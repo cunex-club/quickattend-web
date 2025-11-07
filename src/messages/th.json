@@ -1,0 +1,11 @@
+{
+  "welcome": "ยินดีต้อนรับสู่ QuickAttend!",
+  "login": "เข้าสู่ระบบ",
+  "signup": "ลงทะเบียน",
+  "logout": "ออกจากระบบ",
+  "dashboard": "แดชบอร์ด",
+  "settings": "การตั้งค่า",
+  "profile": "โปรไฟล์",
+  "help": "ช่วยเหลือ",
+  "contactSupport": "ติดต่อฝ่ายสนับสนุน"
+}
