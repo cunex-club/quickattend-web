@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Sarabun&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Sarabun&display=swap");
 
 @font-face {
   font-family: "Material Symbols Outlined";
@@ -67,7 +67,6 @@
   font-size: 36px;
   line-height: 44px;
   letter-spacing: 0px;
-
 }
 
 /* Headline */

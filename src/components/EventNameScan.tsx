@@ -14,7 +14,7 @@ const EventNameScan: StyleableFC<EventNameScanProps> = ({ label, link }) => {
     try {
       await navigator.clipboard.writeText(link);
       // Optional: Show success notification
-      alert("Link copied to clipboard!"); // still not have toatst system 
+      alert("Link copied to clipboard!"); // still not have toatst system
       //TODO: Replace alert with toast notification system
     } catch (err) {
       console.error("Failed to copy link:", err);

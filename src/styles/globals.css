@@ -1,5 +1,5 @@
-@import './token/font.css';
-@import './token/color.css';
+@import "./token/font.css";
+@import "./token/color.css";
 @import "tailwindcss";
 @import "tw-animate-css";
 
