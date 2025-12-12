@@ -7,13 +7,13 @@ type SidebarNavigationProps = {
   href: string;
 };
 
-const SidebarNavigation: StyleableFC<SidebarNavigationProps> = ({ children, href, className }) => {
-
+const SidebarNavigation: StyleableFC<SidebarNavigationProps> = ({
+  children,
+  href,
+  className,
+}) => {
   return (
-    <Link
-      href={href}
-      className={cn(className)}
-    >
+    <Link href={href} className={cn(className)}>
       {children}
     </Link>
   );

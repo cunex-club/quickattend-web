@@ -46,7 +46,7 @@ const Button: StyleableFC<ButtonProps> = ({
         getPropsByBordered[bordered],
         getPropsByMode[mode],
         getPropsByExpanded(expanded),
-        className
+        className,
       )}
       onClick={onClick}
       style={style}

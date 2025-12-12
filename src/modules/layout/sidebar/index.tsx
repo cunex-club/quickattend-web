@@ -28,7 +28,7 @@ const Sidebar = () => {
             {t("addevent")}
           </p>
         </SidebarNavigation>
-        <div className="flex flex-col p-2.5 space-y-6.5">
+        <div className="flex flex-col space-y-2">
           <SidebarNavigation
             href="/create-event"
             className="flex flex-col justify-center items-center"
