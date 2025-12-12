@@ -1,22 +1,20 @@
-import { Link, usePathname } from "@i18n/navigation";
+import { Link } from "@i18n/navigation";
 import { cn } from "@assets/lib/utils";
+import { StyleableFC } from "@utils/misc";
 
 type SidebarNavigationProps = {
-  pathname: string;
-  path: string;
+  children: React.ReactNode;
+  href: string;
 };
 
-const SidebarNavigation = ({ pathname, path }: SidebarNavigationProps) => {
-  const isCurrentPath = usePathname().includes(pathname);
+const SidebarNavigation: StyleableFC<SidebarNavigationProps> = ({ children, href, className }) => {
 
   return (
     <Link
-      href={pathname}
-      className={cn("headline-small-emphasized", {
-        "text-primary": isCurrentPath,
-      })}
+      href={href}
+      className={cn(className)}
     >
-      {path}
+      {children}
     </Link>
   );
 };

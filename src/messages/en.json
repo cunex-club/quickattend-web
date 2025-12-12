@@ -9,8 +9,9 @@
   "help": "Help",
   "contactSupport": "Contact Support",
   "Sidebar": {
-    "event": "activities",
-    "stats": "Statistics",
-    "registration": "Registration"
+    "addevent": "สร้างกิจกรรม",
+    "activities": "กิจกรรม",
+    "scan": "สแกน",
+    "search": "สแกน"
   }
 }

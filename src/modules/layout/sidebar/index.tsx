@@ -8,39 +8,63 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@assets/components/ui/avatar";
-import Icon from "@components/Icon";
+import Button from "@components/Button";
+import IonIcon from "@components/IonIcon";
 
 const Sidebar = () => {
   const t = useTranslations("Sidebar");
   return (
-    <div className="w-70 px-10 pt-15 pb-40 bg-neutral-200 h-screen justify-between flex flex-col">
-      <div>
-        <Image src="/logo/cu-nex.png" alt="Logo" width={160} height={160} />
+    <div className="w-38.5 px-10 pt-8 pb-10 bg-neutral-100 h-screen justify-between flex flex-col">
+      <div className="flex flex-col gap-y-6">
+        <Image src="/logo/cu-nex.png" alt="Logo" width={90} height={90} />
+        <SidebarNavigation
+          href="/create-event"
+          className="flex flex-col justify-center items-center gap-y-2"
+        >
+          <Button mode="Icon" bordered="round" expanded={false}>
+            <IonIcon name="AddOutline" size="32px" className="text-white" />
+          </Button>
+          <p className="title-small-primary whitespace-nowrap">
+            {t("addevent")}
+          </p>
+        </SidebarNavigation>
         <div className="flex flex-col p-2.5 space-y-6.5">
-          <SidebarNavigation path={t("event")} pathname="/events" />
-          <SidebarNavigation path={t("stats")} pathname="/statistic" />
           <SidebarNavigation
-            path={t("registration")}
-            pathname="/registration"
-          />
+            href="/create-event"
+            className="flex flex-col justify-center items-center"
+          >
+            <IonIcon name="Home" size="32px" className="text-primary" />
+            <p className="title-small-primary whitespace-nowrap">
+              {t("activities")}
+            </p>
+          </SidebarNavigation>
+          <SidebarNavigation
+            href="/scan"
+            className="flex flex-col justify-center items-center"
+          >
+            <IonIcon name="ScanOutline" size="32px" className="text-primary" />
+            <p className="title-small-primary whitespace-nowrap">{t("scan")}</p>
+          </SidebarNavigation>
+          <SidebarNavigation
+            href="/search"
+            className="flex flex-col justify-center items-center"
+          >
+            <IonIcon
+              name="SearchOutline"
+              size="32px"
+              className="text-primary"
+            />
+            <p className="title-small-primary whitespace-nowrap">
+              {t("search")}
+            </p>
+          </SidebarNavigation>
         </div>
       </div>
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <Avatar className="w-15 h-15">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <div className="p-2.5">
-            <Icon name="Logout" size={32} className="text-primary" />{" "}
-            {/* will change to ion icon later*/}
-          </div>
-        </div>
-        <div className="space-y-2.5">
-          <p className="title-medium-emphasized">นายคหฤทธิ์ ครเนือง</p>
-          <p className="title-medium">6521008721</p>
-          <p className="title-medium">คณะวิศวกรรมศาสตร์</p>
-        </div>
+      <div className="flex justify-between items-center">
+        <Avatar className="w-15 h-15">
+          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
       </div>
     </div>
   );
