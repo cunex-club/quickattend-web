@@ -3,7 +3,7 @@ import { cn } from "@assets/lib/utils";
 import { StyleableFC } from "@utils/misc";
 import * as React from "react";
 
-import Button from "@shared/Button";
+import Button from "./Button";
 
 type Option = {
   value: string;
@@ -13,7 +13,7 @@ type Option = {
 type GroupFilterButtonProps = {
   options: [Option, Option];
   value: string;
-   // TODO: Add onChange prop when implementing value change functionality
+  // TODO: Add onChange prop when implementing value change functionality
 };
 
 const GroupFilterButton: StyleableFC<GroupFilterButtonProps> = ({

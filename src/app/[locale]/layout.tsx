@@ -8,12 +8,12 @@ import { getMessages } from "next-intl/server";
 import { routing } from "@i18n/routing";
 
 const chulaBoldFont = localFont({
-  src: "../../../public/font/CHULALONGKORNBold.otf",
+  src: "../../assets/font/CHULALONGKORNBold.otf",
   variable: "--font-chula-bold",
   weight: "700",
 });
 const chulaRegularFont = localFont({
-  src: "../../../public/font/CHULALONGKORNReg.otf",
+  src: "../../assets/font/CHULALONGKORNReg.otf",
   variable: "--font-chula-regular",
   weight: "400",
 });
