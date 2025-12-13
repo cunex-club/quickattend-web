@@ -7,5 +7,11 @@
   "settings": "Settings",
   "profile": "Profile",
   "help": "Help",
-  "contactSupport": "Contact Support"
+  "contactSupport": "Contact Support",
+  "Sidebar": {
+    "addevent": "สร้างกิจกรรม",
+    "activities": "กิจกรรม",
+    "scan": "สแกน",
+    "search": "สแกน"
+  }
 }

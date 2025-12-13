@@ -13,7 +13,7 @@ type Option = {
 type GroupFilterButtonProps = {
   options: [Option, Option];
   value: string;
-   // TODO: Add onChange prop when implementing value change functionality
+  // TODO: Add onChange prop when implementing value change functionality
 };
 
 const GroupFilterButton: StyleableFC<GroupFilterButtonProps> = ({

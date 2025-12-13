@@ -19,7 +19,7 @@ const TextField: StyleableFC<TextFieldProps> = React.forwardRef<
 >(
   (
     { className, inputClassName, supportingText, endIcon, error, ...props },
-    ref
+    ref,
   ) => {
     return (
       <div className={cn("flex w-full flex-col", className)}>
@@ -37,7 +37,7 @@ const TextField: StyleableFC<TextFieldProps> = React.forwardRef<
 
               // focus styles
               "focus:ring-2 focus:outline-none",
-              inputClassName
+              inputClassName,
             )}
             {...props}
           />
@@ -51,7 +51,7 @@ const TextField: StyleableFC<TextFieldProps> = React.forwardRef<
           <p
             className={cn(
               "body-small-primary mx-1 ml-4 my-[0.25rem]",
-              error ? "text-error" : "text-[#49454F]"
+              error ? "text-error" : "text-[#49454F]",
             )}
           >
             {supportingText}
@@ -59,7 +59,7 @@ const TextField: StyleableFC<TextFieldProps> = React.forwardRef<
         )}
       </div>
     );
-  }
+  },
 );
 
 TextField.displayName = "TextField";
