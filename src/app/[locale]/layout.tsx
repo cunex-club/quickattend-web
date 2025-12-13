@@ -1,8 +1,8 @@
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
-
+import Sidebar from "@modules/layout/sidebar";
 import type { Metadata } from "next";
-import "./globals.css";
+import "@styles/globals.css";
 import localFont from "next/font/local";
 import { getMessages } from "next-intl/server";
 import { routing } from "@i18n/routing";
@@ -42,7 +42,10 @@ export default async function LocaleLayout({
         className={`${chulaRegularFont.variable} ${chulaBoldFont.variable} antialiased`}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          {children}
+          <div className="flex h-screen overflow-hidden">
+            <Sidebar />
+            <main className="flex-1 overflow-y-auto bg-white">{children}</main>
+          </div>
         </NextIntlClientProvider>
       </body>
     </html>

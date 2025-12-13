@@ -26,6 +26,7 @@ Replace `<BRANCH_NAME_HERE>` with the actual branch name from Linear.
 All commits must follow the [Conventional Commits](https://www.conventionalcommits.org/) specification. This is enforced in the repository.
 
 **Examples:**
+
 - `feat: add user login page`
 - `fix: correct typo in dashboard`
 - `chore: update dependencies`

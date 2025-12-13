@@ -4,13 +4,14 @@ import { cn } from "@assets/lib/utils";
 import { StyleableFC } from "@utils/misc";
 import type { MouseEvent } from "react";
 
-type mode = "filled" | "outline" | "text";
+type mode = "filled" | "outline" | "text" | "Icon";
 type bordered = "square" | "round";
 
 const getPropsByMode: Record<mode, string> = {
   filled: "bg-primary border border-primary text-neutral-white",
   outline: "bg-transparent border border-primary text-neutral-black",
-  text: "text-primary border-none bg-transparent text-primary",
+  text: "bg-transparent border-none text-primary",
+  Icon: "bg-primary border-none p-0 text-primary ",
 };
 
 const getPropsByBordered: Record<bordered, string> = {
