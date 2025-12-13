@@ -30,7 +30,7 @@ const Sidebar = () => {
         </SidebarNavigation>
         <div className="flex flex-col space-y-2">
           <SidebarNavigation
-            href="/create-event"
+            href="/events"
             className="flex flex-col justify-center items-center"
           >
             <IonIcon name="Home" size="32px" className="text-primary" />
