@@ -1,6 +1,5 @@
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
-import Sidebar from "@modules/layout/sidebar";
 import type { Metadata } from "next";
 import "@styles/globals.css";
 import localFont from "next/font/local";
@@ -42,10 +41,7 @@ export default async function LocaleLayout({
         className={`${chulaRegularFont.variable} ${chulaBoldFont.variable} antialiased`}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <div className="flex h-screen overflow-hidden">
-            <Sidebar />
-            <main className="flex-1 overflow-y-auto bg-white">{children}</main>
-          </div>
+          <main className="w-full h-screen overflow-hidden">{children}</main>
         </NextIntlClientProvider>
       </body>
     </html>
