@@ -1,19 +1,19 @@
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
-import Sidebar from "@modules/layout/sidebar";
 import type { Metadata } from "next";
 import "@styles/globals.css";
 import localFont from "next/font/local";
 import { getMessages } from "next-intl/server";
 import { routing } from "@i18n/routing";
+import { AuthProvider } from "../../context/AuthContext";
 
 const chulaBoldFont = localFont({
-  src: "../../../public/font/CHULALONGKORNBold.otf",
+  src: "../../assets/font/CHULALONGKORNBold.otf",
   variable: "--font-chula-bold",
   weight: "700",
 });
 const chulaRegularFont = localFont({
-  src: "../../../public/font/CHULALONGKORNReg.otf",
+  src: "../../assets/font/CHULALONGKORNReg.otf",
   variable: "--font-chula-regular",
   weight: "400",
 });
@@ -42,10 +42,9 @@ export default async function LocaleLayout({
         className={`${chulaRegularFont.variable} ${chulaBoldFont.variable} antialiased`}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <div className="flex h-screen overflow-hidden">
-            <Sidebar />
-            <main className="flex-1 overflow-y-auto bg-white">{children}</main>
-          </div>
+          <main className="w-full min-h-screen">
+            <AuthProvider>{children}</AuthProvider>
+          </main>
         </NextIntlClientProvider>
       </body>
     </html>

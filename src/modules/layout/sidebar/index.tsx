@@ -8,8 +8,8 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@assets/components/ui/avatar";
-import Button from "@components/Button";
-import IonIcon from "@components/IonIcon";
+import Button from "@shared/Button";
+import IonIcon from "@shared/IonIcon";
 
 const Sidebar = () => {
   const t = useTranslations("Sidebar");
