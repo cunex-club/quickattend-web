@@ -13,14 +13,11 @@ import GroupFilterButton from "../GroupFilterButton";
 
 export const description = "A bar chart";
 
-const chartData = [
-  { month: "January", desktop: 121 },
-  { month: "February", desktop: 405 },
-  { month: "March", desktop: 282 },
-  { month: "April", desktop: 117 },
-  { month: "May", desktop: 90 },
-  { month: "June", desktop: 21 },
-];
+
+type BarChartHorizontalOverviewProps = {
+  month: string;
+  desktop: number;
+};
 
 const chartConfig = {
   XAxis: {
@@ -38,7 +35,8 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BarChartHorizontalOverview() {
+export function BarChartHorizontalOverview({ data }: { data: BarChartHorizontalOverviewProps[] }) {
+  const chartData = data;
   const BAR_RADIUS: [number, number, number, number] = [8, 8, 0, 0];
   const BAR_CATEGORY_GAP: number = 1;
   const STROKE_DASH_ARRAY: string = "3 3";

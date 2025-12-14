@@ -19,11 +19,10 @@ import {
 
 export const description = "A bar chart with a custom label";
 
-const chartData = [
-  { faculty: "คณะวิศวกรรมศาสตร์", total: 92 },
-  { faculty: "คณะอักษรศาสตร์", total: 45 },
-  { faculty: "คณะสถาปัตกรรมศาสตร์", total: 67 },
-];
+type BarChartVerticalOverviewProps = {
+  faculty: string;
+  total: number;
+};
 
 const chartConfig = {
   total: {
@@ -35,7 +34,8 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BarChartVerticalOverview() {
+export function BarChartVerticalOverview({ data }: { data: BarChartVerticalOverviewProps[] }) {
+  const chartData = data;
   const BAR_SIZE: number = 32;
   const BAR_GAP: number = 48;
   const BAR_CHART_RADIUS: [number, number, number, number] = [2, 2, 2, 2];

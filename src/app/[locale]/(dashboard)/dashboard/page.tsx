@@ -5,12 +5,14 @@ import Button from "@components/Button";
 import { BarChartHorizontalOverview } from "@components/charts/BarChartHorizontalOverview";
 import { BarChartVerticalOverview } from "@components/charts/BarChartVerticalOverview";
 import { StatCard } from "@components/StatCard";
-import { eventData } from "@utils/data";
+import { chartDataID1, chartDataMonthID1, eventData } from "@utils/data";
 import FullscreenContent from "@components/dashboard/FullScreenContent";
 import Icon from "@components/Icon";
 
 const event = eventData;
-
+const chartDataTop3 = chartDataID1;
+const chartDataTime = chartDataMonthID1;
+  
 export default function OverviewPage() {
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const fullscreenContainerRef = useRef<HTMLDivElement>(null);
@@ -107,7 +109,7 @@ export default function OverviewPage() {
               <p className="headline-large-emphasized">
                 3 อันดับแรกของคณะ/หน่วยงานที่ลงทะเบียน
               </p>
-              <BarChartVerticalOverview />
+              <BarChartVerticalOverview data={chartDataTop3} />
               <Button mode="filled" bordered="square" expanded={false}>
                 <p className="label-large-emphasized translate-y-1">
                   ดูทั้งหมด
@@ -119,7 +121,7 @@ export default function OverviewPage() {
                 สถิติการลงทะเบียนแยกตามช่วงเวลา
               </p>
               <div className="h-full">
-                <BarChartHorizontalOverview />
+                <BarChartHorizontalOverview data={chartDataTime} />
               </div>
             </div>
           </section>

@@ -40,3 +40,24 @@ export const timeData = [
   { id: "t-9", label: "08:00 - 09:00 น." },
   { id: "t-10", label: "09:00 - 10:00 น." },
 ];
+
+export const chartDataID1 = [
+  { faculty: "คณะวิศวกรรมศาสตร์", total: 92 },
+  { faculty: "คณะอักษรศาสตร์", total: 45 },
+  { faculty: "คณะสถาปัตกรรมศาสตร์", total: 67 },
+];
+
+export const chartDataID2 = [
+  { faculty: "Faculty of Engineering", total: 121 },
+  { faculty: "Faculty of Arts", total: 405 },
+  { faculty: "Faculty of Architecture", total: 282 },
+];
+
+export const chartDataMonthID1 = [
+  { month: "January", desktop: 121 },
+  { month: "February", desktop: 405 },
+  { month: "March", desktop: 282 },
+  { month: "April", desktop: 117 },
+  { month: "May", desktop: 90 },
+  { month: "June", desktop: 21 },
+];
