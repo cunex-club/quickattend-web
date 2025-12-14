@@ -87,7 +87,7 @@ export default function OverviewPage() {
                   expanded={false}
                   onClick={handleToggleFullscreen}
                 >
-                  <p className="label-large-emphasized translate-y-1">
+                  <p className="label-large-emphasized">
                     ดูเต็มหน้าจอ
                   </p>
                 </Button>
