@@ -15,6 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@assets/components/ui/dropdown-menu";
+import { useTranslations } from "next-intl";
 
 type EventCardProps = {
   title: string;
@@ -37,12 +38,13 @@ const EventCard: StyleableFC<EventCardProps> = ({
   className,
   ...props
 }) => {
+  const t = useTranslations("Events.EventCard");
   if (!isEnd) {
     return (
       <div
         className={cn(
           "px-8 py-6 rounded-xl shadow-lg bg-neutral-100 space-y-4",
-          className,
+          className
         )}
         {...props}
       >
@@ -61,13 +63,13 @@ const EventCard: StyleableFC<EventCardProps> = ({
             {/* will replace with custom drop down later */}
             <DropdownMenuContent align="end" className="py-2">
               <DropdownMenuItem>
-                <div className="body-small-primary">แชร์ตัวสแกน QR</div>
+                <div className="body-small-primary">{t("shareQr")}</div>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <div className="body-small-primary">แชร์สถิติ</div>
+                <div className="body-small-primary">{t("shareStatistics")}</div>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <div className="body-small-primary">ทำซ้ำกิจกรรม</div>
+                <div className="body-small-primary">{t("repeatActivity")}</div>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -75,7 +77,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-start gap-y-4 sm:gap-x-6 md:gap-x-12.5">
           <div className="sm:flex-2 px-4">
             <div className="headline-small-emphasized mb-2">
-              รายละเอียดกิจกรรม
+              {t("activityDetails")}
             </div>
             <div className="body-large-primary">{description}</div>
           </div>
@@ -105,7 +107,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
             <div className="flex justify-center items-center gap-2">
               <IonIcon name="ScanOutline" size="36px" className="text-white" />
               <div className="title-large-primary text-white ">
-                สแกนผู้เข้าร่วมกิจกรรม
+                {t("scanParticipant")}
               </div>
             </div>
           </Button>
@@ -117,7 +119,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
                 className="text-primary"
               />
               <div className="title-large-primary text-primary">
-                สถิติกิจกรรม
+                {t("activityStatistics")}
               </div>
             </div>
           </Button>

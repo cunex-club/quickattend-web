@@ -13,5 +13,17 @@
     "activities": "กิจกรรม",
     "scan": "สแกน",
     "search": "สแกน"
+  },
+  "Events": {
+    "myEvents": "กิจกรรมของฉัน",
+    "pastEvents": "กิจกรรมที่ผ่านมา",
+    "EventCard": {
+      "shareQr": "แชร์ตัวสแกน QR",
+      "shareStatistics": "แชร์สถิติ",
+      "repeatActivity": "ทำซ้ำกิจกรรม",
+      "activityDetails": "รายละเอียดกิจกรรม",
+      "scanParticipant": "สแกนผู้เข้าร่วมกิจกรรม",
+      "activityStatistics": "สถิติกิจกรรม"
+    }
   }
 }

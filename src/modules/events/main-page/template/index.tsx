@@ -7,8 +7,10 @@ import FilterMenu, {
   FilterValues,
 } from "@modules/events/main-page/components/filter-menu";
 import Pagination from "@shared/Pagination";
+import { useTranslations } from "next-intl";
 
 const EventPageTemplate = () => {
+  const t = useTranslations("Events");
   const [sortOrder, setSortOrder] = useState("newest");
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 10; // TODO: Replace with actual total pages from API
@@ -40,10 +42,7 @@ const EventPageTemplate = () => {
     <div className="w-full h-full px-24 py-24 pb-30 space-y-16">
       <div className="space-y-8">
         <div className="flex justify-between items-center">
-          <div className="title-small-primary md:hidden">กิจกรรมของฉัน</div>
-          <div className="hidden md:block display-medium-emphasized">
-            กิจกรรมของฉัน
-          </div>
+          <div className="display-medium-emphasized">{t("myEvents")}</div>
           <div className="flex justify-center items-center gap-2.25">
             <FilterMenu onFilterChange={handleMyEventsFilterChange} />
             <SortMenu
@@ -76,7 +75,7 @@ const EventPageTemplate = () => {
       </div>
       <div className="space-y-8">
         <div className="flex justify-between items-center">
-          <div className="display-medium-emphasized">กิจกรรมที่ผ่านมา</div>
+          <div className="display-medium-emphasized">{t("pastEvents")}</div>
           <div className="flex justify-center items-center gap-2.25">
             <FilterMenu onFilterChange={handlePastEventsFilterChange} />
             <SortMenu
