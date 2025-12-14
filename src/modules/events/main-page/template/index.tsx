@@ -1,39 +1,64 @@
-import Icon from "@shared/Icon";
+"use client";
+
+import { useState } from "react";
 import EventCard from "@modules/events/main-page/components/event-card";
-import { Link } from "@i18n/navigation";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@assets/components/ui/dropdown-menu";
+import SortMenu from "@modules/events/main-page/components/sort-menu";
+import FilterMenu, {
+  FilterValues,
+} from "@modules/events/main-page/components/filter-menu";
+import Pagination from "@shared/Pagination";
 
 const EventPageTemplate = () => {
+  const [sortOrder, setSortOrder] = useState("newest");
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 10; // TODO: Replace with actual total pages from API
+
+  const handleMyEventsFilterChange = (values: FilterValues) => {
+    console.log("กิจกรรมของฉัน filter:", {
+      accessRights: values.accessRights,
+      date: values.date?.toLocaleDateString("th-TH"),
+    });
+  };
+
+  const handleMyEventsSortChange = (value: string) => {
+    setSortOrder(value);
+    console.log("กิจกรรมของฉัน sort:", value);
+  };
+
+  const handlePastEventsFilterChange = (values: FilterValues) => {
+    console.log("กิจกรรมที่ผ่านมา filter:", {
+      accessRights: values.accessRights,
+      date: values.date?.toLocaleDateString("th-TH"),
+    });
+  };
+
+  const handlePastEventsSortChange = (value: string) => {
+    console.log("กิจกรรมที่ผ่านมา sort:", value);
+  };
+
   return (
     <div className="w-full h-full px-24 py-24 pb-30 space-y-16">
       <div className="space-y-8">
         <div className="flex justify-between items-center">
           <div className="title-small-primary md:hidden">กิจกรรมของฉัน</div>
-          <div className="hidden md:block display-medium-emphasized">กิจกรรมของฉัน</div>
-          <div className="flex gap-2.25">
-            <Link href="/events/search">
-              <Icon name="Search" size={24} className="m-2.5 text-primary" />
-            </Link>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  type="button"
-                  aria-label="Sort"
-                  className="m-2.5 text-primary cursor-pointer rounded focus:outline-none focus:ring-2 focus:ring-primary/50"
-                >
-                  <Icon name="Sort" size={24} className="text-primary" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="py-2">
-                <DropdownMenuItem><div className="body-small-primary">วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด</div></DropdownMenuItem>
-                <DropdownMenuItem><div className="body-small-primary">วันที่จัดกิจกรรม : เก่าสุด - ใหม่สุด</div></DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="hidden md:block display-medium-emphasized">
+            กิจกรรมของฉัน
+          </div>
+          <div className="flex justify-center items-center gap-2.25">
+            <FilterMenu onFilterChange={handleMyEventsFilterChange} />
+            <SortMenu
+              options={[
+                {
+                  label: "วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด",
+                  value: "newest",
+                },
+                {
+                  label: "วันที่จัดกิจกรรม : เก่าสุด - ใหม่สุด",
+                  value: "oldest",
+                },
+              ]}
+              onSelect={handleMyEventsSortChange}
+            />
           </div>
         </div>
         <EventCard
@@ -52,22 +77,22 @@ const EventPageTemplate = () => {
       <div className="space-y-8">
         <div className="flex justify-between items-center">
           <div className="display-medium-emphasized">กิจกรรมที่ผ่านมา</div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                aria-label="Sort"
-                className="m-2.5 text-primary cursor-pointer rounded focus:outline-none focus:ring-2 focus:ring-primary/50"
-              >
-                <Icon name="Sort" size={24} className="text-primary" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem>แรกที่สุดก่อน OR</DropdownMenuItem>
-              <DropdownMenuItem>แรกสุดที่</DropdownMenuItem>
-              <DropdownMenuItem>ทำซ้ำกิจกรรม</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex justify-center items-center gap-2.25">
+            <FilterMenu onFilterChange={handlePastEventsFilterChange} />
+            <SortMenu
+              options={[
+                {
+                  label: "วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด",
+                  value: "newest",
+                },
+                {
+                  label: "วันที่จัดกิจกรรม : เก่าสุด - ใหม่สุด",
+                  value: "oldest",
+                },
+              ]}
+              onSelect={handlePastEventsSortChange}
+            />
+          </div>
         </div>
         <EventCard
           title="Freshmen night"
@@ -80,6 +105,13 @@ const EventPageTemplate = () => {
           location="สนามกีฬาจุฬาลงกรณ์มหาวิทยาลัย"
           role="Owner"
           isEnd
+        />
+      </div>
+      <div className="flex justify-center pt-8">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
         />
       </div>
     </div>

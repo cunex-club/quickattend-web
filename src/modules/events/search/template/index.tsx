@@ -14,7 +14,7 @@ const EventSearchTemplate = () => {
       </div>
       <div className="flex flex-col justify-center items-center space-y-">
         <div className="p-6">
-            <Icon name="search" size={216} className="text-primary" />
+          <Icon name="search" size={216} className="text-primary" />
         </div>
         <div className="title-large-primary">กำลังค้นหากิจกรรมที่ต้องการ</div>
       </div>

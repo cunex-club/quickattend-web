@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Icon from "@shared/Icon";
 import { useState } from "react";
