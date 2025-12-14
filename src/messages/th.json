@@ -23,7 +23,9 @@
       "repeatActivity": "ทำซ้ำกิจกรรม",
       "activityDetails": "รายละเอียดกิจกรรม",
       "scanParticipant": "สแกนผู้เข้าร่วมกิจกรรม",
-      "activityStatistics": "สถิติกิจกรรม"
+      "activityStatistics": "สถิติกิจกรรม",
+      "eventDetails": "รายละเอียดกิจกรรม",
+      "downloadStatistics": "ดาวน์โหลดสถิติ"
     }
   }
 }

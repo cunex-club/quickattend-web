@@ -147,7 +147,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
           <div className="flex flex-col sm:flex-row sm:items-start gap-y-4 sm:gap-x-6 md:gap-x-12.5 pt-4">
             <div className="sm:flex-2 px-4">
               <div className="headline-small-emphasized mb-2">
-                รายละเอียดกิจกรรม
+                {t("eventDetails")}
               </div>
               <div className="body-large-primary">{description}</div>
             </div>
@@ -187,7 +187,9 @@ const EventCard: StyleableFC<EventCardProps> = ({
                   size="36px"
                   className="text-white"
                 />
-                <div className="title-large-primary">สถิติกิจกรรม</div>
+                <div className="title-large-primary">
+                  {t("activityStatistics")}
+                </div>
               </div>
             </Button>
             <Button mode="outline" bordered="round" expanded>
@@ -198,7 +200,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
                   className="text-primary"
                 />
                 <div className="title-large-primary text-primary">
-                  ดาวน์โหลดสถิติ
+                  {t("downloadStatistics")}
                 </div>
               </div>
             </Button>
