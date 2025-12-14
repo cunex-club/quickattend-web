@@ -5,6 +5,7 @@ import "@styles/globals.css";
 import localFont from "next/font/local";
 import { getMessages } from "next-intl/server";
 import { routing } from "@i18n/routing";
+import { AuthProvider } from "../../context/AuthContext"; 
 
 const chulaBoldFont = localFont({
   src: "../../../public/font/CHULALONGKORNBold.otf",
@@ -41,7 +42,9 @@ export default async function LocaleLayout({
         className={`${chulaRegularFont.variable} ${chulaBoldFont.variable} antialiased`}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <main className="w-full h-screen overflow-hidden">{children}</main>
+          <main className="w-full min-h-screen">
+            <AuthProvider>{children}</AuthProvider>
+          </main>
         </NextIntlClientProvider>
       </body>
     </html>
