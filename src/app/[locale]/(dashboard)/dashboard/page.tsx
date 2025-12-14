@@ -7,6 +7,7 @@ import { BarChartVerticalOverview } from "@components/charts/BarChartVerticalOve
 import { StatCard } from "@components/StatCard";
 import { eventData } from "@utils/data";
 import FullscreenContent from "@components/dashboard/FullScreenContent";
+import Icon from "@components/Icon";
 
 const event = eventData;
 
@@ -50,9 +51,11 @@ export default function OverviewPage() {
               <div className="flex justify-between">
                 <p className="headline-large-emphasized">{event.title}</p>
                 <button
-                  className="h-10 w-10 border-2 border-primary rounded-full"
+                  className="border border-primary rounded-full w-auto h-auto p-2 hover:bg-neutral-100 transition-colors duration-200"
                   onClick={handleCopyEventLink}
-                ></button>
+                >
+                  <Icon name="link" size={32} className="text-primary"/>
+                </button>
               </div>
               <div className="flex flex-col space-y-4">
                 <div className="px-4 space-y-2 body-medium-primary">

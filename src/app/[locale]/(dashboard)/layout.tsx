@@ -32,7 +32,7 @@ export default function DashboardGroupLayout({
   }
   return (
     <div className="flex flex-col items-center w-full min-h-screen p-4 md:p-8 bg-neutral-white">
-      <div className="container max-w-[1440px] space-y-6 flex flex-col items-center bg-neutral-white">
+      <div className="container max-w-[1440px] space-y-6 flex flex-col items-center bg-neutral-white w-full">
         <nav className="flex justify-center w-auto">
           {tabs.map((tab) => {
             const isActive = pathname === tab.href;
