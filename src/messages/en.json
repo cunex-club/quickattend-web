@@ -26,6 +26,10 @@
       "activityStatistics": "สถิติกิจกรรม",
       "eventDetails": "รายละเอียดกิจกรรม",
       "downloadStatistics": "ดาวน์โหลดสถิติ"
+    },
+    "Search": {
+      "searching": "กำลังค้นหากิจกรรมที่ต้องการ",
+      "notFound": "ไม่เจอผลการค้นหา"
     }
   }
 }
