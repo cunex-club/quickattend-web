@@ -19,29 +19,11 @@ import {
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
 
-const chartData = [
-  {
-    faculty: "คณะวิศวกรรมศาสตร์",
-    unregistered: 186,
-    registered: 80,
-    total: 266,
-  },
-  { faculty: "คณะอักษรศาสตร์", unregistered: 305, registered: 200, total: 505 },
-  {
-    faculty: "คณะสถาปัตยกรรมศาสตร์",
-    unregistered: 237,
-    registered: 120,
-    total: 357,
-  },
-  { faculty: "คณะวิทยาศาสตร์", unregistered: 73, registered: 190, total: 263 },
-  {
-    faculty: "คณะบริหารธุรกิจ",
-    unregistered: 209,
-    registered: 130,
-    total: 339,
-  },
-  { faculty: "คณะนิติศาสตร์", unregistered: 214, registered: 140, total: 354 },
-];
+type BarChartVerticalStackedProps = {
+  faculty: string;
+  registered: number;
+  unregistered: number;
+};
 
 const chartConfig = {
   unregistered: {
@@ -54,14 +36,14 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BarChartVerticalStacked() {
+export function BarChartVerticalStacked({data} : {data: BarChartVerticalStackedProps[]}) {
   const BAR_SIZE: number = 32;
   const BAR_GAP: number = 48;
   const LEFT_BAR_BORDER_RADIUS: [number, number, number, number] = [0, 2, 2, 0];
   const RIGHT_BAR_BORDER_RADIUS: [number, number, number, number] = [
     2, 2, 2, 2,
   ];
-  const dynamicHeight: number = chartData.length * (BAR_SIZE + BAR_GAP);
+  const dynamicHeight: number = data.length * (BAR_SIZE + BAR_GAP);
 
   return (
     <Card className="bg-neutral-100 shadow-elevation-2 w-full px-6 lg:px-8">
@@ -72,7 +54,7 @@ export function BarChartVerticalStacked() {
           style={{ height: `${dynamicHeight}px` }}
         >
           <BarChart
-            data={chartData}
+            data={data}
             layout="vertical"
             accessibilityLayer
             margin={{ left: 0, right: 20 }}

@@ -14,7 +14,11 @@ import {
 } from "@assets/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { FilterableList } from "./FilterableList";
-import { facultyData, timeData } from "@utils/data";
+import { dataCategorizeByFaculty, dataCategorizeByTime, facultyData, timeData, eventData } from "@utils/data";
+import IonIcon from "@components/IonIcon";
+
+const verticalChartData = dataCategorizeByFaculty;
+const horizontalChartData = dataCategorizeByTime;
 
 export function DeepInsightView() {
   const [selectedFaculties, setSelectedFaculties] = useState<
@@ -61,13 +65,13 @@ export function DeepInsightView() {
       <section className="flex justify-between">
         <div className="space-x-4">
           <Button mode="filled" bordered="square" expanded={false}>
-            <p className="label-large-emphasized translate-y-1">ทั้งหมด</p>
+            <p className="label-large-emphasized">ทั้งหมด</p>
           </Button>
           <Button mode="outline" bordered="square" expanded={false}>
-            <p className="label-large-emphasized translate-y-1">นิสิต</p>
+            <p className="label-large-emphasized">นิสิต</p>
           </Button>
           <Button mode="outline" bordered="square" expanded={false}>
-            <p className="label-large-emphasized translate-y-1">บุคลากร</p>
+            <p className="label-large-emphasized">บุคลากร</p>
           </Button>
         </div>
         <div>
@@ -127,20 +131,20 @@ export function DeepInsightView() {
         </div>
       </section>
 
-      <div className="h-[400px] w-full">
+      <div className="h-[250px] md:h-[450px] w-full">
         <StatCard
           title="จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด"
-          value={1096}
+          value={eventData.totalAttendees}
           unit="คน"
           variant="primary"
         >
-          <div className="mt-4 flex justify-center items-center px-8">
+          <div className="mt-4 hidden md:flex justify-center items-center px-8">
             <span className="headline-small-emphasized pr-2 md:pr-16 text-center">
-              นิสิต: 1090 คน
+              นิสิต: {eventData.studentCount} คน
             </span>
             <div className="inline-block w-0.5 self-stretch bg-neutral-100"></div>
             <span className="headline-small-emphasized pl-2 md:pl-16 text-center">
-              บุคลากร: 6 คน
+              บุคลากร: {eventData.staffCount} คน
             </span>
           </div>
         </StatCard>
@@ -148,22 +152,22 @@ export function DeepInsightView() {
 
       <section className="flex flex-col space-y-8">
         <div className="flex justify-between">
-          <p className="headline-large-emphasized">
+          <p className="headline-small-emphasized md:headline-large-emphasized">
             สถิติการลงทะเบียนแยกตามคณะ/หน่วยงาน
           </p>
-          <div className="h-10 w-10 border-2 border-primary rounded-full"></div>
+          <IonIcon name="SwapVerticalOutline" size="32px" className="text-primary" />
         </div>
         <div className="h-auto">
-          <BarChartVertical />
+          <BarChartVertical data={verticalChartData} />
         </div>
       </section>
 
       <section className="flex flex-col space-y-8">
-        <p className="headline-large-emphasized">
+        <p className="headline-small-emphasized md:headline-large-emphasized">
           สถิติการลงทะเบียนแยกตามช่วงเวลา
         </p>
         <div className="w-full h-full">
-          <BarChartHorizontal />
+          <BarChartHorizontal data={horizontalChartData}/>
         </div>
       </section>
 

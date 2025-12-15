@@ -7,6 +7,8 @@ export const eventData = {
   description:
     "กิจกรรมต้อนรับนิสิตใหม่ CU รุ่น 109 สู่รั้วมหาวิทยาลัย และกระชับสัมพันธ์ อันดีระหว่างน้องใหม่คณะต่าง ๆ ภายในงานมีการจัดแสดงดนตรีโดยวงดนตรี เช่น Landokmai, Dept, Polycat, Tilly Birds การแสดงพิเศษจาก CUDC และละครนิเทศ จุฬาฯ",
   totalAttendees: 1096,
+  studentCount: 1090,
+  staffCount: 6,
 };
 
 export const facultyData = [
@@ -60,4 +62,56 @@ export const chartDataMonthID1 = [
   { month: "April", desktop: 117 },
   { month: "May", desktop: 90 },
   { month: "June", desktop: 21 },
+];
+
+export const dataCategorizeByFaculty = [
+  { faculty: "คณะวิศวกรรมศาสตร์", total: 92 },
+
+  { faculty: "คณะอักษรศาสตร์", total: 45 },
+
+  { faculty: "คณะสถาปัตยกรรมศาสตร์", total: 67 },
+
+  { faculty: "คณะวิทยาศาสตร์", total: 83 },
+
+  { faculty: "คณะครุศาสตร์", total: 54 },
+];
+
+export const dataCategorizeByTime = [
+  { time: "08:00 - 09:00", total: 45 },
+  { time: "09:00 - 10:00", total: 120 },
+  { time: "10:00 - 11:00", total: 185 },
+  { time: "11:00 - 12:00", total: 142 },
+  { time: "12:00 - 13:00", total: 78 },
+  { time: "13:00 - 14:00", total: 156 },
+  { time: "14:00 - 15:00", total: 198 },
+  { time: "15:00 - 16:00", total: 172 },
+];
+
+export const registeredData = [
+  {
+    faculty: "คณะวิศวกรรมศาสตร์",
+    unregistered: 186,
+    registered: 80,
+    total: 266,
+  },
+  { faculty: "คณะอักษรศาสตร์", unregistered: 305, registered: 200, total: 505 },
+  {
+    faculty: "คณะสถาปัตยกรรมศาสตร์",
+    unregistered: 237,
+    registered: 120,
+    total: 357,
+  },
+  { faculty: "คณะวิทยาศาสตร์", unregistered: 73, registered: 190, total: 263 },
+  {
+    faculty: "คณะบริหารธุรกิจ",
+    unregistered: 209,
+    registered: 130,
+    total: 339,
+  },
+  { faculty: "คณะนิติศาสตร์", unregistered: 214, registered: 140, total: 354 },
+];
+
+export const registrationStatusData = [
+  { category: "ลงทะเบียนแล้ว", total: 1096 },
+  { category: "ยังไม่ลงทะเบียน", total: 500 },
 ];

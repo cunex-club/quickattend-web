@@ -14,8 +14,12 @@ import {
 } from "@assets/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { FilterableList } from "./FilterableList";
-import { facultyData, timeData } from "@utils/data";
+import { dataCategorizeByTime, facultyData, registeredData, registrationStatusData, timeData } from "@utils/data";
 import { BarChartVerticalStacked } from "../charts/BarChartVerticalStacked";
+
+const horizontalChartData = dataCategorizeByTime;
+const verticalStackData = registeredData;
+const donutChartData = registrationStatusData;
 
 export function WhitelistInsightView() {
   const [selectedFaculties, setSelectedFaculties] = useState<
@@ -130,7 +134,7 @@ export function WhitelistInsightView() {
 
       <div className="flex flex-col space-y-8">
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="w-full h-full">
+          <div className="h-[250px] md:h-[450px] w-full">
             <StatCard
               title="จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด"
               value={500}
@@ -149,7 +153,7 @@ export function WhitelistInsightView() {
             </StatCard>
           </div>
           <div className="w-full">
-            <DonutChart />
+            <DonutChart data={donutChartData} />
           </div>
         </section>
         <section className="grid grid-cols-1 md:grid-cols-2 min-h-[400px] gap-8">
@@ -182,7 +186,7 @@ export function WhitelistInsightView() {
           <div className="h-10 w-10 border-2 border-primary rounded-full"></div>
         </div>
         <div className="h-auto">
-          <BarChartVerticalStacked />
+          <BarChartVerticalStacked data={verticalStackData}/>
         </div>
       </section>
 
@@ -191,12 +195,12 @@ export function WhitelistInsightView() {
           สถิติการลงทะเบียนแยกตามช่วงเวลา
         </p>
         <div>
-          <BarChartHorizontal />
+          <BarChartHorizontal data={horizontalChartData} />
         </div>
       </section>
 
       <Link href="/dashboard-compare" target="_blank">
-        <Button mode="filled" bordered="square" expanded={false}>
+        <Button mode="filled" bordered="square" expanded={false}> 
           <p className="title-medium-emphasized">
             เปรียบเทียบสถิติการลงทะเบียนเข้าร่วมกิจกรรม
           </p>

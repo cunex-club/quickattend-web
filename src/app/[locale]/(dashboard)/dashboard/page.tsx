@@ -68,27 +68,15 @@ export default function OverviewPage() {
               <div className="flex flex-col space-y-4">
                 <div className="px-4 space-y-0 body-medium-primary ">
                   <span className="flex flex-row space-x-2 items-center">
-                    <IonIcon
-                      name="Calendar"
-                      size="20px"
-                      className="text-primary"
-                    />
+                    <IonIcon name="Calendar" size="20px" className="text-primary"/>
                     <p>{event.date}</p>
                   </span>
                   <span className="flex flex-row space-x-2 items-center">
-                    <IonIcon
-                      name="Time"
-                      size="20px"
-                      className="text-secondary"
-                    />
+                    <IonIcon name="Time" size="20px" className="text-secondary" />
                     <p>{event.time}</p>
                   </span>
                   <span className="flex flex-row space-x-2 items-center">
-                    <IonIcon
-                      name="Location"
-                      size="20px"
-                      className="text-primary"
-                    />
+                    <IonIcon name="Location" size="20px" className="text-primary"/>
                     <p>{event.location}</p>
                   </span>
                 </div>
@@ -112,7 +100,7 @@ export default function OverviewPage() {
             <div className="h-full w-full order-1 md:order-2">
               <StatCard
                 title="จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด"
-                value={1096}
+                value={event.totalAttendees}
                 unit="คน"
                 variant="primary"
               />

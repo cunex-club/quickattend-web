@@ -18,15 +18,10 @@ import {
 
 export const description = "A bar chart with a label";
 
-const chartData = [
-  { faculty: "คณะวิศวกรรมศาสตร์", total: 92 },
-  { faculty: "คณะอักษรศาสตร์", total: 45 },
-  { faculty: "คณะสถาปัตยกรรมศาสตร์", total: 67 },
-  { faculty: "คณะวิทยาศาสตร์", total: 83 },
-  { faculty: "คณะบริหารธุรกิจ", total: 58 },
-  { faculty: "คณะนิติศาสตร์", total: 39 },
-  { faculty: "คณะเศรษฐศาสตร์", total: 48 },
-];
+type BarChartHorizontalProps = {
+  time: string;
+  total: number;
+};
 
 const chartConfig = {
   total: {
@@ -44,7 +39,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BarChartHorizontal() {
+export function BarChartHorizontal({ data }: { data: BarChartHorizontalProps[] }) {
   const BAR_RADIUS: [number, number, number, number] = [8, 8, 0, 0];
   const BAR_CATEGORY_GAP: number = 1;
   const LABEL_OFFSET: number = 12;
@@ -59,7 +54,7 @@ export function BarChartHorizontal() {
         >
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={data}
             margin={{
               top: 20,
             }}
@@ -73,7 +68,7 @@ export function BarChartHorizontal() {
               strokeDasharray="3 3"
             />
             <XAxis
-              dataKey="faculty"
+              dataKey="time"
               tickLine={false}
               tickMargin={10}
               axisLine={true}

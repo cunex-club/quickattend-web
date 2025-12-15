@@ -14,18 +14,10 @@ import { useEffect, useState } from "react";
 
 export const description = "A donut chart with text";
 
-const chartData = [
-  {
-    category: "จำนวนผู้ที่ลงทะเบียน",
-    total: 500,
-    fill: "var(--color-primary)",
-  },
-  {
-    category: "จำนวนผู้ที่ยังไม่ได้ลงทะเบียน",
-    total: 100,
-    fill: "var(--color-gray-300)",
-  },
-];
+type DonutChartProps = {
+  category: string;
+  total: number;
+};
 
 const chartConfig = {
   total: {
@@ -34,9 +26,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function DonutChart() {
+export function DonutChart({data}: {data: DonutChartProps[]}) {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-
+  const chartData = data.map((item, index) => ({
+    ...item,
+    fill: index === 0 ? "var(--color-primary)" : "var(--color-gray-300)",
+  }));
   // we cannot directly adjust the donut size by using width and height of PieChart
   // so we use innerRadius and outerRadius to adjust the size instead
   const [radius, setRadius] = useState({ inner: "40%", outer: "70%" });
@@ -139,7 +134,7 @@ export function DonutChart() {
                         y={viewBox.cy}
                         textAnchor="middle"
                         dominantBaseline="middle"
-                        className="headline-large-emphasized"
+                        className="headline-large-emphasized -translate-y-2.5 md:-translate-y-2"
                       >
                         <tspan
                           x={viewBox.cx}
