@@ -59,7 +59,7 @@ export function BarChartHorizontalOverview({ data }: BarChartHorizontalOverviewP
             expanded={false}
             onClick={() => setSelectedFilter(selectedFilter === "student" ? null : "student")}
           >
-            <span className="label-large-emphasized">นิสิต</span>
+            <p className="label-large-emphasized -translate-y-0.5">นิสิต</p>
           </Button>
           <Button 
             mode={selectedFilter === "staff" ? "filled" : "outline"} 
@@ -67,7 +67,7 @@ export function BarChartHorizontalOverview({ data }: BarChartHorizontalOverviewP
             expanded={false}
             onClick={() => setSelectedFilter(selectedFilter === "staff" ? null : "staff")}
           >
-            <span className="label-large-emphasized">บุคลากร</span>
+            <p className="label-large-emphasized -translate-y-0.5">บุคลากร</p>
           </Button>
         </div>
       </CardAction>

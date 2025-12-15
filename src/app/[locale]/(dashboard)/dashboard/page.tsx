@@ -12,7 +12,7 @@ import IonIcon from "@components/IonIcon";
 const event = eventData;
 const chartDataTop3 = chartDataID1;
 const chartDataTime = chartDataMonthID1;
-  
+
 export default function OverviewPage() {
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const fullscreenContainerRef = useRef<HTMLDivElement>(null);
@@ -28,8 +28,8 @@ export default function OverviewPage() {
 
   const handleCopyEventLink = async () => {
     const eventLink = `${window.location.origin}/events/${event.id}`;
-      try {
-        await navigator.clipboard.writeText(eventLink);
+    try {
+      await navigator.clipboard.writeText(eventLink);
       alert("คัดลอกลิงก์ไปยังคลิปบอร์ดแล้ว");
     } catch (err) {
       console.error("Failed to copy link:", err);
@@ -93,16 +93,14 @@ export default function OverviewPage() {
                   expanded={false}
                   onClick={handleToggleFullscreen}
                 >
-                  <span className="label-large-emphasized">
-                    ดูเต็มหน้าจอ
-                  </span>
+                  <p className="label-large-emphasized">ดูเต็มหน้าจอ</p>
                 </Button>
               </div>
             </div>
             <div className="h-full w-full order-1 md:order-2">
               <StatCard
                 title="จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด"
-                value={1096}
+                value={event.totalAttendees}
                 unit="คน"
                 variant="primary"
               />
@@ -117,9 +115,7 @@ export default function OverviewPage() {
               </p>
               <BarChartVerticalOverview data={chartDataTop3} />
               <Button mode="filled" bordered="square" expanded={false}>
-                <span className="label-large-emphasized">
-                  ดูทั้งหมด
-                </span>
+                <p className="label-large-emphasized">ดูทั้งหมด</p>
               </Button>
             </div>
             <div className="flex flex-col space-y-6">
