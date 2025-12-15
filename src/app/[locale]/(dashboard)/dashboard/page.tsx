@@ -55,7 +55,7 @@ export default function OverviewPage() {
         <div className="flex flex-col space-y-16">
           {/* event information section */}
           <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex flex-col space-y-8">
+            <div className="flex flex-col space-y-8 order-2 md:order-1">
               <div className="flex justify-between">
                 <p className="headline-large-emphasized">{event.title}</p>
                 <button
@@ -99,7 +99,7 @@ export default function OverviewPage() {
                 </Button>
               </div>
             </div>
-            <div className="h-full w-full">
+            <div className="h-full w-full order-1 md:order-2">
               <StatCard
                 title="จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด"
                 value={1096}

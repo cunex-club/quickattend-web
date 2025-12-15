@@ -29,7 +29,7 @@ export const StatCard = ({
   return (
     <div
       className={cn(
-        "flex flex-col justify-center h-full w-full rounded-2xl p-8 shadow-elevation-3 space-y-8",
+        "flex flex-col justify-center h-full w-full rounded-2xl p-16 md:p-8 shadow-elevation-3 space-y-8",
         variantClasses[variant],
         className
       )}
@@ -38,7 +38,7 @@ export const StatCard = ({
         <div className="flex justify-center items-end space-x-4">
           <p
             className={cn(
-              "font-bold text-7xl md:text-9xl translate-y-2 md:translate-y-6"
+              "font-bold text-7xl md:text-9xl translate-y-3 md:translate-y-8"
             )}
           >
             {value}
