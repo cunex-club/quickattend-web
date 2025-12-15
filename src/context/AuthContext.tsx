@@ -1,16 +1,24 @@
 "use client";
 import { createContext, useContext, useState, ReactNode } from "react";
 
-type UserRole = "attendee" | "staff" | "manager" | "owner";
+/**
+ * User role types for authorization
+ */
+export type UserRole = "attendee" | "staff" | "manager" | "owner";
 
 interface AuthContextType {
   role: UserRole;
-  // ... user, isLoading, login(), logout()
+  // Future additions:
+  // user: User | null;
+  // isLoading: boolean;
+  // login: (credentials: LoginCredentials) => Promise<void>;
+  // logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  // TODO: Replace hardcoded role with actual auth state from backend
   const [role, setRole] = useState<UserRole>("owner");
 
   return (

@@ -16,13 +16,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
+import type { BarChartVerticalData } from "@customTypes/chart";
 
 export const description = "A bar chart with a custom label";
-
-type BarChartVerticalOverviewProps = {
-  faculty: string;
-  total: number;
-};
+export type { BarChartVerticalData };
+interface BarChartVerticalOverviewProps {
+  data: BarChartVerticalData[];
+}
 
 const chartConfig = {
   total: {
@@ -34,7 +34,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BarChartVerticalOverview({ data }: { data: BarChartVerticalOverviewProps[] }) {
+export function BarChartVerticalOverview({ data }: BarChartVerticalOverviewProps) {
   const chartData = data;
   const BAR_SIZE: number = 32;
   const BAR_GAP: number = 48;

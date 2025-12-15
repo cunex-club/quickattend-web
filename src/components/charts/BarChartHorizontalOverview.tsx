@@ -11,13 +11,19 @@ import {
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
 import Button from "@components/Button";
+import type { BarChartHorizontalData } from "@customTypes/chart";
 
 export const description = "A bar chart";
 
-type BarChartHorizontalOverviewProps = {
+export type { BarChartHorizontalData };
+
+type ChartDataPoint = {
   month: string;
   desktop: number;
 };
+interface BarChartHorizontalOverviewProps {
+  data: ChartDataPoint[];
+}
 
 const chartConfig = {
   XAxis: {
@@ -35,7 +41,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BarChartHorizontalOverview({ data }: { data: BarChartHorizontalOverviewProps[] }) {
+export function BarChartHorizontalOverview({ data }: BarChartHorizontalOverviewProps) {
   const chartData = data;
   const [selectedFilter, setSelectedFilter] = useState<"student" | "staff" | null>(null);
   const BAR_RADIUS: [number, number, number, number] = [8, 8, 0, 0];
@@ -53,7 +59,7 @@ export function BarChartHorizontalOverview({ data }: { data: BarChartHorizontalO
             expanded={false}
             onClick={() => setSelectedFilter(selectedFilter === "student" ? null : "student")}
           >
-            <p className="label-large-emphasized">นิสิต</p>
+            <span className="label-large-emphasized">นิสิต</span>
           </Button>
           <Button 
             mode={selectedFilter === "staff" ? "filled" : "outline"} 
@@ -61,7 +67,7 @@ export function BarChartHorizontalOverview({ data }: { data: BarChartHorizontalO
             expanded={false}
             onClick={() => setSelectedFilter(selectedFilter === "staff" ? null : "staff")}
           >
-            <p className="label-large-emphasized">บุคลากร</p>
+            <span className="label-large-emphasized">บุคลากร</span>
           </Button>
         </div>
       </CardAction>

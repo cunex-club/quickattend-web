@@ -4,11 +4,7 @@ import { usePathname, redirect } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@assets/lib/utils";
 import React from "react";
-
-type UserRole = "attendee" | "staff" | "manager" | "owner";
-const useAuth = () => ({
-  role: "owner" as UserRole, // change this to test different roles
-});
+import { useAuth, type UserRole } from "../../../context/AuthContext";
 
 const canViewInsights = (role: UserRole) => {
   return role === "manager" || role === "owner";
@@ -35,8 +31,10 @@ export default function DashboardGroupLayout({
       <div className="container max-w-[1440px] space-y-6 flex flex-col items-center bg-neutral-white">
         <nav className="flex justify-center w-auto">
           {tabs.map((tab) => {
-            const isActive = pathname.endsWith(tab.href) || 
-              (tab.href === "/dashboard" && pathname.match(/^\/[^/]+\/dashboard$/));
+            const normalizedPathname = pathname.replace(/^\/[^/]+/, "");
+            const isActive = 
+              normalizedPathname === tab.href || 
+              (tab.href === "/dashboard" && normalizedPathname === "/dashboard");
             const isTabDisabled =
               tab.id === "insights" && !canViewInsights(role);
 
@@ -51,7 +49,7 @@ export default function DashboardGroupLayout({
                     ? "border-primary text-primary"
                     : "border-transparent text-neutral-600 hover:text-primary",
                   isTabDisabled &&
-                    "border-transparent text-neutral-400 opacity-50"
+                    "border-transparent text-neutral-400 opacity-50 cursor-not-allowed"
                 )}
               >
                 <span className="headline-large-emphasized">{tab.label}</span>

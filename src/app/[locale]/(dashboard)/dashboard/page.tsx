@@ -28,8 +28,8 @@ export default function OverviewPage() {
 
   const handleCopyEventLink = async () => {
     const eventLink = `${window.location.origin}/events/${event.id}`;
-    try {
-      await navigator.clipboard.writeText(eventLink);
+      try {
+        await navigator.clipboard.writeText(eventLink);
       alert("คัดลอกลิงก์ไปยังคลิปบอร์ดแล้ว");
     } catch (err) {
       console.error("Failed to copy link:", err);
@@ -93,9 +93,9 @@ export default function OverviewPage() {
                   expanded={false}
                   onClick={handleToggleFullscreen}
                 >
-                  <p className="label-large-emphasized">
+                  <span className="label-large-emphasized">
                     ดูเต็มหน้าจอ
-                  </p>
+                  </span>
                 </Button>
               </div>
             </div>
@@ -117,9 +117,9 @@ export default function OverviewPage() {
               </p>
               <BarChartVerticalOverview data={chartDataTop3} />
               <Button mode="filled" bordered="square" expanded={false}>
-                <p className="label-large-emphasized">
+                <span className="label-large-emphasized">
                   ดูทั้งหมด
-                </p>
+                </span>
               </Button>
             </div>
             <div className="flex flex-col space-y-6">
