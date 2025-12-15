@@ -137,10 +137,7 @@ export default function OverviewPage() {
       {/* full screen container */}
       <div
         ref={fullscreenContainerRef}
-        className={
-          `w-full h-full bg-white` +
-          (isFullscreen ? "fixed inset-0 z-50" : "hidden")
-        }
+        className={isFullscreen ? "w-full h-full bg-white" : "hidden"}
       >
         {isFullscreen && (
           <FullscreenContent onExit={handleToggleFullscreen} data={event} />
