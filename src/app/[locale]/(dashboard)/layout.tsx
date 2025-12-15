@@ -35,15 +35,17 @@ export default function DashboardGroupLayout({
       <div className="container max-w-[1440px] space-y-6 flex flex-col items-center bg-neutral-white">
         <nav className="flex justify-center w-auto">
           {tabs.map((tab) => {
-            const isActive = pathname.endsWith(tab.href) || 
-              (tab.href === "/dashboard" && pathname.match(/^\/[^/]+\/dashboard$/));
+            const isActive =
+              pathname.endsWith(tab.href) ||
+              (tab.href === "/dashboard" &&
+                pathname.match(/^\/[^/]+\/dashboard$/));
             const isTabDisabled =
               tab.id === "insights" && !canViewInsights(role);
 
             return (
               <Link
                 key={tab.id}
-                href={isTabDisabled ? "#" : tab.href} 
+                href={isTabDisabled ? "#" : tab.href}
                 aria-disabled={isTabDisabled}
                 className={cn(
                   "px-4 md:px-16 py-2 transition-colors duration-200 border-b-2",
@@ -51,7 +53,7 @@ export default function DashboardGroupLayout({
                     ? "border-primary text-primary"
                     : "border-transparent text-neutral-600 hover:text-primary",
                   isTabDisabled &&
-                    "border-transparent text-neutral-400 opacity-50"
+                    "border-transparent text-neutral-400 opacity-50",
                 )}
               >
                 <span className="headline-large-emphasized">{tab.label}</span>

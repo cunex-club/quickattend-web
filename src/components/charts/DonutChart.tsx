@@ -106,7 +106,7 @@ export function DonutChart() {
             "mx-auto aspect-square max-h-[200px] md:max-h-[400px] p-4",
             "[&_.recharts-surface]:overflow-visible",
             "[&_.recharts-pie-label-line]:stroke-[var(--color-gray-300)]",
-            "[&_.recharts-pie-label-text]:fill-[var(--color-primary)]"
+            "[&_.recharts-pie-label-text]:fill-[var(--color-primary)]",
             // "[&_.recharts-pie-label-text]:font-family-[var(--font-chula-regular)]", // this not working
             // "[&_.recharts-pie-label-text]:font-size-[12px]",
             // "[&_.recharts-pie-label-text]:line-height-[16px]",

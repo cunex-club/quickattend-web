@@ -41,7 +41,7 @@ const chartConfig = {
   },
   CartesianGrid: {
     color: "var(--color-neutral-300)",
-  }
+  },
 } satisfies ChartConfig;
 
 export function BarChartHorizontal() {
@@ -54,8 +54,8 @@ export function BarChartHorizontal() {
     <Card className="p-0 border-none">
       <CardContent className="px-0">
         <ChartContainer
-          config={chartConfig}  
-          className="max-h-[300px] lg:max-h-[400px] w-full pr-3" 
+          config={chartConfig}
+          className="max-h-[300px] lg:max-h-[400px] w-full pr-3"
         >
           <BarChart
             accessibilityLayer
@@ -99,7 +99,6 @@ export function BarChartHorizontal() {
                 offset={LABEL_OFFSET}
                 className="fill-neutral-black"
                 fontSize={LABEL_FONT_SIZE}
-                
               />
             </Bar>
           </BarChart>

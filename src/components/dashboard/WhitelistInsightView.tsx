@@ -2,7 +2,7 @@
 
 import Button from "@components/Button";
 import { BarChartHorizontal } from "@components/charts/BarChartHorizontal";
-import { DonutChart } from "../charts/DonutChart"; 
+import { DonutChart } from "../charts/DonutChart";
 import React from "react";
 import StatCard from "@components/StatCard";
 import Link from "next/dist/client/link";
@@ -15,19 +15,19 @@ import {
 import { PopoverClose } from "@radix-ui/react-popover";
 import { FilterableList } from "./FilterableList";
 import { facultyData, timeData } from "@utils/data";
-import { BarChartVerticalStacked } from "../charts/BarChartVerticalStacked"; 
+import { BarChartVerticalStacked } from "../charts/BarChartVerticalStacked";
 
 export function WhitelistInsightView() {
   const [selectedFaculties, setSelectedFaculties] = useState<
     Record<string, boolean>
   >({});
   const [selectedTimes, setSelectedTimes] = useState<Record<string, boolean>>(
-    {}
+    {},
   );
   const createSelectionHandler =
     (
       setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-      allItemId: string
+      allItemId: string,
     ) =>
     (itemId: string, checked: boolean) => {
       setter((prevSelected) => {
@@ -48,7 +48,7 @@ export function WhitelistInsightView() {
 
   const handleFacultyChange = createSelectionHandler(
     setSelectedFaculties,
-    "f-0"
+    "f-0",
   );
   const handleTimeChange = createSelectionHandler(setSelectedTimes, "t-0");
 

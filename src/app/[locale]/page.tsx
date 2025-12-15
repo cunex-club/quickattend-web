@@ -14,7 +14,9 @@ export default async function Home() {
       {/* Typography demo */}
       <section className="grid grid-cols-2 space-y-2">
         <div>
-          <p className="body-large-primary lg:display-large-primary">DisplayLarge</p>
+          <p className="body-large-primary lg:display-large-primary">
+            DisplayLarge
+          </p>
           <p className="display-medium-primary">DisplayMedium</p>
           <p className="display-small-primary">DisplaySmall</p>
           <p className="headline-large-primary">HeadlineLarge</p>
@@ -31,11 +33,15 @@ export default async function Home() {
           <p className="body-small-primary">BodySmall</p>
         </div>
         <div>
-          <p className="display-small-emphasized lg:display-large-emphasized">DisplayLarge Emphasized</p>
+          <p className="display-small-emphasized lg:display-large-emphasized">
+            DisplayLarge Emphasized
+          </p>
           <p className="display-medium-emphasized">DisplayMedium Emphasized</p>
           <p className="display-small-emphasized">DisplaySmall Emphasized</p>
           <p className="headline-large-emphasized">HeadlineLarge Emphasized</p>
-          <p className="headline-medium-emphasized">HeadlineMedium Emphasized</p>
+          <p className="headline-medium-emphasized">
+            HeadlineMedium Emphasized
+          </p>
           <p className="headline-small-emphasized">HeadlineSmall Emphasized</p>
           <p className="title-large-emphasized">TitleLarge Emphasized</p>
           <p className="title-medium-emphasized">TitleMedium Emphasized</p>

@@ -30,7 +30,6 @@ export const EventDisplay: React.FC<EventProps> = ({ event }) => {
             <p className="body-large-primary">{event.description}</p>
           </div>
         </div>
-        
       </div>
       <div className="h-full w-full">
         <StatCard

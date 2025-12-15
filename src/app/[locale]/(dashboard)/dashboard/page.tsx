@@ -12,7 +12,7 @@ import IonIcon from "@components/IonIcon";
 const event = eventData;
 const chartDataTop3 = chartDataID1;
 const chartDataTime = chartDataMonthID1;
-  
+
 export default function OverviewPage() {
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const fullscreenContainerRef = useRef<HTMLDivElement>(null);
@@ -62,21 +62,33 @@ export default function OverviewPage() {
                   className="border border-primary rounded-full w-auto h-auto p-0.5 hover:bg-neutral-100 transition-colors duration-200"
                   onClick={handleCopyEventLink}
                 >
-                  <IonIcon name="Link" size="20px" className="text-primary"/>
+                  <IonIcon name="Link" size="20px" className="text-primary" />
                 </button>
               </div>
               <div className="flex flex-col space-y-4">
                 <div className="px-4 space-y-0 body-medium-primary ">
                   <span className="flex flex-row space-x-2 items-center">
-                    <IonIcon name="Calendar" size="20px" className="text-primary"/>
+                    <IonIcon
+                      name="Calendar"
+                      size="20px"
+                      className="text-primary"
+                    />
                     <p>{event.date}</p>
                   </span>
                   <span className="flex flex-row space-x-2 items-center">
-                    <IonIcon name="Time" size="20px" className="text-secondary" />
+                    <IonIcon
+                      name="Time"
+                      size="20px"
+                      className="text-secondary"
+                    />
                     <p>{event.time}</p>
                   </span>
                   <span className="flex flex-row space-x-2 items-center">
-                    <IonIcon name="Location" size="20px" className="text-primary"/>
+                    <IonIcon
+                      name="Location"
+                      size="20px"
+                      className="text-primary"
+                    />
                     <p>{event.location}</p>
                   </span>
                 </div>
@@ -93,9 +105,7 @@ export default function OverviewPage() {
                   expanded={false}
                   onClick={handleToggleFullscreen}
                 >
-                  <p className="label-large-emphasized">
-                    ดูเต็มหน้าจอ
-                  </p>
+                  <p className="label-large-emphasized">ดูเต็มหน้าจอ</p>
                 </Button>
               </div>
             </div>
@@ -117,9 +127,7 @@ export default function OverviewPage() {
               </p>
               <BarChartVerticalOverview data={chartDataTop3} />
               <Button mode="filled" bordered="square" expanded={false}>
-                <p className="label-large-emphasized">
-                  ดูทั้งหมด
-                </p>
+                <p className="label-large-emphasized">ดูทั้งหมด</p>
               </Button>
             </div>
             <div className="flex flex-col space-y-6">

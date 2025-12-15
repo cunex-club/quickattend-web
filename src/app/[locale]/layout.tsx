@@ -5,7 +5,7 @@ import "@styles/globals.css";
 import localFont from "next/font/local";
 import { getMessages } from "next-intl/server";
 import { routing } from "@i18n/routing";
-import { AuthProvider } from "../../context/AuthContext"; 
+import { AuthProvider } from "../../context/AuthContext";
 
 const chulaBoldFont = localFont({
   src: "../../../public/font/CHULALONGKORNBold.otf",

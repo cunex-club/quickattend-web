@@ -29,7 +29,7 @@ export const FilterableList: React.FC<FilterableListProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectedItemsArray = items.filter((item) => selectedItems[item.id]);
-    const variantClasses = {
+  const variantClasses = {
     primary: "bg-white",
     secondary: "bg-neutral-100",
   };
@@ -61,16 +61,19 @@ export const FilterableList: React.FC<FilterableListProps> = ({
              data-[state=closed]:animate-collapsible-up 
              data-[state=open]:animate-collapsible-down"
               >
-                <ScrollArea className={cn(
-                  "h-72 sm:h-80 md:h-96 w-full rounded-md p-4",
-                  variantClasses[filterVariant]
-                )}>
+                <ScrollArea
+                  className={cn(
+                    "h-72 sm:h-80 md:h-96 w-full rounded-md p-4",
+                    variantClasses[filterVariant],
+                  )}
+                >
                   <div className="space-y-2">
                     {items.map((item) => (
                       <div
                         key={item.id}
-                        className={cn("flex items-center space-x-4 border-b border-neutral-200 p-2 md:p-4",
-                            filterVariant === "secondary" && "border-gray-300"
+                        className={cn(
+                          "flex items-center space-x-4 border-b border-neutral-200 p-2 md:p-4",
+                          filterVariant === "secondary" && "border-gray-300",
                         )}
                       >
                         <Checkbox

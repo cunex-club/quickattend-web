@@ -21,12 +21,12 @@ export function DeepInsightView() {
     Record<string, boolean>
   >({});
   const [selectedTimes, setSelectedTimes] = useState<Record<string, boolean>>(
-    {}
+    {},
   );
   const createSelectionHandler =
     (
       setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-      allItemId: string
+      allItemId: string,
     ) =>
     (itemId: string, checked: boolean) => {
       setter((prevSelected) => {
@@ -47,7 +47,7 @@ export function DeepInsightView() {
 
   const handleFacultyChange = createSelectionHandler(
     setSelectedFaculties,
-    "f-0"
+    "f-0",
   );
   const handleTimeChange = createSelectionHandler(setSelectedTimes, "t-0");
 

@@ -14,9 +14,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [role, setRole] = useState<UserRole>("owner");
 
   return (
-    <AuthContext.Provider value={{ role }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ role }}>{children}</AuthContext.Provider>
   );
 };
 

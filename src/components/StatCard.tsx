@@ -20,7 +20,6 @@ export const StatCard = ({
   className,
   children,
 }: StatCardProps) => {
-
   const variantClasses = {
     primary: "bg-primary text-neutral-white",
     secondary: "bg-neutral-200 text-primary",
@@ -31,14 +30,14 @@ export const StatCard = ({
       className={cn(
         "flex flex-col justify-center h-full w-full rounded-2xl p-16 md:p-8 shadow-elevation-3 space-y-8",
         variantClasses[variant],
-        className
+        className,
       )}
     >
       <div className="flex flex-col space-y-4">
         <div className="flex justify-center items-end space-x-4">
           <p
             className={cn(
-              "font-bold text-7xl md:text-9xl translate-y-3 md:translate-y-8"
+              "font-bold text-7xl md:text-9xl translate-y-3 md:translate-y-8",
             )}
           >
             {value}
@@ -49,7 +48,7 @@ export const StatCard = ({
           <p className="title-large-primary text-center">{title}</p>
         </div>
       </div>
-        
+
       {children && <div>{children}</div>}
     </div>
   );
