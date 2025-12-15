@@ -32,10 +32,11 @@ export default function DashboardGroupLayout({
   }
   return (
     <div className="flex flex-col items-center w-full min-h-screen p-4 md:p-8 bg-neutral-white">
-      <div className="container max-w-[1440px] space-y-6 flex flex-col items-center bg-neutral-white w-full">
+      <div className="container max-w-[1440px] space-y-6 flex flex-col items-center bg-neutral-white">
         <nav className="flex justify-center w-auto">
           {tabs.map((tab) => {
-            const isActive = pathname === tab.href;
+            const isActive = pathname.endsWith(tab.href) || 
+              (tab.href === "/dashboard" && pathname.match(/^\/[^/]+\/dashboard$/));
             const isTabDisabled =
               tab.id === "insights" && !canViewInsights(role);
 

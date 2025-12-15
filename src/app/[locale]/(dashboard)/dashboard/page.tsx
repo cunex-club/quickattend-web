@@ -8,6 +8,7 @@ import { StatCard } from "@components/StatCard";
 import { chartDataID1, chartDataMonthID1, eventData } from "@utils/data";
 import FullscreenContent from "@components/dashboard/FullScreenContent";
 import Icon from "@components/Icon";
+import IonIcon from "@components/IonIcon";
 
 const event = eventData;
 const chartDataTop3 = chartDataID1;
@@ -53,24 +54,24 @@ export default function OverviewPage() {
               <div className="flex justify-between">
                 <p className="headline-large-emphasized">{event.title}</p>
                 <button
-                  className="border border-primary rounded-full w-auto h-auto p-2 hover:bg-neutral-100 transition-colors duration-200"
+                  className="border border-primary rounded-full w-auto h-auto p-0.5 hover:bg-neutral-100 transition-colors duration-200"
                   onClick={handleCopyEventLink}
                 >
-                  <Icon name="link" size={32} className="text-primary"/>
+                  <IonIcon name="Link" size="20px" className="text-primary"/>
                 </button>
               </div>
               <div className="flex flex-col space-y-4">
-                <div className="px-4 space-y-2 body-medium-primary">
-                  <span className="flex flex-row space-x-2">
-                    <div className="w-5 h-5 bg-primary rounded-full"></div>
+                <div className="px-4 space-y-0 body-medium-primary ">
+                  <span className="flex flex-row space-x-2 items-center">
+                    <IonIcon name="Calendar" size="20px" className="text-primary"/>
                     <p>{event.date}</p>
                   </span>
-                  <span className="flex flex-row space-x-2">
-                    <div className="w-5 h-5 bg-primary rounded-full"></div>
+                  <span className="flex flex-row space-x-2 items-center">
+                    <IonIcon name="Time" size="20px" className="text-secondary" />
                     <p>{event.time}</p>
                   </span>
-                  <span className="flex flex-row space-x-2">
-                    <div className="w-5 h-5 bg-primary rounded-full"></div>
+                  <span className="flex flex-row space-x-2 items-center">
+                    <IonIcon name="Location" size="20px" className="text-primary"/>
                     <p>{event.location}</p>
                   </span>
                 </div>
@@ -104,14 +105,14 @@ export default function OverviewPage() {
           </section>
 
           {/* chart section */}
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 border">
+          <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-6">
               <p className="headline-large-emphasized">
                 3 อันดับแรกของคณะ/หน่วยงานที่ลงทะเบียน
               </p>
               <BarChartVerticalOverview data={chartDataTop3} />
               <Button mode="filled" bordered="square" expanded={false}>
-                <p className="label-large-emphasized translate-y-1">
+                <p className="label-large-emphasized">
                   ดูทั้งหมด
                 </p>
               </Button>

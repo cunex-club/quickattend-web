@@ -9,7 +9,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
-import GroupFilterButton from "../GroupFilterButton";
+import Button from "@components/Button";
 
 export const description = "A bar chart";
 
@@ -43,15 +43,16 @@ export function BarChartHorizontalOverview({ data }: { data: BarChartHorizontalO
   const LABEL_OFFSET: number = 12;
   const LABEL_FONT_SIZE: number = 12;
   return (
-    <Card className="py-0 px-0 h-full relative border-none ">
+    <Card className="py-0 px-0 h-full relative border-none shadow-none">
       <CardAction className="absolute z-10 right-0">
-        <GroupFilterButton
-          options={[
-            { value: "option1", label: "Option 1" },
-            { value: "option2", label: "Option 2" },
-          ]}
-          value="option1"
-        />{" "}
+        <div className="space-x-4 bg-neutral-white">
+          <Button mode="outline" bordered="square" expanded={false}>
+            <p className="label-large-emphasized">นิสิต</p>
+          </Button>
+          <Button mode="outline" bordered="square" expanded={false}>
+            <p className="label-large-emphasized">บุคลากร</p>
+          </Button>
+        </div>
       </CardAction>
 
       <CardContent className="px-0 py-0 h-full">

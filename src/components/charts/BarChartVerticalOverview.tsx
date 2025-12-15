@@ -43,7 +43,7 @@ export function BarChartVerticalOverview({ data }: { data: BarChartVerticalOverv
   const LABEL_FONT_SIZE: number = 14;
   const dinamicHeight: number = chartData.length * (BAR_SIZE + BAR_GAP) + 24;
   return (
-    <Card className="bg-neutral-100 shadow-elevation-2">
+    <Card className="bg-neutral-100 shadow-elevation-2 p-4  md:p-8">
       <CardContent>
         <ChartContainer
           config={chartConfig}
@@ -87,7 +87,7 @@ export function BarChartVerticalOverview({ data }: { data: BarChartVerticalOverv
                 dataKey="faculty"
                 position="insideBottomLeft"
                 offset={0}
-                className="fill-[var(--color-label)] font-var(--font-chula-regular) text-[22px] leading-[28px] tracking-[0px] -translate-y-[10px]"
+                className="fill-[var(--color-label)] title-medium-primary md:title-large-primary -translate-y-[15px] md:-translate-y-[20px]"
               />
             </Bar>
             <Bar
