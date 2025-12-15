@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts";
 
 import { Card, CardAction, CardContent } from "@assets/components/ui/card";
@@ -12,7 +13,6 @@ import {
 import Button from "@components/Button";
 
 export const description = "A bar chart";
-
 
 type BarChartHorizontalOverviewProps = {
   month: string;
@@ -37,6 +37,7 @@ const chartConfig = {
 
 export function BarChartHorizontalOverview({ data }: { data: BarChartHorizontalOverviewProps[] }) {
   const chartData = data;
+  const [selectedFilter, setSelectedFilter] = useState<"student" | "staff" | null>(null);
   const BAR_RADIUS: [number, number, number, number] = [8, 8, 0, 0];
   const BAR_CATEGORY_GAP: number = 1;
   const STROKE_DASH_ARRAY: string = "3 3";
@@ -46,10 +47,20 @@ export function BarChartHorizontalOverview({ data }: { data: BarChartHorizontalO
     <Card className="py-0 px-0 h-full relative border-none shadow-none">
       <CardAction className="absolute z-10 right-0">
         <div className="space-x-4 bg-neutral-white">
-          <Button mode="outline" bordered="square" expanded={false}>
+          <Button 
+            mode={selectedFilter === "student" ? "filled" : "outline"} 
+            bordered="square" 
+            expanded={false}
+            onClick={() => setSelectedFilter(selectedFilter === "student" ? null : "student")}
+          >
             <p className="label-large-emphasized">นิสิต</p>
           </Button>
-          <Button mode="outline" bordered="square" expanded={false}>
+          <Button 
+            mode={selectedFilter === "staff" ? "filled" : "outline"} 
+            bordered="square" 
+            expanded={false}
+            onClick={() => setSelectedFilter(selectedFilter === "staff" ? null : "staff")}
+          >
             <p className="label-large-emphasized">บุคลากร</p>
           </Button>
         </div>
