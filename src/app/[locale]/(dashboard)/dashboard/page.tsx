@@ -7,7 +7,6 @@ import { BarChartVerticalOverview } from "@components/charts/BarChartVerticalOve
 import { StatCard } from "@components/StatCard";
 import { chartDataID1, chartDataMonthID1, eventData } from "@utils/data";
 import FullscreenContent from "@components/dashboard/FullScreenContent";
-import Icon from "@components/Icon";
 import IonIcon from "@components/IonIcon";
 
 const event = eventData;
@@ -27,9 +26,15 @@ export default function OverviewPage() {
     }
   }, []);
 
-  const handleCopyEventLink = () => {
+  const handleCopyEventLink = async () => {
     const eventLink = `${window.location.origin}/events/${event.id}`;
-    alert(`ลิงก์กิจกรรม: ${eventLink} คัดลอกไปยังคลิปบอร์ดแล้ว`);
+    try {
+      await navigator.clipboard.writeText(eventLink);
+      alert("คัดลอกลิงก์ไปยังคลิปบอร์ดแล้ว");
+    } catch (err) {
+      console.error("Failed to copy link:", err);
+      alert("ไม่สามารถคัดลอกลิงก์ได้");
+    }
   };
 
   useEffect(() => {
