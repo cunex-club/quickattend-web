@@ -37,7 +37,7 @@ export default function OverviewPage() {
           color: "#fff",
           fontSize: "16px",
         },
-        duration: 1500
+        duration: 1500,
       });
     } catch (err) {
       console.error("Failed to copy link:", err);
@@ -45,9 +45,9 @@ export default function OverviewPage() {
         style: {
           background: "#ef4444",
           color: "#fff",
-          fontSize: "16px"
+          fontSize: "16px",
         },
-        duration: 1500
+        duration: 1500,
       });
     }
   };
@@ -83,15 +83,27 @@ export default function OverviewPage() {
               <div className="flex flex-col space-y-4">
                 <div className="px-4 space-y-0 body-medium-primary ">
                   <span className="flex flex-row space-x-2 items-center">
-                    <IonIcon name="Calendar" size="20px" className="text-primary"/>
+                    <IonIcon
+                      name="Calendar"
+                      size="20px"
+                      className="text-primary"
+                    />
                     <p>{event.date}</p>
                   </span>
                   <span className="flex flex-row space-x-2 items-center">
-                    <IonIcon name="Time" size="20px" className="text-secondary" />
+                    <IonIcon
+                      name="Time"
+                      size="20px"
+                      className="text-secondary"
+                    />
                     <p>{event.time}</p>
                   </span>
                   <span className="flex flex-row space-x-2 items-center">
-                    <IonIcon name="Location" size="20px" className="text-primary"/>
+                    <IonIcon
+                      name="Location"
+                      size="20px"
+                      className="text-primary"
+                    />
                     <p>{event.location}</p>
                   </span>
                 </div>

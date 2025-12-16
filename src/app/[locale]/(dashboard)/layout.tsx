@@ -8,7 +8,7 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const role = await getUserRole();
-  
+
   return (
     <RoleProvider initialRole={role}>
       <div className="w-full min-h-screen">{children}</div>

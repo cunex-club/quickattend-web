@@ -14,9 +14,15 @@ import {
 } from "@assets/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { FilterableList } from "./FilterableList";
-import { dataCategorizeByTime, facultyData, registeredData, registrationStatusData, timeData } from "@utils/data";
+import {
+  dataCategorizeByTime,
+  facultyData,
+  registeredData,
+  registrationStatusData,
+  timeData,
+} from "@utils/data";
 import { BarChartVerticalStacked } from "../charts/BarChartVerticalStacked";
-import IonIcon from "@components/IonIcon";
+import SortMenu from "@components/sort-menu";
 
 const horizontalChartData = dataCategorizeByTime;
 const verticalStackData = registeredData;
@@ -65,29 +71,33 @@ export function WhitelistInsightView() {
     setSelectedTimes({});
   };
 
+  const handleSortChange = (value: string) => {
+    console.log("sort:", value);
+  };
+
   return (
     <div className="w-full rounded-xl bg-neutral-white space-y-16">
       <section className="flex justify-between">
         <div className="space-x-4">
-          <Button 
-            mode={selectedFilter === null ? "filled" : "outline"} 
-            bordered="square" 
+          <Button
+            mode={selectedFilter === null ? "filled" : "outline"}
+            bordered="square"
             expanded={false}
             onClick={() => setSelectedFilter(null)}
           >
             <p className="label-large-emphasized">ทั้งหมด</p>
           </Button>
-          <Button 
-            mode={selectedFilter === "student" ? "filled" : "outline"} 
-            bordered="square" 
+          <Button
+            mode={selectedFilter === "student" ? "filled" : "outline"}
+            bordered="square"
             expanded={false}
             onClick={() => setSelectedFilter("student")}
           >
             <p className="label-large-emphasized">นิสิต</p>
           </Button>
-          <Button 
-            mode={selectedFilter === "staff" ? "filled" : "outline"} 
-            bordered="square" 
+          <Button
+            mode={selectedFilter === "staff" ? "filled" : "outline"}
+            bordered="square"
             expanded={false}
             onClick={() => setSelectedFilter("staff")}
           >
@@ -123,7 +133,7 @@ export function WhitelistInsightView() {
                     filterVariant="secondary"
                   />
 
-                  <div className="flex w-full space-x-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Button
                       mode="outline"
                       bordered="round"
@@ -131,14 +141,14 @@ export function WhitelistInsightView() {
                       className="bg-transparent"
                       onClick={handleClearFilters}
                     >
-                      <p className="title-large-emphasized translate-y-1">
+                      <p className="title-large-emphasized translate-y-[-6px]">
                         ล้างตัวกรอง
                       </p>
                     </Button>
 
                     <PopoverClose asChild>
                       <Button mode="filled" bordered="round" expanded={true}>
-                        <p className="title-large-emphasized translate-y-1">
+                        <p className="title-large-emphasized translate-y-[-6px]">
                           กรองข้อมูล
                         </p>
                       </Button>
@@ -202,10 +212,22 @@ export function WhitelistInsightView() {
           <p className="headline-small-emphasized sm:headline-medium-emphasized md:headline-large-emphasized">
             สถิติการลงทะเบียนแยกตามคณะ/หน่วยงาน
           </p>
-          <IonIcon name="SwapVerticalOutline" size="32px" className="text-primary" />
+          <SortMenu
+            options={[
+              {
+                label: "วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด",
+                value: "newest",
+              },
+              {
+                label: "วันที่จัดกิจกรรม : เก่าสุด - ใหม่สุด",
+                value: "oldest",
+              },
+            ]}
+            onSelect={handleSortChange}
+          />
         </div>
         <div className="h-auto">
-          <BarChartVerticalStacked data={verticalStackData}/>
+          <BarChartVerticalStacked data={verticalStackData} />
         </div>
       </section>
 
@@ -219,8 +241,8 @@ export function WhitelistInsightView() {
       </section>
 
       <Link href="/dashboard-compare" target="_blank">
-        <Button mode="filled" bordered="square" expanded={false}> 
-          <p className="label-large-emphasized">
+        <Button mode="filled" bordered="square" expanded={false}>
+          <p className="title-medium-emphasized translate-y-[-2px]">
             เปรียบเทียบสถิติการลงทะเบียนเข้าร่วมกิจกรรม
           </p>
         </Button>

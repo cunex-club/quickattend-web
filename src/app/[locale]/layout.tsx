@@ -42,9 +42,7 @@ export default async function LocaleLayout({
         className={`${chulaRegularFont.variable} ${chulaBoldFont.variable} antialiased`}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <main className="w-full min-h-screen">
-            {children}
-          </main>
+          <main className="w-full min-h-screen">{children}</main>
           <Toaster />
         </NextIntlClientProvider>
       </body>

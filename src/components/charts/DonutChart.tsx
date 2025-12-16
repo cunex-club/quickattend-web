@@ -25,7 +25,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function DonutChart({data}: {data: DonutChartProps[]}) {
+export function DonutChart({ data }: { data: DonutChartProps[] }) {
   const chartData = data.map((item, index) => ({
     ...item,
     fill: index === 0 ? "var(--color-primary)" : "var(--color-gray-300)",
@@ -50,7 +50,8 @@ export function DonutChart({data}: {data: DonutChartProps[]}) {
   const customLabel = (props: LabelProps) => {
     const CUSTOM_DISTANCE = 1.6;
     const RADIAN = Math.PI / 180;
-    const { cx, cy, midAngle, innerRadius, outerRadius, payload, percent } = props;
+    const { cx, cy, midAngle, innerRadius, outerRadius, payload, percent } =
+      props;
 
     const radius: number =
       Number(innerRadius ?? 0) +
@@ -103,7 +104,7 @@ export function DonutChart({data}: {data: DonutChartProps[]}) {
               cursor={false}
               content={<ChartTooltipContent className="label-small-primary" />}
             />
-            
+
             {/* Mobile version - largest radius, no labels */}
             <Pie
               className="md:hidden"

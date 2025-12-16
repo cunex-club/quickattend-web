@@ -14,8 +14,14 @@ import {
 } from "@assets/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { FilterableList } from "./FilterableList";
-import { dataCategorizeByFaculty, dataCategorizeByTime, facultyData, timeData, eventData } from "@utils/data";
-import IonIcon from "@components/IonIcon";
+import {
+  dataCategorizeByFaculty,
+  dataCategorizeByTime,
+  facultyData,
+  timeData,
+  eventData,
+} from "@utils/data";
+import SortMenu from "@components/sort-menu";
 
 const verticalChartData = dataCategorizeByFaculty;
 const horizontalChartData = dataCategorizeByTime;
@@ -63,29 +69,33 @@ export function DeepInsightView() {
     setSelectedTimes({});
   };
 
+  const handleSortChange = (value: string) => {
+    console.log("sort:", value);
+  };
+
   return (
     <div className="w-full rounded-xl bg-neutral-white space-y-16">
       <section className="flex justify-between">
         <div className="space-x-4">
-          <Button 
-            mode={selectedFilter === null ? "filled" : "outline"} 
-            bordered="square" 
+          <Button
+            mode={selectedFilter === null ? "filled" : "outline"}
+            bordered="square"
             expanded={false}
             onClick={() => setSelectedFilter(null)}
           >
             <p className="label-large-emphasized">ทั้งหมด</p>
           </Button>
-          <Button 
-            mode={selectedFilter === "student" ? "filled" : "outline"} 
-            bordered="square" 
+          <Button
+            mode={selectedFilter === "student" ? "filled" : "outline"}
+            bordered="square"
             expanded={false}
             onClick={() => setSelectedFilter("student")}
           >
             <p className="label-large-emphasized">นิสิต</p>
           </Button>
-          <Button 
-            mode={selectedFilter === "staff" ? "filled" : "outline"} 
-            bordered="square" 
+          <Button
+            mode={selectedFilter === "staff" ? "filled" : "outline"}
+            bordered="square"
             expanded={false}
             onClick={() => setSelectedFilter("staff")}
           >
@@ -121,7 +131,7 @@ export function DeepInsightView() {
                     filterVariant="secondary"
                   />
 
-                  <div className="flex w-full space-x-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Button
                       mode="outline"
                       bordered="round"
@@ -129,14 +139,14 @@ export function DeepInsightView() {
                       className="bg-transparent"
                       onClick={handleClearFilters}
                     >
-                      <p className="title-large-emphasized translate-y-1">
+                      <p className="title-large-emphasized translate-y-[-6px]">
                         ล้างตัวกรอง
                       </p>
                     </Button>
 
                     <PopoverClose asChild>
                       <Button mode="filled" bordered="round" expanded={true}>
-                        <p className="title-large-emphasized translate-y-1">
+                        <p className="title-large-emphasized translate-y-[-6px]">
                           กรองข้อมูล
                         </p>
                       </Button>
@@ -173,7 +183,19 @@ export function DeepInsightView() {
           <p className="headline-small-emphasized md:headline-large-emphasized">
             สถิติการลงทะเบียนแยกตามคณะ/หน่วยงาน
           </p>
-          <IonIcon name="SwapVerticalOutline" size="32px" className="text-primary" />
+          <SortMenu
+            options={[
+              {
+                label: "วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด",
+                value: "newest",
+              },
+              {
+                label: "วันที่จัดกิจกรรม : เก่าสุด - ใหม่สุด",
+                value: "oldest",
+              },
+            ]}
+            onSelect={handleSortChange}
+          />
         </div>
         <div className="h-auto">
           <BarChartVertical data={verticalChartData} />
@@ -185,13 +207,13 @@ export function DeepInsightView() {
           สถิติการลงทะเบียนแยกตามช่วงเวลา
         </p>
         <div className="w-full h-full">
-          <BarChartHorizontal data={horizontalChartData}/>
+          <BarChartHorizontal data={horizontalChartData} />
         </div>
       </section>
 
       <Link href="/dashboard-compare" target="_blank">
         <Button mode="filled" bordered="square" expanded={false}>
-          <p className="title-medium-emphasized">
+          <p className="title-medium-emphasized translate-y-[-2px]">
             เปรียบเทียบสถิติการลงทะเบียนเข้าร่วมกิจกรรม
           </p>
         </Button>

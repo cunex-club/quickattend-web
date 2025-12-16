@@ -36,7 +36,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BarChartVerticalStacked({data} : {data: BarChartVerticalStackedProps[]}) {
+export function BarChartVerticalStacked({
+  data,
+}: {
+  data: BarChartVerticalStackedProps[];
+}) {
   const BAR_SIZE: number = 32;
   const BAR_GAP: number = 56;
   const LEFT_BAR_BORDER_RADIUS: [number, number, number, number] = [0, 2, 2, 0];
@@ -60,9 +64,7 @@ export function BarChartVerticalStacked({data} : {data: BarChartVerticalStackedP
             margin={{ left: 0, right: 20 }}
             barCategoryGap={BAR_GAP}
           >
-            <ChartLegend
-              content={<ChartLegendContent />}
-            />
+            <ChartLegend content={<ChartLegendContent />} />
             <CartesianGrid horizontal={false} strokeDasharray="3 3" />
             <XAxis type="number" tickLine={false} axisLine={false} hide />
             <YAxis

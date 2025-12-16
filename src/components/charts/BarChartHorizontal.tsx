@@ -39,7 +39,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BarChartHorizontal({ data }: { data: BarChartHorizontalProps[] }) {
+export function BarChartHorizontal({
+  data,
+}: {
+  data: BarChartHorizontalProps[];
+}) {
   const BAR_RADIUS: [number, number, number, number] = [8, 8, 0, 0];
   const BAR_CATEGORY_GAP: number = 1;
   const LABEL_OFFSET: number = 12;
