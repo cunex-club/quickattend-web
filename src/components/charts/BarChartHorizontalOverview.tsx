@@ -50,9 +50,7 @@ const chartConfig = {
 
 export function BarChartHorizontalOverview({
   data,
-}: {
-  data: BarChartHorizontalOverviewProps[];
-}) {
+}: BarChartHorizontalOverviewProps) {
   const chartData = data;
   const [selectedFilter, setSelectedFilter] = useState<
     "student" | "staff" | null

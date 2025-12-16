@@ -46,7 +46,7 @@ export function BarChartHorizontal({ data }: { data: BarChartHorizontalProps[] }
   const LABEL_FONT_SIZE: number = 12;
 
   return (
-    <Card className="p-0 border-none">
+    <Card className="p-0 border-none shadow-none">
       <CardContent className="px-0">
         <ChartContainer
           config={chartConfig}

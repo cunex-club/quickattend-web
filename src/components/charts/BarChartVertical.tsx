@@ -5,7 +5,6 @@ import {
   BarChart,
   CartesianGrid,
   LabelList,
-  Rectangle,
   XAxis,
   YAxis,
 } from "recharts";

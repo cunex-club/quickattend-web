@@ -12,7 +12,6 @@ export default function DashboardNav({ locale, role, tabs }: { locale: string; r
   return (
     <nav className="flex justify-center w-auto">
       {tabs.map((tab) => {
-        // Remove locale prefix properly using the actual locale value
         const normalizedPathname = pathname.replace(`/${locale}`, "");
         const isActive = 
           normalizedPathname === tab.href || 
@@ -35,7 +34,7 @@ export default function DashboardNav({ locale, role, tabs }: { locale: string; r
                 : ""
             )}
           >
-            <span className="headline-large-emphasized">{tab.label}</span>
+            <span className="headline-small-emphasized md:headline-medium-emphasized lg:headline-large-emphasized">{tab.label}</span>
           </Link>
         );
       })}

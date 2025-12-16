@@ -27,18 +27,18 @@ type BarChartVerticalStackedProps = {
 
 const chartConfig = {
   unregistered: {
-    label: "จำนวนผู้ที่ลงทะเบียนไม่สำเร็จ",
+    label: "จำนวนผู้ที่ยังไม่ได้ลงทะเบียน",
     color: "var(--chart-pink-200)",
   },
   registered: {
-    label: "จำนวนผู้ที่ลงทะเบียนสำเร็จ",
+    label: "จำนวนผู้ลงทะเบียนสำเร็จ",
     color: "var(--color-primary)",
   },
 } satisfies ChartConfig;
 
 export function BarChartVerticalStacked({data} : {data: BarChartVerticalStackedProps[]}) {
   const BAR_SIZE: number = 32;
-  const BAR_GAP: number = 48;
+  const BAR_GAP: number = 56;
   const LEFT_BAR_BORDER_RADIUS: [number, number, number, number] = [0, 2, 2, 0];
   const RIGHT_BAR_BORDER_RADIUS: [number, number, number, number] = [
     2, 2, 2, 2,
@@ -61,7 +61,7 @@ export function BarChartVerticalStacked({data} : {data: BarChartVerticalStackedP
             barCategoryGap={BAR_GAP}
           >
             <ChartLegend
-              content={<ChartLegendContent className="translate-y-[50%]" />}
+              content={<ChartLegendContent />}
             />
             <CartesianGrid horizontal={false} strokeDasharray="3 3" />
             <XAxis type="number" tickLine={false} axisLine={false} hide />
@@ -87,7 +87,7 @@ export function BarChartVerticalStacked({data} : {data: BarChartVerticalStackedP
                 dataKey="faculty"
                 position="insideLeft"
                 offset={0}
-                className="fill-[var(--color-label)] font-var(--font-chula-regular) text-[22px] leading-[28px] tracking-[0px] -translate-y-[-5px]"
+                className="fill-[var(--color-label)] title-medium-primary md:title-large-primary lg:title-large-primary translate-y-[-5px] md:translate-y-[-10px]"
               />
             </Bar>
             <Bar

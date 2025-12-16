@@ -21,6 +21,9 @@ const verticalChartData = dataCategorizeByFaculty;
 const horizontalChartData = dataCategorizeByTime;
 
 export function DeepInsightView() {
+  const [selectedFilter, setSelectedFilter] = useState<
+    "student" | "staff" | null
+  >(null);
   const [selectedFaculties, setSelectedFaculties] = useState<
     Record<string, boolean>
   >({});
@@ -64,13 +67,28 @@ export function DeepInsightView() {
     <div className="w-full rounded-xl bg-neutral-white space-y-16">
       <section className="flex justify-between">
         <div className="space-x-4">
-          <Button mode="filled" bordered="square" expanded={false}>
+          <Button 
+            mode={selectedFilter === null ? "filled" : "outline"} 
+            bordered="square" 
+            expanded={false}
+            onClick={() => setSelectedFilter(null)}
+          >
             <p className="label-large-emphasized">ทั้งหมด</p>
           </Button>
-          <Button mode="outline" bordered="square" expanded={false}>
+          <Button 
+            mode={selectedFilter === "student" ? "filled" : "outline"} 
+            bordered="square" 
+            expanded={false}
+            onClick={() => setSelectedFilter("student")}
+          >
             <p className="label-large-emphasized">นิสิต</p>
           </Button>
-          <Button mode="outline" bordered="square" expanded={false}>
+          <Button 
+            mode={selectedFilter === "staff" ? "filled" : "outline"} 
+            bordered="square" 
+            expanded={false}
+            onClick={() => setSelectedFilter("staff")}
+          >
             <p className="label-large-emphasized">บุคลากร</p>
           </Button>
         </div>

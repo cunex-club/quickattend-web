@@ -16,12 +16,16 @@ import { PopoverClose } from "@radix-ui/react-popover";
 import { FilterableList } from "./FilterableList";
 import { dataCategorizeByTime, facultyData, registeredData, registrationStatusData, timeData } from "@utils/data";
 import { BarChartVerticalStacked } from "../charts/BarChartVerticalStacked";
+import IonIcon from "@components/IonIcon";
 
 const horizontalChartData = dataCategorizeByTime;
 const verticalStackData = registeredData;
 const donutChartData = registrationStatusData;
 
 export function WhitelistInsightView() {
+  const [selectedFilter, setSelectedFilter] = useState<
+    "student" | "staff" | null
+  >(null);
   const [selectedFaculties, setSelectedFaculties] = useState<
     Record<string, boolean>
   >({});
@@ -65,14 +69,29 @@ export function WhitelistInsightView() {
     <div className="w-full rounded-xl bg-neutral-white space-y-16">
       <section className="flex justify-between">
         <div className="space-x-4">
-          <Button mode="filled" bordered="square" expanded={false}>
-            <p className="translate-y-1">ทั้งหมด</p>
+          <Button 
+            mode={selectedFilter === null ? "filled" : "outline"} 
+            bordered="square" 
+            expanded={false}
+            onClick={() => setSelectedFilter(null)}
+          >
+            <p className="label-large-emphasized">ทั้งหมด</p>
           </Button>
-          <Button mode="outline" bordered="square" expanded={false}>
-            <p className="translate-y-1">นิสิต</p>
+          <Button 
+            mode={selectedFilter === "student" ? "filled" : "outline"} 
+            bordered="square" 
+            expanded={false}
+            onClick={() => setSelectedFilter("student")}
+          >
+            <p className="label-large-emphasized">นิสิต</p>
           </Button>
-          <Button mode="outline" bordered="square" expanded={false}>
-            <p className="translate-y-1">บุคลากร</p>
+          <Button 
+            mode={selectedFilter === "staff" ? "filled" : "outline"} 
+            bordered="square" 
+            expanded={false}
+            onClick={() => setSelectedFilter("staff")}
+          >
+            <p className="label-large-emphasized">บุคลากร</p>
           </Button>
         </div>
         <div>
@@ -141,7 +160,7 @@ export function WhitelistInsightView() {
               unit="คน"
               variant="primary"
             >
-              <div className="mt-4 flex justify-center items-center px-8">
+              <div className="mt-4 hidden md:flex justify-center items-center px-8">
                 <span className="headline-small-emphasized pr-4 sm:pr-10 md:pr-16 text-center">
                   นิสิต: 455 คน
                 </span>
@@ -180,10 +199,10 @@ export function WhitelistInsightView() {
 
       <section className="flex flex-col space-y-8">
         <div className="flex justify-between">
-          <p className="headline-large-emphasized">
+          <p className="headline-small-emphasized sm:headline-medium-emphasized md:headline-large-emphasized">
             สถิติการลงทะเบียนแยกตามคณะ/หน่วยงาน
           </p>
-          <div className="h-10 w-10 border-2 border-primary rounded-full"></div>
+          <IonIcon name="SwapVerticalOutline" size="32px" className="text-primary" />
         </div>
         <div className="h-auto">
           <BarChartVerticalStacked data={verticalStackData}/>
@@ -191,7 +210,7 @@ export function WhitelistInsightView() {
       </section>
 
       <section className="flex flex-col space-y-8 mb-0sm:mb-10">
-        <p className="headline-large-emphasized">
+        <p className="headline-small-emphasized sm:headline-medium-emphasized md:headline-large-emphasized">
           สถิติการลงทะเบียนแยกตามช่วงเวลา
         </p>
         <div>
@@ -201,7 +220,7 @@ export function WhitelistInsightView() {
 
       <Link href="/dashboard-compare" target="_blank">
         <Button mode="filled" bordered="square" expanded={false}> 
-          <p className="title-medium-emphasized">
+          <p className="label-large-emphasized">
             เปรียบเทียบสถิติการลงทะเบียนเข้าร่วมกิจกรรม
           </p>
         </Button>

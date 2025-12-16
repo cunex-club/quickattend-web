@@ -36,9 +36,7 @@ const chartConfig = {
 
 export function BarChartVerticalOverview({
   data,
-}: {
-  data: BarChartVerticalOverviewProps[];
-}) {
+}: BarChartVerticalOverviewProps) {
   const chartData = data;
   const BAR_SIZE: number = 32;
   const BAR_GAP: number = 48;

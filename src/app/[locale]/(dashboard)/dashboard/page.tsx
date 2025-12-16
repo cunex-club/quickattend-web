@@ -128,7 +128,7 @@ export default function OverviewPage() {
               <p className="headline-large-emphasized">
                 3 อันดับแรกของคณะ/หน่วยงานที่ลงทะเบียน
               </p>
-              {/* <BarChartVerticalOverview data={chartDataTop3} /> */}
+              <BarChartVerticalOverview data={chartDataTop3} />
               <Button mode="filled" bordered="square" expanded={false}>
                 <p className="label-large-emphasized">ดูทั้งหมด</p>
               </Button>
@@ -138,7 +138,7 @@ export default function OverviewPage() {
                 สถิติการลงทะเบียนแยกตามช่วงเวลา
               </p>
               <div className="h-full">
-                {/* <BarChartHorizontalOverview data={chartDataTime} /> */}
+                <BarChartHorizontalOverview data={chartDataTime} />
               </div>
             </div>
           </section>

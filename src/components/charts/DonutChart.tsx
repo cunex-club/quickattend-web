@@ -10,7 +10,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
-import { useEffect, useState } from "react";
 
 export const description = "A donut chart with text";
 
@@ -27,34 +26,31 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function DonutChart({data}: {data: DonutChartProps[]}) {
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const chartData = data.map((item, index) => ({
     ...item,
     fill: index === 0 ? "var(--color-primary)" : "var(--color-gray-300)",
   }));
-  // we cannot directly adjust the donut size by using width and height of PieChart
-  // so we use innerRadius and outerRadius to adjust the size instead
-  const [radius, setRadius] = useState({ inner: "40%", outer: "70%" });
-  const handleResize = () => {
-    setIsSmallScreen(window.innerWidth < 768);
-    if (window.innerWidth < 768) {
-      setRadius({ inner: "80%", outer: "120%" });
-    } else {
-      setRadius({ inner: "50%", outer: "80%" });
-    }
-  };
 
   const registeredPercent = React.useMemo(() => {
     const total = chartData.reduce((acc, curr) => acc + curr.total, 0);
     const registered = chartData[0].total;
     return ((registered / total) * 100).toFixed(0);
-  }, []);
+  }, [chartData]);
 
-  const customLabel = (props: any) => {
+  interface LabelProps {
+    cx?: number;
+    cy?: number;
+    midAngle?: number;
+    innerRadius?: number;
+    outerRadius?: number;
+    payload?: { category?: string; total?: number };
+    percent?: number;
+  }
+
+  const customLabel = (props: LabelProps) => {
     const CUSTOM_DISTANCE = 1.6;
     const RADIAN = Math.PI / 180;
-    const { cx, cy, midAngle, innerRadius, outerRadius, payload, percent } =
-      props as any;
+    const { cx, cy, midAngle, innerRadius, outerRadius, payload, percent } = props;
 
     const radius: number =
       Number(innerRadius ?? 0) +
@@ -86,19 +82,13 @@ export function DonutChart({data}: {data: DonutChartProps[]}) {
     );
   };
 
-  useEffect(() => {
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   return (
-    <Card className="flex flex-col py-4 md:py-0 justify-center border-none">
+    <Card className="flex flex-col py-12 sm:py-10 md:py-0 justify-center border-none shadow-none h-full">
       <CardContent className="pb-0">
         <ChartContainer
           config={chartConfig}
           className={cn(
-            "mx-auto aspect-square max-h-[200px] md:max-h-[400px] p-4",
+            "mx-auto h-full w-full p-4",
             "[&_.recharts-surface]:overflow-visible",
             "[&_.recharts-pie-label-line]:stroke-[var(--color-gray-300)]",
             "[&_.recharts-pie-label-text]:fill-[var(--color-primary)]",
@@ -113,17 +103,19 @@ export function DonutChart({data}: {data: DonutChartProps[]}) {
               cursor={false}
               content={<ChartTooltipContent className="label-small-primary" />}
             />
+            
+            {/* Mobile version - largest radius, no labels */}
             <Pie
+              className="md:hidden"
               data={chartData}
               dataKey="total"
               nameKey="category"
-              innerRadius={radius.inner}
-              outerRadius={radius.outer}
+              innerRadius={70}
+              outerRadius={125}
               strokeWidth={3}
               startAngle={90}
               endAngle={-270}
-              labelLine={{ strokeWidth: 2 }}
-              label={isSmallScreen ? false : customLabel}
+              label={false}
             >
               <Label
                 content={({ viewBox }) => {
@@ -134,7 +126,84 @@ export function DonutChart({data}: {data: DonutChartProps[]}) {
                         y={viewBox.cy}
                         textAnchor="middle"
                         dominantBaseline="middle"
-                        className="headline-large-emphasized -translate-y-2.5 md:-translate-y-2"
+                        className="headline-large-emphasized -translate-y-2.5"
+                      >
+                        <tspan
+                          x={viewBox.cx}
+                          y={viewBox.cy}
+                          className="fill-primary"
+                        >
+                          {registeredPercent.toLocaleString()}%
+                        </tspan>
+                      </text>
+                    );
+                  }
+                }}
+              />
+            </Pie>
+
+            {/* Tablet version - medium radius, no labels */}
+            <Pie
+              className="hidden md:block lg:hidden"
+              data={chartData}
+              dataKey="total"
+              nameKey="category"
+              innerRadius={100}
+              outerRadius={180}
+              strokeWidth={3}
+              startAngle={90}
+              endAngle={-270}
+              label={false}
+            >
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                    return (
+                      <text
+                        x={viewBox.cx}
+                        y={viewBox.cy}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        className="headline-large-emphasized -translate-y-2"
+                      >
+                        <tspan
+                          x={viewBox.cx}
+                          y={viewBox.cy}
+                          className="fill-primary"
+                        >
+                          {registeredPercent.toLocaleString()}%
+                        </tspan>
+                      </text>
+                    );
+                  }
+                }}
+              />
+            </Pie>
+
+            {/* Desktop version - normal radius, with custom labels */}
+            <Pie
+              className="hidden lg:block"
+              data={chartData}
+              dataKey="total"
+              nameKey="category"
+              innerRadius={110}
+              outerRadius={170}
+              strokeWidth={3}
+              startAngle={90}
+              endAngle={-270}
+              labelLine={{ strokeWidth: 2 }}
+              label={customLabel}
+            >
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                    return (
+                      <text
+                        x={viewBox.cx}
+                        y={viewBox.cy}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        className="headline-large-emphasized -translate-y-2"
                       >
                         <tspan
                           x={viewBox.cx}
