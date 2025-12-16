@@ -5,6 +5,7 @@ import "@styles/globals.css";
 import localFont from "next/font/local";
 import { getMessages } from "next-intl/server";
 import { routing } from "@i18n/routing";
+import { Toaster } from "sonner";
 
 const chulaBoldFont = localFont({
   src: "../../../public/font/CHULALONGKORNBold.otf",
@@ -44,6 +45,7 @@ export default async function LocaleLayout({
           <main className="w-full min-h-screen">
             {children}
           </main>
+          <Toaster />
         </NextIntlClientProvider>
       </body>
     </html>

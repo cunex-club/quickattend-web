@@ -8,6 +8,7 @@ import { StatCard } from "@components/StatCard";
 import { chartDataID1, chartDataMonthID1, eventData } from "@utils/data";
 import FullscreenContent from "@components/dashboard/FullScreenContent";
 import IonIcon from "@components/IonIcon";
+import { toast } from "sonner";
 
 const event = eventData;
 const chartDataTop3 = chartDataID1;
@@ -30,10 +31,24 @@ export default function OverviewPage() {
     const eventLink = `${window.location.origin}/events/${event.id}`;
     try {
       await navigator.clipboard.writeText(eventLink);
-      alert("คัดลอกลิงก์ไปยังคลิปบอร์ดแล้ว");
+      toast.success("คัดลอกลิงก์กิจกรรมเรียบร้อยแล้ว", {
+        style: {
+          background: "#4ade80",
+          color: "#fff",
+          fontSize: "16px",
+        },
+        duration: 1500
+      });
     } catch (err) {
       console.error("Failed to copy link:", err);
-      alert("ไม่สามารถคัดลอกลิงก์ได้");
+      toast.error("ไม่สามารถคัดลอกลิงก์ได้", {
+        style: {
+          background: "#ef4444",
+          color: "#fff",
+          fontSize: "16px"
+        },
+        duration: 1500
+      });
     }
   };
 

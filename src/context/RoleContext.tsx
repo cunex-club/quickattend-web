@@ -1,4 +1,5 @@
 "use client";
+import { getUserRole } from "@lib/auth";
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 export type UserRole = "attendee" | "staff" | "manager" | "owner";
@@ -9,20 +10,14 @@ interface RoleContextType {
 
 const RoleContext = createContext<RoleContextType | null>(null);
 
-// Mock function to get user role from authentication state
-const getUserRoleFromAuth = (): UserRole => {
-  return "owner";
-};
-
-
-
-
 export const RoleProvider = ({ children }: { children: ReactNode }) => {
-  // TODO: Replace hardcoded role with actual auth state from backend
   const [role, setRole] = useState<UserRole>("attendee");
   useEffect(() => {
-    const fetchedRole = getUserRoleFromAuth();
-    setRole(fetchedRole);
+    const fetchRole = async () => {
+      const fetchedRole = await getUserRole();
+      setRole(fetchedRole);
+    };
+    fetchRole();
   }, []);
   return (
     <RoleContext.Provider value={{ role }}>
