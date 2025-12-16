@@ -1,13 +1,16 @@
 import { RoleProvider } from "@context/RoleContext";
+import { getUserRole } from "@lib/auth";
 import React from "react";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const role = await getUserRole();
+  
   return (
-    <RoleProvider>
+    <RoleProvider initialRole={role}>
       <div className="w-full min-h-screen">{children}</div>
     </RoleProvider>
   );

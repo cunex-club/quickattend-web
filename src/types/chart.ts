@@ -4,8 +4,8 @@ export interface BarChartVerticalData {
 }
 
 export interface BarChartHorizontalData {
-    time: string;
-    count: number;
+    month: string;
+    desktop: number;
 }
 
 export interface ChartStyleConfig {

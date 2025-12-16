@@ -1,6 +1,5 @@
 "use client";
-import { getUserRole } from "@lib/auth";
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 
 export type UserRole = "attendee" | "staff" | "manager" | "owner";
 
@@ -10,15 +9,14 @@ interface RoleContextType {
 
 const RoleContext = createContext<RoleContextType | null>(null);
 
-export const RoleProvider = ({ children }: { children: ReactNode }) => {
-  const [role, setRole] = useState<UserRole>("attendee");
-  useEffect(() => {
-    const fetchRole = async () => {
-      const fetchedRole = await getUserRole();
-      setRole(fetchedRole);
-    };
-    fetchRole();
-  }, []);
+interface RoleProviderProps {
+  children: ReactNode;
+  initialRole?: UserRole;
+}
+
+export const RoleProvider = ({ children, initialRole = "attendee" }: RoleProviderProps) => {
+  const [role] = useState<UserRole>(initialRole);
+  
   return (
     <RoleContext.Provider value={{ role }}>
       {children}
