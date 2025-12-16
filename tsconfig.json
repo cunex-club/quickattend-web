@@ -25,9 +25,10 @@
       "@components/*": ["./src/components/*"],
       "@public/*": ["./public/*"],
       "@customTypes/*": ["./src/types/*"],
-      "@lib/*": ["./lib/*"],
+      "@lib/*": ["./src/lib/*"],
       "@constants/*": ["./src/constants/*"],
       "@utils/*": ["./src/utils/*"],
+      "@context/*": ["./src/context/*"],
       "@i18n/*": ["./src/i18n/*"],
       "@shared/*": ["./src/shared/*"],
       "@styles/*": ["./src/styles/*"]

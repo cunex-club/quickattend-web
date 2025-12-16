@@ -18,13 +18,19 @@ import {
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
 import Button from "@components/Button";
+import type { BarChartHorizontalData } from "@customTypes/chart";
 
 export const description = "A bar chart";
 
-type BarChartHorizontalOverviewProps = {
+export type { BarChartHorizontalData };
+
+type ChartDataPoint = {
   month: string;
   desktop: number;
 };
+interface BarChartHorizontalOverviewProps {
+  data: ChartDataPoint[];
+}
 
 const chartConfig = {
   XAxis: {
@@ -68,7 +74,7 @@ export function BarChartHorizontalOverview({
               setSelectedFilter(selectedFilter === "student" ? null : "student")
             }
           >
-            <p className="label-large-emphasized">นิสิต</p>
+            <p className="label-large-emphasized -translate-y-0.5">นิสิต</p>
           </Button>
           <Button
             mode={selectedFilter === "staff" ? "filled" : "outline"}
@@ -78,7 +84,7 @@ export function BarChartHorizontalOverview({
               setSelectedFilter(selectedFilter === "staff" ? null : "staff")
             }
           >
-            <p className="label-large-emphasized">บุคลากร</p>
+            <p className="label-large-emphasized -translate-y-0.5">บุคลากร</p>
           </Button>
         </div>
       </CardAction>
