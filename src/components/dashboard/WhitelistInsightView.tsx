@@ -1,12 +1,48 @@
 "use client";
 
 import Button from "@components/Button";
-import { BarChartHorizontal } from "@components/charts/BarChartHorizontal";
-import { DonutChart } from "../charts/DonutChart";
 import React from "react";
 import StatCard from "@components/StatCard";
-import Link from "next/dist/client/link";
+import Link from "next/link";
 import { useState } from "react";
+import dynamic from "next/dynamic";
+
+// Dynamically import heavy chart components
+const BarChartHorizontal = dynamic(
+  () => import("@components/charts/BarChartHorizontal").then((mod) => mod.BarChartHorizontal),
+  {
+    loading: () => (
+      <div className="w-full h-[400px] flex items-center justify-center bg-gray-100 rounded animate-pulse">
+        <p className="text-gray-400">กำลังโหลดกราฟ...</p>
+      </div>
+    ),
+    ssr: false,
+  }
+);
+
+const DonutChart = dynamic(
+  () => import("../charts/DonutChart").then((mod) => mod.DonutChart),
+  {
+    loading: () => (
+      <div className="w-full h-[400px] flex items-center justify-center bg-gray-100 rounded animate-pulse">
+        <p className="text-gray-400">กำลังโหลดกราฟ...</p>
+      </div>
+    ),
+    ssr: false,
+  }
+);
+
+const BarChartVerticalStacked = dynamic(
+  () => import("../charts/BarChartVerticalStacked").then((mod) => mod.BarChartVerticalStacked),
+  {
+    loading: () => (
+      <div className="w-full h-[400px] flex items-center justify-center bg-gray-100 rounded animate-pulse">
+        <p className="text-gray-400">กำลังโหลดกราฟ...</p>
+      </div>
+    ),
+    ssr: false,
+  }
+);
 import {
   Popover,
   PopoverContent,
@@ -21,7 +57,6 @@ import {
   registrationStatusData,
   timeData,
 } from "@utils/data";
-import { BarChartVerticalStacked } from "../charts/BarChartVerticalStacked";
 import SortMenu from "@components/sort-menu";
 
 const horizontalChartData = dataCategorizeByTime;
