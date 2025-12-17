@@ -21,36 +21,41 @@ import {
 export const description = "A multiple bar chart";
 
 const chartData = [
-  { faculty: "คณะวิศวกรรมศาสตร์", desktop: 186, mobile: 80, ipad: 50 },
-  { faculty: "คณะอักษรศาสตร์", desktop: 305, mobile: 200, ipad: 100 },
-  { faculty: "คณะวิทยาศาสตร์", desktop: 237, mobile: 120, ipad: 80 },
-  { faculty: "คณะรัฐศาสตร์", desktop: 73, mobile: 190, ipad: 60 },
-  { faculty: "คณะสถาปัตยกรรมศาสตร์", desktop: 209, mobile: 130, ipad: 90 },
+  { faculty: "คณะวิศวกรรมศาสตร์", desktop: 186, mobile: 80, ipad: 50, iphone: 30 },
+  { faculty: "คณะอักษรศาสตร์", desktop: 305, mobile: 200, ipad: 100, iphone: 40 },
+  { faculty: "คณะวิทยาศาสตร์", desktop: 237, mobile: 120, ipad: 80, iphone: 35 },
+  { faculty: "คณะรัฐศาสตร์", desktop: 73, mobile: 190, ipad: 60, iphone: 25 },
+  { faculty: "คณะสถาปัตยกรรมศาสตร์", desktop: 209, mobile: 130, ipad: 90, iphone: 45 },
 ];
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "var(--color-chart-1)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--color-chart-2)",
-  },
-  ipad: {
-    label: "iPad",
-    color: "var(--color-chart-3)",
-  },
-} satisfies ChartConfig;
+const CHART_COLORS = [
+  "var(--color-chart-1)",
+  "var(--color-chart-2)",
+  "var(--color-chart-3)",
+  "var(--color-chart-4)",
+  "var(--color-chart-5)",
+];
 
 export function BarChartVerticalMulti() {
+  // Get all data keys except the category key
+  const dataKeys = Object.keys(chartData[0]).filter(key => key !== "faculty");
+  
+  // Dynamically generate chartConfig
+  const chartConfig = dataKeys.reduce((config, key, index) => {
+    config[key] = {
+      label: key.charAt(0).toUpperCase() + key.slice(1),
+      color: CHART_COLORS[index % CHART_COLORS.length],
+    };
+    return config;
+  }, {} as Record<string, { label: string; color: string }>) satisfies ChartConfig;
+
   const BAR_SIZE: number = 32;
   const BAR_GAP: number = 16*chartData.length;
   const BAR_RADIUS: number = 2;
   const LABEL_OFFSET: number = 8;
   const LABEL_FONT_SIZE: number = 16;
-  const BAR_GAP_WITHIN_GROUP: number = 1;
-  const BAR_CATEGORY_GAP: number = 32;
+  const BAR_GAP_WITHIN_GROUP: number = 0;
+  const BAR_CATEGORY_GAP: number = BAR_GAP;
   const dynamicHeight: number = chartData.length * (BAR_SIZE + BAR_GAP + BAR_CATEGORY_GAP);
     
   return (
@@ -84,11 +89,11 @@ export function BarChartVerticalMulti() {
               cursor={false}
               content={<ChartTooltipContent indicator="line" />}
             />
-            {["desktop", "mobile", "ipad"].map((key) => (
+            {dataKeys.map((key, index) => (
               <Bar
                 key={key}
                 dataKey={key}
-                fill={`var(--color-${key})`}
+                fill={CHART_COLORS[index % CHART_COLORS.length]}
                 radius={BAR_RADIUS}
                 barSize={BAR_SIZE}
                 

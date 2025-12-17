@@ -5,6 +5,7 @@ import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 // import { CheckIcon } from "lucide-react"
 
 import { cn } from "@assets/lib/utils";
+import IonIcon from "@components/IonIcon";
 
 function Checkbox({
   className,
@@ -22,9 +23,9 @@ function Checkbox({
     >
       <CheckboxPrimitive.Indicator
         data-slot="checkbox-indicator"
-        className="grid place-content-center text-current transition-none"
+        className="grid place-content-center text-current transition-none -translate-y-2"
       >
-        {/* <CheckIcon className="size-3.5" /> */}
+        <IonIcon name="Checkmark" size="16px" className="text-white" />
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   );
