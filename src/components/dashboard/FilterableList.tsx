@@ -42,7 +42,7 @@ export const FilterableList: React.FC<FilterableListProps> = ({
         <div className="flex flex-col w-full">
           <p className="title-large-emphasized translate-y-[-10px]">{title}</p>
           {hasDescription && (
-            <p className="body-small-primary text-neutral-600">
+            <p className="body-small-primary text-neutral-600 py-2">
               เลือกได้สูงสุด 5 ตัวเลือก
             </p>
           )}
@@ -120,7 +120,9 @@ export const FilterableList: React.FC<FilterableListProps> = ({
             </p>
             <button
               onClick={() => onCheckedChange(item.id, false)}
-              className="absolute -top-3 -right-3 bg-primary border-4 border-neutral-white rounded-full w-[28px] h-[28px] flex items-center justify-center"
+              className={cn(
+                "absolute -top-3 -right-3 bg-primary border-4 rounded-full w-[28px] h-[28px] flex items-center justify-center"
+              ,filterVariant === "secondary" ? "border-white" : "border-neutral-200")}
             >
               <p className="text-neutral-white translate-y-[3px]">x</p>
             </button>
