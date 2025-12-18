@@ -91,14 +91,33 @@ export default function ComparePage() {
       Object.keys(selectedFaculties).length === 0 &&
       Object.keys(selectedTimes).length === 0
     ) {
-      toast.error("กรุณาเลือกอย่างน้อยหนึ่งตัวเลือกเพื่อเปรียบเทียบข้อมูล",{
-        style: {
-          background: "var(--color-error)",
-          color: "#fff",
-      }})
+      toast.error(
+        <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
+          กรุณาเลือกอย่างน้อยหนึ่งตัวเลือกเพื่อเปรียบเทียบข้อมูล
+        </p>,
+        {
+          style: {
+            background: "var(--error)",
+            color: "var(--neutral-white)",
+            width: "max-content",
+          },
+          duration: 1500,
+        }
+      );
       return;
     } else {
-      toast.success("กำลังเปรียบเทียบข้อมูล...")
+      toast.success(
+        <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
+          กำลังเปรียบเทียบข้อมูล...
+        </p>,
+        {
+          style: {
+            background: "var(--success)",
+            color: "var(--neutral-white)",
+          },
+          duration: 1500,
+        }
+      );
     }
   };
 

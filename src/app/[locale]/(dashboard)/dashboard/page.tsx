@@ -31,24 +31,32 @@ export default function OverviewPage() {
     const eventLink = `${window.location.origin}/events/${event.id}`;
     try {
       await navigator.clipboard.writeText(eventLink);
-      toast.success("คัดลอกลิงก์กิจกรรมเรียบร้อยแล้ว", {
-        style: {
-          background: "#4ade80",
-          color: "#fff",
-          fontSize: "16px",
-        },
-        duration: 1500,
-      });
+      toast.success(
+        <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
+          คัดลอกลิงก์กิจกรรมเรียบร้อยแล้ว
+        </p>,
+        {
+          style: {
+            background: "var(--success)",
+            color: "var(--neutral-white)",
+          },
+          duration: 1500,
+        }
+      );
     } catch (err) {
       console.error("Failed to copy link:", err);
-      toast.error("ไม่สามารถคัดลอกลิงก์ได้", {
-        style: {
-          background: "#ef4444",
-          color: "#fff",
-          fontSize: "16px",
-        },
-        duration: 1500,
-      });
+      toast.error(
+        <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
+          ไม่สามารถคัดลอกลิงก์ได้
+        </p>,
+        {
+          style: {
+            background: "var(--error)",
+            color: "var(--neutral-white)",
+          },
+          duration: 1500,
+        }
+      );
     }
   };
 
