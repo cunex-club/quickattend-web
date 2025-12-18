@@ -7,6 +7,7 @@ import {
   LabelList,
   XAxis,
   YAxis,
+  Cell,
 } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
@@ -54,7 +55,7 @@ export function BarChartVerticalStacked({
       <CardContent className="px-0">
         <ChartContainer
           config={chartConfig}
-          className="w-full"
+          className="w-full chart-hover-bar"
           style={{ height: `${dynamicHeight}px` }}
         >
           <BarChart
@@ -99,6 +100,11 @@ export function BarChartVerticalStacked({
               radius={LEFT_BAR_BORDER_RADIUS}
               barSize={BAR_SIZE}
             >
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                />
+              ))}
               <LabelList
                 dataKey="unregistered"
                 position="insideRight"
@@ -112,6 +118,11 @@ export function BarChartVerticalStacked({
               radius={RIGHT_BAR_BORDER_RADIUS}
               barSize={BAR_SIZE}
             >
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                />
+              ))}
               <LabelList
                 dataKey="registered"
                 position="insideRight"

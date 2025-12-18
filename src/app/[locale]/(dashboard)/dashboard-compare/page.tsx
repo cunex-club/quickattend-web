@@ -130,7 +130,7 @@ export default function ComparePage() {
     if (selectedFaculties["f-0"] && selectedTimes["t-0"]) {
       toast.error(
         <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
-          ไม่สามารถเลือก "ทุกคณะ/หน่วยงาน" และ "ทุกช่วงเวลา" พร้อมกันได้ 
+          ไม่สามารถเลือก &quot;ทุกคณะ/หน่วยงาน&quot; และ &quot;ทุกช่วงเวลา&quot; พร้อมกันได้ 
         </p>,
         {
           style: {

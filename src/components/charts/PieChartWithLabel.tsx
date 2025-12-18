@@ -1,5 +1,6 @@
 "use client";
 import { cn } from "@assets/lib/utils";
+import { useCallback, useMemo } from "react";
 import { Pie, PieChart, Cell } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
@@ -33,6 +34,12 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function PieChartWithLabel() {
+  // Memoize chart total to avoid recalculating on every label render
+  const chartTotal = useMemo(() => 
+    chartData.reduce((sum, it) => sum + Number(it?.total ?? 0), 0), 
+    []
+  );
+  
   type PieLabelProps = {
     cx?: number | string;
     cy?: number | string;
@@ -43,7 +50,7 @@ export function PieChartWithLabel() {
   };
 
   // this function is adapted from Recharts' example: https://recharts.org/en-US/examples/CustomizedLabelPieChart
-  const customLabel = (props: unknown) => {
+  const customLabel = useCallback((props: unknown) => {
     const CUSTOM_DISTANCE: number = 1.3;
     const RADIAN = Math.PI / 180;
     const { cx, cy, midAngle, innerRadius, outerRadius, payload } =
@@ -62,7 +69,6 @@ export function PieChartWithLabel() {
     const name = payload?.faculty ?? "";
     const total = Number(payload?.total ?? 0);
 
-    const chartTotal = chartData.reduce((sum, it) => sum + Number(it?.total ?? 0), 0);
     const percent = ((total / (chartTotal || 1)) * 100).toFixed(0);
 
     // anchor left/right depending on which side of the center the label sits
@@ -82,7 +88,7 @@ export function PieChartWithLabel() {
         </tspan>
       </text>
     );
-  };
+  }, [chartTotal]);
 
   return (
     <Card className="flex flex-col justify-center h-full w-full border-none shadow-none">
@@ -92,7 +98,8 @@ export function PieChartWithLabel() {
           className={cn(
             "mx-auto aspect-square max-h-[300px] pb-0 flex flex-col justify-center h-full w-full",  
             "[&_.recharts-pie-label-text]:fill-foreground",
-            "[&_.recharts-surface]:overflow-visible"
+            "[&_.recharts-surface]:overflow-visible",
+            "chart-hover-pie"
           )}
         >
           <PieChart>
@@ -106,7 +113,10 @@ export function PieChartWithLabel() {
               endAngle={-270}
             >
               {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={CHART_COLORS[index % CHART_COLORS.length]}
+                />
               ))}
             </Pie>
           </PieChart>

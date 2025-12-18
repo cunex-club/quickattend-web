@@ -8,6 +8,7 @@ import {
   LabelList,
   XAxis,
   YAxis,
+  Cell,
 } from "recharts";
 
 import { Card, CardAction, CardContent } from "@assets/components/ui/card";
@@ -88,7 +89,7 @@ export function BarChartHorizontalOverview({
       </CardAction>
 
       <CardContent className="px-0 py-0 h-full">
-        <ChartContainer config={chartConfig} className="h-full w-full">
+        <ChartContainer config={chartConfig} className="h-full w-full chart-hover-bar">
           <BarChart
             accessibilityLayer
             data={chartData}
@@ -121,6 +122,11 @@ export function BarChartHorizontalOverview({
               fill="var(--color-desktop)"
               radius={BAR_RADIUS}
             >
+              {chartData.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                />
+              ))}
               <LabelList
                 dataKey="desktop"
                 position="top"

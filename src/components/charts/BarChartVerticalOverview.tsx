@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   Bar,
   BarChart,
@@ -7,6 +8,7 @@ import {
   LabelList,
   XAxis,
   YAxis,
+  Cell,
 } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
@@ -44,15 +46,15 @@ export function BarChartVerticalOverview({
   const LABEL_OFFSET: number = 8;
   const LABEL_FONT_SIZE: number = 14;
   
-  // Calculate total sum for percentage calculation
-  const totalSum = chartData.reduce((sum, item) => sum + item.total, 0);
-  
-  // Add percentage to chart data
-  const chartDataWithPercentage = chartData.map(item => ({
-    ...item,
-    percentage: totalSum > 0 ? ((item.total / totalSum) * 100).toFixed(1) : "0",
-    facultyWithPercentage: `${item.faculty} (${totalSum > 0 ? ((item.total / totalSum) * 100).toFixed(1) : "0"}%)`
-  }));
+  // Calculate total sum for percentage calculation and memoize chart data transformation
+  const chartDataWithPercentage = useMemo(() => {
+    const totalSum = chartData.reduce((sum, item) => sum + item.total, 0);
+    return chartData.map(item => ({
+      ...item,
+      percentage: totalSum > 0 ? ((item.total / totalSum) * 100).toFixed(1) : "0",
+      facultyWithPercentage: `${item.faculty} (${totalSum > 0 ? ((item.total / totalSum) * 100).toFixed(1) : "0"}%)`
+    }));
+  }, [chartData]);
   
   // Calculate dynamic height: (bars × barSize) + (gaps between bars) + padding
   const dynamicHeight: number = 
@@ -64,7 +66,7 @@ export function BarChartVerticalOverview({
         <ChartContainer
           config={chartConfig}
           style={{ minHeight: `${dynamicHeight}px` }}
-          className="w-full"
+          className="w-full chart-hover-bar"
         >
           <BarChart
             accessibilityLayer
@@ -115,6 +117,11 @@ export function BarChartVerticalOverview({
               radius={BAR_CHART_RADIUS}
               barSize={BAR_SIZE}
             >
+              {chartDataWithPercentage.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                />
+              ))}
               <LabelList
                 dataKey="total"
                 position="right"

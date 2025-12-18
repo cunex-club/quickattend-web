@@ -7,6 +7,7 @@ import {
   LabelList,
   XAxis,
   YAxis,
+  Cell,
 } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
@@ -51,7 +52,7 @@ export function BarChartVertical({ data }: { data: BarChartVerticalProps[] }) {
       <CardContent className="px-0">
         <ChartContainer
           config={chartConfig}
-          className="w-full"
+          className="w-full chart-hover-bar"
           style={{ height: `${dynamicHeight}px` }}
         >
           <BarChart
@@ -104,6 +105,11 @@ export function BarChartVertical({ data }: { data: BarChartVerticalProps[] }) {
               radius={BAR_CHART_RADIUS}
               barSize={BAR_SIZE}
             >
+              {chartData.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                />
+              ))}
               <LabelList
                 dataKey="total"
                 position="right"

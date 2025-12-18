@@ -6,6 +6,7 @@ import {
   LabelList,
   XAxis,
   YAxis,
+  Cell,
 } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
@@ -63,7 +64,7 @@ export function BarChartVerticalMulti() {
       <CardContent className="overflow-visible mx-0 sm:mx-8 md:mx-16 lg:mx-24 xl:mx-48 py-6 md:py-8">
         <ChartContainer 
           config={chartConfig} 
-          className="overflow-visible w-full"
+          className="overflow-visible w-full chart-hover-bar"
           style={{ height: `${dynamicHeight}px` }}
         >
           <BarChart 
@@ -96,9 +97,12 @@ export function BarChartVerticalMulti() {
                 fill={CHART_COLORS[index % CHART_COLORS.length]}
                 radius={BAR_RADIUS}
                 barSize={BAR_SIZE}
-                
-                
               >
+                {chartData.map((entry, dataIndex) => (
+                  <Cell
+                    key={`cell-${key}-${dataIndex}`}
+                  />
+                ))}
                 <LabelList
                   dataKey={key}
                   position="right"

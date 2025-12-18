@@ -6,6 +6,7 @@ import {
   XAxis,
   LabelList,
   YAxis,
+  Cell,
 } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
@@ -131,7 +132,7 @@ export function BarChartHorizontalMulti() {
       <CardContent className="px-0">
         <ChartContainer
           config={chartConfig}
-          className="w-full pr-3 max-h-[250px] md:max-h-[450px]"
+          className="w-full pr-3 max-h-[250px] md:max-h-[450px] chart-hover-bar"
         >
           <BarChart accessibilityLayer data={chartData} barGap={BAR_SPACING}>
             <CartesianGrid
@@ -166,6 +167,11 @@ export function BarChartHorizontalMulti() {
                 fill={`var(--color-${key})`}
                 radius={BAR_RADIUS}
               >
+                {chartData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${key}-${index}`}
+                  />
+                ))}
                 <LabelList
                   dataKey={key}
                   position="top"

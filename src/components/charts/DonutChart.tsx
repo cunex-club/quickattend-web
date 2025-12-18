@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@assets/lib/utils";
 import * as React from "react";
-import { Label, Pie, PieChart } from "recharts";
+import { Label, Pie, PieChart, Cell } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
 import {
@@ -26,10 +26,13 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function DonutChart({ data }: { data: DonutChartProps[] }) {
-  const chartData = data.map((item, index) => ({
-    ...item,
-    fill: index === 0 ? "var(--color-primary)" : "var(--color-gray-300)",
-  }));
+  const chartData = React.useMemo(
+    () => data.map((item, index) => ({
+      ...item,
+      fill: index === 0 ? "var(--color-primary)" : "var(--color-gray-300)",
+    })),
+    [data]
+  );
 
   const registeredPercent = React.useMemo(() => {
     const total = chartData.reduce((acc, curr) => acc + curr.total, 0);
@@ -47,41 +50,46 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
     percent?: number;
   }
 
-  const customLabel = (props: LabelProps) => {
-    const CUSTOM_DISTANCE = 1.6;
-    const RADIAN = Math.PI / 180;
-    const { cx, cy, midAngle, innerRadius, outerRadius, payload, percent } =
-      props;
 
-    const radius: number =
-      Number(innerRadius ?? 0) +
-      (Number(outerRadius ?? 0) - Number(innerRadius ?? 0)) * CUSTOM_DISTANCE;
-    const x = Number(cx ?? 0) + radius * Math.cos(-(midAngle ?? 0) * RADIAN);
-    const y = Number(cy ?? 0) + radius * Math.sin(-(midAngle ?? 0) * RADIAN);
+  const customLabel = React.useMemo(() => {
+    const LabelComponent = (props: LabelProps) => {
+      const CUSTOM_DISTANCE = 1.6;
+      const RADIAN = Math.PI / 180;
+      const { cx, cy, midAngle, innerRadius, outerRadius, payload, percent } =
+        props;
 
-    const name = payload?.category ?? "";
-    const value = payload?.total ?? "";
-    const pct = `${(Number(percent ?? 0) * 100).toFixed(0)}%`;
+      const radius: number =
+        Number(innerRadius ?? 0) +
+        (Number(outerRadius ?? 0) - Number(innerRadius ?? 0)) * CUSTOM_DISTANCE;
+      const x = Number(cx ?? 0) + radius * Math.cos(-(midAngle ?? 0) * RADIAN);
+      const y = Number(cy ?? 0) + radius * Math.sin(-(midAngle ?? 0) * RADIAN);
 
-    const anchor = x > Number(cx ?? 0) ? "start" : "end";
+      const name = payload?.category ?? "";
+      const value = payload?.total ?? "";
+      const pct = `${(Number(percent ?? 0) * 100).toFixed(0)}%`;
 
-    return (
-      <text
-        x={x}
-        y={y}
-        textAnchor={anchor}
-        dominantBaseline="central"
-        className="recharts-pie-label-text"
-      >
-        <tspan x={x} className="label-large-primary">
-          {name}
-        </tspan>
-        <tspan x={x} dy="1.5em" className="label-small-primary">
-          {value} คน ({pct})
-        </tspan>
-      </text>
-    );
-  };
+      const anchor = x > Number(cx ?? 0) ? "start" : "end";
+
+      return (
+        <text
+          x={x}
+          y={y}
+          textAnchor={anchor}
+          dominantBaseline="central"
+          className="recharts-pie-label-text"
+        >
+          <tspan x={x} className="label-large-primary">
+            {name}
+          </tspan>
+          <tspan x={x} dy="1.5em" className="label-small-primary">
+            {value} คน ({pct})
+          </tspan>
+        </text>
+      );
+    };
+    LabelComponent.displayName = "DonutChartLabel";
+    return LabelComponent;
+  }, []);
 
   return (
     <Card className="flex flex-col py-12 sm:py-10 md:py-0 justify-center border-none shadow-none h-full">
@@ -93,10 +101,7 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
             "[&_.recharts-surface]:overflow-visible",
             "[&_.recharts-pie-label-line]:stroke-[var(--color-gray-300)]",
             "[&_.recharts-pie-label-text]:fill-[var(--color-primary)]",
-            // "[&_.recharts-pie-label-text]:font-family-[var(--font-chula-regular)]", // this not working
-            // "[&_.recharts-pie-label-text]:font-size-[12px]",
-            // "[&_.recharts-pie-label-text]:line-height-[16px]",
-            // "[&_.recharts-pie-label-text]:letter-spacing-[0.5px]"
+            "chart-hover-pie"
           )}
         >
           <PieChart>
@@ -118,6 +123,11 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
               endAngle={-270}
               label={false}
             >
+              {chartData.map((entry, index) => (
+                <Cell
+                  key={`cell-mobile-${index}`}
+                />
+              ))}
               <Label
                 content={({ viewBox }) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
@@ -156,6 +166,11 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
               endAngle={-270}
               label={false}
             >
+              {chartData.map((entry, index) => (
+                <Cell
+                  key={`cell-tablet-${index}`}
+                />
+              ))}
               <Label
                 content={({ viewBox }) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
@@ -195,6 +210,11 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
               labelLine={{ strokeWidth: 2 }}
               label={customLabel}
             >
+              {chartData.map((entry, index) => (
+                <Cell
+                  key={`cell-desktop-${index}`}
+                />
+              ))}
               <Label
                 content={({ viewBox }) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {

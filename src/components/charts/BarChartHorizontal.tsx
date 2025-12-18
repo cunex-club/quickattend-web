@@ -6,6 +6,7 @@ import {
   LabelList,
   XAxis,
   YAxis,
+  Cell,
 } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
@@ -54,7 +55,7 @@ export function BarChartHorizontal({
       <CardContent className="px-0">
         <ChartContainer
           config={chartConfig}
-          className="max-h-[300px] lg:max-h-[400px] w-full pr-3"
+          className="max-h-[300px] lg:max-h-[400px] w-full pr-3 chart-hover-bar"
         >
           <BarChart
             accessibilityLayer
@@ -92,7 +93,16 @@ export function BarChartHorizontal({
               cursor={true}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="total" fill="var(--color-total)" radius={BAR_RADIUS}>
+            <Bar
+              dataKey="total"
+              fill="var(--color-total)"
+              radius={BAR_RADIUS}
+            >
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                />
+              ))}
               <LabelList
                 position="top"
                 offset={LABEL_OFFSET}
