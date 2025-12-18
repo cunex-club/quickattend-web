@@ -12,20 +12,28 @@ import { useRole } from "@context/RoleContext";
 import { toast } from "sonner";
 
 const BarChartHorizontalMulti = dynamic(
-  () => import("@components/charts/BarChartHorizontalMulti").then((mod) => ({ default: mod.BarChartHorizontalMulti })),
+  () =>
+    import("@components/charts/BarChartHorizontalMulti").then((mod) => ({
+      default: mod.BarChartHorizontalMulti,
+    })),
   { ssr: false }
 );
 
 const BarChartVerticalMulti = dynamic(
-  () => import("@components/charts/BarChartVerticalMulti").then((mod) => ({ default: mod.BarChartVerticalMulti })),
+  () =>
+    import("@components/charts/BarChartVerticalMulti").then((mod) => ({
+      default: mod.BarChartVerticalMulti,
+    })),
   { ssr: false }
 );
 
 const PieChartWithLabel = dynamic(
-  () => import("@components/charts/PieChartWithLabel").then((mod) => ({ default: mod.PieChartWithLabel })),
+  () =>
+    import("@components/charts/PieChartWithLabel").then((mod) => ({
+      default: mod.PieChartWithLabel,
+    })),
   { ssr: false }
 );
-
 
 const canViewPage = (role: string) => {
   return role === "manager" || role === "owner";
@@ -67,7 +75,18 @@ export default function ComparePage() {
           const selectedCount =
             Object.values(newSelected).filter(Boolean).length;
           if (selectedCount >= 5) {
-            console.warn("ไม่สามารถเลือกเกิน 5 รายการ");
+            toast.error(
+              <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
+                คุณสามารถเลือกได้สูงสุด 5 ตัวเลือก
+              </p>,
+              {
+                style: {
+                  background: "var(--error)",
+                  color: "var(--neutral-white)",
+                },
+                duration: 1500,
+              }
+            );
             return prevSelected;
           }
           newSelected[itemId] = true;
@@ -105,20 +124,38 @@ export default function ComparePage() {
         }
       );
       return;
-    } else {
-      toast.success(
+    }
+
+    // Check if both "All" options are selected
+    if (selectedFaculties["f-0"] && selectedTimes["t-0"]) {
+      toast.error(
         <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
-          กำลังเปรียบเทียบข้อมูล...
+          ไม่สามารถเลือก "ทุกคณะ/หน่วยงาน" และ "ทุกช่วงเวลา" พร้อมกันได้ 
         </p>,
         {
           style: {
-            background: "var(--success)",
+            background: "var(--error)",
             color: "var(--neutral-white)",
+            width: "max-content",
           },
-          duration: 1500,
+          duration: 2000,
         }
       );
+      return;
     }
+
+    toast.success(
+      <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
+        กำลังเปรียบเทียบข้อมูล...
+      </p>,
+      {
+        style: {
+          background: "var(--success)",
+          color: "var(--neutral-white)",
+        },
+        duration: 1500,
+      }
+    );
   };
 
   return (
@@ -146,29 +183,27 @@ export default function ComparePage() {
               hasDescription
             />
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-              
-                <Button
-                  mode="outline"
-                  bordered="round"
-                  expanded={true}
-                  className="bg-transparent"
-                  onClick={handleClearSelection}
-                >
-                  <p className="title-large-emphasized translate-y-[-6px]">
-                    ล้างข้อมูล
-                  </p>
-                </Button>
-                <Button
-                  mode="filled"
-                  bordered="round"
-                  expanded={true}
-                  onClick={handleSubmitComparison}
-                >
-                  <p className="title-large-emphasized translate-y-[-6px]">
-                    เปรียบเทียบข้อมูล
-                  </p>
-                </Button>
-              
+              <Button
+                mode="outline"
+                bordered="round"
+                expanded={true}
+                className="bg-transparent"
+                onClick={handleClearSelection}
+              >
+                <p className="title-large-emphasized translate-y-[-6px]">
+                  ล้างข้อมูล
+                </p>
+              </Button>
+              <Button
+                mode="filled"
+                bordered="round"
+                expanded={true}
+                onClick={handleSubmitComparison}
+              >
+                <p className="title-large-emphasized translate-y-[-6px]">
+                  เปรียบเทียบข้อมูล
+                </p>
+              </Button>
             </div>
           </section>
 
@@ -181,7 +216,9 @@ export default function ComparePage() {
                 variant="primary"
               >
                 <div className="flex flex-col justify-center items-center gap-4">
-                  <p className="title-medium-emphasized lg:title-large-emphasized">จากจำนวนทั้งหมด 1096 คน</p>
+                  <p className="title-medium-emphasized lg:title-large-emphasized">
+                    จากจำนวนทั้งหมด 1096 คน
+                  </p>
                 </div>
               </StatCard>
             </div>

@@ -143,23 +143,23 @@
 }
 
 /* Shadow */
-.shadow-elevation-1 {
+@utility shadow-elevation-1 {
   box-shadow: var(--shadow-elevation-1);
 }
 
-.shadow-elevation-2 {
+@utility shadow-elevation-2 {
   box-shadow: var(--shadow-elevation-2);
 }
 
-.shadow-elevation-3 {
+@utility shadow-elevation-3 {
   box-shadow: var(--shadow-elevation-3);
 }
 
-.shadow-elevation-4 {
+@utility shadow-elevation-4 {
   box-shadow: var(--shadow-elevation-4);
 }
 
-.shadow-elevation-5 {
+@utility shadow-elevation-5 {
   box-shadow: var(--shadow-elevation-5);
 }
 

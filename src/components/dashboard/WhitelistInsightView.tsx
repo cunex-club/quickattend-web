@@ -56,7 +56,7 @@ import {
   registeredData,
   registrationStatusData,
   timeData,
-} from "@utils/data";
+} from "@utils/data"; 
 import SortMenu from "@components/sort-menu";
 
 const horizontalChartData = dataCategorizeByTime;

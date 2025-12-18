@@ -39,22 +39,36 @@ export function BarChartVerticalOverview({
 }: BarChartVerticalOverviewProps) {
   const chartData = data;
   const BAR_SIZE: number = 32;
-  const BAR_GAP: number = 48;
+  const BAR_GAP: number = 1;
   const BAR_CHART_RADIUS: [number, number, number, number] = [2, 2, 2, 2];
   const LABEL_OFFSET: number = 8;
   const LABEL_FONT_SIZE: number = 14;
-  const dinamicHeight: number = chartData.length * (BAR_SIZE + BAR_GAP) + 24;
+  
+  // Calculate total sum for percentage calculation
+  const totalSum = chartData.reduce((sum, item) => sum + item.total, 0);
+  
+  // Add percentage to chart data
+  const chartDataWithPercentage = chartData.map(item => ({
+    ...item,
+    percentage: totalSum > 0 ? ((item.total / totalSum) * 100).toFixed(1) : "0",
+    facultyWithPercentage: `${item.faculty} (${totalSum > 0 ? ((item.total / totalSum) * 100).toFixed(1) : "0"}%)`
+  }));
+  
+  // Calculate dynamic height: (bars × barSize) + (gaps between bars) + padding
+  const dynamicHeight: number = 
+    chartData.length * BAR_SIZE + 
+    (chartData.length - 1) * BAR_GAP;
   return (
-    <Card className="bg-neutral-100 shadow-elevation-2 p-4  md:p-8">
-      <CardContent>
+    <Card className="bg-neutral-white md:bg-neutral-100 shadow-none md:shadow-elevation-2 p-4 md:p-8 border-none">
+      <CardContent className="shadow-none border-none">
         <ChartContainer
           config={chartConfig}
-          style={{ maxHeight: `${dinamicHeight}px` }}
+          style={{ minHeight: `${dynamicHeight}px` }}
           className="w-full"
         >
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={chartDataWithPercentage}
             layout="vertical"
             margin={{
               right: 16,
@@ -77,6 +91,7 @@ export function BarChartVerticalOverview({
               cursor={false}
               content={<ChartTooltipContent indicator="line" />}
             />
+            {/* Faculty Names */}
             <Bar
               dataKey="total"
               layout="vertical"
@@ -86,12 +101,13 @@ export function BarChartVerticalOverview({
               tooltipType="none"
             >
               <LabelList
-                dataKey="faculty"
+                dataKey="facultyWithPercentage"
                 position="insideBottomLeft"
                 offset={0}
                 className="fill-[var(--color-label)] title-medium-primary md:title-large-primary -translate-y-[15px] md:-translate-y-[20px]"
               />
             </Bar>
+            {/* Total Values */}
             <Bar
               dataKey="total"
               layout="vertical"
