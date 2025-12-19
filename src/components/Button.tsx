@@ -27,6 +27,7 @@ type ButtonProps = {
   expanded: boolean;
   onClick?: (event: MouseEvent) => void;
   children: React.ReactNode;
+  disabled?: boolean;
 };
 
 const Button: StyleableFC<ButtonProps> = ({
@@ -37,6 +38,7 @@ const Button: StyleableFC<ButtonProps> = ({
   onClick,
   children,
   style,
+  disabled,
   ...props
 }) => {
   return (
@@ -50,6 +52,7 @@ const Button: StyleableFC<ButtonProps> = ({
       )}
       onClick={onClick}
       style={style}
+      disabled={disabled}
       {...props}
     >
       {children}

@@ -3,11 +3,7 @@
 import React from "react";
 import DashboardNav from "@components/dashboard/DashboardNav";
 import { useRole } from "@context/RoleContext";
-
-const tabs = [
-  { id: "overview", label: "ภาพรวม", href: "/dashboard" },
-  { id: "insights", label: "ข้อมูลเชิงลึก", href: "/dashboard/insights" },
-];
+import { useTranslations } from "next-intl";
 
 interface DashboardGroupLayoutProps {
   children: React.ReactNode;
@@ -19,6 +15,7 @@ export default function DashboardGroupLayout({
   params,
 }: DashboardGroupLayoutProps) {
   const { role } = useRole();
+  const t = useTranslations("Dashboard.navbar");
   const [locale, setLocale] = React.useState<string>("");
 
   React.useEffect(() => {
@@ -26,6 +23,11 @@ export default function DashboardGroupLayout({
   }, [params]);
 
   if (!locale) return null;
+
+  const tabs = [
+    { id: "overview", label: t("overview"), href: "/dashboard" },
+    { id: "insights", label: t("insights"), href: "/dashboard/insights" },
+  ];
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen p-4 bg-neutral-white">

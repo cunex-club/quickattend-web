@@ -6,14 +6,14 @@ import { WhitelistInsightView } from "@components/dashboard/WhitelistInsightView
 type EventType = "public" | "specific" | "whitelist";
 
 async function getEventData(): Promise<{ type: EventType }> {
-  const eventType: EventType = "whitelist";
+  const eventType: EventType = "specific";
   return { type: eventType };
 }
 // -------------------------------
 
 export default async function InsightsPageController() {
   const event = await getEventData();
-  if (event.type === "whitelist") {
+  if (event.type === "specific") {
     return <WhitelistInsightView />;
   }
   return <DeepInsightView />;

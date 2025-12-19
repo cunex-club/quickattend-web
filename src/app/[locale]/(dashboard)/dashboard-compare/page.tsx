@@ -11,6 +11,7 @@ import { facultyData, timeData } from "@utils/data";
 import { useRole } from "@context/RoleContext";
 import { toast } from "sonner";
 import { Skeleton } from "@assets/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 const BarChartHorizontalMulti = dynamic(
   () =>
@@ -50,6 +51,7 @@ const canViewPage = (role: string) => {
 };
 
 export default function ComparePage() {
+  const t = useTranslations("Dashboard.compare");
   const { role } = useRole();
   const [selectedFaculties, setSelectedFaculties] = useState<
     Record<string, boolean>
@@ -87,7 +89,7 @@ export default function ComparePage() {
           if (selectedCount >= 5) {
             toast.error(
               <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
-                คุณสามารถเลือกได้สูงสุด 5 ตัวเลือก
+                {t("maxSelectionError")}
               </p>,
               {
                 style: {
@@ -122,7 +124,7 @@ export default function ComparePage() {
     ) {
       toast.error(
         <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
-          กรุณาเลือกอย่างน้อยหนึ่งตัวเลือกเพื่อเปรียบเทียบข้อมูล
+          {t("minSelectionError")}
         </p>,
         {
           style: {
@@ -140,7 +142,7 @@ export default function ComparePage() {
     if (selectedFaculties["f-0"] && selectedTimes["t-0"]) {
       toast.error(
         <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
-          ไม่สามารถเลือก &quot;ทุกคณะ/หน่วยงาน&quot; และ &quot;ทุกช่วงเวลา&quot; พร้อมกันได้ 
+          {t("bothAllError")} 
         </p>,
         {
           style: {
@@ -156,7 +158,7 @@ export default function ComparePage() {
 
     toast.success(
       <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
-        กำลังเปรียบเทียบข้อมูล...
+        {t("comparingData")}
       </p>,
       {
         style: {
@@ -173,20 +175,20 @@ export default function ComparePage() {
       <div className="container max-w-[1440px] flex flex-col items-center bg-neutral-white ">
         <div className="flex flex-col w-full rounded-xl bg-neutral-white space-y-16">
           <span className="mx-auto">
-            <p className="display-small-emphasized">เปรียบเทียบข้อมูล</p>
+            <p className="display-small-emphasized">{t("title")}</p>
           </span>
 
           {/* filter section */}
           <section className="w-full h-auto flex flex-col bg-neutral-200 p-8 sm:p-12 md:p-16 rounded-2xl space-y-8">
             <FilterableList
-              title="คณะ/หน่วยงาน"
+              title={t("faculty")}
               items={facultyData}
               selectedItems={selectedFaculties}
               onCheckedChange={handleFacultyChange}
               hasDescription
             />
             <FilterableList
-              title="ช่วงเวลา"
+              title={t("timePeriod")}
               items={timeData}
               selectedItems={selectedTimes}
               onCheckedChange={handleTimeChange}
@@ -201,7 +203,7 @@ export default function ComparePage() {
                 onClick={handleClearSelection}
               >
                 <p className="title-large-emphasized translate-y-[-6px]">
-                  ล้างข้อมูล
+                  {t("clearData")}
                 </p>
               </Button>
               <Button
@@ -211,7 +213,7 @@ export default function ComparePage() {
                 onClick={handleSubmitComparison}
               >
                 <p className="title-large-emphasized translate-y-[-6px]">
-                  เปรียบเทียบข้อมูล
+                  {t("compareData")}
                 </p>
               </Button>
             </div>
@@ -220,14 +222,14 @@ export default function ComparePage() {
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="w-full">
               <StatCard
-                title="จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด"
+                title={t("totalAttendees")}
                 value={860}
-                unit="คน"
+                unit={t("unit")}
                 variant="primary"
               >
                 <div className="flex flex-col justify-center items-center gap-4">
                   <p className="title-medium-emphasized lg:title-large-emphasized">
-                    จากจำนวนทั้งหมด 1096 คน
+                    {t("outOfTotal")} 1096 {t("unit")}
                   </p>
                 </div>
               </StatCard>
@@ -238,7 +240,7 @@ export default function ComparePage() {
           </section>
           <section className="flex flex-col space-y-8">
             <p className="headline-large-emphasized">
-              สถิติการลงทะเบียนแยกตามคณะ/หน่วยงาน
+              {t("facultyStatsTitle")}
             </p>
             <div className="h-auto">
               <BarChartVerticalMulti />
@@ -246,7 +248,7 @@ export default function ComparePage() {
           </section>
           <section className="flex flex-col space-y-8">
             <p className="headline-large-emphasized">
-              สถิติการลงทะเบียนแยกตามช่วงเวลา
+              {t("timeStatsTitle")}
             </p>
             <div className="h-auto">
               <BarChartHorizontalMulti />

@@ -2,12 +2,15 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import Button from "@components/Button";
 import { StatCard } from "@components/StatCard";
 import { chartDataID1, chartDataMonthID1, eventData } from "@utils/data";
 import IonIcon from "@components/IonIcon";
 import { toast } from "sonner";
 import { Skeleton } from "@assets/components/ui/skeleton";
+import { useTranslations } from "next-intl";
+import { useRole } from "@context/RoleContext";
 
 // Lazy load charts for better initial page load performance
 const BarChartHorizontalOverview = dynamic(
@@ -41,8 +44,13 @@ const chartDataTop3 = chartDataID1;
 const chartDataTime = chartDataMonthID1;
 
 export default function OverviewPage() {
+  const t = useTranslations("Dashboard.overview");
+  const { role } = useRole();
+  const router = useRouter();
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const fullscreenContainerRef = useRef<HTMLDivElement>(null);
+
+  const canViewInsights = role === "manager" || role === "owner";
 
   const handleToggleFullscreen = useCallback(() => {
     if (!fullscreenContainerRef.current) return;
@@ -53,13 +61,19 @@ export default function OverviewPage() {
     }
   }, []);
 
+  const handleViewInsights = () => {
+    if (canViewInsights) {
+      router.push("./dashboard/insights");
+    }
+  };
+
   const handleCopyEventLink = async () => {
     const eventLink = `${window.location.origin}/events/${event.id}`;
     try {
       await navigator.clipboard.writeText(eventLink);
       toast.success(
         <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
-          คัดลอกลิงก์กิจกรรมเรียบร้อยแล้ว
+          {t("linkCopied")}
         </p>,
         {
           style: {
@@ -73,7 +87,7 @@ export default function OverviewPage() {
       console.error("Failed to copy link:", err);
       toast.error(
         <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
-          ไม่สามารถคัดลอกลิงก์ได้
+          {t("linkCopyFailed")}
         </p>,
         {
           style: {
@@ -142,7 +156,7 @@ export default function OverviewPage() {
                   </span>
                 </div>
                 <div className="flex flex-col space-y-2 px-4 ">
-                  <p className="headline-small-emphasized">รายละเอียดกิจกรรม</p>
+                  <p className="headline-small-emphasized">{t("eventDetails")}</p>
                   <p className="body-large-primary">{event.description}</p>
                 </div>
               </div>
@@ -154,15 +168,15 @@ export default function OverviewPage() {
                   expanded={false}
                   onClick={handleToggleFullscreen}
                 >
-                  <p className="label-large-emphasized">ดูเต็มหน้าจอ</p>
+                  <p className="label-large-emphasized">{t("viewFullscreen")}</p>
                 </Button>
               </div>
             </div>
             <div className="h-full w-full order-1 md:order-2">
               <StatCard
-                title="จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด"
+                title={t("totalAttendees")}
                 value={event.totalAttendees}
-                unit="คน"
+                unit={t("unit")}
                 variant="primary"
               />
             </div>
@@ -172,16 +186,23 @@ export default function OverviewPage() {
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-6">
               <p className="headline-large-emphasized">
-                3 อันดับแรกของคณะ/หน่วยงานที่ลงทะเบียน
+                {t("top3Title")}
               </p>
               <BarChartVerticalOverview data={chartDataTop3} />
-              <Button mode="filled" bordered="square" expanded={false}>
-                <p className="label-large-emphasized">ดูทั้งหมด</p>
+              <Button 
+                mode="filled" 
+                bordered="square" 
+                expanded={false}
+                disabled={!canViewInsights}
+                onClick={handleViewInsights}
+                className={!canViewInsights ? "opacity-50 cursor-not-allowed" : ""}
+              >
+                <p className="label-large-emphasized">{t("viewAll")}</p>
               </Button>
             </div>
             <div className="flex flex-col space-y-6">
               <p className="headline-large-emphasized">
-                สถิติการลงทะเบียนแยกตามช่วงเวลา
+                {t("timeStatsTitle")}
               </p>
               <div className="h-full">
                 <BarChartHorizontalOverview data={chartDataTime} />
@@ -197,7 +218,15 @@ export default function OverviewPage() {
         className={isFullscreen ? "w-full h-full bg-white" : "hidden"}
       >
         {isFullscreen && (
-          <FullscreenContent onExit={handleToggleFullscreen} data={event} />
+          <FullscreenContent 
+            onExit={handleToggleFullscreen} 
+            data={event}
+            translations={{
+              eventDetails: t("eventDetails"),
+              totalAttendees: t("totalAttendees"),
+              unit: t("unit"),
+            }}
+          />
         )}
       </div>
     </div>

@@ -1,5 +1,6 @@
 "use client";
 import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { FilterDropdown } from "./FilterDropdown";
 import { SelectedItemsList } from "./SelectedItemsList";
 
@@ -22,6 +23,7 @@ export const FilterableList: React.FC<FilterableListProps> = ({
   hasDescription = false,
   onCheckedChange,
 }) => {
+  const t = useTranslations("Dashboard.compare");
   // Memoize derived state to avoid unnecessary recalculations
   const selectedItemsArray = useMemo(
     () => items.filter((item) => selectedItems[item.id]),
@@ -39,7 +41,7 @@ export const FilterableList: React.FC<FilterableListProps> = ({
           <p className="title-large-emphasized translate-y-[-10px]">{title}</p>
           {hasDescription && (
             <p className="body-small-primary text-neutral-600 py-2">
-              เลือกได้สูงสุด 5 ตัวเลือก
+              {t("maxSelectionError")}
             </p>
           )}
         </div>

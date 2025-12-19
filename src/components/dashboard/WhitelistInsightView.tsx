@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@assets/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 // Dynamically import heavy chart components
 const BarChartHorizontal = dynamic(
@@ -53,6 +54,7 @@ const verticalStackData = registeredData;
 const donutChartData = registrationStatusData;
 
 export function WhitelistInsightView() {
+  const t = useTranslations("Dashboard.insights");
   const [selectedFilter, setSelectedFilter] = useState<
     "student" | "staff" | null
   >(null);
@@ -108,7 +110,7 @@ export function WhitelistInsightView() {
             expanded={false}
             onClick={() => setSelectedFilter(null)}
           >
-            <p className="label-large-emphasized">ทั้งหมด</p>
+            <p className="label-large-emphasized">{t("all")}</p>
           </Button>
           <Button
             mode={selectedFilter === "student" ? "filled" : "outline"}
@@ -116,7 +118,7 @@ export function WhitelistInsightView() {
             expanded={false}
             onClick={() => setSelectedFilter("student")}
           >
-            <p className="label-large-emphasized">นิสิต</p>
+            <p className="label-large-emphasized">{t("student")}</p>
           </Button>
           <Button
             mode={selectedFilter === "staff" ? "filled" : "outline"}
@@ -124,24 +126,24 @@ export function WhitelistInsightView() {
             expanded={false}
             onClick={() => setSelectedFilter("staff")}
           >
-            <p className="label-large-emphasized">บุคลากร</p>
+            <p className="label-large-emphasized">{t("staff")}</p>
           </Button>
         </div>
         <div>
           <Popover>
             <PopoverTrigger asChild>
               <Button mode="filled" bordered="square" expanded={false}>
-                <p className="label-large-emphasized">ตัวกรอง</p>
+                <p className="label-large-emphasized">{t("filter")}</p>
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-screen max-w-md p-8" align="end">
               <div>
                 <div className="flex flex-col space-y-8">
                   <p className="headline-large-emphasized mx-auto">
-                    ตัวกรองข้อมูล
+                    {t("filterDataTitle")}
                   </p>
                   <FilterableList
-                    title="คณะ/หน่วยงาน"
+                    title={t("faculty")}
                     items={facultyData}
                     selectedItems={selectedFaculties}
                     onCheckedChange={handleFacultyChange}
@@ -149,7 +151,7 @@ export function WhitelistInsightView() {
                   />
 
                   <FilterableList
-                    title="ช่วงเวลา"
+                    title={t("timePeriod")}
                     items={timeData}
                     selectedItems={selectedTimes}
                     onCheckedChange={handleTimeChange}
@@ -165,14 +167,14 @@ export function WhitelistInsightView() {
                       onClick={handleClearFilters}
                     >
                       <p className="title-large-emphasized translate-y-[-6px]">
-                        ล้างตัวกรอง
+                        {t("clearFilter")}
                       </p>
                     </Button>
 
                     <PopoverClose asChild>
                       <Button mode="filled" bordered="round" expanded={true}>
                         <p className="title-large-emphasized translate-y-[-6px]">
-                          กรองข้อมูล
+                          {t("applyFilter")}
                         </p>
                       </Button>
                     </PopoverClose>
@@ -188,18 +190,18 @@ export function WhitelistInsightView() {
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="h-[250px] md:h-[450px] w-full">
             <StatCard
-              title="จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด"
+              title={t("totalAttendees")}
               value={500}
-              unit="คน"
+              unit={t("unit")}
               variant="primary"
             >
               <div className="mt-4 hidden md:flex justify-center items-center px-8">
                 <span className="headline-small-emphasized pr-4 sm:pr-10 md:pr-16 text-center">
-                  นิสิต: 455 คน
+                  {t("students")}: 455 {t("unit")}
                 </span>
                 <div className="inline-block w-0.5 self-stretch bg-neutral-100 dark:bg-white/10"></div>
                 <span className="headline-small-emphasized pl-4 sm:pl-10 md:pl-16 text-center">
-                  บุคลากร: 5 คน
+                  {t("staffs")}: 5 {t("unit")}
                 </span>
               </div>
             </StatCard>
@@ -211,18 +213,18 @@ export function WhitelistInsightView() {
         <section className="grid grid-cols-1 md:grid-cols-2 min-h-[400px] gap-8">
           <div className="h-full w-full">
             <StatCard
-              title="จำนวนผู้มีสิทธิลงทะเบียนเข้าร่วมกิจกรรม"
+              title={t("totalEligible")}
               value={600}
-              unit="คน"
+              unit={t("unit")}
               variant="secondary"
               className="shadow-elevation-4"
             />
           </div>
           <div className="h-full w-full">
             <StatCard
-              title="จำนวนผู้ที่ยังไม่ได้ลงทะเบียนเข้าร่วมกิจกรรม"
+              title={t("totalUnregistered")}
               value={100}
-              unit="คน"
+              unit={t("unit")}
               variant="secondary"
               className="shadow-elevation-4"
             />
@@ -233,16 +235,16 @@ export function WhitelistInsightView() {
       <section className="flex flex-col space-y-8">
         <div className="flex justify-between">
           <p className="headline-small-emphasized sm:headline-medium-emphasized md:headline-large-emphasized">
-            สถิติการลงทะเบียนแยกตามคณะ/หน่วยงาน
+            {t("facultyStatsTitle")}
           </p>
           <SortMenu
             options={[
               {
-                label: "วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด",
+                label: t("sortNewest"),
                 value: "newest",
               },
               {
-                label: "วันที่จัดกิจกรรม : เก่าสุด - ใหม่สุด",
+                label: t("sortOldest"),
                 value: "oldest",
               },
             ]}
@@ -256,7 +258,7 @@ export function WhitelistInsightView() {
 
       <section className="flex flex-col space-y-8 mb-0sm:mb-10">
         <p className="headline-small-emphasized sm:headline-medium-emphasized md:headline-large-emphasized">
-          สถิติการลงทะเบียนแยกตามช่วงเวลา
+          {t("timeStatsTitle")}
         </p>
         <div>
           <BarChartHorizontal data={horizontalChartData} />
@@ -266,7 +268,7 @@ export function WhitelistInsightView() {
       <Link href="/dashboard-compare" target="_blank">
         <Button mode="filled" bordered="square" expanded={false}>
           <p className="title-medium-emphasized translate-y-[-2px]">
-            เปรียบเทียบสถิติการลงทะเบียนเข้าร่วมกิจกรรม
+            {t("compareButton")}
           </p>
         </Button>
       </Link>
