@@ -10,13 +10,17 @@ import { FilterableList } from "@components/dashboard/FilterableList";
 import { facultyData, timeData } from "@utils/data";
 import { useRole } from "@context/RoleContext";
 import { toast } from "sonner";
+import { Skeleton } from "@assets/components/ui/skeleton";
 
 const BarChartHorizontalMulti = dynamic(
   () =>
     import("@components/charts/BarChartHorizontalMulti").then((mod) => ({
       default: mod.BarChartHorizontalMulti,
     })),
-  { ssr: false }
+  { 
+    ssr: false,
+    loading: () => <Skeleton className="h-[450px] w-full rounded-lg" />
+  }
 );
 
 const BarChartVerticalMulti = dynamic(
@@ -24,7 +28,10 @@ const BarChartVerticalMulti = dynamic(
     import("@components/charts/BarChartVerticalMulti").then((mod) => ({
       default: mod.BarChartVerticalMulti,
     })),
-  { ssr: false }
+  { 
+    ssr: false,
+    loading: () => <Skeleton className="h-[500px] w-full rounded-lg" />
+  }
 );
 
 const PieChartWithLabel = dynamic(
@@ -32,7 +39,10 @@ const PieChartWithLabel = dynamic(
     import("@components/charts/PieChartWithLabel").then((mod) => ({
       default: mod.PieChartWithLabel,
     })),
-  { ssr: false }
+  { 
+    ssr: false,
+    loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />
+  }
 );
 
 const canViewPage = (role: string) => {

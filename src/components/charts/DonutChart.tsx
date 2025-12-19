@@ -1,6 +1,5 @@
 "use client";
 import { cn } from "@assets/lib/utils";
-import * as React from "react";
 import { Label, Pie, PieChart, Cell } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
@@ -26,19 +25,16 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function DonutChart({ data }: { data: DonutChartProps[] }) {
-  const chartData = React.useMemo(
-    () => data.map((item, index) => ({
-      ...item,
-      fill: index === 0 ? "var(--color-primary)" : "var(--color-gray-300)",
-    })),
-    [data]
-  );
+  const chartData = data.map((item, index) => ({
+    ...item,
+    fill: index === 0 ? "var(--color-primary)" : "var(--color-gray-300)",
+  }));
 
-  const registeredPercent = React.useMemo(() => {
+  const registeredPercent = (() => {
     const total = chartData.reduce((acc, curr) => acc + curr.total, 0);
     const registered = chartData[0].total;
     return ((registered / total) * 100).toFixed(0);
-  }, [chartData]);
+  })();
 
   interface LabelProps {
     cx?: number;
@@ -51,7 +47,7 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
   }
 
 
-  const customLabel = React.useMemo(() => {
+  const customLabel = (() => { 
     const LabelComponent = (props: LabelProps) => {
       const CUSTOM_DISTANCE = 1.6;
       const RADIAN = Math.PI / 180;
@@ -89,7 +85,7 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
     };
     LabelComponent.displayName = "DonutChartLabel";
     return LabelComponent;
-  }, []);
+  })();
 
   return (
     <Card className="flex flex-col py-12 sm:py-10 md:py-0 justify-center border-none shadow-none h-full">

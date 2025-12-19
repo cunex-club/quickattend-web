@@ -51,7 +51,7 @@ export function PieChartWithLabel() {
 
   // this function is adapted from Recharts' example: https://recharts.org/en-US/examples/CustomizedLabelPieChart
   const customLabel = useCallback((props: unknown) => {
-    const CUSTOM_DISTANCE: number = 1.3;
+    const CUSTOM_DISTANCE: number = 1.25;
     const RADIAN = Math.PI / 180;
     const { cx, cy, midAngle, innerRadius, outerRadius, payload } =
       (props as PieLabelProps) || {};

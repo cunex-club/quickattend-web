@@ -1,14 +1,40 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import dynamic from "next/dynamic";
 import Button from "@components/Button";
-import { BarChartHorizontalOverview } from "@components/charts/BarChartHorizontalOverview";
-import { BarChartVerticalOverview } from "@components/charts/BarChartVerticalOverview";
 import { StatCard } from "@components/StatCard";
 import { chartDataID1, chartDataMonthID1, eventData } from "@utils/data";
-import FullscreenContent from "@components/dashboard/FullScreenContent";
 import IonIcon from "@components/IonIcon";
 import { toast } from "sonner";
+import { Skeleton } from "@assets/components/ui/skeleton";
+
+// Lazy load charts for better initial page load performance
+const BarChartHorizontalOverview = dynamic(
+  () => import("@components/charts/BarChartHorizontalOverview").then(mod => ({
+    default: mod.BarChartHorizontalOverview
+  })),
+  { 
+    ssr: false,
+    loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />
+  }
+);
+
+const BarChartVerticalOverview = dynamic(
+  () => import("@components/charts/BarChartVerticalOverview").then(mod => ({
+    default: mod.BarChartVerticalOverview
+  })),
+  { 
+    ssr: false,
+    loading: () => <Skeleton className="h-[400px] w-full rounded-lg" />
+  }
+);
+
+// Only load FullscreenContent when needed (after user clicks button)
+const FullscreenContent = dynamic(
+  () => import("@components/dashboard/FullScreenContent"),
+  { ssr: false }
+);
 
 const event = eventData;
 const chartDataTop3 = chartDataID1;

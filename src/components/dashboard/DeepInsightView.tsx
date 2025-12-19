@@ -6,16 +6,13 @@ import StatCard from "@components/StatCard";
 import Link from "next/link";
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import { Skeleton } from "@assets/components/ui/skeleton";
 
 // Dynamically import heavy chart components
 const BarChartHorizontal = dynamic(
   () => import("@components/charts/BarChartHorizontal").then((mod) => mod.BarChartHorizontal),
   {
-    loading: () => (
-      <div className="w-full h-[400px] flex items-center justify-center bg-gray-100 rounded animate-pulse">
-        <p className="text-gray-400">กำลังโหลดกราฟ...</p>
-      </div>
-    ),
+    loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />,
     ssr: false,
   }
 );
@@ -23,11 +20,7 @@ const BarChartHorizontal = dynamic(
 const BarChartVertical = dynamic(
   () => import("@components/charts/BarChartVertical").then((mod) => mod.BarChartVertical),
   {
-    loading: () => (
-      <div className="w-full h-[400px] flex items-center justify-center bg-gray-100 rounded animate-pulse">
-        <p className="text-gray-400">กำลังโหลดกราฟ...</p>
-      </div>
-    ),
+    loading: () => <Skeleton className="h-[400px] w-full rounded-lg" />,
     ssr: false,
   }
 );
@@ -94,7 +87,6 @@ export function DeepInsightView() {
   };
 
   const handleSortChange = (value: string) => {
-    console.log("sort:", value);
   };
 
   return (

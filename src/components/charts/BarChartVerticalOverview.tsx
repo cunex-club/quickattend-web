@@ -1,6 +1,3 @@
-"use client";
-
-import { useMemo } from "react";
 import {
   Bar,
   BarChart,
@@ -47,14 +44,14 @@ export function BarChartVerticalOverview({
   const LABEL_FONT_SIZE: number = 14;
   
   // Calculate total sum for percentage calculation and memoize chart data transformation
-  const chartDataWithPercentage = useMemo(() => {
+  const chartDataWithPercentage = (() => {
     const totalSum = chartData.reduce((sum, item) => sum + item.total, 0);
     return chartData.map(item => ({
       ...item,
       percentage: totalSum > 0 ? ((item.total / totalSum) * 100).toFixed(1) : "0",
       facultyWithPercentage: `${item.faculty} (${totalSum > 0 ? ((item.total / totalSum) * 100).toFixed(1) : "0"}%)`
     }));
-  }, [chartData]);
+  })();
   
   // Calculate dynamic height: (bars × barSize) + (gaps between bars) + padding
   const dynamicHeight: number = 
