@@ -24,29 +24,28 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function PieChartStacked({
-  dataInner,
-  dataOuter,
+  data,
 }: {
-  dataInner: PieChartStackedProps[];
-  dataOuter: PieChartStackedProps[];
+  data: PieChartStackedProps[];
 }) {
-  const chartDataInner = dataInner.map((item, index) => ({
+  const chartDataInner = data.map((item, index) => ({
     ...item,
     fill: index === 0 ? "var(--color-primary)" : "var(--color-gray-100)",
   }));
 
-  const chartDataOuter = dataOuter.map((item, index) => ({
+  const chartDataOuter = data.map((item, index) => ({
     ...item,
     fill: index === 0 ? "var(--color-pink-200)" : "var(--color-neutral-white)",
   }));
 
   return (
-    <Card className="flex flex-col">
-      <CardContent className="flex-1 pb-0">
+    <Card className="flex flex-col justify-center h-full w-full border shadow-none">
+      <CardContent className="pb-0 h-full flex items-center justify-center">
         <ChartContainer
           config={chartConfig}
           className={cn(
-            "mx-auto aspect-square max-h-[300px]",
+            "mx-auto aspect-square max-h-[300px] max-w-[300px]",
+            "[\u0026_.recharts-surface]:overflow-visible",
             "chart-hover-pie"
           )}
         >
