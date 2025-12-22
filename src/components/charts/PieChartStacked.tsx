@@ -44,7 +44,7 @@ export function PieChartStacked({
         <ChartContainer
           config={chartConfig}
           className={cn(
-            "mx-auto aspect-square max-h-[300px] max-w-[300px]",
+            "mx-auto aspect-square max-h-[300px] max-w-[300px] h-full w-full",
             "[\u0026_.recharts-surface]:overflow-visible",
             "chart-hover-pie"
           )}

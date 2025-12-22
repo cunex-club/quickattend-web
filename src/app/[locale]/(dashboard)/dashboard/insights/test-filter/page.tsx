@@ -206,7 +206,7 @@ export default function FilterView() {
               </div>
             </StatCard>
           </div>
-          <div className="w-full">
+          <div className="h-[250px] md:h-[450px] w-full">
             <DonutChart data={donutChartData} />
           </div>
         </section>
