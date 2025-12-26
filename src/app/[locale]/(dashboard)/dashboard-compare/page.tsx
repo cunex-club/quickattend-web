@@ -18,9 +18,9 @@ const BarChartHorizontalMulti = dynamic(
     import("@components/charts/BarChartHorizontalMulti").then((mod) => ({
       default: mod.BarChartHorizontalMulti,
     })),
-  { 
+  {
     ssr: false,
-    loading: () => <Skeleton className="h-[450px] w-full rounded-lg" />
+    loading: () => <Skeleton className="h-[450px] w-full rounded-lg" />,
   }
 );
 
@@ -29,9 +29,9 @@ const BarChartVerticalMulti = dynamic(
     import("@components/charts/BarChartVerticalMulti").then((mod) => ({
       default: mod.BarChartVerticalMulti,
     })),
-  { 
+  {
     ssr: false,
-    loading: () => <Skeleton className="h-[500px] w-full rounded-lg" />
+    loading: () => <Skeleton className="h-[500px] w-full rounded-lg" />,
   }
 );
 
@@ -40,9 +40,9 @@ const PieChartWithLabel = dynamic(
     import("@components/charts/PieChartWithLabel").then((mod) => ({
       default: mod.PieChartWithLabel,
     })),
-  { 
+  {
     ssr: false,
-    loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />
+    loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />,
   }
 );
 
@@ -142,7 +142,7 @@ export default function ComparePage() {
     if (selectedFaculties["f-0"] && selectedTimes["t-0"]) {
       toast.error(
         <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
-          {t("bothAllError")} 
+          {t("bothAllError")}
         </p>,
         {
           style: {
@@ -179,43 +179,47 @@ export default function ComparePage() {
           </span>
 
           {/* filter section */}
-          <section className="w-full h-auto flex flex-col bg-neutral-200 p-8 sm:p-12 md:p-16 rounded-2xl space-y-8">
-            <FilterableList
-              title={t("faculty")}
-              items={facultyData}
-              selectedItems={selectedFaculties}
-              onCheckedChange={handleFacultyChange}
-              hasDescription
-            />
-            <FilterableList
-              title={t("timePeriod")}
-              items={timeData}
-              selectedItems={selectedTimes}
-              onCheckedChange={handleTimeChange}
-              hasDescription
-            />
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-              <Button
-                mode="outline"
-                bordered="round"
-                expanded={true}
-                className="bg-transparent"
-                onClick={handleClearSelection}
-              >
-                <p className="title-large-emphasized translate-y-[-6px]">
-                  {t("clearData")}
-                </p>
-              </Button>
-              <Button
-                mode="filled"
-                bordered="round"
-                expanded={true}
-                onClick={handleSubmitComparison}
-              >
-                <p className="title-large-emphasized translate-y-[-6px]">
-                  {t("compareData")}
-                </p>
-              </Button>
+          <section className="w-full h-auto flex flex-col space-y-8 bg-neutral-100 p-8 sm:p-12 md:p-16 rounded-2xl">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <FilterableList
+                title={t("faculty")}
+                items={facultyData}
+                selectedItems={selectedFaculties}
+                onCheckedChange={handleFacultyChange}
+                hasDescription
+              />
+              <FilterableList
+                title={t("timePeriod")}
+                items={timeData}
+                selectedItems={selectedTimes}
+                onCheckedChange={handleTimeChange}
+                hasDescription
+              />
+            </div>
+            <div className="flex justify-end">
+              <div className="flex flex-col-reverse md:flex-row gap-4 md:gap-8 w-full md:w-[40%]">
+                <Button
+                  mode="outline"
+                  bordered="round"
+                  expanded={true}
+                  className="bg-transparent"
+                  onClick={handleClearSelection}
+                >
+                  <p className="title-large-emphasized translate-y-[-6px]">
+                    {t("clearData")}
+                  </p>
+                </Button>
+                <Button
+                  mode="filled"
+                  bordered="round"
+                  expanded={true}
+                  onClick={handleSubmitComparison}
+                >
+                  <p className="title-large-emphasized translate-y-[-6px]">
+                    {t("compareData")}
+                  </p>
+                </Button>
+              </div>
             </div>
           </section>
 
@@ -247,9 +251,7 @@ export default function ComparePage() {
             </div>
           </section>
           <section className="flex flex-col space-y-8">
-            <p className="headline-large-emphasized">
-              {t("timeStatsTitle")}
-            </p>
+            <p className="headline-large-emphasized">{t("timeStatsTitle")}</p>
             <div className="h-auto">
               <BarChartHorizontalMulti />
             </div>

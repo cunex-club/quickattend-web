@@ -30,7 +30,7 @@ export const SelectedItemsList: React.FC<SelectedItemsListProps> = ({
             onClick={() => onRemove(item.id)}
             className={cn(
               "absolute -top-3 -right-3 bg-primary border-4 rounded-full w-[28px] h-[28px] flex items-center justify-center",
-              filterVariant === "secondary" ? "border-white" : "border-neutral-200"
+              filterVariant === "secondary" ? "border-white" : "border-neutral-100"
             )}
           >
             <p className="text-neutral-white translate-y-[3px]">x</p>
