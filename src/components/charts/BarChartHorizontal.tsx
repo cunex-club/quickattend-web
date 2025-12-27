@@ -53,65 +53,64 @@ export function BarChartHorizontal({
   return (
     <Card className="p-0 border-none shadow-none">
       <CardContent className="px-0">
-        <ChartContainer
-          config={chartConfig}
-          className="max-h-[300px] lg:max-h-[400px] w-full pr-3 chart-hover-bar"
-        >
-          <BarChart
-            accessibilityLayer
-            data={data}
-            margin={{
-              top: 20,
-            }}
-            barCategoryGap={BAR_CATEGORY_GAP}
+        <div className="min-w-[900px] sm:min-w-[1200px] md:min-w-[1000px] lg:min-w-[600px] w-full">
+          <ChartContainer
+            config={chartConfig}
+            className="max-h-[300px] lg:max-h-[400px] w-full pr-3 chart-hover-bar"
           >
-            <CartesianGrid
-              horizontal={true}
-              vertical={false}
-              stroke="var(--color-CartesianGrid)"
-              strokeWidth={0.4}
-              strokeDasharray="3 3"
-            />
-            <XAxis
-              dataKey="time"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={true}
-              stroke={"var(--color-XAxis)"}
-              className="hidden md:block"
-            />
-            <YAxis
-              type="number"
-              dataKey="total"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={true}
-              stroke={"var(--color-YAxis)"}
-            />
-
-            <ChartTooltip
-              cursor={true}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Bar
-              dataKey="total"
-              fill="var(--color-total)"
-              radius={BAR_RADIUS}
+            <BarChart
+              accessibilityLayer
+              data={data}
+              margin={{
+                top: 20,
+              }}
+              barCategoryGap={BAR_CATEGORY_GAP}
             >
-              {data.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                />
-              ))}
-              <LabelList
-                position="top"
-                offset={LABEL_OFFSET}
-                className="fill-neutral-black"
-                fontSize={LABEL_FONT_SIZE}
+              <CartesianGrid
+                horizontal={true}
+                vertical={false}
+                stroke="var(--color-CartesianGrid)"
+                strokeWidth={0.4}
+                strokeDasharray="3 3"
               />
-            </Bar>
-          </BarChart>
-        </ChartContainer>
+              <XAxis
+                dataKey="time"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={true}
+                stroke={"var(--color-XAxis)"}
+              />
+              <YAxis
+                type="number"
+                dataKey="total"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={true}
+                stroke={"var(--color-YAxis)"}
+              />
+
+              <ChartTooltip
+                cursor={true}
+                content={<ChartTooltipContent hideLabel />}
+              />
+              <Bar
+                dataKey="total"
+                fill="var(--color-total)"
+                radius={BAR_RADIUS}
+              >
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} />
+                ))}
+                <LabelList
+                  position="top"
+                  offset={LABEL_OFFSET}
+                  className="fill-neutral-black"
+                  fontSize={LABEL_FONT_SIZE}
+                />
+              </Bar>
+            </BarChart>
+          </ChartContainer>
+        </div>
       </CardContent>
     </Card>
   );

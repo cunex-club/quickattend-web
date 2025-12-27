@@ -229,7 +229,7 @@ export default function ComparePage() {
                 title={t("totalAttendees")}
                 value={860}
                 unit={t("unit")}
-                variant="primary"
+                variant="primary-outline"
               >
                 <div className="flex flex-col justify-center items-center gap-4">
                   <p className="title-medium-emphasized lg:title-large-emphasized">
@@ -252,7 +252,7 @@ export default function ComparePage() {
           </section>
           <section className="flex flex-col space-y-8">
             <p className="headline-large-emphasized">{t("timeStatsTitle")}</p>
-            <div className="h-auto">
+            <div className="h-auto w-full overflow-auto">
               <BarChartHorizontalMulti />
             </div>
           </section>

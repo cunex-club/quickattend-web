@@ -48,7 +48,7 @@ export function BarChartVertical({ data }: { data: BarChartVerticalProps[] }) {
   const dynamicHeight: number = chartData.length * (BAR_SIZE + BAR_GAP);
 
   return (
-    <Card className="bg-neutral-100 shadow-elevation-2 h-auto w-full px-0 lg:px-8">
+    <Card className="bg-neutral-white md:bg-neutral-100 border-none shadow-none h-auto w-full px-0 lg:px-8">
       <CardContent className="px-0">
         <ChartContainer
           config={chartConfig}

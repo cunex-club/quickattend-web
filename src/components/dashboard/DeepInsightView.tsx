@@ -11,7 +11,10 @@ import { useTranslations } from "next-intl";
 
 // Dynamically import heavy chart components
 const BarChartHorizontal = dynamic(
-  () => import("@components/charts/BarChartHorizontal").then((mod) => mod.BarChartHorizontal),
+  () =>
+    import("@components/charts/BarChartHorizontal").then(
+      (mod) => mod.BarChartHorizontal
+    ),
   {
     loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />,
     ssr: false,
@@ -19,7 +22,10 @@ const BarChartHorizontal = dynamic(
 );
 
 const BarChartVertical = dynamic(
-  () => import("@components/charts/BarChartVertical").then((mod) => mod.BarChartVertical),
+  () =>
+    import("@components/charts/BarChartVertical").then(
+      (mod) => mod.BarChartVertical
+    ),
   {
     loading: () => <Skeleton className="h-[400px] w-full rounded-lg" />,
     ssr: false,
@@ -40,6 +46,7 @@ import {
   eventData,
 } from "@utils/data";
 import SortMenu from "@components/sort-menu";
+import IonIcon from "@components/IonIcon";
 
 const verticalChartData = dataCategorizeByFaculty;
 const horizontalChartData = dataCategorizeByTime;
@@ -53,12 +60,12 @@ export function DeepInsightView() {
     Record<string, boolean>
   >({});
   const [selectedTimes, setSelectedTimes] = useState<Record<string, boolean>>(
-    {},
+    {}
   );
   const createSelectionHandler =
     (
       setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-      allItemId: string,
+      allItemId: string
     ) =>
     (itemId: string, checked: boolean) => {
       setter((prevSelected) => {
@@ -79,7 +86,7 @@ export function DeepInsightView() {
 
   const handleFacultyChange = createSelectionHandler(
     setSelectedFaculties,
-    "f-0",
+    "f-0"
   );
   const handleTimeChange = createSelectionHandler(setSelectedTimes, "t-0");
 
@@ -88,13 +95,12 @@ export function DeepInsightView() {
     setSelectedTimes({});
   };
 
-  const handleSortChange = (value: string) => {
-  };
+  const handleSortChange = (value: string) => {};
 
   return (
     <div className="w-full rounded-xl bg-neutral-white space-y-16">
       <section className="flex justify-between">
-        <div className="space-x-4">
+        <div className="space-x-4 flex items-center">
           <Button
             mode={selectedFilter === null ? "filled" : "outline"}
             bordered="square"
@@ -123,9 +129,13 @@ export function DeepInsightView() {
         <div>
           <Popover>
             <PopoverTrigger asChild>
-              <Button mode="filled" bordered="square" expanded={false}>
-                <p className="label-large-emphasized">{t("filter")}</p>
-              </Button>
+              <button className="flex items-center">
+                <IonIcon
+                  name="FunnelOutline"
+                  size="32px"
+                  className="text-primary"
+                />
+              </button>
             </PopoverTrigger>
             <PopoverContent className="w-screen max-w-md p-8" align="end">
               <div>
@@ -182,7 +192,7 @@ export function DeepInsightView() {
           title={t("totalAttendees")}
           value={eventData.totalAttendees}
           unit={t("unit")}
-          variant="primary"
+          variant="primary-outline"
         >
           <div className="mt-4 hidden md:flex justify-center items-center px-8">
             <span className="headline-small-emphasized pr-2 md:pr-16 text-center">
@@ -224,18 +234,17 @@ export function DeepInsightView() {
         <p className="headline-small-emphasized md:headline-large-emphasized">
           {t("timeStatsTitle")}
         </p>
-        <div className="w-full h-full">
+        <div className="w-full h-full overflow-auto">
           <BarChartHorizontal data={horizontalChartData} />
         </div>
+        <Link href="/dashboard-compare" target="_blank">
+          <Button mode="filled" bordered="square" expanded={false}>
+            <p className="title-medium-emphasized translate-y-[-2px]">
+              {t("compareButton")}
+            </p>
+          </Button>
+        </Link>
       </section>
-
-      <Link href="/dashboard-compare" target="_blank">
-        <Button mode="filled" bordered="square" expanded={false}>
-          <p className="title-medium-emphasized translate-y-[-2px]">
-            {t("compareButton")}
-          </p>
-        </Button>
-      </Link>
     </div>
   );
 }

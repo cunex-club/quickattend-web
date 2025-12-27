@@ -13,7 +13,7 @@ async function getEventData(): Promise<{ type: EventType }> {
 
 export default async function InsightsPageController() {
   const event = await getEventData();
-  if (event.type === "specific") {
+  if (event.type === "whitelist") {
     return <WhitelistInsightView />;
   }
   return <DeepInsightView />;

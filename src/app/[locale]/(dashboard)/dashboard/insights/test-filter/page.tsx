@@ -193,7 +193,7 @@ export default function FilterView() {
               title={t("totalAttendees")}
               value={500}
               unit={t("unit")}
-              variant="primary"
+              variant="primary-outline"
             >
               <div className="mt-4 hidden md:flex justify-center items-center px-8">
                 <span className="headline-small-emphasized pr-4 sm:pr-10 md:pr-16 text-center">

@@ -1,23 +1,41 @@
 @layer components {
-    .chart-cell-transition {
-        transition: fill-opacity 0.3s ease, opacity 0.3s ease;
-    }
+  .chart-cell-transition {
+    transition:
+      fill-opacity 0.3s ease,
+      opacity 0.3s ease;
+  }
 
-    /* Bar Chart Hover Effects */
-    .chart-hover-bar .recharts-bar-rectangle {
-        transition: fill-opacity 0.3s ease-in-out;
-    }
+  .chart-hover-bar .recharts-bar-rectangle,
+  .chart-hover-bar .recharts-rectangle {
+    transition: fill-opacity 0.3s ease-in-out;
+  }
 
-    .chart-hover-bar:has(.recharts-bar-rectangle:hover) .recharts-bar-rectangle:not(:hover) {
-        fill-opacity: 0.3;
-    }
+  .chart-hover-bar:has(.recharts-bar-rectangle:hover)
+    .recharts-bar-rectangle:not(:hover),
+  .chart-hover-bar:has(.recharts-rectangle:hover)
+    .recharts-rectangle:not(:hover) {
+    fill-opacity: 0.3;
+  }
 
-    /* Pie Chart Hover Effects */
-    .chart-hover-pie .recharts-pie-sector {
-        transition: opacity 0.3s ease-in-out;
-    }
+  .chart-hover-bar:hover .recharts-bar-rectangle:not(:hover),
+  .chart-hover-bar:hover .recharts-rectangle:not(:hover) {
+    fill-opacity: 0.5;
+  }
 
-    .chart-hover-pie:has(.recharts-pie-sector:hover) .recharts-pie-sector:not(:hover) {
-        opacity: 0.3;
-    }
+  .chart-hover-pie .recharts-pie-sector {
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .chart-hover-pie:has(.recharts-pie-sector:hover)
+    .recharts-pie-sector:not(:hover) {
+    opacity: 0.3;
+  }
+  
+  .chart-list-group:hover .recharts-rectangle {
+    fill-opacity: 0.3;
+  }
+
+  .chart-list-group .chart-item:hover .recharts-rectangle {
+    fill-opacity: 1;
+  }
 }

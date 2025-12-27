@@ -94,7 +94,7 @@ const FullscreenContent: React.FC<FullscreenContentProps> = ({
                   title={translations.totalAttendees}
                   value={data.totalAttendees}
                   unit={translations.unit}
-                  variant="primary"
+                  variant="primary-filled"
                 />
               </div>
             </div>

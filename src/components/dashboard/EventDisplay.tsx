@@ -36,7 +36,7 @@ export const EventDisplay: React.FC<EventProps> = ({ event }) => {
           title="จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด"
           value={event.totalAttendees}
           unit="คน"
-          variant="primary"
+          variant="primary-filled"
         />
       </div>
     </section>

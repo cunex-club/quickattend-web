@@ -61,6 +61,7 @@ export function BarChartHorizontalOverview({
   const STROKE_DASH_ARRAY: string = "3 3";
   const LABEL_OFFSET: number = 12;
   const LABEL_FONT_SIZE: number = 12;
+
   return (
     <Card className="py-0 px-0 h-full relative border-none shadow-none">
       <CardAction className="absolute z-10 right-0">

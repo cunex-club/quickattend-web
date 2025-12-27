@@ -18,7 +18,7 @@ export default function DashboardNav({
     return role === "manager" || role === "owner";
   };
   return (
-    <nav className="flex justify-center w-auto">
+    <nav className="flex justify-start space-x-4 pt-4">
       {tabs.map((tab) => {
         const normalizedPathname = pathname.replace(`/${locale}`, "");
         const isActive =
@@ -32,7 +32,7 @@ export default function DashboardNav({
             href={isTabDisabled ? "#" : `/${locale}${tab.href}`}
             aria-disabled={isTabDisabled}
             className={cn(
-              "px-4 md:px-16 py-2 transition-colors duration-200 border-b-2",
+              "w-28 transition-colors duration-200 border-b-2",
               isActive
                 ? "border-primary text-primary"
                 : "border-transparent text-neutral-600 hover:text-primary",
@@ -41,7 +41,7 @@ export default function DashboardNav({
                 : "",
             )}
           >
-            <span className="headline-small-emphasized md:headline-medium-emphasized lg:headline-large-emphasized">
+            <span className="headline-small-emphasized">
               {tab.label}
             </span>
           </Link>

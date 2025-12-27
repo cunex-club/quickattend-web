@@ -14,22 +14,24 @@ import { useRole } from "@context/RoleContext";
 
 // Lazy load charts for better initial page load performance
 const BarChartHorizontalOverview = dynamic(
-  () => import("@components/charts/BarChartHorizontalOverview").then(mod => ({
-    default: mod.BarChartHorizontalOverview
-  })),
-  { 
+  () =>
+    import("@components/charts/BarChartHorizontalOverview").then((mod) => ({
+      default: mod.BarChartHorizontalOverview,
+    })),
+  {
     ssr: false,
-    loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />
+    loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />,
   }
 );
 
 const BarChartVerticalOverview = dynamic(
-  () => import("@components/charts/BarChartVerticalOverview").then(mod => ({
-    default: mod.BarChartVerticalOverview
-  })),
-  { 
+  () =>
+    import("@components/charts/BarChartVerticalOverview").then((mod) => ({
+      default: mod.BarChartVerticalOverview,
+    })),
+  {
     ssr: false,
-    loading: () => <Skeleton className="h-[400px] w-full rounded-lg" />
+    loading: () => <Skeleton className="h-[400px] w-full rounded-lg" />,
   }
 );
 
@@ -113,13 +115,13 @@ export default function OverviewPage() {
   }, []);
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative">
       {!isFullscreen && (
-        <div className="flex flex-col space-y-16">
+        <div className="flex flex-col space-y-8">
           {/* event information section */}
           <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex flex-col space-y-8 order-2 md:order-1">
-              <div className="flex justify-between">
+            <div className="flex flex-col space-y-6 order-2 md:order-1">
+              <div className="flex justify-between items-center">
                 <p className="headline-large-emphasized">{event.title}</p>
                 <button
                   className="border border-primary rounded-full w-auto h-auto p-0.5 hover:bg-neutral-100 transition-colors duration-200"
@@ -129,7 +131,7 @@ export default function OverviewPage() {
                 </button>
               </div>
               <div className="flex flex-col space-y-4">
-                <div className="px-4 space-y-0 body-medium-primary ">
+                <div className="px-4 space-y-0 body-medium-primary">
                   <span className="flex flex-row space-x-2 items-center">
                     <IonIcon
                       name="Calendar"
@@ -156,7 +158,9 @@ export default function OverviewPage() {
                   </span>
                 </div>
                 <div className="flex flex-col space-y-2 px-4 ">
-                  <p className="headline-small-emphasized">{t("eventDetails")}</p>
+                  <p className="headline-small-emphasized">
+                    {t("eventDetails")}
+                  </p>
                   <p className="body-large-primary">{event.description}</p>
                 </div>
               </div>
@@ -168,7 +172,9 @@ export default function OverviewPage() {
                   expanded={false}
                   onClick={handleToggleFullscreen}
                 >
-                  <p className="label-large-emphasized">{t("viewFullscreen")}</p>
+                  <p className="label-large-emphasized">
+                    {t("viewFullscreen")}
+                  </p>
                 </Button>
               </div>
             </div>
@@ -177,34 +183,38 @@ export default function OverviewPage() {
                 title={t("totalAttendees")}
                 value={event.totalAttendees}
                 unit={t("unit")}
-                variant="primary"
+                variant="primary-filled"
               />
             </div>
           </section>
 
           {/* chart section */}
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <p className="headline-large-emphasized">
+          <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+            <div className="space-y-6 md:space-y-4">
+              <p className="headline-medium-emphasized">
                 {t("top3Title")}
               </p>
-              <BarChartVerticalOverview data={chartDataTop3} />
-              <Button 
-                mode="filled" 
-                bordered="square" 
+              <div className="max-h-[280px] md:max-h-[320px]">
+                <BarChartVerticalOverview data={chartDataTop3} />
+              </div>
+              <Button
+                mode="filled"
+                bordered="square"
                 expanded={false}
                 disabled={!canViewInsights}
                 onClick={handleViewInsights}
-                className={!canViewInsights ? "opacity-50 cursor-not-allowed" : ""}
+                className={
+                  !canViewInsights ? "opacity-50 cursor-not-allowed" : ""
+                }
               >
                 <p className="label-large-emphasized">{t("viewAll")}</p>
               </Button>
             </div>
-            <div className="flex flex-col space-y-6">
-              <p className="headline-large-emphasized">
+            <div className="flex flex-col space-y-3 md:space-y-4">
+              <p className="headline-medium-emphasized">
                 {t("timeStatsTitle")}
               </p>
-              <div className="h-full">
+              <div className="max-h-[320px] overflow-auto">
                 <BarChartHorizontalOverview data={chartDataTime} />
               </div>
             </div>
@@ -218,8 +228,8 @@ export default function OverviewPage() {
         className={isFullscreen ? "w-full h-full bg-white" : "hidden"}
       >
         {isFullscreen && (
-          <FullscreenContent 
-            onExit={handleToggleFullscreen} 
+          <FullscreenContent
+            onExit={handleToggleFullscreen}
             data={event}
             translations={{
               eventDetails: t("eventDetails"),

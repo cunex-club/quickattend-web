@@ -11,7 +11,10 @@ import { useTranslations } from "next-intl";
 
 // Dynamically import heavy chart components
 const BarChartHorizontal = dynamic(
-  () => import("@components/charts/BarChartHorizontal").then((mod) => mod.BarChartHorizontal),
+  () =>
+    import("@components/charts/BarChartHorizontal").then(
+      (mod) => mod.BarChartHorizontal
+    ),
   {
     loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />,
     ssr: false,
@@ -27,7 +30,10 @@ const DonutChart = dynamic(
 );
 
 const BarChartVerticalStacked = dynamic(
-  () => import("../charts/BarChartVerticalStacked").then((mod) => mod.BarChartVerticalStacked),
+  () =>
+    import("../charts/BarChartVerticalStacked").then(
+      (mod) => mod.BarChartVerticalStacked
+    ),
   {
     loading: () => <Skeleton className="h-full w-full rounded-lg" />,
     ssr: false,
@@ -46,8 +52,9 @@ import {
   registeredData,
   registrationStatusData,
   timeData,
-} from "@utils/data"; 
+} from "@utils/data";
 import SortMenu from "@components/sort-menu";
+import IonIcon from "@components/IonIcon";
 
 const horizontalChartData = dataCategorizeByTime;
 const verticalStackData = registeredData;
@@ -62,12 +69,12 @@ export function WhitelistInsightView() {
     Record<string, boolean>
   >({});
   const [selectedTimes, setSelectedTimes] = useState<Record<string, boolean>>(
-    {},
+    {}
   );
   const createSelectionHandler =
     (
       setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-      allItemId: string,
+      allItemId: string
     ) =>
     (itemId: string, checked: boolean) => {
       setter((prevSelected) => {
@@ -88,7 +95,7 @@ export function WhitelistInsightView() {
 
   const handleFacultyChange = createSelectionHandler(
     setSelectedFaculties,
-    "f-0",
+    "f-0"
   );
   const handleTimeChange = createSelectionHandler(setSelectedTimes, "t-0");
 
@@ -97,13 +104,12 @@ export function WhitelistInsightView() {
     setSelectedTimes({});
   };
 
-  const handleSortChange = (value: string) => {
-  };
+  const handleSortChange = (value: string) => {};
 
   return (
     <div className="w-full rounded-xl bg-neutral-white space-y-16">
       <section className="flex justify-between">
-        <div className="space-x-4">
+        <div className="space-x-4 flex items-center">
           <Button
             mode={selectedFilter === null ? "filled" : "outline"}
             bordered="square"
@@ -132,9 +138,13 @@ export function WhitelistInsightView() {
         <div>
           <Popover>
             <PopoverTrigger asChild>
-              <Button mode="filled" bordered="square" expanded={false}>
-                <p className="label-large-emphasized">{t("filter")}</p>
-              </Button>
+              <button className="flex items-center">
+                <IonIcon
+                  name="FunnelOutline"
+                  size="32px"
+                  className="text-primary"
+                />
+              </button>
             </PopoverTrigger>
             <PopoverContent className="w-screen max-w-md p-8" align="end">
               <div>
@@ -193,13 +203,13 @@ export function WhitelistInsightView() {
               title={t("totalAttendees")}
               value={500}
               unit={t("unit")}
-              variant="primary"
+              variant="primary-outline"
             >
-              <div className="mt-4 hidden md:flex justify-center items-center px-8">
+              <div className="mt-0 md:mt-4 hidden md:flex justify-center items-center px-8">
                 <span className="headline-small-emphasized pr-4 sm:pr-10 md:pr-16 text-center">
                   {t("students")}: 455 {t("unit")}
                 </span>
-                <div className="inline-block w-0.5 self-stretch bg-neutral-100 dark:bg-white/10"></div>
+                <div className="inline-block w-0.5 self-stretch bg-neutral-black"></div>
                 <span className="headline-small-emphasized pl-4 sm:pl-10 md:pl-16 text-center">
                   {t("staffs")}: 5 {t("unit")}
                 </span>
@@ -217,7 +227,6 @@ export function WhitelistInsightView() {
               value={600}
               unit={t("unit")}
               variant="secondary"
-              className="shadow-elevation-4"
             />
           </div>
           <div className="h-full w-full">
@@ -226,7 +235,6 @@ export function WhitelistInsightView() {
               value={100}
               unit={t("unit")}
               variant="secondary"
-              className="shadow-elevation-4"
             />
           </div>
         </section>
@@ -256,11 +264,11 @@ export function WhitelistInsightView() {
         </div>
       </section>
 
-      <section className="flex flex-col space-y-8 mb-0sm:mb-10">
+      <section className="flex flex-col space-y-8 mb-8 sm:mb-10">
         <p className="headline-small-emphasized sm:headline-medium-emphasized md:headline-large-emphasized">
           {t("timeStatsTitle")}
         </p>
-        <div>
+        <div className="w-full overflow-auto">
           <BarChartHorizontal data={horizontalChartData} />
         </div>
       </section>

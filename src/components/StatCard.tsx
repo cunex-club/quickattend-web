@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "@assets/lib/utils";
 
-type StatCardVariant = "primary" | "secondary";
+type StatCardVariant = "primary-filled" | "primary-outline" | "secondary";
 
 interface StatCardProps {
   title: string;
@@ -16,21 +16,22 @@ export const StatCard = ({
   title,
   value,
   unit,
-  variant = "primary",
+  variant = "primary-filled",
   className,
   children,
 }: StatCardProps) => {
   const variantClasses = {
-    primary: "bg-primary text-neutral-white",
-    secondary: "bg-neutral-200 text-primary",
+    "primary-filled": "bg-primary",
+    "primary-outline": "border border-primary",
+    secondary: "bg-neutral-200",
   };
 
   return (
     <div
       className={cn(
-        "flex flex-col justify-center h-full w-full rounded-2xl p-16 md:p-8 shadow-elevation-3 space-y-8",
+        "flex flex-col justify-center h-full w-full rounded-2xl p-16 md:p-8 space-y-8",
         variantClasses[variant],
-        className,
+        className
       )}
     >
       <div className="flex flex-col space-y-4">
@@ -38,14 +39,41 @@ export const StatCard = ({
           <p
             className={cn(
               "font-bold text-7xl md:text-9xl translate-y-3 md:translate-y-8",
+              variant === "primary-filled"
+                ? "text-neutral-white"
+                : "text-neutral-black",
+              variant === "primary-outline" ? "text-primary" : "",
+              variant === "secondary" ? "text-primary" : ""
             )}
           >
             {value}
           </p>
-          <p className="display-medium-emphasized">{unit}</p>
+          <p
+            className={cn(
+              "display-medium-emphasized",
+              variant === "primary-filled"
+                ? "text-neutral-white"
+                : "text-neutral-black",
+              variant === "primary-outline" ? "text-primary" : "",
+              variant === "secondary" ? "text-primary" : ""
+            )}
+          >
+            {unit}
+          </p>
         </div>
         <div className="flex flex-col items-center">
-          <p className="title-large-primary text-center">{title}</p>
+          <p
+            className={cn(
+              "title-large-primary text-center",
+              variant === "primary-filled"
+                ? "text-neutral-white"
+                : "text-neutral-black",
+              variant === "primary-outline" ? "text-neutral-black" : "",
+              variant === "secondary" ? "text-neutral-black" : ""
+            )}
+          >
+            {title}
+          </p>
         </div>
       </div>
 

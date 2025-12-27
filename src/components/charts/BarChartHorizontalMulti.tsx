@@ -23,7 +23,7 @@ export const description = "A multiple bar chart";
 
 const chartData = [
   {
-    month: "January", 
+    month: "January",
     desktop: 186,
     mobile: 80,
     ipad: 50,
@@ -130,59 +130,59 @@ export function BarChartHorizontalMulti() {
   return (
     <Card className="px-0 border-none shadow-none">
       <CardContent className="px-0">
-        <ChartContainer
-          config={chartConfig}
-          className="w-full pr-3 max-h-[250px] md:max-h-[450px] chart-hover-bar"
-        >
-          <BarChart accessibilityLayer data={chartData} barGap={BAR_SPACING}>
-            <CartesianGrid
-              horizontal={true}
-              vertical={false}
-              stroke="var(--color-gray-300)"
-              strokeWidth={0.4}
-              strokeDasharray={STROKE_DASH_ARRAY}
-            />
-            <ChartLegend content={<ChartLegendContent />} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={true}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <YAxis
-              type="number"
-              tickLine={false}
-              axisLine={true}
-              tickFormatter={(value) => value.toString()}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="line" />}
-            />
-            {["desktop", "mobile", "ipad", "macbook", "tablet"].map((key) => (
-              <Bar
-                key={key}
-                dataKey={key}
-                fill={`var(--color-${key})`}
-                radius={BAR_RADIUS}
-              >
-                {chartData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${key}-${index}`}
-                  />
-                ))}
-                <LabelList
+        <div className="min-w-[1000px] sm:min-w-[2000px] md:min-w-[1500px] lg:min-w-[1300px] w-full">
+          <ChartContainer
+            config={chartConfig}
+            className="w-full pr-3 max-h-[250px] md:max-h-[450px] chart-hover-bar"
+          >
+            <BarChart accessibilityLayer data={chartData} barGap={BAR_SPACING}>
+              <CartesianGrid
+                horizontal={true}
+                vertical={false}
+                stroke="var(--color-gray-300)"
+                strokeWidth={0.4}
+                strokeDasharray={STROKE_DASH_ARRAY}
+              />
+              <ChartLegend content={<ChartLegendContent />} />
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={true}
+                tickFormatter={(value) => value.slice(0, 3)}
+              />
+              <YAxis
+                type="number"
+                tickLine={false}
+                axisLine={true}
+                tickFormatter={(value) => value.toString()}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent indicator="line" />}
+              />
+              {["desktop", "mobile", "ipad", "macbook", "tablet"].map((key) => (
+                <Bar
+                  key={key}
                   dataKey={key}
-                  position="top"
-                  offset={LABEL_OFFSET}
-                  className="fill-foreground hidden md:block"
-                  fontSize={LABEL_FONT_SIZE}
-                />
-              </Bar>
-            ))}
-          </BarChart>
-        </ChartContainer>
+                  fill={`var(--color-${key})`}
+                  radius={BAR_RADIUS}
+                >
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${key}-${index}`} />
+                  ))}
+                  <LabelList
+                    dataKey={key}
+                    position="top"
+                    offset={LABEL_OFFSET}
+                    className="fill-foreground hidden md:block"
+                    fontSize={LABEL_FONT_SIZE}
+                  />
+                </Bar>
+              ))}
+            </BarChart>
+          </ChartContainer>
+        </div>
       </CardContent>
     </Card>
   );
