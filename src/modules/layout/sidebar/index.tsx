@@ -40,14 +40,14 @@ const Sidebar = () => {
             </p>
           </SidebarNavigation>
           <SidebarNavigation
-            href={`/scan`}
+            href={`/events/scan`}
             className="flex flex-col justify-center items-center"
           >
             <IonIcon name="ScanOutline" size="32px" className="text-primary" />
             <p className="title-small-primary whitespace-nowrap">{t("scan")}</p>
           </SidebarNavigation>
           <SidebarNavigation
-            href={`/search`}
+            href={`/events/search`}
             className="flex flex-col justify-center items-center"
           >
             <IonIcon
