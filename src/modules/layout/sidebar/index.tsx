@@ -13,12 +13,13 @@ import IonIcon from "@shared/IonIcon";
 
 const Sidebar = () => {
   const t = useTranslations("Sidebar");
+
   return (
     <div className="w-38.5 px-10 pt-8 pb-10 bg-neutral-100 h-screen justify-between flex flex-col">
       <div className="flex flex-col gap-y-6">
         <Image src="/logo/cu-nex.png" alt="Logo" width={90} height={90} />
         <SidebarNavigation
-          href="/create-event"
+          href={`/events/create`}
           className="flex flex-col justify-center items-center gap-y-2"
         >
           <Button mode="Icon" bordered="round" expanded={false}>
@@ -30,7 +31,7 @@ const Sidebar = () => {
         </SidebarNavigation>
         <div className="flex flex-col space-y-2">
           <SidebarNavigation
-            href="/events"
+            href={`/events`}
             className="flex flex-col justify-center items-center"
           >
             <IonIcon name="Home" size="32px" className="text-primary" />
@@ -39,14 +40,14 @@ const Sidebar = () => {
             </p>
           </SidebarNavigation>
           <SidebarNavigation
-            href="/scan"
+            href={`/scan`}
             className="flex flex-col justify-center items-center"
           >
             <IonIcon name="ScanOutline" size="32px" className="text-primary" />
             <p className="title-small-primary whitespace-nowrap">{t("scan")}</p>
           </SidebarNavigation>
           <SidebarNavigation
-            href="/search"
+            href={`/search`}
             className="flex flex-col justify-center items-center"
           >
             <IonIcon
