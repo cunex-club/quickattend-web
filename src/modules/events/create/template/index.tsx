@@ -11,6 +11,22 @@ import CreateEventStep3 from "../components/create-event-step3";
 import Button from "@shared/Button";
 import CreateEventResult from "../components/create-event-result";
 
+export interface Agenda {
+  activity_name: string;
+  startTime: Date;
+  endTime: Date;
+}
+export interface EventFormInterface {
+  name: string;
+  description: string;
+  date: Date | undefined;
+  startTime: Date | undefined;
+  endTime: Date | undefined;
+  location: string;
+  agenda: Agenda[];
+  organizer: string;
+}
+
 const EventCreateTemplate = () => {
   const { setShowSidebar } = useSidebar();
   const tCreateEvent = useTranslations("CreateEvent");
@@ -19,6 +35,48 @@ const EventCreateTemplate = () => {
   const [step, setStep] = useState<number>(1);
   const [showExample, setShowExample] = useState(false);
   const [width, setWidth] = useState(0);
+
+  const [eventForm, setEventForm] = useState<EventFormInterface>({
+    name: "",
+    description: "",
+    date: undefined,
+    startTime: undefined,
+    endTime: undefined,
+    location: "",
+    agenda: [],
+    organizer: "",
+  });
+
+  const [validStep1, setValidStep1] = useState(false);
+  const [validStep2, setValidStep2] = useState(false);
+  const [validStep3, setValidStep3] = useState(false);
+
+  useEffect(() => {
+    if (
+      eventForm.name &&
+      eventForm.date &&
+      eventForm.startTime &&
+      eventForm.endTime &&
+      eventForm.location &&
+      eventForm.organizer
+    ) {
+      setValidStep1(true);
+    } else {
+      setValidStep1(false);
+    }
+
+    if (true) {
+      setValidStep2(true);
+    } else {
+      setValidStep2(false);
+    }
+
+    if (true) {
+      setValidStep3(true);
+    } else {
+      setValidStep3(false);
+    }
+  }, [eventForm]);
 
   const topRef = useRef<HTMLDivElement | null>(null);
 
@@ -42,7 +100,7 @@ const EventCreateTemplate = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-neutral-200 h-full">
+    <div className="w-full h-fit min-h-screen bg-neutral-200">
       <header
         ref={topRef}
         className="w-full h-16 relative flex items-center justify-center shadow-elevation-3"
@@ -55,10 +113,11 @@ const EventCreateTemplate = () => {
             router.back();
           }}
         />
-        <p className="headline-small-primary font-bold">
+        <p className="headline-small-emphasized">
           {tCreateEvent("createEvent")}
         </p>
       </header>
+
       <main className="w-full flex flex-col">
         <div
           className={`
@@ -139,9 +198,24 @@ const EventCreateTemplate = () => {
 
         {/* Content */}
         <div className="w-full px-4 py-8 bg-neutral-white">
-          {step === 1 && <CreateEventStep1 />}
-          {step === 2 && <CreateEventStep2 />}
-          {step === 3 && <CreateEventStep3 />}
+          {step === 1 && (
+            <CreateEventStep1
+              eventForm={eventForm}
+              setEventForm={setEventForm}
+            />
+          )}
+          {step === 2 && (
+            <CreateEventStep2
+              eventForm={eventForm}
+              setEventForm={setEventForm}
+            />
+          )}
+          {step === 3 && (
+            <CreateEventStep3
+              eventForm={eventForm}
+              setEventForm={setEventForm}
+            />
+          )}
         </div>
       </main>
 
@@ -170,13 +244,16 @@ const EventCreateTemplate = () => {
             bordered="square"
             expanded
             className={`${
-              step != 3
+              (step == 1 && validStep1) || (step == 2 && validStep2)
                 ? "cursor-pointer border-primary text-neutral-black"
                 : "cursor-default border-neutral-400 text-neutral-400"
             } max-w-40 h-9`}
             onClick={() => {
               if (step != 3) {
-                setStep((prev) => prev + 1);
+                if ((step == 1 && validStep1) || (step == 2 && validStep2)) {
+                  setStep((prev) => prev + 1);
+                  return;
+                }
               }
               scrollToTop();
             }}
@@ -190,7 +267,26 @@ const EventCreateTemplate = () => {
             bordered="square"
             expanded
             className="cursor-pointer max-w-40 h-9"
-            onClick={() => alert("สร้างกิจกรรม")}
+            onClick={() => {
+              if (step == 3 && validStep3) {
+                const agendaText = eventForm.agenda
+                  .map((item, index) => {
+                    return `${index + 1}. ${item.activity_name} 
+                    - Start: ${item.startTime}
+                    - End: ${item.endTime}`;
+                  })
+                  .join("\n\n");
+
+                alert(`Name: ${eventForm.name}
+                Description: ${eventForm.description}
+                Date: ${eventForm.date}
+                Start Time: ${eventForm.startTime}
+                End Date: ${eventForm.endTime}
+                Location: ${eventForm.location}
+                Agenda: ${agendaText}
+                Organizer: ${eventForm.organizer}`);
+              }
+            }}
           >
             {tCreateEvent("create")}
           </Button>

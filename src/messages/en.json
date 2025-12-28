@@ -33,6 +33,23 @@
     "showExample": "Show example",
     "back": "Back",
     "next": "Next",
-    "create": "Create an event"
+    "create": "Create an event",
+    "eventDetail": "Event Detail",
+    "name": "Event name",
+    "namePlaceholder": "Event name",
+    "description": "Event description",
+    "descriptionPlaceholder": "Event description",
+    "date": "Date",
+    "datePlaceholder": "DD / MM / YYYY",
+    "time": "Time",
+    "timePlaceholder": "--:--",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "location": "Location",
+    "locationPlaceholder": "Location",
+    "agenda": "Agenda",
+    "addAgenda": "Add to agenda",
+    "organizer": "Organizer",
+    "organizerPlaceholder": "Organizer"
   }
 }
