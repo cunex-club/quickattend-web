@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSidebar } from "../../../../context/SidebarContext";
 import { useTranslations } from "next-intl";
 import IonIcon from "@shared/IonIcon";
@@ -16,9 +16,11 @@ const EventCreateTemplate = () => {
   const tCreateEvent = useTranslations("CreateEvent");
   const router = useRouter();
 
-  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [step, setStep] = useState<number>(1);
   const [showExample, setShowExample] = useState(false);
   const [width, setWidth] = useState(0);
+
+  const topRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const update = () => setWidth(window.innerWidth);
@@ -32,9 +34,19 @@ const EventCreateTemplate = () => {
     return () => setShowSidebar(true);
   }, [setShowSidebar]);
 
+  const scrollToTop = () => {
+    topRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
   return (
-    <>
-      <header className="w-full h-16 bg-neutral-200 relative flex items-center justify-center shadow-elevation-3">
+    <div className="w-full min-h-screen bg-neutral-200 h-full">
+      <header
+        ref={topRef}
+        className="w-full h-16 relative flex items-center justify-center shadow-elevation-3"
+      >
         <IonIcon
           name="ChevronBack"
           size="16px"
@@ -51,7 +63,7 @@ const EventCreateTemplate = () => {
         <div
           className={`
             w-full flex gap-4 ${width < 320 ? "flex-col" : "flex-row flex-wrap justify-between"}
-            sm:items-center sm:justify-center bg-neutral-200 px-4 py-8`}
+            sm:items-center sm:justify-center px-4 py-8`}
         >
           {/* Progress Bar */}
           <div
@@ -71,13 +83,17 @@ const EventCreateTemplate = () => {
                   <div className="flex flex-col items-center relative z-10">
                     <div
                       className={`
-                        w-8 h-8 rounded-full flex items-center justify-center
-                        font-bold text-lg transition-colors duration-300
-                        ${
-                          isActive || isCompleted
-                            ? "border bg-primary text-neutral-white"
-                            : "border border-primary text-neutral-600"
-                        }`}
+                            w-8 h-8 rounded-full flex items-center justify-center
+                            font-bold text-lg transition-colors duration-200 ease-out
+                            ${
+                              isActive || isCompleted
+                                ? "border bg-primary text-neutral-white"
+                                : "border border-primary text-neutral-600"
+                            }
+                        `}
+                      style={{
+                        transitionDelay: `${stepNumber * 75}ms`,
+                      }}
                     >
                       <p className="label-medium-primary -translate-y-0.5">
                         {stepNumber}
@@ -91,11 +107,14 @@ const EventCreateTemplate = () => {
                       <div className="absolute inset-0 bg-gray-300" />
                       <div
                         className={`
-                            absolute inset-0 bg-primary transition-all duration-300
+                            absolute inset-0 bg-primary transition-all duration-400 ease-out
                             ${isCompleted ? "w-full" : ""}
                             ${isActive ? "w-1/2" : ""}
                             ${!isActive && !isCompleted ? "w-0" : ""}
-                            `}
+                        `}
+                        style={{
+                          transitionDelay: `${stepNumber * 100}ms`,
+                        }}
                       />
                     </div>
                   )}
@@ -119,15 +138,67 @@ const EventCreateTemplate = () => {
         </div>
 
         {/* Content */}
-        <div className="w-full px-4 py-8">
+        <div className="w-full px-4 py-8 bg-neutral-white">
           {step === 1 && <CreateEventStep1 />}
           {step === 2 && <CreateEventStep2 />}
           {step === 3 && <CreateEventStep3 />}
         </div>
       </main>
 
+      <footer className="w-full flex px-4 py-8 justify-between gap-4 flex-wrap items-center">
+        <Button
+          mode="outline"
+          bordered="square"
+          expanded
+          className={`${
+            step != 1
+              ? "cursor-pointer border-primary text-neutral-black"
+              : "cursor-default border-neutral-400 text-neutral-400"
+          } max-w-40 h-9`}
+          onClick={() => {
+            if (step != 1) {
+              setStep((prev) => prev - 1);
+            }
+            scrollToTop();
+          }}
+        >
+          {tCreateEvent("back")}
+        </Button>
+        {step != 3 && (
+          <Button
+            mode="outline"
+            bordered="square"
+            expanded
+            className={`${
+              step != 3
+                ? "cursor-pointer border-primary text-neutral-black"
+                : "cursor-default border-neutral-400 text-neutral-400"
+            } max-w-40 h-9`}
+            onClick={() => {
+              if (step != 3) {
+                setStep((prev) => prev + 1);
+              }
+              scrollToTop();
+            }}
+          >
+            {tCreateEvent("next")}
+          </Button>
+        )}
+        {step == 3 && (
+          <Button
+            mode="filled"
+            bordered="square"
+            expanded
+            className="cursor-pointer max-w-40 h-9"
+            onClick={() => alert("สร้างกิจกรรม")}
+          >
+            {tCreateEvent("create")}
+          </Button>
+        )}
+      </footer>
+
       {showExample && <CreateEventResult />}
-    </>
+    </div>
   );
 };
 

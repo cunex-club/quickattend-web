@@ -31,6 +31,9 @@
 
   "CreateEvent": {
     "createEvent": "สร้างกิจกรรม",
-    "showExample": "ดูตัวอย่าง"
+    "showExample": "ดูตัวอย่าง",
+    "back": "ย้อนกลับ",
+    "next": "ถัดไป",
+    "create": "สร้างกิจกรรม"
   }
 }

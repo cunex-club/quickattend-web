@@ -30,6 +30,9 @@
   },
   "CreateEvent": {
     "createEvent": "Create an event",
-    "showExample": "Show example"
+    "showExample": "Show example",
+    "back": "Back",
+    "next": "Next",
+    "create": "Create an event"
   }
 }
