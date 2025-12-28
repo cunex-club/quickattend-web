@@ -30,6 +30,7 @@
   },
 
   "CreateEvent": {
-    "createEvent": "สร้างกิจกรรม"
+    "createEvent": "สร้างกิจกรรม",
+    "showExample": "ดูตัวอย่าง"
   }
 }

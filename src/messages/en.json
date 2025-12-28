@@ -29,6 +29,7 @@
     }
   },
   "CreateEvent": {
-    "createEvent": "Create an event"
+    "createEvent": "Create an event",
+    "showExample": "Show example"
   }
 }
