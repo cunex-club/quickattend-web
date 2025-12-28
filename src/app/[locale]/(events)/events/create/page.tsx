@@ -1,17 +1,6 @@
-"use client";
-
-import { useEffect } from "react";
-import { useSidebar } from "../../../../../context/SidebarContext";
+import EventCreateTemplate from "@modules/events/create/template";
 
 const EventCreatePage = () => {
-  const { setShowSidebar } = useSidebar();
-
-  useEffect(() => {
-    setShowSidebar(false);
-    return () => setShowSidebar(true);
-  }, [setShowSidebar]);
-
-  return <div>This is Create Event Page</div>;
+  return <EventCreateTemplate />;
 };
-
 export default EventCreatePage;

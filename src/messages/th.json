@@ -27,5 +27,9 @@
       "eventDetails": "รายละเอียดกิจกรรม",
       "downloadStatistics": "ดาวน์โหลดสถิติ"
     }
+  },
+
+  "CreateEvent": {
+    "createEvent": "สร้างกิจกรรม"
   }
 }
