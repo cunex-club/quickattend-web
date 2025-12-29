@@ -62,6 +62,11 @@
     "facultiesAdd": "เพิ่มคณะ/หน่วยงาน",
     "whitelist": "เฉพาะรายชื่อที่กำหนด",
     "whitelistPlaceholder": "รหัสประจำตัว",
-    "whitelistAdd": "เพิ่มรายชื่อ"
+    "whitelistAdd": "เพิ่มรายชื่อ",
+    "scanSetting": "ตั้งค่าผลลัพธ์การสแกน",
+    "scanSettingImages": "รูปภาพ",
+    "scanSettingName": "ชื่อ-นามสกุล",
+    "scanSettingId": "รหัสประจำตัว",
+    "scanSettingFaculty": "คณะ/หน่วยงาน"
   }
 }

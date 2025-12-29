@@ -24,6 +24,13 @@ export const AttendanceType = {
   WHITELIST: "whitelist",
 } as const;
 
+export const ParticipantFieldType = {
+  NAME: "name",
+  ORGANIZATION: "organization",
+  REFID: "refid",
+  PHOTO: "photo",
+} as const;
+
 export type AttendanceType =
   (typeof AttendanceType)[keyof typeof AttendanceType];
 
@@ -31,6 +38,9 @@ export interface Student {
   id: string;
   name: string;
 }
+
+export type ParticipantFieldType =
+  (typeof ParticipantFieldType)[keyof typeof ParticipantFieldType];
 
 export interface EventFormInterface {
   name: string;
@@ -44,6 +54,7 @@ export interface EventFormInterface {
   attendance_type: AttendanceType;
   selectedFaculties: string[];
   selectedStudents: Student[];
+  revealed_fields: ParticipantFieldType[];
 }
 
 const EventCreateTemplate = () => {
@@ -67,6 +78,7 @@ const EventCreateTemplate = () => {
     attendance_type: "all",
     selectedFaculties: [],
     selectedStudents: [],
+    revealed_fields: [],
   });
 
   const [validStep1, setValidStep1] = useState(false);
@@ -87,7 +99,14 @@ const EventCreateTemplate = () => {
       setValidStep1(false);
     }
 
-    if (eventForm.attendance_type) {
+    if (
+      (eventForm.attendance_type == AttendanceType.ALL ||
+        (eventForm.attendance_type == AttendanceType.FACULTIES &&
+          eventForm.selectedFaculties.length > 0) ||
+        (eventForm.attendance_type == AttendanceType.WHITELIST &&
+          eventForm.selectedStudents.length > 0)) &&
+      eventForm.revealed_fields.length > 0
+    ) {
       setValidStep2(true);
     } else {
       setValidStep2(false);
@@ -315,6 +334,9 @@ const EventCreateTemplate = () => {
                     })
                     .join("\n");
                 }
+
+                const revealedFieldText = eventForm.revealed_fields.join(", ");
+
                 alert(`Name: ${eventForm.name}
                 Description: ${eventForm.description}
                 Date: ${eventForm.date}
@@ -324,7 +346,8 @@ const EventCreateTemplate = () => {
                 Agenda: ${agendaText}
                 Organizer: ${eventForm.organizer}
                 Attendance Type: ${eventForm.attendance_type}
-                Attendee: ${attendeeText}`);
+                Attendee: ${attendeeText}
+                Revealed Fields: ${revealedFieldText}`);
               }
             }}
           >

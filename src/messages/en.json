@@ -55,12 +55,17 @@
     "setting": "Settings and Display",
     "access": "Accessibility",
     "all": "Public",
-    "faculties": "Faculties/Organizations",
-    "facultiesPlaceholder": "Faculties/Organizations",
+    "faculties": "Faculty/Organization",
+    "facultiesPlaceholder": "Faculty/Organization",
     "facultiesNotFound": "No matching faculties or organizations",
     "facultiesAdd": "Add Faculty/Organization",
     "whitelist": "Whitelist",
     "whitelistPlaceholder": "Student ID",
-    "whitelistAdd": "Add Student"
+    "whitelistAdd": "Add Student",
+    "scanSetting": "Scan Settings",
+    "scanSettingImages": "Images",
+    "scanSettingName": "Full name",
+    "scanSettingId": "Student ID",
+    "scanSettingFaculty": "Faculty/Organization"
   }
 }

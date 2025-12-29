@@ -1,5 +1,10 @@
 import { useTranslations } from "next-intl";
-import { AttendanceType, EventFormInterface, Student } from "../template";
+import {
+  AttendanceType,
+  EventFormInterface,
+  ParticipantFieldType,
+  Student,
+} from "../template";
 import { RadioGroup, RadioGroupItem } from "@assets/components/ui/radio-group";
 import {
   Command,
@@ -12,6 +17,7 @@ import { useEffect, useState } from "react";
 import { Input } from "@assets/components/ui/input";
 import Button from "@shared/Button";
 import IonIcon from "@shared/IonIcon";
+import { Checkbox } from "@assets/components/ui/checkbox";
 
 const MOCK_STUDENTNAME = "นางสาวปริณ ไกรภพ";
 interface CreateEventStep2Props {
@@ -138,7 +144,7 @@ const CreateEventStep2 = ({
       </h1>
 
       {/* Accessibility */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 mb-4">
         <p className="title-large-emphasized mb-4">
           {tCreateEvent("access")} <span className="text-primary">*</span>
         </p>
@@ -431,6 +437,151 @@ const CreateEventStep2 = ({
             ))}
           </div>
         </RadioGroup>
+      </div>
+
+      {/* Scan Setting */}
+      <div className="flex flex-col gap-4 mb-4">
+        <p className="title-large-emphasized mb-4">
+          {tCreateEvent("scanSetting")} <span className="text-primary">*</span>
+        </p>
+
+        {/* Image */}
+        <div className="flex items-center gap-3">
+          <Checkbox
+            id="scanSettingImages"
+            className="cursor-pointer"
+            onCheckedChange={() => {
+              if (
+                eventForm.revealed_fields.includes(ParticipantFieldType.PHOTO)
+              ) {
+                setEventForm({
+                  ...eventForm,
+                  revealed_fields: eventForm.revealed_fields.filter(
+                    (field) => field != ParticipantFieldType.PHOTO
+                  ),
+                });
+              } else {
+                setEventForm({
+                  ...eventForm,
+                  revealed_fields: [
+                    ...eventForm.revealed_fields,
+                    ParticipantFieldType.PHOTO,
+                  ],
+                });
+              }
+            }}
+          />
+          <label
+            htmlFor="scanSettingImages"
+            className="label-large-primary cursor-pointer"
+          >
+            {tCreateEvent("scanSettingImages")}
+          </label>
+        </div>
+
+        {/* Name */}
+        <div className="flex items-center gap-3">
+          <Checkbox
+            id="scanSettingName"
+            className="cursor-pointer"
+            onCheckedChange={() => {
+              if (
+                eventForm.revealed_fields.includes(ParticipantFieldType.NAME)
+              ) {
+                setEventForm({
+                  ...eventForm,
+                  revealed_fields: eventForm.revealed_fields.filter(
+                    (field) => field != ParticipantFieldType.NAME
+                  ),
+                });
+              } else {
+                setEventForm({
+                  ...eventForm,
+                  revealed_fields: [
+                    ...eventForm.revealed_fields,
+                    ParticipantFieldType.NAME,
+                  ],
+                });
+              }
+            }}
+          />
+          <label
+            htmlFor="scanSettingName"
+            className="label-large-primary cursor-pointer"
+          >
+            {tCreateEvent("scanSettingName")}
+          </label>
+        </div>
+
+        {/* Student Id */}
+        <div className="flex items-center gap-3">
+          <Checkbox
+            id="scanSettingId"
+            className="cursor-pointer"
+            onCheckedChange={() => {
+              if (
+                eventForm.revealed_fields.includes(ParticipantFieldType.REFID)
+              ) {
+                setEventForm({
+                  ...eventForm,
+                  revealed_fields: eventForm.revealed_fields.filter(
+                    (field) => field != ParticipantFieldType.REFID
+                  ),
+                });
+              } else {
+                setEventForm({
+                  ...eventForm,
+                  revealed_fields: [
+                    ...eventForm.revealed_fields,
+                    ParticipantFieldType.REFID,
+                  ],
+                });
+              }
+            }}
+          />
+          <label
+            htmlFor="scanSettingId"
+            className="label-large-primary cursor-pointer"
+          >
+            {tCreateEvent("scanSettingId")}
+          </label>
+        </div>
+
+        {/* Faculty */}
+        <div className="flex items-center gap-3">
+          <Checkbox
+            id="scanSettingFaculty"
+            className="cursor-pointer"
+            onCheckedChange={() => {
+              if (
+                eventForm.revealed_fields.includes(
+                  ParticipantFieldType.ORGANIZATION
+                )
+              ) {
+                setEventForm({
+                  ...eventForm,
+                  revealed_fields: eventForm.revealed_fields.filter(
+                    (field) => field != ParticipantFieldType.ORGANIZATION
+                  ),
+                });
+              } else {
+                setEventForm({
+                  ...eventForm,
+                  revealed_fields: [
+                    ...eventForm.revealed_fields,
+                    ParticipantFieldType.ORGANIZATION,
+                  ],
+                });
+              }
+            }}
+          />
+          <label
+            htmlFor="scanSettingFaculty"
+            className="label-large-primary cursor-pointer"
+          >
+            {tCreateEvent("scanSettingFaculty")}
+          </label>
+        </div>
       </div>
     </div>
   );
