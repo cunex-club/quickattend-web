@@ -7,7 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@assets/components/ui/popover";
-import { format } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import IonIcon from "@shared/IonIcon";
 import { useEffect, useState } from "react";
 import { cn } from "@assets/lib/utils";
@@ -24,6 +24,7 @@ const CreateEventStep1 = ({
   setEventForm,
 }: CreateEventStep1Props) => {
   const tCreateEvent = useTranslations("CreateEvent");
+  const today = startOfDay(new Date());
 
   const [mounted, setMounted] = useState(false);
   const [agendaStart, setAgendaStart] = useState<string>("");
@@ -281,9 +282,12 @@ const CreateEventStep1 = ({
             <PopoverContent className="w-full p-0" align="start">
               <Calendar
                 mode="single"
-                required={false}
                 selected={eventForm.date}
-                onSelect={handleSelectDate}
+                onSelect={(date) => {
+                  handleSelectDate(date);
+                }}
+                defaultMonth={today}
+                disabled={(date) => date < today}
               />
             </PopoverContent>
           </Popover>
@@ -483,7 +487,11 @@ const CreateEventStep1 = ({
           bordered="square"
           expanded={false}
           onClick={handleAddAgenda}
-          className={`h-9 w-fit ${agendaStart && agendaEnd && agendaName ? "cursor-pointer" : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"}`}
+          className={`h-9 w-fit ${
+            agendaStart && agendaEnd && agendaName
+              ? "cursor-pointer"
+              : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
+          }`}
         >
           {tCreateEvent("addAgenda")}
         </Button>
@@ -530,6 +538,7 @@ const CreateEventStep1 = ({
               value={item.activity_name}
               onChange={(e) => updateAgendaName(index, e.target.value)}
               className="!body-medium-primary"
+              placeholder={tCreateEvent("descriptionPlaceholder")}
             />
           </div>
         </div>

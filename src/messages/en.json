@@ -50,6 +50,15 @@
     "agenda": "Agenda",
     "addAgenda": "Add to agenda",
     "organizer": "Organizer",
-    "organizerPlaceholder": "Organizer"
+    "organizerPlaceholder": "Organizer",
+
+    "setting": "Settings and Display",
+    "access": "Accessibility",
+    "all": "Public",
+    "faculties": "Faculties/Organizations",
+    "facultiesPlaceholder": "Faculties/Organizations",
+    "facultiesNotFound": "No matching faculties or organizations",
+    "facultiesAdd": "Add Faculty/Organization",
+    "whitelist": "Whitelist"
   }
 }

@@ -17,6 +17,21 @@ export interface Agenda {
   startTime: Date;
   endTime: Date;
 }
+
+export const AttendanceType = {
+  ALL: "all",
+  FACULTIES: "faculties",
+  WHITELIST: "whitelist",
+} as const;
+
+export type AttendanceType =
+  (typeof AttendanceType)[keyof typeof AttendanceType];
+
+export interface Student {
+  id: string;
+  name: string;
+}
+
 export interface EventFormInterface {
   name: string;
   description: string;
@@ -26,6 +41,8 @@ export interface EventFormInterface {
   location: string;
   agenda: Agenda[];
   organizer: string;
+  attendance_type: AttendanceType;
+  attendee: string[] | Student[];
 }
 
 const EventCreateTemplate = () => {
@@ -33,7 +50,7 @@ const EventCreateTemplate = () => {
   const tCreateEvent = useTranslations("CreateEvent");
   const router = useRouter();
 
-  const [step, setStep] = useState<number>(1);
+  const [step, setStep] = useState<number>(2);
   const [showExample, setShowExample] = useState(false);
   const [width, setWidth] = useState(0);
 
@@ -46,6 +63,8 @@ const EventCreateTemplate = () => {
     location: "",
     agenda: [],
     organizer: "",
+    attendance_type: "all",
+    attendee: [],
   });
 
   const [validStep1, setValidStep1] = useState(false);
@@ -66,7 +85,7 @@ const EventCreateTemplate = () => {
       setValidStep1(false);
     }
 
-    if (true) {
+    if (eventForm.attendance_type) {
       setValidStep2(true);
     } else {
       setValidStep2(false);
@@ -276,7 +295,16 @@ const EventCreateTemplate = () => {
                     - Start: ${item.startTime}
                     - End: ${item.endTime}`;
                   })
-                  .join("\n\n");
+                  .join("\n");
+
+                let attendeeText = "-";
+                if (eventForm.attendance_type == AttendanceType.FACULTIES) {
+                  attendeeText = (eventForm.attendee as string[])
+                    .map((item, index) => {
+                      return `${index + 1} ${item}`;
+                    })
+                    .join("\n");
+                }
 
                 alert(`Name: ${eventForm.name}
                 Description: ${eventForm.description}
@@ -285,7 +313,9 @@ const EventCreateTemplate = () => {
                 End Date: ${eventForm.endTime}
                 Location: ${eventForm.location}
                 Agenda: ${agendaText}
-                Organizer: ${eventForm.organizer}`);
+                Organizer: ${eventForm.organizer}
+                Attendance Type: ${eventForm.attendance_type}
+                Attendee: ${attendeeText}`);
               }
             }}
           >

@@ -51,6 +51,15 @@
     "agenda": "ตารางกิจกรรม",
     "addAgenda": "เพิ่มตารางกิจกรรม",
     "organizer": "ผู้จัดกิจกรรม",
-    "organizerPlaceholder": "ผู้จัดกิจกรรม"
+    "organizerPlaceholder": "ผู้จัดกิจกรรม",
+
+    "setting": "การตั้งค่ากิจกรรมและการแสดงผลกิจกรรม",
+    "access": "สิทธิ์การเข้าร่วมกิจกรรม",
+    "all": "สาธารณะ",
+    "faculties": "เฉพาะคณะ/หน่วยงาน",
+    "facultiesPlaceholder": "คณะ/หน่วยงาน",
+    "facultiesNotFound": "ไม่พบคณะดังกล่าว",
+    "facultiesAdd": "เพิ่มคณะ/หน่วยงาน",
+    "whitelist": "เฉพาะรายชื่อที่กำหนด"
   }
 }
