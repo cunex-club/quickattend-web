@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Bar,
   BarChart,
@@ -8,7 +8,6 @@ import {
   LabelList,
   XAxis,
   YAxis,
-  Cell,
 } from "recharts";
 
 import { Card, CardAction, CardContent } from "@assets/components/ui/card";
@@ -61,6 +60,9 @@ export function BarChartHorizontalOverview({
   const STROKE_DASH_ARRAY: string = "3 3";
   const LABEL_OFFSET: number = 12;
   const LABEL_FONT_SIZE: number = 12;
+  
+  // Calculate dynamic height based on number of bars
+  const chartWidth = chartData.length * 90;
 
   return (
     <Card className="py-0 px-0 h-full relative border-none shadow-none">
@@ -90,54 +92,54 @@ export function BarChartHorizontalOverview({
       </CardAction>
 
       <CardContent className="px-0 py-0 h-full">
-        <ChartContainer config={chartConfig} className="h-full w-full chart-hover-bar">
-          <BarChart
-            accessibilityLayer
-            data={chartData}
-            barCategoryGap={BAR_CATEGORY_GAP}
+        <div className="min-w-full h-full md:w-full" style={{ width: `${chartWidth}px` }}>
+          <ChartContainer
+            config={chartConfig}
+            className="w-full h-full chart-hover-bar"
           >
-            <CartesianGrid
-              vertical={false}
-              stroke="var(--color-CartesianGrid)"
-              strokeDasharray={STROKE_DASH_ARRAY}
-            />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={true}
-              tickFormatter={(value) => value.slice(0, 3)}
-              stroke={"var(--color-XAxis)"}
-            />
-            <YAxis
-              type="number"
-              dataKey="desktop"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={true}
-              stroke={"var(--color-YAxis)"}
-            />
-            <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
-            <Bar
-              dataKey="desktop"
-              fill="var(--color-desktop)"
-              radius={BAR_RADIUS}
+            <BarChart
+              accessibilityLayer
+              data={chartData}
+              barCategoryGap={BAR_CATEGORY_GAP}
             >
-              {chartData.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                />
-              ))}
-              <LabelList
-                dataKey="desktop"
-                position="top"
-                className="fill-neutral-black"
-                offset={LABEL_OFFSET}
-                fontSize={LABEL_FONT_SIZE}
+              <CartesianGrid
+                vertical={false}
+                stroke="var(--color-CartesianGrid)"
+                strokeDasharray={STROKE_DASH_ARRAY}
               />
-            </Bar>
-          </BarChart>
-        </ChartContainer>
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={true}
+                tickFormatter={(value) => value.slice(0, 3)}
+                stroke={"var(--color-XAxis)"}
+              />
+              <YAxis
+                type="number"
+                dataKey="desktop"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={true}
+                stroke={"var(--color-YAxis)"}
+              />
+              <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
+              <Bar
+                dataKey="desktop"
+                fill="var(--color-desktop)"
+                radius={BAR_RADIUS}
+              >
+                <LabelList
+                  dataKey="desktop"
+                  position="top"
+                  className="fill-neutral-black"
+                  offset={LABEL_OFFSET}
+                  fontSize={LABEL_FONT_SIZE}
+                />
+              </Bar>
+            </BarChart>
+          </ChartContainer>
+        </div>
       </CardContent>
     </Card>
   );

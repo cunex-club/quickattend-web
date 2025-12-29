@@ -29,7 +29,7 @@ export const StatCard = ({
   return (
     <div
       className={cn(
-        "flex flex-col justify-center h-full w-full rounded-2xl p-16 md:p-8 space-y-8",
+        "flex flex-col justify-center h-full w-full rounded-[28px] p-12 md:p-8 space-y-8",
         variantClasses[variant],
         className
       )}
@@ -38,7 +38,7 @@ export const StatCard = ({
         <div className="flex justify-center items-end space-x-4">
           <p
             className={cn(
-              "font-bold text-7xl md:text-9xl translate-y-3 md:translate-y-8",
+              "font-bold text-7xl sm:text-[56px] md:text-[70px] lg:text-[128px] translate-y-3 md:translate-y-4 lg:translate-y-8",
               variant === "primary-filled"
                 ? "text-neutral-white"
                 : "text-neutral-black",
@@ -64,7 +64,7 @@ export const StatCard = ({
         <div className="flex flex-col items-center">
           <p
             className={cn(
-              "title-large-primary text-center",
+              "title-medium-primary lg:title-large-primary text-center",
               variant === "primary-filled"
                 ? "text-neutral-white"
                 : "text-neutral-black",

@@ -5,15 +5,12 @@ import {
   LabelList,
   XAxis,
   YAxis,
-  Cell,
 } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
@@ -42,12 +39,19 @@ export function BarChartVerticalStacked({
 }) {
   const BAR_SIZE: number = 36;
   const LEFT_BAR_BORDER_RADIUS: [number, number, number, number] = [2, 0, 0, 2];
-  const RIGHT_BAR_BORDER_RADIUS: [number, number, number, number] = [0, 2, 2, 0];
+  const RIGHT_BAR_BORDER_RADIUS: [number, number, number, number] = [
+    0, 2, 2, 0,
+  ];
 
-  const maxDataValue = Math.max(...data.map((d) => d.registered + d.unregistered));
+  const maxDataValue = Math.max(
+    ...data.map((d) => d.registered + d.unregistered)
+  );
   const xDomainMax = (maxDataValue || 0) * 1.15;
 
-  const totalSum = data.reduce((sum, item) => sum + item.registered + item.unregistered, 0);
+  const totalSum = data.reduce(
+    (sum, item) => sum + item.registered + item.unregistered,
+    0
+  );
   const chartDataWithMeta = data.map((item) => {
     const total = item.registered + item.unregistered;
     return {
@@ -63,7 +67,10 @@ export function BarChartVerticalStacked({
         <div className="flex flex-col space-y-4">
           {chartDataWithMeta.map((item, idx) => {
             return (
-              <div key={`faculty-stacked-${idx}`} className="flex flex-col space-y-2">
+              <div
+                key={`faculty-stacked-${idx}`}
+                className="flex flex-col space-y-2"
+              >
                 <div className="flex items-center justify-between">
                   <p className="title-medium-primary md:title-large-primary -translate-y-0.5  md:-translate-y-1.5">
                     {item.faculty}
@@ -84,7 +91,13 @@ export function BarChartVerticalStacked({
                     margin={{ left: 0, right: 20, top: 0, bottom: 0 }}
                   >
                     <CartesianGrid horizontal={false} vertical={false} />
-                    <XAxis type="number" tickLine={false} axisLine={false} hide domain={[0, xDomainMax]} />
+                    <XAxis
+                      type="number"
+                      tickLine={false}
+                      axisLine={false}
+                      hide
+                      domain={[0, xDomainMax]}
+                    />
                     <YAxis
                       dataKey="faculty"
                       type="category"
@@ -93,6 +106,7 @@ export function BarChartVerticalStacked({
                       hide
                     />
                     <ChartTooltip content={<ChartTooltipContent />} />
+                    {/* left stacked */}
                     <Bar
                       dataKey="unregistered"
                       stackId="a"
@@ -100,13 +114,13 @@ export function BarChartVerticalStacked({
                       radius={LEFT_BAR_BORDER_RADIUS}
                       barSize={BAR_SIZE}
                     >
-                      <Cell />
                       <LabelList
                         dataKey="unregistered"
                         position="insideRight"
                         className="fill-neutral-white text-xs"
                       />
                     </Bar>
+                    {/* right stacked */}
                     <Bar
                       dataKey="registered"
                       stackId="a"
@@ -114,7 +128,6 @@ export function BarChartVerticalStacked({
                       radius={RIGHT_BAR_BORDER_RADIUS}
                       barSize={BAR_SIZE}
                     >
-                      <Cell />
                       <LabelList
                         dataKey="registered"
                         position="insideRight"
@@ -131,11 +144,15 @@ export function BarChartVerticalStacked({
           <div className="flex justify-center items-center space-x-8 md:space-x-16">
             <div className="flex flex-row space-x-2 items-center">
               <div className="w-4 h-4 bg-primary"></div>
-              <p className="label-small-primary -translate-y-0.5">จำนวนผู้ลงทะเบียนสำเร็จ</p>
+              <p className="label-small-primary -translate-y-0.5">
+                จำนวนผู้ลงทะเบียนสำเร็จ
+              </p>
             </div>
             <div className="flex flex-row space-x-2 items-center">
               <div className="w-4 h-4 bg-chart-pink-200"></div>
-              <p className="label-small-primary -translate-y-0.5">จำนวนผู้ที่ยังไม่ได้ลงทะเบียน</p>
+              <p className="label-small-primary -translate-y-0.5">
+                จำนวนผู้ที่ยังไม่ได้ลงทะเบียน
+              </p>
             </div>
           </div>
         </div>

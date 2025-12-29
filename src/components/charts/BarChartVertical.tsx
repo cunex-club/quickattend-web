@@ -7,7 +7,6 @@ import {
   LabelList,
   XAxis,
   YAxis,
-  Cell,
 } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
@@ -40,86 +39,80 @@ const chartConfig = {
 
 export function BarChartVertical({ data }: { data: BarChartVerticalProps[] }) {
   const chartData = data;
-  const BAR_SIZE: number = 32;
-  const BAR_GAP: number = 48;
+  const BAR_SIZE: number = 28;
   const BAR_CHART_RADIUS: [number, number, number, number] = [2, 2, 2, 2];
   const LABEL_OFFSET: number = 8;
   const LABEL_FONT_SIZE: number = 14;
-  const dynamicHeight: number = chartData.length * (BAR_SIZE + BAR_GAP);
+  
+  const maxDataValue = Math.max(...chartData.map((d) => d.total));
+  const xDomainMax = (maxDataValue || 0) * 1.15;
+
+  // Compute percentage once to optionally show in tooltips (no transparent overlay)
+  const totalSum = chartData.reduce((sum, item) => sum + item.total, 0);
+  const chartDataWithMeta = chartData.map((item) => ({
+    ...item,
+    percentage: totalSum > 0 ? ((item.total / totalSum) * 100).toFixed(1) : "0",
+  }));
 
   return (
     <Card className="bg-neutral-white md:bg-neutral-100 border-none shadow-none h-auto w-full px-0 lg:px-8">
       <CardContent className="px-0">
-        <ChartContainer
-          config={chartConfig}
-          className="w-full chart-hover-bar"
-          style={{ height: `${dynamicHeight}px` }}
-        >
-          <BarChart
-            data={chartData}
-            layout="vertical"
-            accessibilityLayer
-            margin={{ left: 40, right: 20 }}
-          >
-            <CartesianGrid horizontal={false} vertical={false} />
-
-            <YAxis
-              dataKey="faculty"
-              type="category"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) =>
-                typeof value === "string" ? value.slice(0, 3) : value
-              }
-              hide
-            />
-
-            <XAxis dataKey="total" type="number" hide />
-
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="line" />}
-            />
-
-            <Bar
-              dataKey="total"
-              layout="vertical"
-              fill="transparent"
-              radius={BAR_CHART_RADIUS}
-              barSize={BAR_SIZE}
-              tooltipType="none"
-            >
-              <LabelList
-                dataKey="faculty"
-                position="insideBottomLeft"
-                offset={0}
-                className="fill-[var(--color-label)] font-var(--font-chula-regular) text-[22px] leading-[28px] tracking-[0px] -translate-y-[10px]"
-              />
-            </Bar>
-
-            <Bar
-              dataKey="total"
-              layout="vertical"
-              fill="var(--color-total)"
-              radius={BAR_CHART_RADIUS}
-              barSize={BAR_SIZE}
-            >
-              {chartData.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                />
-              ))}
-              <LabelList
-                dataKey="total"
-                position="right"
-                offset={LABEL_OFFSET}
-                className="fill-foreground"
-                fontSize={LABEL_FONT_SIZE}
-              />
-            </Bar>
-          </BarChart>
-        </ChartContainer>
+        <div className="chart-list-group flex flex-col space-y-4">
+          {chartDataWithMeta.map((item, idx) => (
+            <div key={`faculty-chart-${idx}`} className="flex flex-col space-y-2 chart-item">
+              <div className="flex items-center justify-between">
+                <p className="title-medium-primary md:title-large-primary">
+                  {item.faculty}
+                </p>
+                <p className="body-medium-primary md:body-large-primary text-[var(--color-label)]">
+                  {item.total} คน ({item.percentage}%)
+                </p>
+              </div>
+              <ChartContainer
+                config={chartConfig}
+                style={{ maxHeight: `${BAR_SIZE}px` }}
+                className="w-full chart-hover-bar"
+              >
+                <BarChart
+                  accessibilityLayer
+                  data={[item]}
+                  layout="vertical"
+                  margin={{ left: 0, right: 16, top: 0, bottom: 0 }}
+                >
+                  <CartesianGrid horizontal={false} vertical={false} />
+                  <YAxis
+                    dataKey="faculty"
+                    type="category"
+                    tickLine={false}
+                    axisLine={false}
+                    hide
+                  />
+                  <XAxis dataKey="total" type="number" hide domain={[0, xDomainMax]} />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent indicator="line" />}
+                  />
+                  <Bar
+                    dataKey="total"
+                    layout="vertical"
+                    fill="var(--color-total)"
+                    radius={BAR_CHART_RADIUS}
+                    barSize={BAR_SIZE}
+                  >
+                    {/* <Cell /> */}
+                    <LabelList
+                      dataKey="total"
+                      position="right"
+                      offset={LABEL_OFFSET}
+                      className="fill-foreground"
+                      fontSize={LABEL_FONT_SIZE}
+                    />
+                  </Bar>
+                </BarChart>
+              </ChartContainer>
+            </div>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );

@@ -119,8 +119,8 @@ export default function OverviewPage() {
       {!isFullscreen && (
         <div className="flex flex-col space-y-8">
           {/* event information section */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex flex-col space-y-6 order-2 md:order-1">
+          <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="flex flex-col space-y-6 order-2 lg:order-1">
               <div className="flex justify-between items-center">
                 <p className="headline-large-emphasized">{event.title}</p>
                 <button
@@ -178,7 +178,7 @@ export default function OverviewPage() {
                 </Button>
               </div>
             </div>
-            <div className="h-full w-full order-1 md:order-2">
+            <div className="h-full w-full order-1 lg:order-2">
               <StatCard
                 title={t("totalAttendees")}
                 value={event.totalAttendees}
@@ -189,7 +189,7 @@ export default function OverviewPage() {
           </section>
 
           {/* chart section */}
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+          <section className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
             <div className="space-y-6 md:space-y-4">
               <p className="headline-medium-emphasized">
                 {t("top3Title")}
@@ -214,7 +214,7 @@ export default function OverviewPage() {
               <p className="headline-medium-emphasized">
                 {t("timeStatsTitle")}
               </p>
-              <div className="max-h-[320px] overflow-auto">
+              <div className="h-[360px] sm:h-[360px] md:h-[360px] lg:h-[350px] xl:max-h-[320px] overflow-auto">
                 <BarChartHorizontalOverview data={chartDataTime} />
               </div>
             </div>

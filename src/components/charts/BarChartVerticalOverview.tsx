@@ -5,7 +5,6 @@ import {
   LabelList,
   XAxis,
   YAxis,
-  Cell,
 } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
@@ -96,7 +95,6 @@ export function BarChartVerticalOverview({
                     radius={BAR_CHART_RADIUS}
                     barSize={BAR_SIZE}
                   >
-                    <Cell />
                     <LabelList
                       dataKey="total"
                       position="right"
