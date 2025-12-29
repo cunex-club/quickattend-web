@@ -12,6 +12,7 @@ import Button from "@shared/Button";
 import CreateEventResult from "../components/create-event-result";
 
 export interface Agenda {
+  id: string;
   activity_name: string;
   startTime: Date;
   endTime: Date;

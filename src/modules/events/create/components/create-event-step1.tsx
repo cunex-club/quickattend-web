@@ -12,6 +12,7 @@ import IonIcon from "@shared/IonIcon";
 import { useEffect, useState } from "react";
 import { cn } from "@assets/lib/utils";
 import Button from "@shared/Button";
+import EditableTime from "./editable-time";
 
 interface CreateEventStep1Props {
   eventForm: EventFormInterface;
@@ -81,14 +82,26 @@ const CreateEventStep1 = ({
 
     const newStart = updateTime(eventForm.startTime, time);
     let endTime = eventForm.endTime;
+
     if (!isEndAfterStart(newStart, eventForm.endTime)) {
       endTime = addMins(newStart, 1);
     }
+
+    const newAgenda = eventForm.agenda.map((agenda) => {
+      if (agenda.startTime.getTime() < newStart.getTime()) {
+        agenda.startTime = newStart;
+      }
+      if (!isEndAfterStart(agenda.startTime, agenda.endTime)) {
+        agenda.endTime = addMins(agenda.startTime, 1);
+      }
+      return agenda;
+    });
 
     setEventForm({
       ...eventForm,
       startTime: newStart,
       endTime,
+      agenda: newAgenda,
     });
   };
 
@@ -99,9 +112,17 @@ const CreateEventStep1 = ({
 
     if (!isEndAfterStart(eventForm.startTime, newEnd)) return;
 
+    const newAgenda = eventForm.agenda.map((agenda) => {
+      if (agenda.endTime.getTime() > newEnd.getTime()) {
+        agenda.endTime = newEnd;
+      }
+      return agenda;
+    });
+
     setEventForm({
       ...eventForm,
       endTime: newEnd,
+      agenda: newAgenda,
     });
   };
 
@@ -138,6 +159,7 @@ const CreateEventStep1 = ({
     if (end < start) return;
 
     const newAgenda = {
+      id: crypto.randomUUID(),
       activity_name: agendaName,
       startTime: start,
       endTime: end,
@@ -166,6 +188,37 @@ const CreateEventStep1 = ({
       ...eventForm,
       agenda: newAgenda,
     });
+  };
+
+  const updateAgendaTime = (
+    index: number,
+    field: "startTime" | "endTime",
+    time: string
+  ) => {
+    const updated = [...eventForm.agenda];
+    const base = updated[index][field];
+    const newDate = updateTime(base, time);
+
+    if (!eventForm.startTime || !eventForm.endTime) return;
+
+    if (field === "startTime" && newDate > updated[index].endTime) return;
+    if (field === "startTime" && newDate < eventForm.startTime) return;
+
+    if (field === "endTime" && newDate < updated[index].startTime) return;
+    if (field === "endTime" && newDate > eventForm.endTime) return;
+
+    updated[index] = {
+      ...updated[index],
+      [field]: newDate,
+    };
+
+    setEventForm({ ...eventForm, agenda: updated });
+  };
+
+  const updateAgendaName = (index: number, name: string) => {
+    const updated = [...eventForm.agenda];
+    updated[index] = { ...updated[index], activity_name: name };
+    setEventForm({ ...eventForm, agenda: updated });
   };
 
   return (
@@ -437,38 +490,50 @@ const CreateEventStep1 = ({
       </div>
 
       {/* Agenda List */}
-      {eventForm.agenda.length > 0 && (
-        <div className="flex flex-col gap-2 mt-2">
-          {eventForm.agenda.map((item, index) => (
-            <div
-              key={`${item.activity_name}-${index}`}
-              className="flex items-center justify-between border rounded-md px-3 py-2"
-            >
-              <div className="flex items-center gap-3">
-                {/* Remove Button */}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveAgenda(index)}
-                  className="text-primary"
-                >
-                  <IonIcon name="RemoveCircle" size="18px" />
-                </button>
+      {eventForm.agenda.map((item, index) => (
+        <div
+          key={item.id}
+          className="flex items-center gap-2 border rounded-md px-3 py-2"
+        >
+          {/* Remove */}
+          <button
+            type="button"
+            onClick={() => handleRemoveAgenda(index)}
+            className="text-primary mt-2"
+          >
+            <IonIcon name="RemoveCircleOutline" size="18px" />
+          </button>
 
-                {/* Agenda Detail */}
-                <div className="flex flex-col min-w-0 max-w-full">
-                  <p className="body-medium-primary break-all">
-                    {item.activity_name}
-                  </p>
-                  <p className="body-small-primary text-neutral-500">
-                    {format(item.startTime, "HH:mm")} –{" "}
-                    {format(item.endTime, "HH:mm")}
-                  </p>
-                </div>
-              </div>
+          {/* Content */}
+          <div className="flex flex-col gap-2 w-full min-w-0">
+            {/* Time Row */}
+            <div className="flex gap-3 w-full flex-wrap">
+              {/* Start Time */}
+              <EditableTime
+                value={item.startTime}
+                min={eventForm.startTime}
+                max={item.endTime}
+                onChange={(time) => updateAgendaTime(index, "startTime", time)}
+              />
+
+              {/* End Time */}
+              <EditableTime
+                value={item.endTime}
+                min={item.startTime}
+                max={eventForm.endTime}
+                onChange={(time) => updateAgendaTime(index, "endTime", time)}
+              />
             </div>
-          ))}
+
+            {/* Name */}
+            <Input
+              value={item.activity_name}
+              onChange={(e) => updateAgendaName(index, e.target.value)}
+              className="!body-medium-primary"
+            />
+          </div>
         </div>
-      )}
+      ))}
 
       {/* Organizer */}
       <div className="flex flex-col gap-2">
