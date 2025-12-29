@@ -455,14 +455,14 @@ const CreateEventStep1 = ({
                 </button>
 
                 {/* Agenda Detail */}
-                <div className="flex flex-col">
-                  <span className="body-medium-primary">
+                <div className="flex flex-col min-w-0 max-w-full">
+                  <p className="body-medium-primary break-all">
                     {item.activity_name}
-                  </span>
-                  <span className="body-small-primary text-neutral-500">
+                  </p>
+                  <p className="body-small-primary text-neutral-500">
                     {format(item.startTime, "HH:mm")} –{" "}
                     {format(item.endTime, "HH:mm")}
-                  </span>
+                  </p>
                 </div>
               </div>
             </div>
