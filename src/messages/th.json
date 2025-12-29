@@ -60,6 +60,8 @@
     "facultiesPlaceholder": "คณะ/หน่วยงาน",
     "facultiesNotFound": "ไม่พบคณะดังกล่าว",
     "facultiesAdd": "เพิ่มคณะ/หน่วยงาน",
-    "whitelist": "เฉพาะรายชื่อที่กำหนด"
+    "whitelist": "เฉพาะรายชื่อที่กำหนด",
+    "whitelistPlaceholder": "รหัสประจำตัว",
+    "whitelistAdd": "เพิ่มรายชื่อ"
   }
 }

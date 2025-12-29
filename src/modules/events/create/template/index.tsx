@@ -42,7 +42,8 @@ export interface EventFormInterface {
   agenda: Agenda[];
   organizer: string;
   attendance_type: AttendanceType;
-  attendee: string[] | Student[];
+  selectedFaculties: string[];
+  selectedStudents: Student[];
 }
 
 const EventCreateTemplate = () => {
@@ -64,7 +65,8 @@ const EventCreateTemplate = () => {
     agenda: [],
     organizer: "",
     attendance_type: "all",
-    attendee: [],
+    selectedFaculties: [],
+    selectedStudents: [],
   });
 
   const [validStep1, setValidStep1] = useState(false);
@@ -299,13 +301,20 @@ const EventCreateTemplate = () => {
 
                 let attendeeText = "-";
                 if (eventForm.attendance_type == AttendanceType.FACULTIES) {
-                  attendeeText = (eventForm.attendee as string[])
+                  attendeeText = eventForm.selectedFaculties
                     .map((item, index) => {
                       return `${index + 1} ${item}`;
                     })
                     .join("\n");
+                } else if (
+                  eventForm.attendance_type == AttendanceType.WHITELIST
+                ) {
+                  attendeeText = eventForm.selectedStudents
+                    .map((item, index) => {
+                      return `${index + 1} ${item.id} ${item.name}`;
+                    })
+                    .join("\n");
                 }
-
                 alert(`Name: ${eventForm.name}
                 Description: ${eventForm.description}
                 Date: ${eventForm.date}

@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import { AttendanceType, EventFormInterface } from "../template";
+import { AttendanceType, EventFormInterface, Student } from "../template";
 import { RadioGroup, RadioGroupItem } from "@assets/components/ui/radio-group";
 import {
   Command,
@@ -13,6 +13,7 @@ import { Input } from "@assets/components/ui/input";
 import Button from "@shared/Button";
 import IonIcon from "@shared/IonIcon";
 
+const MOCK_STUDENTNAME = "นางสาวปริณ ไกรภพ";
 interface CreateEventStep2Props {
   eventForm: EventFormInterface;
   setEventForm: (formdata: EventFormInterface) => void;
@@ -111,23 +112,24 @@ const CreateEventStep2 = ({
 }: CreateEventStep2Props) => {
   const tCreateEvent = useTranslations("CreateEvent");
 
-  const [selectedFaculty, setSelectedFaculty] = useState("");
-  const [query, setQuery] = useState("");
-  const [filteredFaculties, setFilteredOrganization] = useState<string[]>();
+  const [facultyQuery, setFacultyQuery] = useState("");
+  const [studentIdQuery, setStudentIdQuery] = useState("");
+  const [filteredFaculties, setFilteredOrganization] = useState<string[]>([]);
+
+  const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([]);
 
   const [openFacultyFilter, setOpenFacultyFilter] = useState(false);
 
   useEffect(() => {
-    if (!query) {
+    if (!facultyQuery) {
       setFilteredOrganization([]);
       setOpenFacultyFilter(false);
+      return;
     }
-    const filtered = FacultyList.filter((org) =>
-      org.toLowerCase().includes(query.toLowerCase())
-    );
+    const filtered = FacultyList.filter((org) => org.includes(facultyQuery));
     setFilteredOrganization(filtered);
     setOpenFacultyFilter(true);
-  }, [query]);
+  }, [facultyQuery]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -149,7 +151,7 @@ const CreateEventStep2 = ({
               attendance_type: value,
             });
           }}
-          className="flex flex-col gap-6"
+          className="w-full flex flex-col gap-6"
         >
           {/* All */}
           <div className="flex flex-col gap-4">
@@ -157,10 +159,11 @@ const CreateEventStep2 = ({
               <RadioGroupItem
                 value={AttendanceType.ALL}
                 id={AttendanceType.ALL}
+                className="cursor-pointer"
               />
               <label
                 htmlFor={AttendanceType.ALL}
-                className="label-large-primary"
+                className="label-large-primary cursor-pointer"
               >
                 {tCreateEvent("all")}
               </label>
@@ -169,30 +172,39 @@ const CreateEventStep2 = ({
 
           {/* Faculties */}
           <div className="flex flex-col gap-4">
+            {/* Radio Button */}
             <div className="flex items-center space-x-4">
               <RadioGroupItem
                 value={AttendanceType.FACULTIES}
                 id={AttendanceType.FACULTIES}
+                className="cursor-pointer"
               />
               <label
                 htmlFor={AttendanceType.FACULTIES}
-                className="label-large-primary"
+                className="label-large-primary cursor-pointer"
               >
                 {tCreateEvent("faculties")}
               </label>
             </div>
-            <div className="flex gap-4 flex-wrap">
-              <div className="flex flex-col gap-2">
+
+            {/* Faculty Input */}
+            <div className="flex gap-4 flex-wrap w-full">
+              <div className="flex flex-col gap-2 flex-1">
                 <Input
-                  value={query}
+                  value={facultyQuery}
                   onChange={(e) => {
-                    setQuery(e.target.value);
-                    setOpenFacultyFilter(true);
+                    const value = e.target.value;
+
+                    if (/^[\u0E00-\u0E7F]*$/.test(value)) {
+                      setFacultyQuery(e.target.value);
+                      setOpenFacultyFilter(true);
+                    }
                   }}
                   disabled={
                     eventForm.attendance_type != AttendanceType.FACULTIES
                   }
                   placeholder={tCreateEvent("facultiesPlaceholder")}
+                  className="w-full"
                 />
                 {openFacultyFilter && (
                   <Command>
@@ -203,16 +215,15 @@ const CreateEventStep2 = ({
                         </CommandEmpty>
                       )}
 
-                      {query && (
+                      {facultyQuery && (
                         <CommandGroup>
                           {filteredFaculties?.map((f) => (
                             <CommandItem
                               key={f}
                               value={f}
                               onSelect={(value) => {
-                                setSelectedFaculty(value);
                                 setOpenFacultyFilter(false);
-                                setQuery(value);
+                                setFacultyQuery(value);
                               }}
                             >
                               {f}
@@ -228,29 +239,29 @@ const CreateEventStep2 = ({
                 mode="filled"
                 bordered="square"
                 expanded={false}
-                className={`h-9 ${
+                className={`h-9 shrink-0 ${
                   eventForm.attendance_type == AttendanceType.FACULTIES &&
-                  FacultyList.includes(selectedFaculty) &&
-                  !(eventForm.attendee as string[]).includes(selectedFaculty)
+                  FacultyList.includes(facultyQuery) &&
+                  !eventForm.selectedFaculties.includes(facultyQuery)
                     ? "cursor-pointer"
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
                 }`}
                 onClick={() => {
                   if (eventForm.attendance_type != AttendanceType.FACULTIES)
                     return;
-                  const attendee = eventForm.attendee as string[];
-                  if (!FacultyList.includes(selectedFaculty)) return;
-                  if (attendee.includes(selectedFaculty)) return;
+                  const selectedFaculties = eventForm.selectedFaculties;
+                  if (!FacultyList.includes(facultyQuery)) return;
+                  if (selectedFaculties.includes(facultyQuery)) return;
 
                   setEventForm({
                     ...eventForm,
-                    attendee: [...attendee, selectedFaculty].sort((a, b) =>
-                      a.localeCompare(b, "th")
-                    ),
+                    selectedFaculties: [
+                      ...selectedFaculties,
+                      facultyQuery,
+                    ].sort((a, b) => a.localeCompare(b, "th")),
                   });
 
-                  setQuery("");
-                  setSelectedFaculty("");
+                  setFacultyQuery("");
                 }}
               >
                 <p className="label-large-primary -translate-y-0.5">
@@ -258,8 +269,9 @@ const CreateEventStep2 = ({
                 </p>
               </Button>
             </div>
+
             {/* Faculty List */}
-            {(eventForm.attendee as string[]).map((faculty) => (
+            {eventForm.selectedFaculties.map((faculty) => (
               <div
                 key={faculty}
                 className={`flex items-center gap-2 border rounded-md px-3 py-2 ${eventForm.attendance_type != AttendanceType.FACULTIES && "opacity-50"}`}
@@ -274,15 +286,13 @@ const CreateEventStep2 = ({
                     if (eventForm.attendance_type != AttendanceType.FACULTIES)
                       return;
 
-                    const newAttendee = eventForm.attendee
+                    const newFaculties = eventForm.selectedFaculties
                       .filter((item) => item !== faculty)
-                      .sort((a, b) =>
-                        (a as string).localeCompare(b as string, "th")
-                      );
+                      .sort((a, b) => a.localeCompare(b, "th"));
 
                     setEventForm({
                       ...eventForm,
-                      attendee: newAttendee as string[],
+                      selectedFaculties: newFaculties,
                     });
                   }}
                   className={`${eventForm.attendance_type == AttendanceType.FACULTIES ? "text-primary" : "text-neutral-500"}`}
@@ -297,18 +307,128 @@ const CreateEventStep2 = ({
 
           {/* Whitelist */}
           <div className="flex flex-col gap-4">
+            {/* Radio Button */}
             <div className="flex items-center space-x-4">
               <RadioGroupItem
                 value={AttendanceType.WHITELIST}
                 id={AttendanceType.WHITELIST}
+                className="cursor-pointer"
               />
               <label
                 htmlFor={AttendanceType.WHITELIST}
-                className="label-large-primary"
+                className="label-large-primary cursor-pointer"
               >
                 {tCreateEvent("whitelist")}
               </label>
             </div>
+
+            {/* Individual Input */}
+            <div className="flex gap-4 flex-wrap w-full">
+              <div className="flex flex-col gap-2 flex-1">
+                <Input
+                  inputMode="numeric"
+                  maxLength={10}
+                  value={studentIdQuery}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (/^\d{0,10}$/.test(value)) {
+                      setStudentIdQuery(value);
+                    }
+                  }}
+                  disabled={
+                    eventForm.attendance_type != AttendanceType.WHITELIST
+                  }
+                  placeholder={tCreateEvent("whitelistPlaceholder")}
+                />
+              </div>
+              <Button
+                mode="filled"
+                bordered="square"
+                expanded={false}
+                className={`h-9 shrink-0 ${
+                  eventForm.attendance_type == AttendanceType.WHITELIST &&
+                  studentIdQuery?.length == 10 &&
+                  !selectedStudentIds?.includes(studentIdQuery)
+                    ? "cursor-pointer"
+                    : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
+                }`}
+                onClick={() => {
+                  if (eventForm.attendance_type != AttendanceType.WHITELIST)
+                    return;
+
+                  if (studentIdQuery.length != 10) return;
+                  if (selectedStudentIds?.includes(studentIdQuery)) return;
+
+                  // =====
+                  // TODO: Fetch Student Name from Student Id
+                  // =====
+
+                  const student: Student = {
+                    id: studentIdQuery,
+                    name: MOCK_STUDENTNAME,
+                  };
+
+                  setEventForm({
+                    ...eventForm,
+                    selectedStudents: [
+                      ...eventForm.selectedStudents,
+                      student,
+                    ].sort((a, b) => {
+                      return Number(a.id) - Number(b.id);
+                    }),
+                  });
+
+                  setSelectedStudentIds((prev) => [...prev, studentIdQuery]);
+                  setStudentIdQuery("");
+                }}
+              >
+                <p className="label-large-primary -translate-y-0.5">
+                  {tCreateEvent("whitelistAdd")}
+                </p>
+              </Button>
+            </div>
+
+            {/* Individual List */}
+            {eventForm.selectedStudents.map((student) => (
+              <div
+                key={student.id}
+                className={`flex items-center gap-2 border rounded-md px-3 py-2 ${eventForm.attendance_type != AttendanceType.WHITELIST && "opacity-50"}`}
+              >
+                {/* Remove */}
+                <button
+                  type="button"
+                  disabled={
+                    eventForm.attendance_type != AttendanceType.WHITELIST
+                  }
+                  onClick={() => {
+                    if (eventForm.attendance_type != AttendanceType.WHITELIST)
+                      return;
+
+                    const newStudents = eventForm.selectedStudents
+                      .filter((s) => s.id !== student.id)
+                      .sort((a, b) => {
+                        return Number(a.id) - Number(b.id);
+                      });
+
+                    setEventForm({
+                      ...eventForm,
+                      selectedStudents: newStudents,
+                    });
+
+                    setSelectedStudentIds((prev) => {
+                      return prev.filter((id) => id != student.id);
+                    });
+                  }}
+                  className={`${eventForm.attendance_type == AttendanceType.WHITELIST ? "text-primary" : "text-neutral-500"}`}
+                >
+                  <IonIcon name="RemoveCircleOutline" size="18px" />
+                </button>
+
+                <p className="body-large-primary">
+                  {student.id} {student.name}
+                </p>
+              </div>
+            ))}
           </div>
         </RadioGroup>
       </div>

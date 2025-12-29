@@ -59,6 +59,8 @@
     "facultiesPlaceholder": "Faculties/Organizations",
     "facultiesNotFound": "No matching faculties or organizations",
     "facultiesAdd": "Add Faculty/Organization",
-    "whitelist": "Whitelist"
+    "whitelist": "Whitelist",
+    "whitelistPlaceholder": "Student ID",
+    "whitelistAdd": "Add Student"
   }
 }
