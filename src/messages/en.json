@@ -53,7 +53,7 @@
     "organizerPlaceholder": "Organizer",
 
     "setting": "Settings and Display",
-    "access": "Accessibility",
+    "permission": "Permission",
     "all": "Public",
     "faculties": "Faculty/Organization",
     "facultiesPlaceholder": "Faculty/Organization",
@@ -66,6 +66,16 @@
     "scanSettingImages": "Images",
     "scanSettingName": "Full name",
     "scanSettingId": "Student ID",
-    "scanSettingFaculty": "Faculty/Organization"
+    "scanSettingFaculty": "Faculty/Organization",
+    "access": "Access Control",
+    "addEventManager": "Add Event Manager",
+    "addEventManagerIdPlaceholder": "Student ID",
+    "addEventManagerRolePlaceholder": "Role",
+    "staff": "Staff",
+    "manager": "Manager",
+    "owner": "Owner",
+    "allowAllToScan": "Registration Scanning Permission",
+    "limited": "Only the event owner and added event managers",
+    "anyone": "Anyone who has access to the scanning link"
   }
 }

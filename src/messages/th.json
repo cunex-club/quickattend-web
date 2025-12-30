@@ -54,7 +54,7 @@
     "organizerPlaceholder": "ผู้จัดกิจกรรม",
 
     "setting": "การตั้งค่ากิจกรรมและการแสดงผลกิจกรรม",
-    "access": "สิทธิ์การเข้าร่วมกิจกรรม",
+    "permission": "สิทธิ์การเข้าร่วมกิจกรรม",
     "all": "สาธารณะ",
     "faculties": "เฉพาะคณะ/หน่วยงาน",
     "facultiesPlaceholder": "คณะ/หน่วยงาน",
@@ -67,6 +67,16 @@
     "scanSettingImages": "รูปภาพ",
     "scanSettingName": "ชื่อ-นามสกุล",
     "scanSettingId": "รหัสประจำตัว",
-    "scanSettingFaculty": "คณะ/หน่วยงาน"
+    "scanSettingFaculty": "คณะ/หน่วยงาน",
+    "access": "การกำหนดสิทธิการเข้าถึง",
+    "addEventManager": "เพิ่มผู้ดูแลกิจกรรม",
+    "addEventManagerIdPlaceholder": "รหัสประจำตัว",
+    "addEventManagerRolePlaceholder": "บทบาท",
+    "staff": "ผู้ดูแลงาน",
+    "manager": "ผู้จัดการกิจกรรม",
+    "owner": "เจ้าของกิจกรรม",
+    "allowAllToScan": "สิทธิ์การสแกนผู้มีสิทธิลงทะเบียน",
+    "limited": "เฉพาะเจ้าและผู้ที่ถูกเพิ่มเป็นผู้ดูแล",
+    "anyone": "ทุกคนที่มีลิงก์สำหรับสแกน"
   }
 }

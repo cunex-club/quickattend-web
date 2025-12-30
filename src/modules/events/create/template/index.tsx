@@ -34,13 +34,36 @@ export const ParticipantFieldType = {
 export type AttendanceType =
   (typeof AttendanceType)[keyof typeof AttendanceType];
 
+export const ScanPermissionType = {
+  LIMITED: "limited",
+  ANYONE: "anyone",
+} as const;
+
+export type ScanPermissionType =
+  (typeof ScanPermissionType)[keyof typeof ScanPermissionType];
+
 export interface Student {
   id: string;
   name: string;
 }
 
+export const EventManagerType = {
+  OWNER: "owner",
+  MANAGER: "manager",
+  STAFF: "staff",
+};
+
+export type EventManagerType =
+  (typeof EventManagerType)[keyof typeof EventManagerType];
+
 export type ParticipantFieldType =
   (typeof ParticipantFieldType)[keyof typeof ParticipantFieldType];
+
+export interface EventManager {
+  id: string;
+  name: string;
+  role: EventManagerType;
+}
 
 export interface EventFormInterface {
   name: string;
@@ -55,6 +78,8 @@ export interface EventFormInterface {
   selectedFaculties: string[];
   selectedStudents: Student[];
   revealed_fields: ParticipantFieldType[];
+  managers_and_staff: EventManager[];
+  allow_all_to_scan: boolean;
 }
 
 const EventCreateTemplate = () => {
@@ -79,6 +104,8 @@ const EventCreateTemplate = () => {
     selectedFaculties: [],
     selectedStudents: [],
     revealed_fields: [],
+    managers_and_staff: [],
+    allow_all_to_scan: true,
   });
 
   const [validStep1, setValidStep1] = useState(false);
@@ -105,7 +132,10 @@ const EventCreateTemplate = () => {
           eventForm.selectedFaculties.length > 0) ||
         (eventForm.attendance_type == AttendanceType.WHITELIST &&
           eventForm.selectedStudents.length > 0)) &&
-      eventForm.revealed_fields.length > 0
+      eventForm.revealed_fields.length > 0 &&
+      eventForm.managers_and_staff.filter(
+        (item) => item.role == EventManagerType.OWNER
+      ).length == 1
     ) {
       setValidStep2(true);
     } else {
@@ -273,8 +303,9 @@ const EventCreateTemplate = () => {
           onClick={() => {
             if (step != 1) {
               setStep((prev) => prev - 1);
+              scrollToTop();
+              return;
             }
-            scrollToTop();
           }}
         >
           {tCreateEvent("back")}
@@ -293,10 +324,10 @@ const EventCreateTemplate = () => {
               if (step != 3) {
                 if ((step == 1 && validStep1) || (step == 2 && validStep2)) {
                   setStep((prev) => prev + 1);
+                  scrollToTop();
                   return;
                 }
               }
-              scrollToTop();
             }}
           >
             {tCreateEvent("next")}
@@ -337,6 +368,12 @@ const EventCreateTemplate = () => {
 
                 const revealedFieldText = eventForm.revealed_fields.join(", ");
 
+                const managerAndStaffText = eventForm.managers_and_staff
+                  .map((item, index) => {
+                    return `${index + 1} ${item.id} ${item.name} ${item.role}`;
+                  })
+                  .join("\n");
+
                 alert(`Name: ${eventForm.name}
                 Description: ${eventForm.description}
                 Date: ${eventForm.date}
@@ -347,7 +384,9 @@ const EventCreateTemplate = () => {
                 Organizer: ${eventForm.organizer}
                 Attendance Type: ${eventForm.attendance_type}
                 Attendee: ${attendeeText}
-                Revealed Fields: ${revealedFieldText}`);
+                Revealed Fields: ${revealedFieldText}
+                Manager and Staff: ${managerAndStaffText}
+                Allow All to Scan: ${eventForm.allow_all_to_scan}`);
               }
             }}
           >
