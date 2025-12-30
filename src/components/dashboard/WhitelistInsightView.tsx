@@ -209,7 +209,7 @@ export function WhitelistInsightView() {
                 <span className="headline-small-emphasized pr-4 sm:pr-10 md:pr-16 text-center">
                   {t("students")}: 455 {t("unit")}
                 </span>
-                <div className="inline-block w-0.5 self-stretch bg-neutral-black"></div>
+                <div className="inline-block w-0.5 self-stretch bg-neutral-400"></div>
                 <span className="headline-small-emphasized pl-4 sm:pl-10 md:pl-16 text-center">
                   {t("staffs")}: 5 {t("unit")}
                 </span>

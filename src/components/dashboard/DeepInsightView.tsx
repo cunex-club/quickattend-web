@@ -198,7 +198,7 @@ export function DeepInsightView() {
             <span className="headline-small-emphasized pr-2 md:pr-16 text-center">
               {t("students")}: {eventData.studentCount} {t("unit")}
             </span>
-            <div className="inline-block w-0.5 self-stretch bg-neutral-100"></div>
+            <div className="inline-block w-0.5 self-stretch bg-neutral-400"></div>
             <span className="headline-small-emphasized pl-2 md:pl-16 text-center">
               {t("staffs")}: {eventData.staffCount} {t("unit")}
             </span>

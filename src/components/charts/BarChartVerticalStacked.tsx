@@ -62,7 +62,7 @@ export function BarChartVerticalStacked({
   });
 
   return (
-    <Card className="bg-neutral-100 w-full px-6 lg:px-8 py-8 shadow-none border-none rounded-3xl">
+    <Card className="bg-neutral-100 w-full px-6 lg:px-8 py-8 shadow-none border-none rounded-[28px]">
       <CardContent className="px-0 flex flex-col space-y-6">
         <div className="flex flex-col space-y-4">
           {chartDataWithMeta.map((item, idx) => {

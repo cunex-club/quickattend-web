@@ -12,7 +12,7 @@ export default async function DashboardLayout({
 
   return (
     <RoleProvider initialRole={role}>
-      <div className="flex flex-col md:flex-row w-full min-h-screen">
+      <div className="flex flex-col lg:flex-row w-full min-h-screen">
         <DashboardSidebar />
         <main className="flex-1 w-full">{children}</main>
       </div>

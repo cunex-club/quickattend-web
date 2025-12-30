@@ -15,6 +15,7 @@ import {
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
 import type { BarChartVerticalData } from "@customTypes/chart";
+import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
 
 export const description = "A bar chart with a custom label";
 export type { BarChartVerticalData };
@@ -36,10 +37,18 @@ export function BarChartVerticalOverview({
   data,
 }: BarChartVerticalOverviewProps) {
   const chartData = data;
-  const BAR_SIZE: number = 28;
   const BAR_CHART_RADIUS: [number, number, number, number] = [2, 2, 2, 2];
   const LABEL_OFFSET: number = 8;
   const LABEL_FONT_SIZE: number = 14;
+
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet(); 
+  let BAR_SIZE: number = 28;
+  if (isMobile) {
+    BAR_SIZE = 16;
+  } else if (isTablet) {
+    BAR_SIZE = 19;
+  }
   
   const maxDataValue = Math.max(...chartData.map((d) => d.total));
   const xDomainMax = (maxDataValue || 0) * 1.15;
@@ -51,7 +60,7 @@ export function BarChartVerticalOverview({
     percentage: totalSum > 0 ? ((item.total / totalSum) * 100).toFixed(1) : "0",
   }));
   return (
-    <Card className="bg-neutral-white md:bg-neutral-100 shadow-none p-0 md:p-5   border-none">
+    <Card className="bg-neutral-white lg:bg-neutral-100 shadow-none p-0 md:p-5 border-none rounded-[28px] w-full h-auto">
       <CardContent className="shadow-none border-none">
         <div className="chart-list-group flex flex-col space-y-4">
           {chartDataWithMeta.map((item, idx) => (

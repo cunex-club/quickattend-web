@@ -19,7 +19,7 @@ export function DashboardSidebar() {
   return (
     <>
       {/* Mobile: Horizontal nav at top */}
-      <nav className="md:hidden w-full bg-neutral-100 px-4 py-3 flex flex-row justify-between">
+      <nav className="lg:hidden w-full bg-neutral-100 px-4 py-3 flex flex-row justify-between">
         <p className="headline-small-emphasized my-auto">สถิติการลงทะเบียน</p>
         <div className="flex items-center space-x-4">
           <Link
@@ -70,7 +70,7 @@ export function DashboardSidebar() {
       </nav>
 
       {/* Desktop: Vertical sidebar on left */}
-      <aside className="hidden bg-neutral-100 sm:flex sm:flex-col sm:justify-between min-h-screen pt-4 px-2 pb-10">
+      <aside className="hidden bg-neutral-100 lg:flex lg:flex-col lg:justify-between min-h-screen pt-4 px-2 pb-10">
         <section className="flex flex-col space-y-6">
           <Image
             src="/logo/cu-nex.png"

@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Bar,
   BarChart,
@@ -17,6 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
+import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
 
 export const description = "A bar chart with a custom label";
 
@@ -39,11 +38,20 @@ const chartConfig = {
 
 export function BarChartVertical({ data }: { data: BarChartVerticalProps[] }) {
   const chartData = data;
-  const BAR_SIZE: number = 28;
+
   const BAR_CHART_RADIUS: [number, number, number, number] = [2, 2, 2, 2];
   const LABEL_OFFSET: number = 8;
   const LABEL_FONT_SIZE: number = 14;
   
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet(); 
+  let BAR_SIZE: number = 28;
+  if (isMobile) {
+    BAR_SIZE = 16;
+  } else if (isTablet) {
+    BAR_SIZE = 15;
+  }
+
   const maxDataValue = Math.max(...chartData.map((d) => d.total));
   const xDomainMax = (maxDataValue || 0) * 1.15;
 
@@ -55,11 +63,11 @@ export function BarChartVertical({ data }: { data: BarChartVerticalProps[] }) {
   }));
 
   return (
-    <Card className="bg-neutral-white md:bg-neutral-100 border-none shadow-none h-auto w-full px-0 lg:px-8">
+    <Card className="bg-neutral-white lg:bg-neutral-100 border-none shadow-none h-auto w-full px-0 lg:px-8 rounded-[28px]">
       <CardContent className="px-0">
         <div className="chart-list-group flex flex-col space-y-4">
           {chartDataWithMeta.map((item, idx) => (
-            <div key={`faculty-chart-${idx}`} className="flex flex-col space-y-2 chart-item">
+            <div key={`faculty-chart-${idx}`} className="flex flex-col space-y-3 md:space-y-5 lg:space-y-4 chart-item">
               <div className="flex items-center justify-between">
                 <p className="title-medium-primary md:title-large-primary">
                   {item.faculty}
@@ -99,7 +107,6 @@ export function BarChartVertical({ data }: { data: BarChartVerticalProps[] }) {
                     radius={BAR_CHART_RADIUS}
                     barSize={BAR_SIZE}
                   >
-                    {/* <Cell /> */}
                     <LabelList
                       dataKey="total"
                       position="right"
