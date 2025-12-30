@@ -76,6 +76,10 @@
     "owner": "Owner",
     "allowAllToScan": "Registration Scanning Permission",
     "limited": "Only the event owner and added event managers",
-    "anyone": "Anyone who has access to the scanning link"
+    "anyone": "Anyone who has access to the scanning link",
+
+    "evaluationForm": "Evaluation Form",
+    "evaluationFormLink": "Evaluation Form Link",
+    "evaluationFormLinkPlaceholder": "Evaluation form link"
   }
 }

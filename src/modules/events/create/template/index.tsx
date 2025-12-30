@@ -80,6 +80,7 @@ export interface EventFormInterface {
   revealed_fields: ParticipantFieldType[];
   managers_and_staff: EventManager[];
   allow_all_to_scan: boolean;
+  evaluation_form: string;
 }
 
 const EventCreateTemplate = () => {
@@ -87,7 +88,7 @@ const EventCreateTemplate = () => {
   const tCreateEvent = useTranslations("CreateEvent");
   const router = useRouter();
 
-  const [step, setStep] = useState<number>(2);
+  const [step, setStep] = useState<number>(1);
   const [showExample, setShowExample] = useState(false);
   const [width, setWidth] = useState(0);
 
@@ -106,6 +107,7 @@ const EventCreateTemplate = () => {
     revealed_fields: [],
     managers_and_staff: [],
     allow_all_to_scan: true,
+    evaluation_form: "",
   });
 
   const [validStep1, setValidStep1] = useState(false);
@@ -142,7 +144,7 @@ const EventCreateTemplate = () => {
       setValidStep2(false);
     }
 
-    if (true) {
+    if (!eventForm.evaluation_form || isValidUrl(eventForm.evaluation_form)) {
       setValidStep3(true);
     } else {
       setValidStep3(false);
@@ -168,6 +170,15 @@ const EventCreateTemplate = () => {
       behavior: "smooth",
       block: "start",
     });
+  };
+
+  const isValidUrl = (value: string) => {
+    try {
+      new URL(value);
+      return true;
+    } catch {
+      return false;
+    }
   };
 
   return (
@@ -338,7 +349,11 @@ const EventCreateTemplate = () => {
             mode="filled"
             bordered="square"
             expanded
-            className="cursor-pointer max-w-40 h-9"
+            className={`cursor-pointer max-w-40 h-9 ${
+              validStep3
+                ? "cursor-pointer border-primary"
+                : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
+            }`}
             onClick={() => {
               if (step == 3 && validStep3) {
                 const agendaText = eventForm.agenda
@@ -386,7 +401,8 @@ const EventCreateTemplate = () => {
                 Attendee: ${attendeeText}
                 Revealed Fields: ${revealedFieldText}
                 Manager and Staff: ${managerAndStaffText}
-                Allow All to Scan: ${eventForm.allow_all_to_scan}`);
+                Allow All to Scan: ${eventForm.allow_all_to_scan}
+                Evaluation Form: ${eventForm.evaluation_form}`);
               }
             }}
           >
