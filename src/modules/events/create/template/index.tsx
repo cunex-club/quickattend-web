@@ -333,7 +333,13 @@ const EventCreateTemplate = () => {
             </div>
 
             {/* Content */}
-            <div className="max-w-full max-h-[60vh] h-fit flex-1 bg-neutral-white rounded-4xl px-4 py-6 overflow-y-auto break-all">
+            <div
+              className={`max-w-full ${
+                cardMode == CardPreviewType.CARD_PREVIEW
+                  ? "max-h-[36vh]"
+                  : "max-h-[55vh]"
+              } h-fit flex-1 bg-neutral-white rounded-4xl px-4 py-6 overflow-y-auto break-all`}
+            >
               <CreateEventPreview eventForm={eventForm} cardMode={cardMode} />
             </div>
           </div>
