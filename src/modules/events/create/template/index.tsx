@@ -9,7 +9,13 @@ import CreateEventStep1 from "../components/create-event-step1";
 import CreateEventStep2 from "../components/create-event-step2";
 import CreateEventStep3 from "../components/create-event-step3";
 import Button from "@shared/Button";
-import CreateEventResult from "../components/create-event-result";
+import CreateEventPreview from "../components/create-event-preview";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@assets/components/ui/drawer";
 
 export interface Agenda {
   id: string;
@@ -411,7 +417,19 @@ const EventCreateTemplate = () => {
         )}
       </footer>
 
-      {showExample && <CreateEventResult />}
+      <Drawer open={showExample} onOpenChange={setShowExample}>
+        <DrawerContent className="bg-neutral-white sm:hidden h-[80vh]">
+          <div className="mx-auto mt-2 h-1.5 w-12 rounded-full bg-muted" />
+
+          <DrawerHeader>
+            <DrawerTitle>{tCreateEvent("showExample")}</DrawerTitle>
+          </DrawerHeader>
+
+          <div className="px-4 pb-6 overflow-y-auto">
+            <CreateEventPreview eventForm={eventForm} />
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 };
