@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { EventFormInterface } from "../template";
 import { Input } from "@assets/components/ui/input";
 import { Calendar } from "@assets/components/ui/calendar";
@@ -25,6 +25,7 @@ const CreateEventStep1 = ({
 }: CreateEventStep1Props) => {
   const tCreateEvent = useTranslations("CreateEvent");
   const today = startOfDay(new Date());
+  const locale = useLocale();
 
   const [mounted, setMounted] = useState(false);
   const [agendaStart, setAgendaStart] = useState<string>("");
@@ -52,6 +53,14 @@ const CreateEventStep1 = ({
     const d = new Date(date);
     d.setMinutes(d.getMinutes() + mins);
     return d;
+  };
+
+  const formatDate = (date: string, locale: string) => {
+    return new Intl.DateTimeFormat(locale, {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(new Date(date));
   };
 
   const formatTime = (date?: Date) => (date ? format(date, "HH:mm") : null);
@@ -269,7 +278,7 @@ const CreateEventStep1 = ({
                   {!mounted
                     ? tCreateEvent("datePlaceholder")
                     : eventForm.date
-                      ? format(eventForm.date, "dd / MM / yyyy")
+                      ? formatDate(eventForm.date.toISOString(), locale)
                       : tCreateEvent("datePlaceholder")}
                 </span>
 

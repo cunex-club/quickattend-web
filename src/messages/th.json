@@ -48,7 +48,7 @@
     "endTime": "เวลาสิ้นสุด",
     "location": "สถานที่",
     "locationPlaceholder": "สถานที่จัดกิจกรรม",
-    "agenda": "ตารางกิจกรรม",
+    "agenda": "กำหนดการกิจกรรม",
     "addAgenda": "เพิ่มตารางกิจกรรม",
     "organizer": "ผู้จัดกิจกรรม",
     "organizerPlaceholder": "ผู้จัดกิจกรรม",
@@ -81,6 +81,10 @@
 
     "evaluationForm": "แบบฟอร์มประเมินกิจกรรม",
     "evaluationFormLink": "ลิงก์แบบฟอร์มประเมินกิจกรรม",
-    "evaluationFormLinkPlaceholder": "ลิงก์แบบฟอร์มประเมินกิจกรรม"
+    "evaluationFormLinkPlaceholder": "ลิงก์แบบฟอร์มประเมินกิจกรรม",
+
+    "eventPreview": "ดูตัวอย่างกิจกรรม",
+    "cardPreview": "การ์ดกิจกรรม",
+    "detailPreview": "รายละเอียดกิจกรรม"
   }
 }

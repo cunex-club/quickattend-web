@@ -14,8 +14,17 @@ import {
   Drawer,
   DrawerContent,
   DrawerHeader,
+  DrawerOverlay,
   DrawerTitle,
 } from "@assets/components/ui/drawer";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@assets/components/ui/select";
 
 export interface Agenda {
   id: string;
@@ -64,6 +73,14 @@ export type EventManagerType =
 
 export type ParticipantFieldType =
   (typeof ParticipantFieldType)[keyof typeof ParticipantFieldType];
+
+export const CardPreviewType = {
+  CARD_PREVIEW: "cardPreview",
+  DETAIL_PREVIEW: "detailPreview",
+};
+
+export type CardPreviewType =
+  (typeof CardPreviewType)[keyof typeof CardPreviewType];
 
 export interface EventManager {
   id: string;
@@ -119,6 +136,10 @@ const EventCreateTemplate = () => {
   const [validStep1, setValidStep1] = useState(false);
   const [validStep2, setValidStep2] = useState(false);
   const [validStep3, setValidStep3] = useState(false);
+
+  const [cardMode, setCardMode] = useState<CardPreviewType>(
+    CardPreviewType.CARD_PREVIEW
+  );
 
   useEffect(() => {
     if (
@@ -417,19 +438,40 @@ const EventCreateTemplate = () => {
         )}
       </footer>
 
-      <Drawer open={showExample} onOpenChange={setShowExample}>
-        <DrawerContent className="bg-neutral-white sm:hidden h-[80vh]">
-          <div className="mx-auto mt-2 h-1.5 w-12 rounded-full bg-muted" />
+      {width < 640 && (
+        <Drawer open={showExample} onOpenChange={setShowExample}>
+          <DrawerContent className="px-4 py-2 bg-neutral-white h-[80vh]">
+            <DrawerHeader>
+              <div className="flex justify-between gap-2 flex-wrap">
+                <DrawerTitle className="title-large-emphasized text-primary">
+                  {tCreateEvent("eventPreview")}
+                </DrawerTitle>
 
-          <DrawerHeader>
-            <DrawerTitle>{tCreateEvent("showExample")}</DrawerTitle>
-          </DrawerHeader>
+                <Select value={cardMode} onValueChange={setCardMode}>
+                  <SelectTrigger className="w-[150px]">
+                    <SelectValue placeholder={tCreateEvent("eventPreview")} />
+                  </SelectTrigger>
 
-          <div className="px-4 pb-6 overflow-y-auto">
-            <CreateEventPreview eventForm={eventForm} />
-          </div>
-        </DrawerContent>
-      </Drawer>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value={CardPreviewType.CARD_PREVIEW}>
+                        {tCreateEvent(CardPreviewType.CARD_PREVIEW)}
+                      </SelectItem>
+                      <SelectItem value={CardPreviewType.DETAIL_PREVIEW}>
+                        {tCreateEvent(CardPreviewType.DETAIL_PREVIEW)}
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </DrawerHeader>
+
+            <div className="flex flex-col h-full min-h-0 pb-6">
+              <CreateEventPreview eventForm={eventForm} cardMode={cardMode} />
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
     </div>
   );
 };

@@ -80,6 +80,10 @@
 
     "evaluationForm": "Evaluation Form",
     "evaluationFormLink": "Evaluation Form Link",
-    "evaluationFormLinkPlaceholder": "Evaluation form link"
+    "evaluationFormLinkPlaceholder": "Evaluation form link",
+
+    "eventPreview": "Preview",
+    "cardPreview": "Event Card",
+    "detailPreview": "Event Detail"
   }
 }
