@@ -10,10 +10,8 @@
     transition: fill-opacity 0.3s ease-in-out;
   }
 
-  .chart-hover-bar:has(.recharts-bar-rectangle:hover)
-    .recharts-bar-rectangle:not(:hover),
-  .chart-hover-bar:has(.recharts-rectangle:hover)
-    .recharts-rectangle:not(:hover) {
+  .chart-hover-bar:has(.recharts-bar-rectangle:hover) .recharts-bar-rectangle:not(:hover),
+  .chart-hover-bar:has(.recharts-rectangle:hover) .recharts-rectangle:not(:hover) {
     fill-opacity: 0.3;
   }
 
@@ -26,11 +24,10 @@
     transition: opacity 0.3s ease-in-out;
   }
 
-  .chart-hover-pie:has(.recharts-pie-sector:hover)
-    .recharts-pie-sector:not(:hover) {
+  .chart-hover-pie:has(.recharts-pie-sector:hover) .recharts-pie-sector:not(:hover) {
     opacity: 0.3;
   }
-  
+
   .chart-list-group:hover .recharts-rectangle {
     fill-opacity: 0.3;
   }

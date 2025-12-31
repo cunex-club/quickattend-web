@@ -51,6 +51,9 @@ export default function OverviewPage() {
   const router = useRouter();
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const fullscreenContainerRef = useRef<HTMLDivElement>(null);
+  const [selectedFilter, setSelectedFilter] = useState<
+    "student" | "staff" | null
+  >(null);
 
   const canViewInsights = role === "manager" || role === "owner";
 
@@ -214,9 +217,36 @@ export default function OverviewPage() {
               <p className="headline-medium-emphasized">
                 {t("timeStatsTitle")}
               </p>
-              <div className="h-[360px] sm:h-[360px] md:h-[360px] lg:h-[350px] xl:max-h-[320px] overflow-auto">
-                <BarChartHorizontalOverview data={chartDataTime} />
+              <div className="w-full relative">
+                <div className="h-[360px] sm:h-[360px] md:h-[360px] lg:h-[350px] xl:max-h-[320px] overflow-auto">
+                  <BarChartHorizontalOverview data={chartDataTime} />
+                </div>
+                <div className="absolute z-10 right-0 top-0">
+                  <div className="space-x-4 bg-neutral-white">
+                    <Button
+                      mode={selectedFilter === "student" ? "filled" : "outline"}
+                      bordered="square"
+                      expanded={false}
+                      onClick={() =>
+                        setSelectedFilter(selectedFilter === "student" ? null : "student")
+                      }
+                    >
+                      <p className="label-large-emphasized -translate-y-0.5">นิสิต</p>
+                    </Button>
+                    <Button
+                      mode={selectedFilter === "staff" ? "filled" : "outline"}
+                      bordered="square"
+                      expanded={false}
+                      onClick={() =>
+                        setSelectedFilter(selectedFilter === "staff" ? null : "staff")
+                      }
+                    >
+                      <p className="label-large-emphasized -translate-y-0.5">บุคลากร</p>
+                    </Button>
+                </div>
               </div>
+              </div>
+              
             </div>
           </section>
         </div>

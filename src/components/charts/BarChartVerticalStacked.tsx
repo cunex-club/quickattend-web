@@ -14,6 +14,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
+import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
 
 type BarChartVerticalStackedProps = {
   faculty: string;
@@ -37,11 +38,19 @@ export function BarChartVerticalStacked({
 }: {
   data: BarChartVerticalStackedProps[];
 }) {
-  const BAR_SIZE: number = 36;
   const LEFT_BAR_BORDER_RADIUS: [number, number, number, number] = [2, 0, 0, 2];
   const RIGHT_BAR_BORDER_RADIUS: [number, number, number, number] = [
     0, 2, 2, 0,
   ];
+
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+  let BAR_SIZE: number = 28;
+  if (isMobile) {
+    BAR_SIZE = 16;
+  } else if (isTablet) {
+    BAR_SIZE = 15;
+  }
 
   const maxDataValue = Math.max(
     ...data.map((d) => d.registered + d.unregistered)
@@ -62,8 +71,8 @@ export function BarChartVerticalStacked({
   });
 
   return (
-    <Card className="bg-neutral-100 w-full px-6 lg:px-8 py-8 shadow-none border-none rounded-[28px]">
-      <CardContent className="px-0 flex flex-col space-y-6">
+    <Card className="bg-neutral-white lg:bg-neutral-100 border-none shadow-none lg:py-8 pl-0 lg:pl-8 lg:pr-6 rounded-[28px] w-full">
+      <CardContent className="mr-2 max-h-[470px] overflow-auto">
         <div className="flex flex-col space-y-4">
           {chartDataWithMeta.map((item, idx) => {
             return (
@@ -75,7 +84,7 @@ export function BarChartVerticalStacked({
                   <p className="title-medium-primary md:title-large-primary -translate-y-0.5  md:-translate-y-1.5">
                     {item.faculty}
                   </p>
-                  <p className="body-medium-primary md:body-large-primary text-neutral-500">
+                  <p className="body-medium-primary md:body-large-primary text-neutral-black">
                     {item.total} คน ({item.percentage}%)
                   </p>
                 </div>
@@ -140,23 +149,23 @@ export function BarChartVerticalStacked({
             );
           })}
         </div>
-        <div className="w-full flex justify-center">
-          <div className="flex justify-center items-center space-x-8 md:space-x-16">
-            <div className="flex flex-row space-x-2 items-center">
-              <div className="w-4 h-4 bg-primary"></div>
-              <p className="label-small-primary -translate-y-0.5">
-                จำนวนผู้ลงทะเบียนสำเร็จ
-              </p>
-            </div>
-            <div className="flex flex-row space-x-2 items-center">
-              <div className="w-4 h-4 bg-chart-pink-200"></div>
-              <p className="label-small-primary -translate-y-0.5">
-                จำนวนผู้ที่ยังไม่ได้ลงทะเบียน
-              </p>
-            </div>
+      </CardContent>
+      <div className="w-full flex justify-center">
+        <div className="flex justify-center items-center space-x-8 md:space-x-16">
+          <div className="flex flex-row space-x-2 items-center">
+            <div className="w-4 h-4 bg-primary"></div>
+            <p className="label-small-primary -translate-y-0.5">
+              {chartConfig.registered.label}
+            </p>
+          </div>
+          <div className="flex flex-row space-x-2 items-center">
+            <div className="w-4 h-4 bg-chart-pink-200"></div>
+            <p className="label-small-primary -translate-y-0.5">
+              {chartConfig.unregistered.label}
+            </p>
           </div>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }

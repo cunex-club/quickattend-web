@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 import { StatCard } from "@components/StatCard";
 import Button from "@components/Button";
 import { FilterableList } from "@components/dashboard/FilterableList";
-import { facultyData, timeData } from "@utils/data";
+import { facultyData, timeData, chartDataForComparePage } from "@utils/data";
 import { useRole } from "@context/RoleContext";
 import { toast } from "sonner";
 import { Skeleton } from "@assets/components/ui/skeleton";
@@ -172,7 +172,7 @@ export default function ComparePage() {
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen px-4 md:px-8 py-16 bg-neutral-white">
-      <div className="container max-w-[1440px] flex flex-col items-center bg-neutral-white ">
+      <div className="container flex flex-col items-center bg-neutral-white ">
         <div className="flex flex-col w-full rounded-xl bg-neutral-white space-y-16">
           <span className="mx-auto">
             <p className="display-small-emphasized">{t("title")}</p>
@@ -247,13 +247,13 @@ export default function ComparePage() {
               {t("facultyStatsTitle")}
             </p>
             <div className="h-auto">
-              <BarChartVerticalMulti />
+              <BarChartVerticalMulti data={chartDataForComparePage} />
             </div>
           </section>
           <section className="flex flex-col space-y-8">
             <p className="headline-large-emphasized">{t("timeStatsTitle")}</p>
-            <div className="h-auto w-full overflow-auto">
-              <BarChartHorizontalMulti />
+            <div className="h-auto w-full">
+              <BarChartHorizontalMulti data={chartDataForComparePage} />
             </div>
           </section>
         </div>

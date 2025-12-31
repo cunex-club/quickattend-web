@@ -1,6 +1,3 @@
-"use client";
-
-import { useState, useRef, useEffect } from "react";
 import {
   Bar,
   BarChart,
@@ -10,14 +7,13 @@ import {
   YAxis,
 } from "recharts";
 
-import { Card, CardAction, CardContent } from "@assets/components/ui/card";
+import { Card, CardContent } from "@assets/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
-import Button from "@components/Button";
 import type { BarChartHorizontalData } from "@customTypes/chart";
 
 export const description = "A bar chart";
@@ -52,9 +48,6 @@ export function BarChartHorizontalOverview({
   data,
 }: BarChartHorizontalOverviewProps) {
   const chartData = data;
-  const [selectedFilter, setSelectedFilter] = useState<
-    "student" | "staff" | null
-  >(null);
   const BAR_RADIUS: [number, number, number, number] = [8, 8, 0, 0];
   const BAR_CATEGORY_GAP: number = 1;
   const STROKE_DASH_ARRAY: string = "3 3";
@@ -66,31 +59,6 @@ export function BarChartHorizontalOverview({
 
   return (
     <Card className="py-0 px-0 h-full relative border-none shadow-none">
-      <CardAction className="absolute z-10 right-0">
-        <div className="space-x-4 bg-neutral-white">
-          <Button
-            mode={selectedFilter === "student" ? "filled" : "outline"}
-            bordered="square"
-            expanded={false}
-            onClick={() =>
-              setSelectedFilter(selectedFilter === "student" ? null : "student")
-            }
-          >
-            <p className="label-large-emphasized -translate-y-0.5">นิสิต</p>
-          </Button>
-          <Button
-            mode={selectedFilter === "staff" ? "filled" : "outline"}
-            bordered="square"
-            expanded={false}
-            onClick={() =>
-              setSelectedFilter(selectedFilter === "staff" ? null : "staff")
-            }
-          >
-            <p className="label-large-emphasized -translate-y-0.5">บุคลากร</p>
-          </Button>
-        </div>
-      </CardAction>
-
       <CardContent className="px-0 py-0 h-full">
         <div className="min-w-full h-full md:w-full" style={{ width: `${chartWidth}px` }}>
           <ChartContainer

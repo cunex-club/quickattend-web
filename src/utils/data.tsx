@@ -5,7 +5,7 @@ export const eventData = {
   time: "16:00 - 20:00 น.",
   location: "สนามกีฬาจุฬาลงกรณ์มหาวิทยาลัย",
   description:
-    "กิจกรรมต้อนรับนิสิตใหม่ CU รุ่น 109 สู่รั้วมหาวิทยาลัย และกระชับสัมพันธ์ อันดีระหว่างน้องใหม่คณะต่าง ๆ ภายในงานมีการจัดแสดงดนตรีโดยวงดนตรี เช่น Landokmai, Dept, Polycat, Tilly Birds การแสดงพิเศษจาก CUDC และละครนิเทศ จุฬาฯ",
+    "กิจกรรมต้อนรับนิสิตใหม่ CU รุ่น 109 สู่รั้วมหาวิทยาลัย และกระชับส ัมพันธ์ อันดีระหว่างน้องใหม่คณะต่าง ๆ ภายในงานมีการจัดแสดงดนตรีโดยวงดนตรี เช่น Landokmai, Dept, Polycat, Tilly Birds การแสดงพิเศษจาก CUDC และละครนิเทศ จุฬาฯ",
   totalAttendees: 1096,
   studentCount: 1090,
   staffCount: 6,
@@ -66,13 +66,19 @@ export const chartDataMonthID1 = [
 
 export const dataCategorizeByFaculty = [
   { faculty: "คณะวิศวกรรมศาสตร์", total: 92 },
-
   { faculty: "คณะอักษรศาสตร์", total: 45 },
-
   { faculty: "คณะสถาปัตยกรรมศาสตร์", total: 67 },
-
   { faculty: "คณะวิทยาศาสตร์", total: 83 },
-
+  { faculty: "คณะครุศาสตร์", total: 54 },
+  { faculty: "คณะวิศวกรรมศาสตร์", total: 92 },
+  { faculty: "คณะอักษรศาสตร์", total: 45 },
+  { faculty: "คณะสถาปัตยกรรมศาสตร์", total: 67 },
+  { faculty: "คณะวิทยาศาสตร์", total: 83 },
+  { faculty: "คณะครุศาสตร์", total: 54 },
+  { faculty: "คณะวิศวกรรมศาสตร์", total: 92 },
+  { faculty: "คณะอักษรศาสตร์", total: 45 },
+  { faculty: "คณะสถาปัตยกรรมศาสตร์", total: 67 },
+  { faculty: "คณะวิทยาศาสตร์", total: 83 },
   { faculty: "คณะครุศาสตร์", total: 54 },
 ];
 
@@ -110,24 +116,104 @@ export const registeredData = [
     registered: 80,
     total: 266,
   },
-  { faculty: "คณะอักษรศาสตร์", unregistered: 305, registered: 200, total: 505 },
+  { faculty: "คณะอักษรศาสตร์", 
+    unregistered: 305, 
+    registered: 200, 
+    total: 505 
+  },
   {
     faculty: "คณะสถาปัตยกรรมศาสตร์",
     unregistered: 237,
     registered: 120,
     total: 357,
   },
-  { faculty: "คณะวิทยาศาสตร์", unregistered: 73, registered: 190, total: 263 },
+  { faculty: "คณะวิทยาศาสตร์",
+    unregistered: 73, 
+    registered: 190, 
+    total: 263 
+  },
   {
     faculty: "คณะบริหารธุรกิจ",
     unregistered: 209,
     registered: 130,
     total: 339,
   },
-  { faculty: "คณะนิติศาสตร์", unregistered: 214, registered: 140, total: 354 },
+  { faculty: "คณะนิติศาสตร์",
+    unregistered: 214, 
+    registered: 140, 
+    total: 354 
+  },
+  { faculty: "คณะครุศาสตร์",
+    unregistered: 150, 
+    registered: 90, 
+    total: 240 
+  },
+  { faculty: "คณะนิเทศศาสตร์",
+    unregistered: 180, 
+    registered: 110, 
+    total: 290 
+  },
+  { faculty: "คณะเศรษฐศาสตร์",
+    unregistered: 175, 
+    registered: 95, 
+    total: 270 
+  },
 ];
 
 export const registrationStatusData = [
   { category: "ลงทะเบียนแล้ว", total: 1096 },
   { category: "ยังไม่ลงทะเบียน", total: 500 },
+];
+
+export const chartDataForComparePage = [
+  {
+    faculty: "คณะวิศวกรรมศาสตร์",
+    data: [
+      {time: "16:00 - 17:00", total: 225},
+      {time: "17:00 - 18:00", total: 198},
+      {time: "18:00 - 19:00", total: 165},
+      {time: "19:00 - 20:00", total: 142},
+      {time: "20:00 - 21:00", total: 98},
+    ]
+  },
+  {
+    faculty: "คณะอักษรศาสตร์",
+    data: [
+      {time: "16:00 - 17:00", total: 121},
+      {time: "17:00 - 18:00", total: 405},
+      {time: "18:00 - 19:00", total: 282},
+      {time: "19:00 - 20:00", total: 117},
+      {time: "20:00 - 21:00", total: 90},
+    ]
+  },
+  {
+    faculty: "คณะสถาปัตยกรรมศาสตร์",
+    data: [
+      {time: "16:00 - 17:00", total: 10},
+      {time: "17:00 - 18:00", total: 175},
+      {time: "18:00 - 19:00", total: 156},
+      {time: "19:00 - 20:00", total: 242},
+      {time: "20:00 - 21:00", total: 158},
+    ]
+  },
+  {
+    faculty: "คณะวิทยาศาสตร์",
+    data: [
+      {time: "16:00 - 17:00", total: 188},
+      {time: "17:00 - 18:00", total: 165},
+      {time: "18:00 - 19:00", total: 106},
+      {time: "19:00 - 20:00", total: 140},
+      {time: "20:00 - 21:00", total: 210},
+    ]
+  },
+  {
+    faculty: "คณะบริหารธุรกิจ",
+    data: [
+      {time: "16:00 - 17:00", total: 90},
+      {time: "17:00 - 18:00", total: 160},
+      {time: "18:00 - 19:00", total: 140},
+      {time: "19:00 - 20:00", total: 210},
+      {time: "20:00 - 21:00", total: 158},
+    ]
+  },
 ];

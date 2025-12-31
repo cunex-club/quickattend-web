@@ -63,8 +63,8 @@ export function BarChartVertical({ data }: { data: BarChartVerticalProps[] }) {
   }));
 
   return (
-    <Card className="bg-neutral-white lg:bg-neutral-100 border-none shadow-none h-auto w-full px-0 lg:px-8 rounded-[28px]">
-      <CardContent className="px-0">
+    <Card className="bg-neutral-white lg:bg-neutral-100 border-none shadow-none lg:py-8 pl-0 lg:pl-8 lg:pr-6 rounded-[28px] w-full">
+      <CardContent className="mr-2 max-h-[470px] overflow-auto">
         <div className="chart-list-group flex flex-col space-y-4">
           {chartDataWithMeta.map((item, idx) => (
             <div key={`faculty-chart-${idx}`} className="flex flex-col space-y-3 md:space-y-5 lg:space-y-4 chart-item">

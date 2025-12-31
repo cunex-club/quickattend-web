@@ -1,4 +1,3 @@
-"use client";
 import {
   Bar,
   BarChart,
@@ -6,7 +5,6 @@ import {
   XAxis,
   LabelList,
   YAxis,
-  Cell,
 } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
@@ -14,79 +12,24 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
+  ChartTooltipContent
 } from "@assets/components/ui/chart";
 
 export const description = "A multiple bar chart";
 
-const chartData = [
-  {
-    month: "January",
-    desktop: 186,
-    mobile: 80,
-    ipad: 50,
-    macbook: 120,
-    tablet: 60,
-  },
-  {
-    month: "February",
-    desktop: 305,
-    mobile: 200,
-    ipad: 100,
-    macbook: 150,
-    tablet: 90,
-  },
-  {
-    month: "March",
-    desktop: 237,
-    mobile: 120,
-    ipad: 80,
-    macbook: 130,
-    tablet: 70,
-  },
-  {
-    month: "April",
-    desktop: 73,
-    mobile: 190,
-    ipad: 60,
-    macbook: 90,
-    tablet: 50,
-  },
-  {
-    month: "May",
-    desktop: 209,
-    mobile: 130,
-    ipad: 90,
-    macbook: 110,
-    tablet: 80,
-  },
-  {
-    month: "June",
-    desktop: 214,
-    mobile: 140,
-    ipad: 70,
-    macbook: 140,
-    tablet: 90,
-  },
-  {
-    month: "July",
-    desktop: 180,
-    mobile: 160,
-    ipad: 75,
-    macbook: 125,
-    tablet: 65,
-  },
-  {
-    month: "August",
-    desktop: 220,
-    mobile: 150,
-    ipad: 85,
-    macbook: 135,
-    tablet: 75,
-  },
-];
+type TimeData = {
+  time: string;
+  total: number;
+};
+
+type FacultyData = {
+  faculty: string;
+  data: TimeData[];
+};
+
+interface BarChartHorizontalMultiProps {
+  data: FacultyData[];
+}
 
 const chartConfig = {
   XAxis: {
@@ -95,41 +38,56 @@ const chartConfig = {
   YAxis: {
     color: "var(--color-neutral-400)",
   },
-  desktop: {
-    label: "Desktop",
-    color: "var(--color-chart-1)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--color-chart-2)",
-  },
-  ipad: {
-    label: "iPad",
-    color: "var(--color-chart-3)",
-  },
-  macbook: {
-    label: "MacBook",
-    color: "var(--color-chart-4)",
-  },
-  tablet: {
-    label: "Tablet",
-    color: "var(--color-chart-5)",
-  },
   CartesianGrid: {
     color: "var(--color-gray-300)",
   },
 } satisfies ChartConfig;
 
-export function BarChartHorizontalMulti() {
+const CHART_COLORS = [
+  "var(--color-chart-1)",
+  "var(--color-chart-2)",
+  "var(--color-chart-3)",
+  "var(--color-chart-4)",
+  "var(--color-chart-5)",
+];
+
+export function BarChartHorizontalMulti({ data }: BarChartHorizontalMultiProps) {
   const BAR_SPACING = 0;
   const BAR_RADIUS = 2;
   const LABEL_OFFSET: number = 8;
   const LABEL_FONT_SIZE: number = 14;
   const STROKE_DASH_ARRAY: string = "3 3";
 
+  // Transform nested data structure to flat structure for Recharts
+  // From: [{faculty, data: [{time, total}]}]
+  // To: [{time, faculty1: total, faculty2: total, ...}]
+  const transformData = () => {
+    if (!data || data.length === 0) return [];
+    
+    const timeMap = new Map<string, Record<string, string | number>>();
+    
+    // Collect all unique times and faculty data
+    data.forEach(({ faculty, data: timeData }) => {
+      timeData.forEach(({ time, total }) => {
+        if (!timeMap.has(time)) {
+          timeMap.set(time, { time });
+        }
+        const entry = timeMap.get(time)!;
+        entry[faculty] = total;
+      });
+    });
+    
+    return Array.from(timeMap.values());
+  };
+
+  const chartData = transformData();
+  
+  // Extract faculty names for series
+  const faculties = data.map(item => item.faculty);
+
   return (
     <Card className="px-0 border-none shadow-none">
-      <CardContent className="px-0">
+      <CardContent className="px-0 overflow-auto">
         <div className="min-w-[1000px] sm:min-w-[2000px] md:min-w-[1500px] lg:min-w-[1300px] w-full">
           <ChartContainer
             config={chartConfig}
@@ -143,13 +101,11 @@ export function BarChartHorizontalMulti() {
                 strokeWidth={0.4}
                 strokeDasharray={STROKE_DASH_ARRAY}
               />
-              <ChartLegend content={<ChartLegendContent />} />
               <XAxis
-                dataKey="month"
+                dataKey="time"
                 tickLine={false}
                 tickMargin={10}
                 axisLine={true}
-                tickFormatter={(value) => value.slice(0, 3)}
               />
               <YAxis
                 type="number"
@@ -161,21 +117,18 @@ export function BarChartHorizontalMulti() {
                 cursor={false}
                 content={<ChartTooltipContent indicator="line" />}
               />
-              {["desktop", "mobile", "ipad", "macbook", "tablet"].map((key) => (
+              {faculties.map((faculty, index) => (
                 <Bar
-                  key={key}
-                  dataKey={key}
-                  fill={`var(--color-${key})`}
+                  key={faculty} 
+                  dataKey={faculty}
+                  fill={CHART_COLORS[index % CHART_COLORS.length]}
                   radius={BAR_RADIUS}
                 >
-                  {chartData.map((entry, index) => (
-                    <Cell key={`cell-${key}-${index}`} />
-                  ))}
                   <LabelList
-                    dataKey={key}
+                    dataKey={faculty}
                     position="top"
                     offset={LABEL_OFFSET}
-                    className="fill-foreground hidden md:block"
+                    className="fill-foreground"
                     fontSize={LABEL_FONT_SIZE}
                   />
                 </Bar>
@@ -184,6 +137,23 @@ export function BarChartHorizontalMulti() {
           </ChartContainer>
         </div>
       </CardContent>
+
+      {/* Legend section */}
+      <div className="w-full flex justify-center">
+        <div className="flex flex-row flex-wrap gap-4 justify-center items-center space-x-8 md:space-x-16 px-10">
+          {faculties.map((faculty, index) => (
+            <div key={faculty} className="flex flex-row space-x-2 items-center">
+              <div 
+                className="w-4 h-4" 
+                style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}
+              />
+              <p className="label-small-primary -translate-y-0.5">
+                {faculty}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
     </Card>
   );
 }
