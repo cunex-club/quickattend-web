@@ -85,5 +85,6 @@
     "eventPreview": "Preview",
     "cardPreview": "Event Card",
     "detailPreview": "Event Detail"
-  }
+  },
+  "EditEvent": {}
 }
