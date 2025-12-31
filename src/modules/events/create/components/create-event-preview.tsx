@@ -15,7 +15,7 @@ const CreateEventPreview = ({
   const tCreateEvent = useTranslations("CreateEvent");
   const locale = useLocale();
 
-  const formatDate = (date: string, locale: string) => {
+  const formatDate = (date: string) => {
     return new Intl.DateTimeFormat(locale, {
       day: "numeric",
       month: "long",
@@ -39,7 +39,7 @@ const CreateEventPreview = ({
           <IonIcon name="Calendar" size="16px" className="text-primary" />
           <p className="body-medium-primary text-neutral-600 translate-y-1">
             {eventForm.date
-              ? formatDate(eventForm.date.toISOString(), locale)
+              ? formatDate(eventForm.date.toISOString())
               : tCreateEvent("datePlaceholder")}
           </p>
         </div>
@@ -79,9 +79,42 @@ const CreateEventPreview = ({
 
       {cardMode === CardPreviewType.DETAIL_PREVIEW && (
         <div className="flex flex-col ml-2">
-          <h2 className="title-medium-emphasized text-neutral-600 mb-2">
-            {tCreateEvent("agenda")}
-          </h2>
+          {/* Agenda */}
+          <div className="flex flex-col mb-4">
+            <h2 className="title-medium-emphasized text-neutral-600 mb-2">
+              {tCreateEvent("agenda")}
+            </h2>
+
+            {eventForm.agenda.length ? (
+              eventForm.agenda.map((item) => {
+                return (
+                  <div
+                    key={`Agenda-${item.id}`}
+                    className="flex flex-col gap-2"
+                  >
+                    <div className="flex justify-between gap-2 body-small-primary">
+                      <p>{item.activity_name}</p>
+                      <p>
+                        {formatTime(item.startTime)}-{formatTime(item.endTime)}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <p className="body-small-primary">{tCreateEvent("agenda")}</p>
+            )}
+          </div>
+
+          {/* Organizer */}
+          <div className="flex flex-col gap-2 mb-4">
+            <h2 className="title-medium-emphasized text-neutral-600">
+              {tCreateEvent("organizer")}
+            </h2>
+            <p className="body-small-primary text-neutral-600">
+              {eventForm.organizer || tCreateEvent("organizer")}
+            </p>
+          </div>
         </div>
       )}
     </div>
