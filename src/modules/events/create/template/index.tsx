@@ -305,26 +305,60 @@ const EventCreateTemplate = () => {
           </Button>
         </div>
 
-        {/* Content */}
-        <div className="w-full px-4 py-8 bg-neutral-white">
-          {step === 1 && (
-            <CreateEventStep1
-              eventForm={eventForm}
-              setEventForm={setEventForm}
-            />
-          )}
-          {step === 2 && (
-            <CreateEventStep2
-              eventForm={eventForm}
-              setEventForm={setEventForm}
-            />
-          )}
-          {step === 3 && (
-            <CreateEventStep3
-              eventForm={eventForm}
-              setEventForm={setEventForm}
-            />
-          )}
+        <div className="flex gap-6 px-4 py-8">
+          {/* Preview */}
+          <div className="w-full hidden sm:flex sm:flex-col sm:flex-2 sm:gap-4">
+            {/* Header */}
+            <div className="flex justify-between gap-2 flex-wrap">
+              <h2 className="title-large-emphasized text-primary">
+                {tCreateEvent("eventPreview")}
+              </h2>
+
+              <Select value={cardMode} onValueChange={setCardMode}>
+                <SelectTrigger className="w-[150px] bg-neutral-white">
+                  <SelectValue placeholder={tCreateEvent("eventPreview")} />
+                </SelectTrigger>
+
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value={CardPreviewType.CARD_PREVIEW}>
+                      {tCreateEvent(CardPreviewType.CARD_PREVIEW)}
+                    </SelectItem>
+                    <SelectItem value={CardPreviewType.DETAIL_PREVIEW}>
+                      {tCreateEvent(CardPreviewType.DETAIL_PREVIEW)}
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Content */}
+            <div className="max-w-full max-h-[60vh] h-fit flex-1 bg-neutral-white rounded-4xl px-4 py-6 overflow-y-auto break-all">
+              <CreateEventPreview eventForm={eventForm} cardMode={cardMode} />
+            </div>
+          </div>
+
+          {/* Form */}
+          <div className="w-full flex-4 bg-neutral-white px-4 py-8 rounded-4xl">
+            {step === 1 && (
+              <CreateEventStep1
+                eventForm={eventForm}
+                setEventForm={setEventForm}
+              />
+            )}
+            {step === 2 && (
+              <CreateEventStep2
+                eventForm={eventForm}
+                setEventForm={setEventForm}
+              />
+            )}
+            {step === 3 && (
+              <CreateEventStep3
+                eventForm={eventForm}
+                setEventForm={setEventForm}
+              />
+            )}
+          </div>
         </div>
       </main>
 
@@ -466,7 +500,7 @@ const EventCreateTemplate = () => {
               </div>
             </DrawerHeader>
 
-            <div className="flex flex-col h-full min-h-0 pb-6">
+            <div className="max-w-full min-h-[50vh] flex-1 bg-neutral-100 rounded-4xl px-4 py-6 mb-6 overflow-y-auto break-all">
               <CreateEventPreview eventForm={eventForm} cardMode={cardMode} />
             </div>
           </DrawerContent>

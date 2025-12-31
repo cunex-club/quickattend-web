@@ -26,7 +26,7 @@ const CreateEventPreview = ({
   const formatTime = (date?: Date) => (date ? format(date, "HH:mm") : null);
 
   return (
-    <div className="max-w-full min-h-[50vh] flex-1 bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 overflow-y-auto break-all">
+    <div className="w-full h-fit flex flex-col">
       {/* Header */}
       <h1 className="headline-small-emphasized mb-2 ml-2">
         {eventForm.name || tCreateEvent("namePlaceholder")}
