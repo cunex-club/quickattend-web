@@ -220,54 +220,57 @@ const CreateEventStep2 = ({
 
             {/* Faculty Input */}
             <div className="flex gap-4 flex-col sm:flex-row w-full">
-              <Input
-                value={facultyQuery}
-                onChange={(e) => {
-                  const value = e.target.value;
+              <div className="flex flex-col gap-2 flex-1">
+                <Input
+                  value={facultyQuery}
+                  onChange={(e) => {
+                    const value = e.target.value;
 
-                  if (/^[\u0E00-\u0E7F]*$/.test(value)) {
-                    setFacultyQuery(e.target.value);
-                    setOpenFacultyFilter(true);
+                    if (/^[\u0E00-\u0E7F]*$/.test(value)) {
+                      setFacultyQuery(e.target.value);
+                      setOpenFacultyFilter(true);
+                    }
+                  }}
+                  disabled={
+                    eventForm.attendance_type != AttendanceType.FACULTIES
                   }
-                }}
-                disabled={eventForm.attendance_type != AttendanceType.FACULTIES}
-                placeholder={tCreateEvent("facultiesPlaceholder")}
-                className="flex-1"
-              />
-              {openFacultyFilter && (
-                <Command>
-                  <CommandList>
-                    {filteredFaculties?.length === 0 && (
-                      <CommandEmpty>
-                        {tCreateEvent("facultiesNotFound")}
-                      </CommandEmpty>
-                    )}
+                  placeholder={tCreateEvent("facultiesPlaceholder")}
+                />
+                {openFacultyFilter && (
+                  <Command>
+                    <CommandList>
+                      {filteredFaculties?.length === 0 && (
+                        <CommandEmpty>
+                          {tCreateEvent("facultiesNotFound")}
+                        </CommandEmpty>
+                      )}
 
-                    {facultyQuery && (
-                      <CommandGroup>
-                        {filteredFaculties?.map((f) => (
-                          <CommandItem
-                            key={f}
-                            value={f}
-                            onSelect={(value) => {
-                              setOpenFacultyFilter(false);
-                              setFacultyQuery(value);
-                            }}
-                          >
-                            {f}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    )}
-                  </CommandList>
-                </Command>
-              )}
+                      {facultyQuery && (
+                        <CommandGroup>
+                          {filteredFaculties?.map((f) => (
+                            <CommandItem
+                              key={f}
+                              value={f}
+                              onSelect={(value) => {
+                                setOpenFacultyFilter(false);
+                                setFacultyQuery(value);
+                              }}
+                            >
+                              {f}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      )}
+                    </CommandList>
+                  </Command>
+                )}
+              </div>
 
               <Button
                 mode="filled"
                 bordered="square"
                 expanded={false}
-                className={`w-fit h-9 shrink-0 ${
+                className={`h-9 shrink-0 ${
                   eventForm.attendance_type == AttendanceType.FACULTIES &&
                   FacultyList.includes(facultyQuery) &&
                   !eventForm.selectedFaculties.includes(facultyQuery)
