@@ -176,14 +176,14 @@ export function WhitelistInsightView() {
                       className="bg-transparent"
                       onClick={handleClearFilters}
                     >
-                      <p className="title-large-emphasized translate-y-[-6px]">
+                      <p className="title-large-emphasized">
                         {t("clearFilter")}
                       </p>
                     </Button>
 
                     <PopoverClose asChild>
                       <Button mode="filled" bordered="round" expanded={true}>
-                        <p className="title-large-emphasized translate-y-[-6px]">
+                        <p className="title-large-emphasized">
                           {t("applyFilter")}
                         </p>
                       </Button>
@@ -275,7 +275,7 @@ export function WhitelistInsightView() {
 
       <Link href="/dashboard-compare" target="_blank">
         <Button mode="filled" bordered="square" expanded={false}>
-          <p className="title-medium-emphasized translate-y-[-2px]">
+          <p className="title-medium-emphasized">
             {t("compareButton")}
           </p>
         </Button>

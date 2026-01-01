@@ -40,7 +40,7 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
       <div className="flex flex-col justify-between mb-2">
         <CollapsibleTrigger asChild>
           <button className="flex justify-between items-center gap-2 px-4 py-2 border border-gray-400 rounded-lg">
-            <p className="body-large-primary text-gray-400 translate-y-[-6px]">
+            <p className="body-large-primary text-gray-400">
               {title}
             </p>
             <IonIcon
@@ -79,7 +79,7 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
                     }
                   />
                   <Label htmlFor={item.id}>
-                    <p className="body-large-primary translate-y-[-6px]">
+                    <p className="body-large-primary">
                       {item.label}
                     </p>
                   </Label>

@@ -88,7 +88,7 @@ export default function ComparePage() {
             Object.values(newSelected).filter(Boolean).length;
           if (selectedCount >= 5) {
             toast.error(
-              <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
+              <p className="title-medium-emphasized text-neutral-white">
                 {t("maxSelectionError")}
               </p>,
               {
@@ -123,7 +123,7 @@ export default function ComparePage() {
       Object.keys(selectedTimes).length === 0
     ) {
       toast.error(
-        <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
+        <p className="title-medium-emphasized text-neutral-white">
           {t("minSelectionError")}
         </p>,
         {
@@ -205,7 +205,7 @@ export default function ComparePage() {
                   className="bg-transparent"
                   onClick={handleClearSelection}
                 >
-                  <p className="title-large-emphasized translate-y-[-6px]">
+                  <p className="title-large-emphasized">
                     {t("clearData")}
                   </p>
                 </Button>
@@ -215,7 +215,7 @@ export default function ComparePage() {
                   expanded={true}
                   onClick={handleSubmitComparison}
                 >
-                  <p className="title-large-emphasized translate-y-[-6px]">
+                  <p className="title-large-emphasized">
                     {t("compareData")}
                   </p>
                 </Button>

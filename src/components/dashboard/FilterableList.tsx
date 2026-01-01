@@ -38,7 +38,7 @@ export const FilterableList: React.FC<FilterableListProps> = ({
     <div className="flex flex-col space-y-4 w-full">
       <section className="flex flex-col space-y-2 w-full">
         <div className="flex flex-col w-full">
-          <p className="title-large-emphasized translate-y-[-10px]">{title}</p>
+          <p className="title-large-emphasized">{title}</p>
           {hasDescription && (
             <p className="body-small-primary text-neutral-600 py-2">
               {t("maxSelectionError")}

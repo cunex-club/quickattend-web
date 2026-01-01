@@ -148,7 +148,7 @@ export function BarChartVerticalMulti({ data }: BarChartVerticalMultiProps) {
                   backgroundColor: CHART_COLORS[index % CHART_COLORS.length],
                 }}
               />
-              <p className="label-small-primary -translate-y-0.5">{time}</p>
+              <p className="label-small-primary">{time}</p>
             </div>
           ))}
         </div>

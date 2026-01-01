@@ -38,7 +38,7 @@ export const StatCard = ({
         <div className="flex justify-center items-end space-x-4">
           <p
             className={cn(
-              "font-bold text-7xl sm:text-[56px] md:text-[70px] lg:text-[128px] translate-y-3 md:translate-y-4 lg:translate-y-8",
+              "font-bold text-7xl sm:text-[56px] md:text-[70px] lg:text-[128px]",
               variant === "primary-filled"
                 ? "text-neutral-white"
                 : "text-neutral-black",

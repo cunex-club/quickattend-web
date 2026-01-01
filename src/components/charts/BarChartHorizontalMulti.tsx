@@ -147,7 +147,7 @@ export function BarChartHorizontalMulti({ data }: BarChartHorizontalMultiProps) 
                 className="w-4 h-4" 
                 style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}
               />
-              <p className="label-small-primary -translate-y-0.5">
+              <p className="label-small-primary">
                 {faculty}
               </p>
             </div>

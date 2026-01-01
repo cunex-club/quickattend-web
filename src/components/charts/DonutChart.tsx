@@ -133,7 +133,7 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
                         y={viewBox.cy}
                         textAnchor="middle"
                         dominantBaseline="middle"
-                        className="headline-large-emphasized -translate-y-2.5"
+                        className="headline-large-emphasized"
                       >
                         <tspan
                           x={viewBox.cx}
@@ -176,7 +176,7 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
                         y={viewBox.cy}
                         textAnchor="middle"
                         dominantBaseline="middle"
-                        className="headline-large-emphasized -translate-y-2"
+                        className="headline-large-emphasized"
                       >
                         <tspan
                           x={viewBox.cx}

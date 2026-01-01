@@ -81,7 +81,7 @@ export function BarChartVerticalStacked({
                 className="flex flex-col space-y-2"
               >
                 <div className="flex items-center justify-between">
-                  <p className="title-medium-primary md:title-large-primary -translate-y-0.5  md:-translate-y-1.5">
+                  <p className="title-medium-primary md:title-large-primary">
                     {item.faculty}
                   </p>
                   <p className="body-medium-primary md:body-large-primary text-neutral-black">
@@ -154,13 +154,13 @@ export function BarChartVerticalStacked({
         <div className="flex justify-center items-center space-x-8 md:space-x-16">
           <div className="flex flex-row space-x-2 items-center">
             <div className="w-4 h-4 bg-primary"></div>
-            <p className="label-small-primary -translate-y-0.5">
+            <p className="label-small-primary">
               {chartConfig.registered.label}
             </p>
           </div>
           <div className="flex flex-row space-x-2 items-center">
             <div className="w-4 h-4 bg-chart-pink-200"></div>
-            <p className="label-small-primary -translate-y-0.5">
+            <p className="label-small-primary">
               {chartConfig.unregistered.label}
             </p>
           </div>

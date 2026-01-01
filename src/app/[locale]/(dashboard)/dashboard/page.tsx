@@ -77,7 +77,7 @@ export default function OverviewPage() {
     try {
       await navigator.clipboard.writeText(eventLink);
       toast.success(
-        <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
+        <p className="title-medium-emphasized text-neutral-white">
           {t("linkCopied")}
         </p>,
         {
@@ -91,7 +91,7 @@ export default function OverviewPage() {
     } catch (err) {
       console.error("Failed to copy link:", err);
       toast.error(
-        <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
+        <p className="title-medium-emphasized text-neutral-white">
           {t("linkCopyFailed")}
         </p>,
         {
@@ -231,7 +231,7 @@ export default function OverviewPage() {
                         setSelectedFilter(selectedFilter === "student" ? null : "student")
                       }
                     >
-                      <p className="label-large-emphasized -translate-y-0.5">นิสิต</p>
+                      <p className="label-large-emphasized">นิสิต</p>
                     </Button>
                     <Button
                       mode={selectedFilter === "staff" ? "filled" : "outline"}
@@ -241,7 +241,7 @@ export default function OverviewPage() {
                         setSelectedFilter(selectedFilter === "staff" ? null : "staff")
                       }
                     >
-                      <p className="label-large-emphasized -translate-y-0.5">บุคลากร</p>
+                      <p className="label-large-emphasized">บุคลากร</p>
                     </Button>
                 </div>
               </div>

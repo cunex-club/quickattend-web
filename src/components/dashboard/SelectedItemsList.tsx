@@ -23,7 +23,7 @@ export const SelectedItemsList: React.FC<SelectedItemsListProps> = ({
           key={item.id}
           className="relative flex items-center bg-transparent text-neutral-500 border border-neutral-500 rounded-lg px-3 py-1.5 animate-in fade-in-0 zoom-in-95"
         >
-          <p className="label-large-primary translate-y-[-2px]">
+          <p className="label-large-primary">
             {item.label}
           </p>
           <button
@@ -33,7 +33,7 @@ export const SelectedItemsList: React.FC<SelectedItemsListProps> = ({
               filterVariant === "secondary" ? "border-white" : "border-neutral-100"
             )}
           >
-            <p className="text-neutral-white translate-y-[3px]">x</p>
+            <p className="text-neutral-white">x</p>
           </button>
         </div>
       ))}
