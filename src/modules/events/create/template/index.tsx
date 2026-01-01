@@ -480,7 +480,7 @@ const EventCreateTemplate = () => {
 
       {width < 640 && (
         <Drawer open={showExample} onOpenChange={setShowExample}>
-          <DrawerContent className="px-4 py-2 bg-neutral-white h-[80vh]">
+          <DrawerContent className="px-4 py-2 bg-neutral-white h-fit max-h-[80vh]">
             <DrawerHeader>
               <div className="flex justify-between gap-2 flex-wrap">
                 <DrawerTitle className="title-large-emphasized text-primary">
@@ -506,7 +506,7 @@ const EventCreateTemplate = () => {
               </div>
             </DrawerHeader>
 
-            <div className="max-w-full min-h-[50vh] flex-1 bg-neutral-100 rounded-4xl px-4 py-6 mb-6 overflow-y-auto break-all">
+            <div className="max-w-full h-fit max-h-[50vh] flex-1 rounded-4xl px-4 mb-6 overflow-y-auto break-all transition-all duration-300">
               <CreateEventPreview eventForm={eventForm} cardMode={cardMode} />
             </div>
           </DrawerContent>
