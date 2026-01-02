@@ -523,7 +523,7 @@ const CreateEventStep1 = ({
           <button
             type="button"
             onClick={() => handleRemoveAgenda(index)}
-            className="text-primary mt-2"
+            className="text-primary mt-2 cursor-pointer"
           >
             <IonIcon name="RemoveCircleOutline" size="18px" />
           </button>
