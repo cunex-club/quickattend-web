@@ -5,6 +5,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@assets/components/ui/popover";
+import { Textarea } from "@assets/components/ui/textarea";
 import { cn } from "@assets/lib/utils";
 import EditableTime from "@modules/events/create/components/editable-time";
 import { EventFormInterface } from "@modules/events/create/template";
@@ -222,7 +223,13 @@ const EditEventSection1 = ({
       [field]: newDate,
     };
 
-    setEventForm({ ...eventForm, agenda: updated });
+    const sortedAgenda = updated.sort(
+      (a, b) =>
+        a.startTime.getTime() - b.startTime.getTime() ||
+        a.endTime.getTime() - b.endTime.getTime()
+    );
+
+    setEventForm({ ...eventForm, agenda: sortedAgenda });
   };
 
   const updateAgendaName = (index: number, name: string) => {
@@ -245,7 +252,7 @@ const EditEventSection1 = ({
         <Input
           value={eventForm.name}
           placeholder={tEditEvent("namePlaceholder")}
-          className="!body-large-primary focus:border-primary focus-visible:ring-0"
+          className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) => setEventForm({ ...eventForm, name: e.target.value })}
         />
       </div>
@@ -253,10 +260,10 @@ const EditEventSection1 = ({
       {/* Description */}
       <div className="flex flex-col gap-2">
         <p className="title-medium-emphasized">{tEditEvent("description")}</p>
-        <Input
+        <Textarea
           value={eventForm.description}
           placeholder={tEditEvent("descriptionPlaceholder")}
-          className="!body-large-primary focus:border-primary focus-visible:ring-0"
+          className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
             setEventForm({ ...eventForm, description: e.target.value })
           }
@@ -273,7 +280,7 @@ const EditEventSection1 = ({
 
           <Popover>
             <PopoverTrigger asChild>
-              <div className="w-full h-10 flex items-center justify-between border rounded-md cursor-pointer pl-3 !body-large-primary">
+              <div className="w-full h-10 flex items-center justify-between border rounded-md cursor-pointer pl-3 body-large-primary">
                 <span>
                   {!mounted
                     ? tEditEvent("datePlaceholder")
@@ -323,7 +330,7 @@ const EditEventSection1 = ({
 
                 <div
                   className={cn(
-                    "w-full h-10 flex items-center justify-between border rounded-md pl-3 !body-large-primary",
+                    "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
                     !isDateSelected && "opacity-50 pointer-events-none"
                   )}
                 >
@@ -335,7 +342,7 @@ const EditEventSection1 = ({
                 </div>
               </label>
 
-              <p className="!body-small-primary text-neutral-500">
+              <p className="pl-3 body-small-primary text-neutral-500">
                 {tEditEvent("startTime")}
               </p>
             </div>
@@ -354,7 +361,7 @@ const EditEventSection1 = ({
 
                 <div
                   className={cn(
-                    "w-full h-10 flex items-center justify-between border rounded-md pl-3 !body-large-primary",
+                    "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
                     !isDateSelected && "opacity-50 pointer-events-none"
                   )}
                 >
@@ -366,7 +373,7 @@ const EditEventSection1 = ({
                 </div>
               </label>
 
-              <p className="!body-small-primary text-neutral-500">
+              <p className="pl-3 body-small-primary text-neutral-500">
                 {tEditEvent("endTime")}
               </p>
             </div>
@@ -382,7 +389,7 @@ const EditEventSection1 = ({
         <Input
           value={eventForm.location}
           placeholder={tEditEvent("locationPlaceholder")}
-          className="!body-large-primary focus:border-primary focus-visible:ring-0"
+          className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
             setEventForm({ ...eventForm, location: e.target.value })
           }
@@ -423,7 +430,7 @@ const EditEventSection1 = ({
 
               <div
                 className={cn(
-                  "w-full h-10 flex items-center justify-between border rounded-md pl-3 !body-large-primary",
+                  "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
                   !isDateSelected && "opacity-50 pointer-events-none"
                 )}
               >
@@ -432,7 +439,7 @@ const EditEventSection1 = ({
               </div>
             </label>
 
-            <p className="!body-small-primary text-neutral-500">
+            <p className="pl-3 body-small-primary text-neutral-500">
               {tEditEvent("startTime")}
             </p>
           </div>
@@ -467,7 +474,7 @@ const EditEventSection1 = ({
 
               <div
                 className={cn(
-                  "w-full h-10 flex items-center justify-between border rounded-md pl-3 !body-large-primary",
+                  "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
                   !isDateSelected && "opacity-50 pointer-events-none"
                 )}
               >
@@ -476,7 +483,7 @@ const EditEventSection1 = ({
               </div>
             </label>
 
-            <p className="!body-small-primary text-neutral-500">
+            <p className="pl-3 body-small-primary text-neutral-500">
               {tEditEvent("endTime")}
             </p>
           </div>
@@ -487,7 +494,7 @@ const EditEventSection1 = ({
           value={agendaName}
           placeholder={tEditEvent("descriptionPlaceholder")}
           onChange={(e) => setAgendaName(e.target.value)}
-          className="w-full sm:flex-1"
+          className="w-full sm:flex-1 body-large-primary"
         />
 
         {/* Button */}
@@ -546,7 +553,7 @@ const EditEventSection1 = ({
             <Input
               value={item.activity_name}
               onChange={(e) => updateAgendaName(index, e.target.value)}
-              className="!body-medium-primary"
+              className="body-large-primary"
               placeholder={tEditEvent("descriptionPlaceholder")}
             />
           </div>
@@ -561,7 +568,7 @@ const EditEventSection1 = ({
         <Input
           value={eventForm.organizer}
           placeholder={tEditEvent("organizerPlaceholder")}
-          className="!body-large-primary focus:border-primary focus-visible:ring-0"
+          className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
             setEventForm({ ...eventForm, organizer: e.target.value })
           }
