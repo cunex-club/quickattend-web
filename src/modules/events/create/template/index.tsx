@@ -110,7 +110,7 @@ const EventCreateTemplate = () => {
   const tCreateEvent = useTranslations("CreateEvent");
   const router = useRouter();
 
-  const [step, setStep] = useState<number>(3);
+  const [step, setStep] = useState<number>(1);
   const [showExample, setShowExample] = useState(false);
   const [width, setWidth] = useState(0);
 
@@ -210,18 +210,17 @@ const EventCreateTemplate = () => {
         ref={topRef}
         className="w-full h-16 relative flex items-center justify-center shadow-elevation-3"
       >
-        <div className="absolute left-4 top-4 text-primary font-semibold cursor-pointer flex items-center">
-          <IonIcon
-            name="ChevronBack"
-            size="16px"
-            onClick={() => {
-              router.back();
-            }}
-          />
+        <button
+          onClick={() => {
+            router.back();
+          }}
+          className="absolute left-4 top-4 text-primary font-semibold cursor-pointer flex items-center"
+        >
+          <IonIcon name="ChevronBack" size="16px" />
           <p className="hidden sm:block label-large-emphasized">
             {tCreateEvent("back")}
           </p>
-        </div>
+        </button>
         <p className="headline-small-emphasized">
           {tCreateEvent("createEvent")}
         </p>
