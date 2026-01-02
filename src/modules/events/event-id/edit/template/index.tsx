@@ -6,7 +6,11 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import IonIcon from "@shared/IonIcon";
 import Button from "@shared/Button";
-import { EventFormInterface } from "@modules/events/create/template";
+import {
+  AttendanceType,
+  EventFormInterface,
+} from "@modules/events/create/template";
+import { Input } from "@assets/components/ui/input";
 
 const EventEditTemplate = () => {
   const { id: eventId } = useParams();
@@ -20,28 +24,26 @@ const EventEditTemplate = () => {
 
   const [width, setWidth] = useState(0);
 
-  const [eventForm, setEventForm] = useState<EventFormInterface>();
+  const [eventForm, setEventForm] = useState<EventFormInterface>({
+    name: "Sample Event",
+    description: "Lorem Ipsum",
+    date: undefined,
+    startTime: undefined,
+    endTime: undefined,
+    location: "",
+    agenda: [],
+    organizer: "",
+    attendance_type: "all",
+    selectedFaculties: [],
+    selectedStudents: [],
+    revealed_fields: [],
+    managers_and_staff: [],
+    allow_all_to_scan: true,
+    evaluation_form: "",
+  });
 
   useEffect(() => {
     // TODO: Fetch event information using eventID
-
-    setEventForm({
-      name: "",
-      description: "",
-      date: undefined,
-      startTime: undefined,
-      endTime: undefined,
-      location: "",
-      agenda: [],
-      organizer: "",
-      attendance_type: "all",
-      selectedFaculties: [],
-      selectedStudents: [],
-      revealed_fields: [],
-      managers_and_staff: [],
-      allow_all_to_scan: true,
-      evaluation_form: "",
-    });
   }, []);
 
   useEffect(() => {
@@ -57,37 +59,144 @@ const EventEditTemplate = () => {
   }, [setShowSidebar]);
 
   const saveEvent = () => {
-    alert(`Save Event ${eventId}`);
+    const agendaText = eventForm.agenda
+      .map((item, index) => {
+        return `${index + 1}. ${item.activity_name} 
+                        - Start: ${item.startTime}
+                        - End: ${item.endTime}`;
+      })
+      .join("\n");
+
+    let attendeeText = "-";
+    if (eventForm.attendance_type == AttendanceType.FACULTIES) {
+      attendeeText = eventForm.selectedFaculties
+        .map((item, index) => {
+          return `${index + 1} ${item}`;
+        })
+        .join("\n");
+    } else if (eventForm.attendance_type == AttendanceType.WHITELIST) {
+      attendeeText = eventForm.selectedStudents
+        .map((item, index) => {
+          return `${index + 1} ${item.id} ${item.name}`;
+        })
+        .join("\n");
+    }
+
+    const revealedFieldText = eventForm.revealed_fields.join(", ");
+
+    const managerAndStaffText = eventForm.managers_and_staff
+      .map((item, index) => {
+        return `${index + 1} ${item.id} ${item.name} ${item.role}`;
+      })
+      .join("\n");
+
+    alert(`Name: ${eventForm.name}
+    Description: ${eventForm.description}
+    Date: ${eventForm.date}
+    Start Time: ${eventForm.startTime}
+    End Date: ${eventForm.endTime}
+    Location: ${eventForm.location}
+    Agenda: ${agendaText}
+    Organizer: ${eventForm.organizer}
+    Attendance Type: ${eventForm.attendance_type}
+    Attendee: ${attendeeText}
+    Revealed Fields: ${revealedFieldText}
+    Manager and Staff: ${managerAndStaffText}
+    Allow All to Scan: ${eventForm.allow_all_to_scan}
+    Evaluation Form: ${eventForm.evaluation_form}`);
   };
 
   return (
-    <div className="w-full h-fit min-h-screen bg-neutral-100">
-      <header className="w-full h-16 px-4 relative flex items-center justify-between gap-2 shadow-elevation-3">
-        <IonIcon
-          name="ChevronBack"
-          size="16px"
-          className="text-primary font-semibold cursor-pointer"
-          onClick={() => {
-            router.back();
-          }}
-        />
-        <p className="headline-small-emphasized">{tEditEvent("editEvent")}</p>
-        <Button
-          mode="filled"
-          bordered="square"
-          expanded={false}
-          onClick={saveEvent}
-          className="w-fit h-9 px-2 pr-4 flex items-center cursor-pointer"
-        >
+    <>
+      <div className="w-full h-fit min-h-screen max-w-screen bg-neutral-100">
+        <header className="w-full h-16 px-4 relative flex items-center justify-between gap-2 shadow-elevation-3">
           <IonIcon
-            name="Checkmark"
+            name="ChevronBack"
             size="16px"
-            className="font-semibold cursor-pointer"
+            className="text-primary font-semibold cursor-pointer"
+            onClick={() => {
+              router.back();
+            }}
           />
-          <p className="label-large-emphasized">{tEditEvent("save")}</p>
-        </Button>
-      </header>
-    </div>
+          <p className="headline-small-emphasized">{tEditEvent("editEvent")}</p>
+
+          <Button
+            mode="filled"
+            bordered="square"
+            expanded={false}
+            onClick={saveEvent}
+            className="w-fit h-9 px-1 pr-2 flex items-center cursor-pointer"
+          >
+            <IonIcon
+              name="Checkmark"
+              size="16px"
+              className="font-semibold cursor-pointer"
+            />
+            <p className="label-large-emphasized">{tEditEvent("save")}</p>
+          </Button>
+        </header>
+
+        <main className="min-h-screen px-4 py-8 w-full flex flex-col gap-4 bg-neutral-white">
+          {/* Menu */}
+          <h1 className="title-large-emphasized text-primary mb-4">
+            {tEditEvent("eventDetail")}
+          </h1>
+
+          {/* Name */}
+          <div className="flex flex-col gap-2">
+            <p className="title-medium-emphasized">
+              {tEditEvent("name")} <span className="text-primary">*</span>
+            </p>
+            <Input
+              value={eventForm.name}
+              placeholder={tEditEvent("namePlaceholder")}
+              className="!body-large-primary focus:border-primary focus-visible:ring-0"
+              onChange={(e) =>
+                setEventForm({ ...eventForm, name: e.target.value })
+              }
+            />
+          </div>
+
+          {/* Description */}
+          <div className="flex flex-col gap-2">
+            <p className="title-medium-emphasized">
+              {tEditEvent("description")}
+            </p>
+            <Input
+              value={eventForm.description}
+              placeholder={tEditEvent("descriptionPlaceholder")}
+              className="!body-large-primary focus:border-primary focus-visible:ring-0"
+              onChange={(e) =>
+                setEventForm({ ...eventForm, description: e.target.value })
+              }
+            />
+          </div>
+        </main>
+
+        <footer className="fixed bottom-0 left-0 w-full h-16 px-4 bg-neutral-200 rounded-t-2xl z-50 grid grid-cols-4 gap-2 place-items-center">
+          <IonIcon
+            name="List"
+            size="18px"
+            className="text-primary cursor-pointer"
+          />
+          <IonIcon
+            name="EyeOutline"
+            size="18px"
+            className="text-primary cursor-pointer"
+          />
+          <IonIcon
+            name="DuplicateOutline"
+            size="18px"
+            className="text-primary cursor-pointer"
+          />
+          <IonIcon
+            name="TrashOutline"
+            size="18px"
+            className="text-primary cursor-pointer"
+          />
+        </footer>
+      </div>
+    </>
   );
 };
 
