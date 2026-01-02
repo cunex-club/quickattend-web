@@ -147,10 +147,6 @@ const CreateEventStep2 = ({
 
   const [openFacultyFilter, setOpenFacultyFilter] = useState(false);
 
-  const hasOwner = eventForm.managers_and_staff.some(
-    (m) => m.role === EventManagerType.OWNER
-  );
-
   useEffect(() => {
     if (!facultyQuery) {
       setFilteredOrganization([]);
@@ -194,7 +190,7 @@ const CreateEventStep2 = ({
               />
               <label
                 htmlFor={AttendanceType.ALL}
-                className="label-large-primary cursor-pointer"
+                className="body-large-primary cursor-pointer"
               >
                 {tCreateEvent(AttendanceType.ALL)}
               </label>
@@ -212,7 +208,7 @@ const CreateEventStep2 = ({
               />
               <label
                 htmlFor={AttendanceType.FACULTIES}
-                className="label-large-primary cursor-pointer"
+                className="body-large-primary cursor-pointer"
               >
                 {tCreateEvent(AttendanceType.FACULTIES)}
               </label>
@@ -235,12 +231,13 @@ const CreateEventStep2 = ({
                     eventForm.attendance_type != AttendanceType.FACULTIES
                   }
                   placeholder={tCreateEvent("facultiesPlaceholder")}
+                  className="body-large-primary"
                 />
                 {openFacultyFilter && (
                   <Command>
                     <CommandList>
                       {filteredFaculties?.length === 0 && (
-                        <CommandEmpty>
+                        <CommandEmpty className="body-large-primary">
                           {tCreateEvent("facultiesNotFound")}
                         </CommandEmpty>
                       )}
@@ -255,6 +252,7 @@ const CreateEventStep2 = ({
                                 setOpenFacultyFilter(false);
                                 setFacultyQuery(value);
                               }}
+                              className="body-large-primary"
                             >
                               {f}
                             </CommandItem>
@@ -326,7 +324,7 @@ const CreateEventStep2 = ({
                       selectedFaculties: newFaculties,
                     });
                   }}
-                  className={`${eventForm.attendance_type == AttendanceType.FACULTIES ? "text-primary" : "text-neutral-500"}`}
+                  className={`${eventForm.attendance_type == AttendanceType.FACULTIES ? "text-primary cursor-pointer" : "text-neutral-500"}`}
                 >
                   <IonIcon name="RemoveCircleOutline" size="18px" />
                 </button>
@@ -347,7 +345,7 @@ const CreateEventStep2 = ({
               />
               <label
                 htmlFor={AttendanceType.WHITELIST}
-                className="label-large-primary cursor-pointer"
+                className="body-large-primary cursor-pointer"
               >
                 {tCreateEvent(AttendanceType.WHITELIST)}
               </label>
@@ -367,7 +365,7 @@ const CreateEventStep2 = ({
                 }}
                 disabled={eventForm.attendance_type != AttendanceType.WHITELIST}
                 placeholder={tCreateEvent("whitelistPlaceholder")}
-                className="flex-1"
+                className="body-large-primary"
               />
 
               <Button
@@ -458,7 +456,7 @@ const CreateEventStep2 = ({
                       return prev.filter((id) => id != student.id);
                     });
                   }}
-                  className={`${eventForm.attendance_type == AttendanceType.WHITELIST ? "text-primary" : "text-neutral-500"}`}
+                  className={`${eventForm.attendance_type == AttendanceType.WHITELIST ? "text-primary cursor-pointer" : "text-neutral-500"}`}
                 >
                   <IonIcon name="RemoveCircleOutline" size="18px" />
                 </button>
@@ -506,7 +504,7 @@ const CreateEventStep2 = ({
           />
           <label
             htmlFor="scanSettingImages"
-            className="label-large-primary cursor-pointer"
+            className="body-large-primary cursor-pointer"
           >
             {tCreateEvent("scanSettingImages")}
           </label>
@@ -540,7 +538,7 @@ const CreateEventStep2 = ({
           />
           <label
             htmlFor="scanSettingName"
-            className="label-large-primary cursor-pointer"
+            className="body-large-primary cursor-pointer"
           >
             {tCreateEvent("scanSettingName")}
           </label>
@@ -574,7 +572,7 @@ const CreateEventStep2 = ({
           />
           <label
             htmlFor="scanSettingId"
-            className="label-large-primary cursor-pointer"
+            className="body-large-primary cursor-pointer"
           >
             {tCreateEvent("scanSettingId")}
           </label>
@@ -610,7 +608,7 @@ const CreateEventStep2 = ({
           />
           <label
             htmlFor="scanSettingFaculty"
-            className="label-large-primary cursor-pointer"
+            className="body-large-primary cursor-pointer"
           >
             {tCreateEvent("scanSettingFaculty")}
           </label>
@@ -618,270 +616,248 @@ const CreateEventStep2 = ({
       </div>
 
       {/* Accessibility */}
-      <div className="flex flex-col gap-2 mb-4">
-        <p className="title-large-emphasized mb-4">
-          {tCreateEvent("access")} <span className="text-primary">*</span>
-        </p>
-
-        <div className="flex flex-col gap-2">
-          <p className="title-medium-emphasized">
-            {tCreateEvent("addEventManager")}
+      <div className="flex flex-col gap-4 mb-4">
+        {/* Role */}
+        <div className="flex flex-col gap-2 mb-4">
+          <p className="title-large-emphasized mb-4">
+            {tCreateEvent("access")} <span className="text-primary">*</span>
           </p>
 
-          {/* Accessibility Input */}
-          <div className="flex gap-4 flex-col sm:flex-row w-full">
-            <Input
-              inputMode="numeric"
-              maxLength={10}
-              value={studentIdAccessibilityQuery}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (/^\d{0,10}$/.test(value)) {
-                  setStudentIdAccessibilityQuery(value);
-                }
-              }}
-              placeholder={tCreateEvent("addEventManagerIdPlaceholder")}
-              className="flex-1"
-            />
+          <div className="flex flex-col gap-2">
+            <p className="title-medium-emphasized">
+              {tCreateEvent("addEventManager")}
+            </p>
 
-            <Select
-              value={roleAccessibilityQuery}
-              onValueChange={(e) => {
-                setRoleAccessibilityQuery(e);
-              }}
-            >
-              <SelectTrigger className="w-full flex-1">
-                <SelectValue
-                  placeholder={tCreateEvent("addEventManagerRolePlaceholder")}
-                />
-              </SelectTrigger>
-              <SelectContent className="w-full flex-1">
-                <SelectGroup>
-                  {!hasOwner && (
-                    <SelectItem value={EventManagerType.OWNER}>
-                      {tCreateEvent(EventManagerType.OWNER)}
-                    </SelectItem>
-                  )}
-                  <SelectItem value={EventManagerType.MANAGER}>
-                    <p className="label-large-primary">
-                      {tCreateEvent(EventManagerType.MANAGER)}
-                    </p>
-                  </SelectItem>
-                  <SelectItem value={EventManagerType.STAFF}>
-                    <p className="label-large-primary">
-                      {tCreateEvent(EventManagerType.STAFF)}
-                    </p>
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-
-            <Button
-              mode="filled"
-              bordered="square"
-              expanded={false}
-              className={`w-fit h-9 shrink-0 ${
-                studentIdAccessibilityQuery?.length == 10 &&
-                !selectedStudentIdsAccessibility?.includes(
-                  studentIdAccessibilityQuery
-                ) &&
-                roleAccessibilityQuery != ""
-                  ? "cursor-pointer"
-                  : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
-              }`}
-              onClick={() => {
-                if (studentIdAccessibilityQuery.length != 10) return;
-                if (
-                  selectedStudentIdsAccessibility?.includes(
-                    studentIdAccessibilityQuery
-                  )
-                )
-                  return;
-                if (roleAccessibilityQuery == "") return;
-
-                // =====
-                // TODO: Fetch Student Name from Student Id
-                // =====
-
-                const manager: EventManager = {
-                  id: studentIdAccessibilityQuery,
-                  name: MOCK_STUDENTNAME,
-                  role: roleAccessibilityQuery ?? "",
-                };
-
-                setEventForm({
-                  ...eventForm,
-                  managers_and_staff: [
-                    ...eventForm.managers_and_staff,
-                    manager,
-                  ].sort((a, b) => {
-                    if (a.role == b.role) {
-                      return Number(a.id) - Number(b.id);
-                    }
-                    return a.role.localeCompare(b.role, "th");
-                  }),
-                });
-
-                setSelectedStudentIdsPermission((prev) => [
-                  ...prev,
-                  studentIdAccessibilityQuery,
-                ]);
-
-                setRoleAccessibilityQuery("");
-                setStudentIdAccessibilityQuery("");
-              }}
-            >
-              <p className="label-large-primary -translate-y-0.5">
-                {tCreateEvent("addEventManager")}
-              </p>
-            </Button>
-          </div>
-
-          {/* Accessibility List */}
-          {eventForm.managers_and_staff.map((student) => (
-            <div
-              key={student.id}
-              className={`w-full flex items-center border rounded-md px-3 py-2 space-y-2 flex-wrap sm:flex-nowrap`}
-            >
-              {/* Remove */}
-              <button
-                type="button"
-                onClick={() => {
-                  const newStudents = eventForm.managers_and_staff
-                    .filter((s) => s.id !== student.id)
-                    .sort((a, b) => {
-                      if (a.role == b.role) {
-                        return Number(a.id) - Number(b.id);
-                      }
-                      return a.id.localeCompare(b.id, "th");
-                    });
-
-                  setEventForm({
-                    ...eventForm,
-                    managers_and_staff: newStudents,
-                  });
-
-                  setSelectedStudentIdsAccessibility((prev) => {
-                    return prev.filter((id) => id != student.id);
-                  });
+            {/* Accessibility Input */}
+            <div className="flex gap-4 flex-col sm:flex-row w-full">
+              <Input
+                inputMode="numeric"
+                maxLength={10}
+                value={studentIdAccessibilityQuery}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^\d{0,10}$/.test(value)) {
+                    setStudentIdAccessibilityQuery(value);
+                  }
                 }}
-                className={`text-primary`}
-              >
-                <IonIcon name="RemoveCircleOutline" size="18px" />
-              </button>
-
-              <div className="w-fit px-8 flex flex-col">
-                <p className="body-large-primary">{student.id}</p>
-                <p className="body-large-primary">{student.name}</p>
-              </div>
+                placeholder={tCreateEvent("addEventManagerIdPlaceholder")}
+                className="flex-1 body-large-primary"
+              />
 
               <Select
-                value={student.role}
-                onValueChange={(newRole) => {
-                  if (
-                    newRole === EventManagerType.OWNER &&
-                    hasOwner &&
-                    student.role !== EventManagerType.OWNER
-                  ) {
-                    return;
-                  }
-
-                  const updated = eventForm.managers_and_staff.map((m) =>
-                    m.id === student.id ? { ...m, role: newRole } : m
-                  );
-
-                  setEventForm({
-                    ...eventForm,
-                    managers_and_staff: updated.sort((a, b) => {
-                      if (a.role === b.role) {
-                        return Number(a.id) - Number(b.id);
-                      }
-                      return a.role.localeCompare(b.role, "th");
-                    }),
-                  });
+                value={roleAccessibilityQuery}
+                onValueChange={(e) => {
+                  setRoleAccessibilityQuery(e);
                 }}
               >
-                <SelectTrigger className="flex-1">
-                  <SelectValue />
+                <SelectTrigger className="w-full flex-1 body-large-primary">
+                  <SelectValue
+                    placeholder={tCreateEvent("addEventManagerRolePlaceholder")}
+                  />
                 </SelectTrigger>
-
-                <SelectContent className="flex-1">
+                <SelectContent className="w-full flex-1">
                   <SelectGroup>
-                    {(!hasOwner || student.role === EventManagerType.OWNER) && (
-                      <SelectItem value={EventManagerType.OWNER}>
-                        {tCreateEvent(EventManagerType.OWNER)}
-                      </SelectItem>
-                    )}
-
                     <SelectItem value={EventManagerType.MANAGER}>
-                      {tCreateEvent(EventManagerType.MANAGER)}
+                      <p className="body-large-primary">
+                        {tCreateEvent(EventManagerType.MANAGER)}
+                      </p>
                     </SelectItem>
-
                     <SelectItem value={EventManagerType.STAFF}>
-                      {tCreateEvent(EventManagerType.STAFF)}
+                      <p className="body-large-primary">
+                        {tCreateEvent(EventManagerType.STAFF)}
+                      </p>
                     </SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
+
+              <Button
+                mode="filled"
+                bordered="square"
+                expanded={false}
+                className={`w-fit h-9 shrink-0 ${
+                  studentIdAccessibilityQuery?.length == 10 &&
+                  !selectedStudentIdsAccessibility?.includes(
+                    studentIdAccessibilityQuery
+                  ) &&
+                  roleAccessibilityQuery != ""
+                    ? "cursor-pointer"
+                    : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
+                }`}
+                onClick={() => {
+                  if (studentIdAccessibilityQuery.length != 10) return;
+                  if (
+                    selectedStudentIdsAccessibility?.includes(
+                      studentIdAccessibilityQuery
+                    )
+                  )
+                    return;
+                  if (roleAccessibilityQuery == "") return;
+
+                  // =====
+                  // TODO: Fetch Student Name from Student Id
+                  // =====
+
+                  const manager: EventManager = {
+                    id: studentIdAccessibilityQuery,
+                    name: MOCK_STUDENTNAME,
+                    role: roleAccessibilityQuery ?? "",
+                  };
+
+                  setEventForm({
+                    ...eventForm,
+                    managers_and_staff: [
+                      ...eventForm.managers_and_staff,
+                      manager,
+                    ].sort((a, b) => {
+                      return Number(a.id) - Number(b.id);
+                    }),
+                  });
+
+                  setSelectedStudentIdsAccessibility((prev) => [
+                    ...prev,
+                    studentIdAccessibilityQuery,
+                  ]);
+
+                  setRoleAccessibilityQuery("");
+                  setStudentIdAccessibilityQuery("");
+                }}
+              >
+                <p className="label-large-primary -translate-y-0.5">
+                  {tCreateEvent("addEventManager")}
+                </p>
+              </Button>
             </div>
-          ))}
+
+            {/* Accessibility List */}
+            {eventForm.managers_and_staff.map((student) => (
+              <div
+                key={student.id}
+                className={`w-full flex items-center border rounded-md px-3 py-2 space-x-4 sm:space-x-8 space-y-2 flex-wrap sm:flex-nowrap`}
+              >
+                {/* Remove */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newStudents = eventForm.managers_and_staff
+                      .filter((s) => s.id !== student.id)
+                      .sort((a, b) => {
+                        if (a.role == b.role) {
+                          return Number(a.id) - Number(b.id);
+                        }
+                        return a.id.localeCompare(b.id, "th");
+                      });
+
+                    setEventForm({
+                      ...eventForm,
+                      managers_and_staff: newStudents,
+                    });
+
+                    setSelectedStudentIdsAccessibility((prev) => {
+                      return prev.filter((id) => id != student.id);
+                    });
+                  }}
+                  className={`text-primary cursor-pointer`}
+                >
+                  <IonIcon name="RemoveCircleOutline" size="18px" />
+                </button>
+
+                <div className="w-fit flex flex-col">
+                  <p className="body-large-primary">{student.id}</p>
+                  <p className="body-large-primary">{student.name}</p>
+                </div>
+
+                <Select
+                  value={student.role}
+                  onValueChange={(newRole) => {
+                    const updated = eventForm.managers_and_staff.map((m) =>
+                      m.id === student.id ? { ...m, role: newRole } : m
+                    );
+
+                    setEventForm({
+                      ...eventForm,
+                      managers_and_staff: updated.sort((a, b) => {
+                        return Number(a.id) - Number(b.id);
+                      }),
+                    });
+                  }}
+                >
+                  <SelectTrigger className="flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
+
+                  <SelectContent className="flex-1">
+                    <SelectGroup>
+                      <SelectItem value={EventManagerType.MANAGER}>
+                        {tCreateEvent(EventManagerType.MANAGER)}
+                      </SelectItem>
+
+                      <SelectItem value={EventManagerType.STAFF}>
+                        {tCreateEvent(EventManagerType.STAFF)}
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Allow All to Scan */}
-      <div className="flex flex-col gap-2 mb-4">
-        <p className="title-large-emphasized mb-4">
-          {tCreateEvent("allowAllToScan")}{" "}
-          <span className="text-primary">*</span>
-        </p>
+        {/* Allow All to Scan */}
+        <div className="flex flex-col gap-2 mb-4">
+          <p className="title-medium-emphasized mb-4">
+            {tCreateEvent("allowAllToScan")}{" "}
+            <span className="text-primary">*</span>
+          </p>
 
-        <RadioGroup
-          defaultValue={
-            eventForm.allow_all_to_scan == true
-              ? ScanPermissionType.ANYONE
-              : ScanPermissionType.LIMITED
-          }
-          onValueChange={(value) => {
-            let allow_all_to_scan = false;
-            if (value == ScanPermissionType.ANYONE) {
-              allow_all_to_scan = true;
-            } else if (value == ScanPermissionType.LIMITED) {
-              allow_all_to_scan = false;
+          <RadioGroup
+            defaultValue={
+              eventForm.allow_all_to_scan == true
+                ? ScanPermissionType.ANYONE
+                : ScanPermissionType.LIMITED
             }
-            setEventForm({
-              ...eventForm,
-              allow_all_to_scan,
-            });
-          }}
-          className="w-full flex flex-col gap-6"
-        >
-          <div className="flex items-center space-x-4">
-            <RadioGroupItem
-              value={ScanPermissionType.LIMITED}
-              id={ScanPermissionType.LIMITED}
-              className="cursor-pointer"
-            />
-            <label
-              htmlFor={ScanPermissionType.LIMITED}
-              className="label-large-primary cursor-pointer"
-            >
-              {tCreateEvent(ScanPermissionType.LIMITED)}
-            </label>
-          </div>
-          <div className="flex items-center space-x-4">
-            <RadioGroupItem
-              value={ScanPermissionType.ANYONE}
-              id={ScanPermissionType.ANYONE}
-              className="cursor-pointer"
-            />
-            <label
-              htmlFor={ScanPermissionType.ANYONE}
-              className="label-large-primary cursor-pointer"
-            >
-              {tCreateEvent(ScanPermissionType.ANYONE)}
-            </label>
-          </div>
-        </RadioGroup>
+            onValueChange={(value) => {
+              let allow_all_to_scan = false;
+              if (value == ScanPermissionType.ANYONE) {
+                allow_all_to_scan = true;
+              } else if (value == ScanPermissionType.LIMITED) {
+                allow_all_to_scan = false;
+              }
+              setEventForm({
+                ...eventForm,
+                allow_all_to_scan,
+              });
+            }}
+            className="w-full flex flex-col gap-6"
+          >
+            <div className="flex items-center space-x-4">
+              <RadioGroupItem
+                value={ScanPermissionType.LIMITED}
+                id={ScanPermissionType.LIMITED}
+                className="cursor-pointer"
+              />
+              <label
+                htmlFor={ScanPermissionType.LIMITED}
+                className="body-large-primary cursor-pointer"
+              >
+                {tCreateEvent(ScanPermissionType.LIMITED)}
+              </label>
+            </div>
+            <div className="flex items-center space-x-4">
+              <RadioGroupItem
+                value={ScanPermissionType.ANYONE}
+                id={ScanPermissionType.ANYONE}
+                className="cursor-pointer"
+              />
+              <label
+                htmlFor={ScanPermissionType.ANYONE}
+                className="body-large-primary cursor-pointer"
+              >
+                {tCreateEvent(ScanPermissionType.ANYONE)}
+              </label>
+            </div>
+          </RadioGroup>
+        </div>
       </div>
     </div>
   );

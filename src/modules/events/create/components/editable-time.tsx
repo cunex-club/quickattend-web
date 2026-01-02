@@ -34,7 +34,7 @@ const EditableTime = ({
       />
 
       <div
-        className={`w-full h-10 flex items-center justify-between border rounded-md pl-3 !body-large-primary
+        className={`w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary
           ${disabled ? "opacity-50 pointer-events-none" : ""}`}
       >
         <span>{formatTime(value) || tCreateEvent("timePlaceholder")}</span>

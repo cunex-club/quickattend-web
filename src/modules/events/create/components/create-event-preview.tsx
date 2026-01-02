@@ -28,7 +28,7 @@ const CreateEventPreview = ({
   return (
     <div className="w-full h-fit flex flex-col">
       {/* Header */}
-      <h1 className="headline-small-emphasized mb-2 ml-2 line-clamp-1">
+      <h1 className="headline-small-emphasized mb-2 ml-2 line-clamp-2">
         {eventForm.name || tCreateEvent("namePlaceholder")}
       </h1>
 
@@ -72,7 +72,7 @@ const CreateEventPreview = ({
         <h2 className="title-medium-emphasized text-neutral-600">
           {tCreateEvent("description")}
         </h2>
-        <p className="body-small-primary text-neutral-600 line-clamp-5">
+        <p className="body-small-primary text-neutral-600 line-clamp-5 whitespace-pre-wrap">
           {eventForm.description || tCreateEvent("descriptionPlaceholder")}
         </p>
       </div>

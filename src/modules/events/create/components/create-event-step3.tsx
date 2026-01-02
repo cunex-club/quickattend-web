@@ -27,7 +27,7 @@ const CreateEventStep3 = ({
           type="url"
           value={eventForm.evaluation_form}
           placeholder={tCreateEvent("evaluationFormLinkPlaceholder")}
-          className="!body-large-primary focus:border-primary focus-visible:ring-0"
+          className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) => {
             setEventForm({ ...eventForm, evaluation_form: e.target.value });
           }}

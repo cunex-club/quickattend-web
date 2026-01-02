@@ -63,7 +63,6 @@ export interface Student {
 }
 
 export const EventManagerType = {
-  OWNER: "owner",
   MANAGER: "manager",
   STAFF: "staff",
 };
@@ -111,7 +110,7 @@ const EventCreateTemplate = () => {
   const tCreateEvent = useTranslations("CreateEvent");
   const router = useRouter();
 
-  const [step, setStep] = useState<number>(1);
+  const [step, setStep] = useState<number>(3);
   const [showExample, setShowExample] = useState(false);
   const [width, setWidth] = useState(0);
 
@@ -161,10 +160,7 @@ const EventCreateTemplate = () => {
           eventForm.selectedFaculties.length > 0) ||
         (eventForm.attendance_type == AttendanceType.WHITELIST &&
           eventForm.selectedStudents.length > 0)) &&
-      eventForm.revealed_fields.length > 0 &&
-      eventForm.managers_and_staff.filter(
-        (item) => item.role == EventManagerType.OWNER
-      ).length == 1
+      eventForm.revealed_fields.length > 0
     ) {
       setValidStep2(true);
     } else {
@@ -214,14 +210,18 @@ const EventCreateTemplate = () => {
         ref={topRef}
         className="w-full h-16 relative flex items-center justify-center shadow-elevation-3"
       >
-        <IonIcon
-          name="ChevronBack"
-          size="16px"
-          className="absolute left-4 top-6 text-primary font-semibold cursor-pointer"
-          onClick={() => {
-            router.back();
-          }}
-        />
+        <div className="absolute left-4 top-4 text-primary font-semibold cursor-pointer flex items-center">
+          <IonIcon
+            name="ChevronBack"
+            size="16px"
+            onClick={() => {
+              router.back();
+            }}
+          />
+          <p className="hidden sm:block label-large-emphasized">
+            {tCreateEvent("back")}
+          </p>
+        </div>
         <p className="headline-small-emphasized">
           {tCreateEvent("createEvent")}
         </p>
@@ -305,9 +305,9 @@ const EventCreateTemplate = () => {
           </Button>
         </div>
 
-        <div className="flex gap-6 px-4 py-8">
+        <div className="flex gap-6 sm:px-4">
           {/* Preview */}
-          <div className="w-full hidden sm:flex sm:flex-col sm:flex-2 sm:gap-4">
+          <div className="w-full flex-1 hidden sm:flex sm:flex-col sm:flex-2 sm:gap-4">
             {/* Header */}
             <div className="flex justify-between gap-2 flex-wrap">
               <h2 className="title-large-emphasized text-primary">
@@ -340,119 +340,126 @@ const EventCreateTemplate = () => {
             </div>
           </div>
 
-          {/* Form */}
-          <div className="w-full flex-4 bg-neutral-white px-4 py-8 rounded-4xl">
-            {step === 1 && (
-              <CreateEventStep1
-                eventForm={eventForm}
-                setEventForm={setEventForm}
-              />
-            )}
-            {step === 2 && (
-              <CreateEventStep2
-                eventForm={eventForm}
-                setEventForm={setEventForm}
-              />
-            )}
-            {step === 3 && (
-              <CreateEventStep3
-                eventForm={eventForm}
-                setEventForm={setEventForm}
-              />
-            )}
-          </div>
-        </div>
-      </main>
+          {/* Content */}
+          <div className="flex flex-col flex-4">
+            {/* Form */}
+            <div className="w-full flex-4 min-h-fit bg-neutral-white px-4 py-8 sm:rounded-4xl">
+              {step === 1 && (
+                <CreateEventStep1
+                  eventForm={eventForm}
+                  setEventForm={setEventForm}
+                />
+              )}
+              {step === 2 && (
+                <CreateEventStep2
+                  eventForm={eventForm}
+                  setEventForm={setEventForm}
+                />
+              )}
+              {step === 3 && (
+                <CreateEventStep3
+                  eventForm={eventForm}
+                  setEventForm={setEventForm}
+                />
+              )}
+            </div>
 
-      <footer className="w-full flex px-4 py-8 justify-between gap-4 flex-wrap items-center">
-        <Button
-          mode="outline"
-          bordered="square"
-          expanded
-          className={`${
-            step != 1
-              ? "cursor-pointer border-primary text-neutral-black"
-              : "cursor-default border-neutral-400 text-neutral-400"
-          } max-w-40 h-9`}
-          onClick={() => {
-            if (step != 1) {
-              setStep((prev) => prev - 1);
-              scrollToTop();
-              return;
-            }
-          }}
-        >
-          {tCreateEvent("back")}
-        </Button>
-        {step != 3 && (
-          <Button
-            mode="outline"
-            bordered="square"
-            expanded
-            className={`${
-              (step == 1 && validStep1) || (step == 2 && validStep2)
-                ? "cursor-pointer border-primary text-neutral-black"
-                : "cursor-default border-neutral-400 text-neutral-400"
-            } max-w-40 h-9`}
-            onClick={() => {
-              if (step != 3) {
-                if ((step == 1 && validStep1) || (step == 2 && validStep2)) {
-                  setStep((prev) => prev + 1);
-                  scrollToTop();
-                  return;
-                }
-              }
-            }}
-          >
-            {tCreateEvent("next")}
-          </Button>
-        )}
-        {step == 3 && (
-          <Button
-            mode="filled"
-            bordered="square"
-            expanded
-            className={`cursor-pointer max-w-40 h-9 ${
-              validStep3
-                ? "cursor-pointer border-primary"
-                : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
-            }`}
-            onClick={() => {
-              if (step == 3 && validStep3) {
-                const agendaText = eventForm.agenda
-                  .map((item, index) => {
-                    return `${index + 1}. ${item.activity_name} 
+            {/* Buttons */}
+            <div className="w-full flex px-4 py-8 justify-between gap-4 flex-wrap items-center">
+              <Button
+                mode="outline"
+                bordered="square"
+                expanded
+                className={`${
+                  step != 1
+                    ? "cursor-pointer border-primary text-neutral-black"
+                    : "cursor-default border-neutral-400 text-neutral-400"
+                } max-w-40 h-9`}
+                onClick={() => {
+                  if (step != 1) {
+                    setStep((prev) => prev - 1);
+                    scrollToTop();
+                    return;
+                  }
+                }}
+              >
+                {tCreateEvent("back")}
+              </Button>
+              {step != 3 && (
+                <Button
+                  mode="outline"
+                  bordered="square"
+                  expanded
+                  className={`${
+                    (step == 1 && validStep1) || (step == 2 && validStep2)
+                      ? "cursor-pointer border-primary text-neutral-black"
+                      : "cursor-default border-neutral-400 text-neutral-400"
+                  } max-w-40 h-9`}
+                  onClick={() => {
+                    if (step != 3) {
+                      if (
+                        (step == 1 && validStep1) ||
+                        (step == 2 && validStep2)
+                      ) {
+                        setStep((prev) => prev + 1);
+                        scrollToTop();
+                        return;
+                      }
+                    }
+                  }}
+                >
+                  {tCreateEvent("next")}
+                </Button>
+              )}
+              {step == 3 && (
+                <Button
+                  mode="filled"
+                  bordered="square"
+                  expanded
+                  className={`cursor-pointer max-w-40 h-9 ${
+                    validStep3
+                      ? "cursor-pointer border-primary"
+                      : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
+                  }`}
+                  onClick={() => {
+                    if (step == 3 && validStep3) {
+                      const agendaText = eventForm.agenda
+                        .map((item, index) => {
+                          return `${index + 1}. ${item.activity_name} 
                     - Start: ${item.startTime}
                     - End: ${item.endTime}`;
-                  })
-                  .join("\n");
+                        })
+                        .join("\n");
 
-                let attendeeText = "-";
-                if (eventForm.attendance_type == AttendanceType.FACULTIES) {
-                  attendeeText = eventForm.selectedFaculties
-                    .map((item, index) => {
-                      return `${index + 1} ${item}`;
-                    })
-                    .join("\n");
-                } else if (
-                  eventForm.attendance_type == AttendanceType.WHITELIST
-                ) {
-                  attendeeText = eventForm.selectedStudents
-                    .map((item, index) => {
-                      return `${index + 1} ${item.id} ${item.name}`;
-                    })
-                    .join("\n");
-                }
+                      let attendeeText = "-";
+                      if (
+                        eventForm.attendance_type == AttendanceType.FACULTIES
+                      ) {
+                        attendeeText = eventForm.selectedFaculties
+                          .map((item, index) => {
+                            return `${index + 1} ${item}`;
+                          })
+                          .join("\n");
+                      } else if (
+                        eventForm.attendance_type == AttendanceType.WHITELIST
+                      ) {
+                        attendeeText = eventForm.selectedStudents
+                          .map((item, index) => {
+                            return `${index + 1} ${item.id} ${item.name}`;
+                          })
+                          .join("\n");
+                      }
 
-                const revealedFieldText = eventForm.revealed_fields.join(", ");
+                      const revealedFieldText =
+                        eventForm.revealed_fields.join(", ");
 
-                const managerAndStaffText = eventForm.managers_and_staff
-                  .map((item, index) => {
-                    return `${index + 1} ${item.id} ${item.name} ${item.role}`;
-                  })
-                  .join("\n");
+                      const managerAndStaffText = eventForm.managers_and_staff
+                        .map((item, index) => {
+                          return `${index + 1} ${item.id} ${item.name} ${item.role}`;
+                        })
+                        .join("\n");
 
-                alert(`Name: ${eventForm.name}
+                      alert(`Name: ${eventForm.name}
                 Description: ${eventForm.description}
                 Date: ${eventForm.date}
                 Start Time: ${eventForm.startTime}
@@ -466,13 +473,16 @@ const EventCreateTemplate = () => {
                 Manager and Staff: ${managerAndStaffText}
                 Allow All to Scan: ${eventForm.allow_all_to_scan}
                 Evaluation Form: ${eventForm.evaluation_form}`);
-              }
-            }}
-          >
-            {tCreateEvent("create")}
-          </Button>
-        )}
-      </footer>
+                    }
+                  }}
+                >
+                  {tCreateEvent("create")}
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </main>
 
       {width < 640 && (
         <Drawer open={showExample} onOpenChange={setShowExample}>
@@ -503,7 +513,7 @@ const EventCreateTemplate = () => {
             </DrawerHeader>
 
             <div
-              className={`max-w-full h-fit max-h-[55vh] rounded-4xl px-4 mb-6 overflow-y-auto break-all`}
+              className={`max-w-full h-fit max-h-[60vh] ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100"} rounded-4xl p-4 mb-6 overflow-y-auto break-all`}
             >
               <CreateEventPreview eventForm={eventForm} cardMode={cardMode} />
             </div>

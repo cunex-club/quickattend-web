@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@assets/lib/utils";
 import Button from "@shared/Button";
 import EditableTime from "./editable-time";
+import { Textarea } from "@assets/components/ui/textarea";
 
 interface CreateEventStep1Props {
   eventForm: EventFormInterface;
@@ -222,7 +223,13 @@ const CreateEventStep1 = ({
       [field]: newDate,
     };
 
-    setEventForm({ ...eventForm, agenda: updated });
+    const sortedAgenda = updated.sort(
+      (a, b) =>
+        a.startTime.getTime() - b.startTime.getTime() ||
+        a.endTime.getTime() - b.endTime.getTime()
+    );
+
+    setEventForm({ ...eventForm, agenda: sortedAgenda });
   };
 
   const updateAgendaName = (index: number, name: string) => {
@@ -245,7 +252,7 @@ const CreateEventStep1 = ({
         <Input
           value={eventForm.name}
           placeholder={tCreateEvent("namePlaceholder")}
-          className="!body-large-primary focus:border-primary focus-visible:ring-0"
+          className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) => setEventForm({ ...eventForm, name: e.target.value })}
         />
       </div>
@@ -253,10 +260,10 @@ const CreateEventStep1 = ({
       {/* Description */}
       <div className="flex flex-col gap-2">
         <p className="title-medium-emphasized">{tCreateEvent("description")}</p>
-        <Input
+        <Textarea
           value={eventForm.description}
           placeholder={tCreateEvent("descriptionPlaceholder")}
-          className="!body-large-primary focus:border-primary focus-visible:ring-0"
+          className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
             setEventForm({ ...eventForm, description: e.target.value })
           }
@@ -273,7 +280,7 @@ const CreateEventStep1 = ({
 
           <Popover>
             <PopoverTrigger asChild>
-              <div className="w-full h-10 flex items-center justify-between border rounded-md cursor-pointer pl-3 !body-large-primary">
+              <div className="w-full h-10 flex items-center justify-between border rounded-md cursor-pointer pl-3 body-large-primary">
                 <span>
                   {!mounted
                     ? tCreateEvent("datePlaceholder")
@@ -323,7 +330,7 @@ const CreateEventStep1 = ({
 
                 <div
                   className={cn(
-                    "w-full h-10 flex items-center justify-between border rounded-md pl-3 !body-large-primary",
+                    "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
                     !isDateSelected && "opacity-50 pointer-events-none"
                   )}
                 >
@@ -335,7 +342,7 @@ const CreateEventStep1 = ({
                 </div>
               </label>
 
-              <p className="!body-small-primary text-neutral-500">
+              <p className="pl-3 body-small-primary text-neutral-500">
                 {tCreateEvent("startTime")}
               </p>
             </div>
@@ -354,7 +361,7 @@ const CreateEventStep1 = ({
 
                 <div
                   className={cn(
-                    "w-full h-10 flex items-center justify-between border rounded-md pl-3 !body-large-primary",
+                    "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
                     !isDateSelected && "opacity-50 pointer-events-none"
                   )}
                 >
@@ -366,7 +373,7 @@ const CreateEventStep1 = ({
                 </div>
               </label>
 
-              <p className="!body-small-primary text-neutral-500">
+              <p className="pl-3 body-small-primary text-neutral-500">
                 {tCreateEvent("endTime")}
               </p>
             </div>
@@ -382,7 +389,7 @@ const CreateEventStep1 = ({
         <Input
           value={eventForm.location}
           placeholder={tCreateEvent("locationPlaceholder")}
-          className="!body-large-primary focus:border-primary focus-visible:ring-0"
+          className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
             setEventForm({ ...eventForm, location: e.target.value })
           }
@@ -423,7 +430,7 @@ const CreateEventStep1 = ({
 
               <div
                 className={cn(
-                  "w-full h-10 flex items-center justify-between border rounded-md pl-3 !body-large-primary",
+                  "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
                   !isDateSelected && "opacity-50 pointer-events-none"
                 )}
               >
@@ -432,7 +439,7 @@ const CreateEventStep1 = ({
               </div>
             </label>
 
-            <p className="!body-small-primary text-neutral-500">
+            <p className="pl-3 body-small-primary text-neutral-500">
               {tCreateEvent("startTime")}
             </p>
           </div>
@@ -467,7 +474,7 @@ const CreateEventStep1 = ({
 
               <div
                 className={cn(
-                  "w-full h-10 flex items-center justify-between border rounded-md pl-3 !body-large-primary",
+                  "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
                   !isDateSelected && "opacity-50 pointer-events-none"
                 )}
               >
@@ -476,7 +483,7 @@ const CreateEventStep1 = ({
               </div>
             </label>
 
-            <p className="!body-small-primary text-neutral-500">
+            <p className="pl-3 body-small-primary text-neutral-500">
               {tCreateEvent("endTime")}
             </p>
           </div>
@@ -487,7 +494,7 @@ const CreateEventStep1 = ({
           value={agendaName}
           placeholder={tCreateEvent("descriptionPlaceholder")}
           onChange={(e) => setAgendaName(e.target.value)}
-          className="w-full sm:flex-1"
+          className="w-full sm:flex-1 body-large-primary"
         />
 
         {/* Button */}
@@ -546,7 +553,7 @@ const CreateEventStep1 = ({
             <Input
               value={item.activity_name}
               onChange={(e) => updateAgendaName(index, e.target.value)}
-              className="!body-medium-primary"
+              className="body-large-primary"
               placeholder={tCreateEvent("descriptionPlaceholder")}
             />
           </div>
@@ -561,7 +568,7 @@ const CreateEventStep1 = ({
         <Input
           value={eventForm.organizer}
           placeholder={tCreateEvent("organizerPlaceholder")}
-          className="!body-large-primary focus:border-primary focus-visible:ring-0"
+          className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
             setEventForm({ ...eventForm, organizer: e.target.value })
           }
