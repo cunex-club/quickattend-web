@@ -334,11 +334,7 @@ const EventCreateTemplate = () => {
 
             {/* Content */}
             <div
-              className={`max-w-full ${
-                cardMode == CardPreviewType.CARD_PREVIEW
-                  ? "max-h-[36vh]"
-                  : "max-h-[55vh]"
-              } h-fit flex-1 bg-neutral-white rounded-4xl px-4 py-6 overflow-y-auto break-all`}
+              className={`max-w-full ${cardMode == CardPreviewType.CARD_PREVIEW ? "max-h-[55vh]" : "max-h-screen"} h-fit bg-neutral-white rounded-4xl px-4 py-6 overflow-y-auto break-all`}
             >
               <CreateEventPreview eventForm={eventForm} cardMode={cardMode} />
             </div>
@@ -506,7 +502,9 @@ const EventCreateTemplate = () => {
               </div>
             </DrawerHeader>
 
-            <div className="max-w-full h-fit max-h-[50vh] flex-1 rounded-4xl px-4 mb-6 overflow-y-auto break-all transition-all duration-300">
+            <div
+              className={`max-w-full h-fit max-h-[55vh] rounded-4xl px-4 mb-6 overflow-y-auto break-all`}
+            >
               <CreateEventPreview eventForm={eventForm} cardMode={cardMode} />
             </div>
           </DrawerContent>
