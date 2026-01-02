@@ -10,7 +10,9 @@ import {
   AttendanceType,
   EventFormInterface,
 } from "@modules/events/create/template";
-import { Input } from "@assets/components/ui/input";
+import EditEventSection1 from "../components/edit-event-section1";
+import EditEventSection2 from "../components/edit-event-section2";
+import EditEventSection3 from "../components/edit-event-section3";
 
 const EventEditTemplate = () => {
   const { id: eventId } = useParams();
@@ -24,22 +26,52 @@ const EventEditTemplate = () => {
 
   const [width, setWidth] = useState(0);
 
+  // NOTE: MOCK VERSION
   const [eventForm, setEventForm] = useState<EventFormInterface>({
     name: "Sample Event",
-    description: "Lorem Ipsum",
-    date: undefined,
-    startTime: undefined,
-    endTime: undefined,
-    location: "",
-    agenda: [],
-    organizer: "",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    date: new Date("2026-02-10"),
+    startTime: new Date("2026-02-10T09:00:00"),
+    endTime: new Date("2026-02-10T16:00:00"),
+    location: "Main Auditorium, Building A",
+    agenda: [
+      {
+        id: "1",
+        activity_name: "Opening Ceremony",
+        startTime: new Date("2026-02-10T09:00:00"),
+        endTime: new Date("2026-02-10T09:30:00"),
+      },
+      {
+        id: "2",
+        activity_name: "Keynote Speech",
+        startTime: new Date("2026-02-10T09:30:00"),
+        endTime: new Date("2026-02-10T10:30:00"),
+      },
+    ],
+    organizer: "Student Affairs Office",
     attendance_type: "all",
-    selectedFaculties: [],
-    selectedStudents: [],
-    revealed_fields: [],
-    managers_and_staff: [],
+    selectedFaculties: ["Engineering", "Science"],
+    selectedStudents: [
+      {
+        id: "6631333321",
+        name: "บลา บาล",
+      },
+    ],
+    revealed_fields: ["name"],
+    managers_and_staff: [
+      {
+        id: "6631333321",
+        name: "บลา บาล",
+        role: "manager",
+      },
+      {
+        id: "6631333121",
+        name: "บาล บลา",
+        role: "owner",
+      },
+    ],
     allow_all_to_scan: true,
-    evaluation_form: "",
+    evaluation_form: "https://forms.google.com/sample-evaluation-form",
   });
 
   useEffect(() => {
@@ -136,41 +168,19 @@ const EventEditTemplate = () => {
           </Button>
         </header>
 
-        <main className="min-h-screen px-4 py-8 w-full flex flex-col gap-4 bg-neutral-white">
-          {/* Menu */}
-          <h1 className="title-large-emphasized text-primary mb-4">
-            {tEditEvent("eventDetail")}
-          </h1>
-
-          {/* Name */}
-          <div className="flex flex-col gap-2">
-            <p className="title-medium-emphasized">
-              {tEditEvent("name")} <span className="text-primary">*</span>
-            </p>
-            <Input
-              value={eventForm.name}
-              placeholder={tEditEvent("namePlaceholder")}
-              className="!body-large-primary focus:border-primary focus-visible:ring-0"
-              onChange={(e) =>
-                setEventForm({ ...eventForm, name: e.target.value })
-              }
-            />
-          </div>
-
-          {/* Description */}
-          <div className="flex flex-col gap-2">
-            <p className="title-medium-emphasized">
-              {tEditEvent("description")}
-            </p>
-            <Input
-              value={eventForm.description}
-              placeholder={tEditEvent("descriptionPlaceholder")}
-              className="!body-large-primary focus:border-primary focus-visible:ring-0"
-              onChange={(e) =>
-                setEventForm({ ...eventForm, description: e.target.value })
-              }
-            />
-          </div>
+        <main className="min-h-screen px-4 py-8 pb-20 w-full flex flex-col gap-8 bg-neutral-white">
+          <EditEventSection1
+            eventForm={eventForm}
+            setEventForm={setEventForm}
+          />
+          <EditEventSection2
+            eventForm={eventForm}
+            setEventForm={setEventForm}
+          />
+          <EditEventSection3
+            eventForm={eventForm}
+            setEventForm={setEventForm}
+          />
         </main>
 
         <footer className="fixed bottom-0 left-0 w-full h-16 px-4 bg-neutral-200 rounded-t-2xl z-50 grid grid-cols-4 gap-2 place-items-center">
