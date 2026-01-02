@@ -624,7 +624,7 @@ const CreateEventStep2 = ({
         </p>
 
         <div className="flex flex-col gap-2">
-          <p className="title-medium-primary">
+          <p className="title-medium-emphasized">
             {tCreateEvent("addEventManager")}
           </p>
 

@@ -239,7 +239,7 @@ const CreateEventStep1 = ({
 
       {/* Name */}
       <div className="flex flex-col gap-2">
-        <p className="title-medium-primary">
+        <p className="title-medium-emphasized">
           {tCreateEvent("name")} <span className="text-primary">*</span>
         </p>
         <Input
@@ -252,7 +252,7 @@ const CreateEventStep1 = ({
 
       {/* Description */}
       <div className="flex flex-col gap-2">
-        <p className="title-medium-primary">{tCreateEvent("description")}</p>
+        <p className="title-medium-emphasized">{tCreateEvent("description")}</p>
         <Input
           value={eventForm.description}
           placeholder={tCreateEvent("descriptionPlaceholder")}
@@ -267,7 +267,7 @@ const CreateEventStep1 = ({
       <div className="flex flex-col sm:flex-row gap-4">
         {/* Date */}
         <div className="flex flex-col gap-2 w-full">
-          <p className="title-medium-primary">
+          <p className="title-medium-emphasized">
             {tCreateEvent("date")} <span className="text-primary">*</span>
           </p>
 
@@ -304,7 +304,7 @@ const CreateEventStep1 = ({
 
         {/* Time */}
         <div className="flex flex-col gap-2 w-full">
-          <p className="title-medium-primary">
+          <p className="title-medium-emphasized">
             {tCreateEvent("time")} <span className="text-primary">*</span>
           </p>
 
@@ -376,7 +376,7 @@ const CreateEventStep1 = ({
 
       {/* Location */}
       <div className="flex flex-col gap-2">
-        <p className="title-medium-primary">
+        <p className="title-medium-emphasized">
           {tCreateEvent("location")} <span className="text-primary">*</span>
         </p>
         <Input
@@ -391,7 +391,7 @@ const CreateEventStep1 = ({
 
       {/* Agenda */}
       <div className="flex flex-col gap-4">
-        <p className="title-medium-primary">{tCreateEvent("agenda")}</p>
+        <p className="title-medium-emphasized">{tCreateEvent("agenda")}</p>
 
         {/* Time */}
         <div className="flex gap-4 w-full">
@@ -555,7 +555,7 @@ const CreateEventStep1 = ({
 
       {/* Organizer */}
       <div className="flex flex-col gap-2">
-        <p className="title-medium-primary">
+        <p className="title-medium-emphasized">
           {tCreateEvent("organizer")} <span className="text-primary">*</span>
         </p>
         <Input
