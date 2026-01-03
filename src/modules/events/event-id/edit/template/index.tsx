@@ -2,17 +2,33 @@
 
 import { useTranslations } from "next-intl";
 import { useSidebar } from "../../../../../context/SidebarContext";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import IonIcon from "@shared/IonIcon";
 import Button from "@shared/Button";
 import {
   AttendanceType,
+  CardPreviewType,
   EventFormInterface,
 } from "@modules/events/create/template";
 import EditEventSection1 from "../components/edit-event-section1";
 import EditEventSection2 from "../components/edit-event-section2";
 import EditEventSection3 from "../components/edit-event-section3";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@assets/components/ui/drawer";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@assets/components/ui/select";
+import EditEventPreview from "../components/edit-event-preview";
 
 const EventEditTemplate = () => {
   const { id: eventId } = useParams();
@@ -25,6 +41,10 @@ const EventEditTemplate = () => {
   const tEditEvent = useTranslations("EditEvent");
 
   const [width, setWidth] = useState(0);
+  const [showExample, setShowExample] = useState(false);
+  const [cardMode, setCardMode] = useState<CardPreviewType>(
+    CardPreviewType.CARD_PREVIEW
+  );
 
   // NOTE: MOCK VERSION
   const [eventForm, setEventForm] = useState<EventFormInterface>({
@@ -63,6 +83,10 @@ const EventEditTemplate = () => {
     allow_all_to_scan: true,
     evaluation_form: "https://forms.google.com/sample-evaluation-form",
   });
+
+  const section1Ref = useRef<HTMLDivElement>(null);
+  const section2Ref = useRef<HTMLDivElement>(null);
+  const section3Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // TODO: Fetch event information using eventID
@@ -158,19 +182,39 @@ const EventEditTemplate = () => {
           </Button>
         </header>
 
-        <main className="min-h-screen px-4 py-8 pb-24 w-full flex flex-col gap-8 bg-neutral-white">
-          <EditEventSection1
-            eventForm={eventForm}
-            setEventForm={setEventForm}
-          />
-          <EditEventSection2
-            eventForm={eventForm}
-            setEventForm={setEventForm}
-          />
-          <EditEventSection3
-            eventForm={eventForm}
-            setEventForm={setEventForm}
-          />
+        <main className="min-h-screen px-4 py-8 pb-24 w-full flex flex-col gap-8 bg-neutral-white sm:bg-transparent">
+          {/* Section 1 */}
+          <div
+            className="flex flex-col sm:px-4 sm:py-8 bg-neutral-white sm:rounded-2xl"
+            ref={section1Ref}
+          >
+            <EditEventSection1
+              eventForm={eventForm}
+              setEventForm={setEventForm}
+            />
+          </div>
+
+          {/* Section 2 */}
+          <div
+            className="flex flex-col sm:px-4 sm:py-8 bg-neutral-white sm:rounded-2xl"
+            ref={section2Ref}
+          >
+            <EditEventSection2
+              eventForm={eventForm}
+              setEventForm={setEventForm}
+            />
+          </div>
+
+          {/* Section 3 */}
+          <div
+            className="flex flex-col sm:px-4 sm:py-8 bg-neutral-white sm:rounded-2xl"
+            ref={section3Ref}
+          >
+            <EditEventSection3
+              eventForm={eventForm}
+              setEventForm={setEventForm}
+            />
+          </div>
         </main>
 
         <footer className="fixed bottom-0 left-0 w-full h-16 px-4 bg-neutral-200 rounded-t-2xl z-50 grid grid-cols-4 gap-2 place-items-center">
@@ -183,6 +227,9 @@ const EventEditTemplate = () => {
             name="EyeOutline"
             size="18px"
             className="text-primary cursor-pointer"
+            onClick={() => {
+              setShowExample(true);
+            }}
           />
           <IonIcon
             name="DuplicateOutline"
@@ -196,6 +243,44 @@ const EventEditTemplate = () => {
           />
         </footer>
       </div>
+
+      {/* Show Example */}
+      {width < 640 && (
+        <Drawer open={showExample} onOpenChange={setShowExample}>
+          <DrawerContent className="px-4 py-2 bg-neutral-white h-fit max-h-[80vh]">
+            <DrawerHeader>
+              <div className="flex justify-between gap-2 flex-wrap">
+                <DrawerTitle className="title-large-emphasized text-primary">
+                  {tEditEvent("eventPreview")}
+                </DrawerTitle>
+
+                <Select value={cardMode} onValueChange={setCardMode}>
+                  <SelectTrigger className="w-[150px]">
+                    <SelectValue placeholder={tEditEvent("eventPreview")} />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value={CardPreviewType.CARD_PREVIEW}>
+                        {tEditEvent(CardPreviewType.CARD_PREVIEW)}
+                      </SelectItem>
+                      <SelectItem value={CardPreviewType.DETAIL_PREVIEW}>
+                        {tEditEvent(CardPreviewType.DETAIL_PREVIEW)}
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </DrawerHeader>
+
+            <div
+              className={`max-w-full h-fit max-h-[60vh] ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100"} rounded-4xl p-4 mb-6 overflow-y-auto break-all`}
+            >
+              <EditEventPreview eventForm={eventForm} cardMode={cardMode} />
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
     </>
   );
 };

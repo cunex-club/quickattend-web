@@ -134,6 +134,10 @@
     "anyone": "ทุกคนที่มีลิงก์สำหรับสแกน",
     "evaluationForm": "แบบฟอร์มประเมินกิจกรรม",
     "evaluationFormLink": "ลิงก์แบบฟอร์มประเมินกิจกรรม",
-    "evaluationFormLinkPlaceholder": "ลิงก์แบบฟอร์มประเมินกิจกรรม"
+    "evaluationFormLinkPlaceholder": "ลิงก์แบบฟอร์มประเมินกิจกรรม",
+
+    "eventPreview": "ดูตัวอย่างกิจกรรม",
+    "cardPreview": "การ์ดกิจกรรม",
+    "detailPreview": "รายละเอียดกิจกรรม"
   }
 }
