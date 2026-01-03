@@ -1,3 +1,4 @@
+import { Input } from "@assets/components/ui/input";
 import { EventFormInterface } from "@modules/events/create/template";
 import { useTranslations } from "next-intl";
 
@@ -15,8 +16,24 @@ const EditEventSection3 = ({
   return (
     <div className="flex flex-col gap-4">
       <h1 className="title-large-emphasized text-primary mb-4">
-        This is Edit Event Section 3
+        {tEditEvent("evaluationForm")}
       </h1>
+
+      {/* Evaluation Form */}
+      <div className="flex flex-col gap-2">
+        <p className="title-medium-emphasized">
+          {tEditEvent("evaluationFormLink")}
+        </p>
+        <Input
+          type="url"
+          value={eventForm.evaluation_form}
+          placeholder={tEditEvent("evaluationFormLinkPlaceholder")}
+          className="body-large-primary focus:border-primary focus-visible:ring-0"
+          onChange={(e) => {
+            setEventForm({ ...eventForm, evaluation_form: e.target.value });
+          }}
+        />
+      </div>
     </div>
   );
 };

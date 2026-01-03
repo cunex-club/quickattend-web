@@ -49,25 +49,15 @@ const EventEditTemplate = () => {
       },
     ],
     organizer: "Student Affairs Office",
-    attendance_type: "all",
-    selectedFaculties: ["Engineering", "Science"],
-    selectedStudents: [
-      {
-        id: "6631333321",
-        name: "บลา บาล",
-      },
-    ],
+    attendance_type: "faculties",
+    selectedFaculties: ["คณะวิศวกรรมศาสตร์"],
+    selectedStudents: [],
     revealed_fields: ["name"],
     managers_and_staff: [
       {
         id: "6631333321",
         name: "บลา บาล",
         role: "manager",
-      },
-      {
-        id: "6631333121",
-        name: "บาล บลา",
-        role: "owner",
       },
     ],
     allow_all_to_scan: true,
@@ -168,7 +158,7 @@ const EventEditTemplate = () => {
           </Button>
         </header>
 
-        <main className="min-h-screen px-4 py-8 pb-20 w-full flex flex-col gap-8 bg-neutral-white">
+        <main className="min-h-screen px-4 py-8 pb-24 w-full flex flex-col gap-8 bg-neutral-white">
           <EditEventSection1
             eventForm={eventForm}
             setEventForm={setEventForm}
