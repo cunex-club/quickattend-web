@@ -137,6 +137,7 @@
 
     "eventPreview": "Preview",
     "cardPreview": "Event Card",
-    "detailPreview": "Event Detail"
+    "detailPreview": "Event Detail",
+    "category": "Category"
   }
 }

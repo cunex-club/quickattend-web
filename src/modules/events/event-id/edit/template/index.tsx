@@ -29,6 +29,11 @@ import {
   SelectValue,
 } from "@assets/components/ui/select";
 import EditEventPreview from "../components/edit-event-preview";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@assets/components/ui/dialog";
 
 export const EditPreviewType = {
   NAVIGATE: "navigate",
@@ -49,13 +54,10 @@ const EventEditTemplate = () => {
   const tEditEvent = useTranslations("EditEvent");
 
   const [width, setWidth] = useState(0);
-  const [showExample, setShowExample] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [showNavigation, setShowNavigation] = useState(false);
   const [cardMode, setCardMode] = useState<CardPreviewType>(
     CardPreviewType.CARD_PREVIEW
-  );
-
-  const [previewMode, setPreviewMode] = useState<EditPreviewType>(
-    EditPreviewType.NAVIGATE
   );
 
   // NOTE: MOCK VERSION
@@ -202,8 +204,8 @@ const EventEditTemplate = () => {
               size="18px"
               className="text-primary cursor-pointer"
               onClick={() => {
-                setShowExample(true);
-                setPreviewMode(EditPreviewType.NAVIGATE);
+                setShowNavigation(true);
+                setShowPreview(false);
               }}
             />
             <IonIcon
@@ -211,8 +213,8 @@ const EventEditTemplate = () => {
               size="18px"
               className="text-primary cursor-pointer"
               onClick={() => {
-                setShowExample(true);
-                setPreviewMode(EditPreviewType.PREVIEW);
+                setShowNavigation(false);
+                setShowPreview(true);
               }}
             />
             <hr className="border-neutral-300 border w-[60%]" />
@@ -228,43 +230,72 @@ const EventEditTemplate = () => {
             />
           </div>
 
-          {/* Preview and Navigation */}
-          <div className="flex-6 h-fit max-h-[80vh] hidden sm:block">
-            {previewMode == EditPreviewType.NAVIGATE && <div></div>}
-            {previewMode == EditPreviewType.PREVIEW && (
-              <div className="flex flex-col gap-4 h-fit max-h-[80vh]">
-                {/* Header */}
-                <div className="flex justify-between gap-2 flex-wrap">
-                  <h2 className="title-large-emphasized text-neutral-600">
-                    {tEditEvent("eventPreview")}
-                  </h2>
+          {/* Navigation */}
+          <div className="hidden sm:flex flex-6 flex-col gap-8 h-fit max-h-[80vh] bg-neutral-white rounded-4xl p-4 mb-6 overflow-y-auto break-all">
+            {/* Header */}
+            <h2 className="headline-medium-emphasized text-primary pl-2">
+              {tEditEvent("category")}
+            </h2>
 
-                  <Select value={cardMode} onValueChange={setCardMode}>
-                    <SelectTrigger className="w-[150px]">
-                      <SelectValue placeholder={tEditEvent("eventPreview")} />
-                    </SelectTrigger>
+            {/* Content */}
+            <div
+              className={`flex flex-col gap-6 max-w-full h-fit rounded-4xl mb-6`}
+            >
+              <p
+                className="flex gap-2 items-center cursor-pointer"
+                onClick={() => {
+                  section1Ref.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                }}
+              >
+                <IonIcon
+                  name="DocumentText"
+                  size="18px"
+                  className="text-primary"
+                />
+                <span className="translate-y-1">
+                  {tEditEvent("eventDetail")}
+                </span>
+              </p>
 
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value={CardPreviewType.CARD_PREVIEW}>
-                          {tEditEvent(CardPreviewType.CARD_PREVIEW)}
-                        </SelectItem>
-                        <SelectItem value={CardPreviewType.DETAIL_PREVIEW}>
-                          {tEditEvent(CardPreviewType.DETAIL_PREVIEW)}
-                        </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
+              <p
+                className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
+                onClick={() => {
+                  section2Ref.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                }}
+              >
+                <IonIcon
+                  name="DocumentText"
+                  size="18px"
+                  className="text-primary"
+                />
+                <span className="translate-y-1">{tEditEvent("setting")}</span>
+              </p>
 
-                {/* Content */}
-                <div
-                  className={`max-w-full h-fit max-h-[60vh] bg-neutral-white rounded-4xl ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100"} rounded-4xl p-4 mb-6 overflow-y-auto break-all`}
-                >
-                  <EditEventPreview eventForm={eventForm} cardMode={cardMode} />
-                </div>
-              </div>
-            )}
+              <p
+                className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
+                onClick={() => {
+                  section3Ref.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                }}
+              >
+                <IonIcon
+                  name="DocumentText"
+                  size="18px"
+                  className="text-primary"
+                />
+                <span className="translate-y-1">
+                  {tEditEvent("evaluationForm")}
+                </span>
+              </p>
+            </div>
           </div>
 
           {/* Form */}
@@ -309,14 +340,18 @@ const EventEditTemplate = () => {
             name="List"
             size="18px"
             className="text-primary cursor-pointer"
+            onClick={() => {
+              setShowNavigation(true);
+              setShowPreview(false);
+            }}
           />
           <IonIcon
             name="EyeOutline"
             size="18px"
             className="text-primary cursor-pointer"
             onClick={() => {
-              setShowExample(true);
-              setPreviewMode(EditPreviewType.PREVIEW);
+              setShowNavigation(false);
+              setShowPreview(true);
             }}
           />
           <IonIcon
@@ -332,15 +367,131 @@ const EventEditTemplate = () => {
         </footer>
       </div>
 
-      {/* Show Example */}
+      {/* For Mobile */}
       {width < 640 && (
-        <Drawer open={showExample} onOpenChange={setShowExample}>
-          <DrawerContent className="px-4 py-2 bg-neutral-white h-fit max-h-[80vh]">
-            <DrawerHeader>
-              <div className="flex justify-between gap-2 flex-wrap">
+        <>
+          {/* Navigation */}
+          <Drawer open={showNavigation} onOpenChange={setShowNavigation}>
+            <DrawerContent className="px-4 py-2 bg-neutral-white h-fit min-h-[50vh] max-h-[80vh]">
+              <DrawerHeader>
                 <DrawerTitle className="title-large-emphasized text-primary">
-                  {tEditEvent("eventPreview")}
+                  {tEditEvent("category")}
                 </DrawerTitle>
+              </DrawerHeader>
+
+              <div
+                className={`flex flex-col gap-8 max-w-full h-fit rounded-4xl p-4 mb-6`}
+              >
+                <p
+                  className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
+                  onClick={() => {
+                    setShowNavigation(false);
+                    section1Ref.current?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                >
+                  <IonIcon
+                    name="DocumentText"
+                    size="18px"
+                    className="text-primary"
+                  />
+                  <span className="translate-y-1">
+                    {tEditEvent("eventDetail")}
+                  </span>
+                </p>
+
+                <p
+                  className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
+                  onClick={() => {
+                    setShowNavigation(false);
+                    section2Ref.current?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                >
+                  <IonIcon
+                    name="DocumentText"
+                    size="18px"
+                    className="text-primary"
+                  />
+                  <span className="translate-y-1">{tEditEvent("setting")}</span>
+                </p>
+
+                <p
+                  className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
+                  onClick={() => {
+                    setShowNavigation(false);
+                    section3Ref.current?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                >
+                  <IonIcon
+                    name="DocumentText"
+                    size="18px"
+                    className="text-primary"
+                  />
+                  <span className="translate-y-1">
+                    {tEditEvent("evaluationForm")}
+                  </span>
+                </p>
+              </div>
+            </DrawerContent>
+          </Drawer>
+
+          {/* Preview */}
+          <Drawer open={showPreview} onOpenChange={setShowPreview}>
+            <DrawerContent className="px-4 py-2 bg-neutral-white h-fit max-h-[80vh]">
+              <DrawerHeader>
+                <div className="flex justify-between gap-2 flex-wrap">
+                  <DrawerTitle className="title-large-emphasized text-primary">
+                    {tEditEvent("eventPreview")}
+                  </DrawerTitle>
+
+                  <Select value={cardMode} onValueChange={setCardMode}>
+                    <SelectTrigger className="w-[150px]">
+                      <SelectValue placeholder={tEditEvent("eventPreview")} />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value={CardPreviewType.CARD_PREVIEW}>
+                          {tEditEvent(CardPreviewType.CARD_PREVIEW)}
+                        </SelectItem>
+                        <SelectItem value={CardPreviewType.DETAIL_PREVIEW}>
+                          {tEditEvent(CardPreviewType.DETAIL_PREVIEW)}
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </DrawerHeader>
+
+              <div
+                className={`max-w-full h-fit max-h-[60vh] ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100"} rounded-4xl p-4 mb-6 overflow-y-auto break-all`}
+              >
+                <EditEventPreview eventForm={eventForm} cardMode={cardMode} />
+              </div>
+            </DrawerContent>
+          </Drawer>
+        </>
+      )}
+
+      {/* For Tablet and PC */}
+      {width >= 640 && (
+        <>
+          {/* Preview */}
+          <Dialog open={showPreview} onOpenChange={setShowPreview}>
+            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] min-h-[60vh]">
+              {/* Header */}
+              <div className="flex justify-between gap-2 px-6 py-4 bg-neutral-white rounded-2xl h-fit">
+                <DialogTitle className="headline-small-emphasized text-primary">
+                  {tEditEvent("eventPreview")}
+                </DialogTitle>
 
                 <Select value={cardMode} onValueChange={setCardMode}>
                   <SelectTrigger className="w-[150px]">
@@ -359,15 +510,18 @@ const EventEditTemplate = () => {
                   </SelectContent>
                 </Select>
               </div>
-            </DrawerHeader>
 
-            <div
-              className={`max-w-full h-fit max-h-[60vh] ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100"} rounded-4xl p-4 mb-6 overflow-y-auto break-all`}
-            >
-              <EditEventPreview eventForm={eventForm} cardMode={cardMode} />
-            </div>
-          </DrawerContent>
-        </Drawer>
+              {/* Content */}
+              <div className="flex items-center justify-center bg-neutral-white px-6 py-4 rounded-2xl min-h-[50vh]">
+                <div
+                  className={`max-w-[60%] h-fit max-h-full ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100"} rounded-4xl p-4 overflow-y-auto break-all`}
+                >
+                  <EditEventPreview eventForm={eventForm} cardMode={cardMode} />
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </>
       )}
     </>
   );

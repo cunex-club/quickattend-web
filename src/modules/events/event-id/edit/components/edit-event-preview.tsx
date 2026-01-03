@@ -28,7 +28,7 @@ const EditEventPreview = ({ eventForm, cardMode }: EditEventPreviewProps) => {
   return (
     <div className="w-full h-fit flex flex-col">
       {/* Header */}
-      <h1 className="headline-small-emphasized mb-2 ml-2">
+      <h1 className="headline-small-emphasized mb-2 ml-2 line-clamp-2">
         {eventForm.name || tEditEvent("namePlaceholder")}
       </h1>
 
@@ -61,7 +61,7 @@ const EditEventPreview = ({ eventForm, cardMode }: EditEventPreviewProps) => {
         {/* Location */}
         <div className="flex gap-2">
           <IonIcon name="Location" size="16px" className="text-primary" />
-          <p className="body-medium-primary text-neutral-600 translate-y-1">
+          <p className="body-medium-primary text-neutral-600 translate-y-1 line-clamp-2">
             {eventForm.location || tEditEvent("locationPlaceholder")}
           </p>
         </div>
@@ -72,7 +72,7 @@ const EditEventPreview = ({ eventForm, cardMode }: EditEventPreviewProps) => {
         <h2 className="title-medium-emphasized text-neutral-600">
           {tEditEvent("description")}
         </h2>
-        <p className="body-small-primary text-neutral-600">
+        <p className="body-small-primary text-neutral-600 line-clamp-5 whitespace-pre-wrap">
           {eventForm.description || tEditEvent("descriptionPlaceholder")}
         </p>
       </div>
@@ -93,10 +93,10 @@ const EditEventPreview = ({ eventForm, cardMode }: EditEventPreviewProps) => {
                     className="flex flex-col gap-2"
                   >
                     <div className="flex justify-between gap-2 body-small-primary">
-                      <p className="max-w-[80%] break-all">
+                      <p className="max-w-[60%] break-all line-clamp-2">
                         {item.activity_name}
                       </p>
-                      <p>
+                      <p className="line-clamp-2 text-end">
                         {formatTime(item.startTime)}-{formatTime(item.endTime)}
                       </p>
                     </div>
@@ -113,7 +113,7 @@ const EditEventPreview = ({ eventForm, cardMode }: EditEventPreviewProps) => {
             <h2 className="title-medium-emphasized text-neutral-600">
               {tEditEvent("organizer")}
             </h2>
-            <p className="body-small-primary text-neutral-600">
+            <p className="body-small-primary text-neutral-600 line-clamp-1">
               {eventForm.organizer || tEditEvent("organizer")}
             </p>
           </div>
