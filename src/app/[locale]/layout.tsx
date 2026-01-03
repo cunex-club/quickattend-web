@@ -2,21 +2,9 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import "@styles/globals.css";
-import localFont from "next/font/local";
 import { getMessages } from "next-intl/server";
 import { routing } from "@i18n/routing";
 import { AuthProvider } from "../../context/AuthContext";
-
-const chulaBoldFont = localFont({
-  src: "../../assets/font/CHULALONGKORNBold.otf",
-  variable: "--font-chula-bold",
-  weight: "700",
-});
-const chulaRegularFont = localFont({
-  src: "../../assets/font/CHULALONGKORNReg.otf",
-  variable: "--font-chula-regular",
-  weight: "400",
-});
 
 export const metadata: Metadata = {
   title: "Quick Project",
@@ -39,7 +27,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <body
-        className={`${chulaRegularFont.variable} ${chulaBoldFont.variable} antialiased`}
+        className="antialiased"
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <main className="w-full min-h-screen">

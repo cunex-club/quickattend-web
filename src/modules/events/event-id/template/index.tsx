@@ -1,8 +1,14 @@
+"use client";
+
+import { useState } from "react";
 import IonIcon from "@shared/IonIcon";
 import Icon from "@shared/Icon";
 import Button from "@shared/Button";
+import ShareModal from "../components/shareModal";
 
 const EventIdPageTemplate = () => {
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
   return (
     <div className="w-full flex flex-col justify-center items-center px-25 pt-35 gap-7.5">
       <div className="w-full flex flex-row gap-10">
@@ -128,7 +134,12 @@ const EventIdPageTemplate = () => {
               className="text-primary"
             />
           </Button>
-          <Button mode="outline" bordered="round" expanded={false}>
+          <Button 
+            mode="outline" 
+            bordered="round" 
+            expanded={false}
+            onClick={() => setIsShareModalOpen(true)}
+          >
             <IonIcon
               name="ArrowRedoOutline"
               size="36px"
@@ -137,6 +148,11 @@ const EventIdPageTemplate = () => {
           </Button>
         </div>
       </div>
+
+      <ShareModal 
+        open={isShareModalOpen} 
+        onOpenChange={setIsShareModalOpen} 
+      />
     </div>
   );
 };
