@@ -30,6 +30,14 @@ import {
 } from "@assets/components/ui/select";
 import EditEventPreview from "../components/edit-event-preview";
 
+export const EditPreviewType = {
+  NAVIGATE: "navigate",
+  PREVIEW: "preview",
+};
+
+export type EditPreviewType =
+  (typeof EditPreviewType)[keyof typeof EditPreviewType];
+
 const EventEditTemplate = () => {
   const { id: eventId } = useParams();
   console.log("Event ID: ", eventId);
@@ -44,6 +52,10 @@ const EventEditTemplate = () => {
   const [showExample, setShowExample] = useState(false);
   const [cardMode, setCardMode] = useState<CardPreviewType>(
     CardPreviewType.CARD_PREVIEW
+  );
+
+  const [previewMode, setPreviewMode] = useState<EditPreviewType>(
+    EditPreviewType.NAVIGATE
   );
 
   // NOTE: MOCK VERSION
@@ -182,42 +194,117 @@ const EventEditTemplate = () => {
           </Button>
         </header>
 
-        <main className="min-h-screen px-4 py-8 pb-24 w-full flex flex-col gap-8 bg-neutral-white sm:bg-transparent">
-          {/* Section 1 */}
-          <div
-            className="flex flex-col sm:px-4 sm:py-8 bg-neutral-white sm:rounded-2xl"
-            ref={section1Ref}
-          >
-            <EditEventSection1
-              eventForm={eventForm}
-              setEventForm={setEventForm}
+        <main className="w-full flex gap-4 px-4 py-8">
+          {/* Buttons */}
+          <div className="h-fit py-4 bg-neutral-white rounded-4xl grid-cols-1 gap-8 place-items-center flex-1 hidden sm:grid">
+            <IonIcon
+              name="List"
+              size="18px"
+              className="text-primary cursor-pointer"
+              onClick={() => {
+                setShowExample(true);
+                setPreviewMode(EditPreviewType.NAVIGATE);
+              }}
+            />
+            <IonIcon
+              name="EyeOutline"
+              size="18px"
+              className="text-primary cursor-pointer"
+              onClick={() => {
+                setShowExample(true);
+                setPreviewMode(EditPreviewType.PREVIEW);
+              }}
+            />
+            <hr className="border-neutral-300 border w-[60%]" />
+            <IonIcon
+              name="DuplicateOutline"
+              size="18px"
+              className="text-primary cursor-pointer"
+            />
+            <IonIcon
+              name="TrashOutline"
+              size="18px"
+              className="text-primary cursor-pointer"
             />
           </div>
 
-          {/* Section 2 */}
-          <div
-            className="flex flex-col sm:px-4 sm:py-8 bg-neutral-white sm:rounded-2xl"
-            ref={section2Ref}
-          >
-            <EditEventSection2
-              eventForm={eventForm}
-              setEventForm={setEventForm}
-            />
+          {/* Preview and Navigation */}
+          <div className="flex-6 h-fit max-h-[80vh] hidden sm:block">
+            {previewMode == EditPreviewType.NAVIGATE && <div></div>}
+            {previewMode == EditPreviewType.PREVIEW && (
+              <div className="flex flex-col gap-4 h-fit max-h-[80vh]">
+                {/* Header */}
+                <div className="flex justify-between gap-2 flex-wrap">
+                  <h2 className="title-large-emphasized text-neutral-600">
+                    {tEditEvent("eventPreview")}
+                  </h2>
+
+                  <Select value={cardMode} onValueChange={setCardMode}>
+                    <SelectTrigger className="w-[150px]">
+                      <SelectValue placeholder={tEditEvent("eventPreview")} />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value={CardPreviewType.CARD_PREVIEW}>
+                          {tEditEvent(CardPreviewType.CARD_PREVIEW)}
+                        </SelectItem>
+                        <SelectItem value={CardPreviewType.DETAIL_PREVIEW}>
+                          {tEditEvent(CardPreviewType.DETAIL_PREVIEW)}
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Content */}
+                <div
+                  className={`max-w-full h-fit max-h-[60vh] bg-neutral-white rounded-4xl ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100"} rounded-4xl p-4 mb-6 overflow-y-auto break-all`}
+                >
+                  <EditEventPreview eventForm={eventForm} cardMode={cardMode} />
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Section 3 */}
-          <div
-            className="flex flex-col sm:px-4 sm:py-8 bg-neutral-white sm:rounded-2xl"
-            ref={section3Ref}
-          >
-            <EditEventSection3
-              eventForm={eventForm}
-              setEventForm={setEventForm}
-            />
+          {/* Form */}
+          <div className="py-4 sm:py-0 pb-24 w-full flex flex-col gap-8 bg-neutral-white sm:bg-transparent flex-13">
+            {/* Section 1 */}
+            <div
+              className="flex flex-col px-4 sm:py-8 bg-neutral-white sm:rounded-4xl"
+              ref={section1Ref}
+            >
+              <EditEventSection1
+                eventForm={eventForm}
+                setEventForm={setEventForm}
+              />
+            </div>
+
+            {/* Section 2 */}
+            <div
+              className="flex flex-col px-4 sm:py-8 bg-neutral-white sm:rounded-2xl"
+              ref={section2Ref}
+            >
+              <EditEventSection2
+                eventForm={eventForm}
+                setEventForm={setEventForm}
+              />
+            </div>
+
+            {/* Section 3 */}
+            <div
+              className="flex flex-col px-4 sm:py-8 bg-neutral-white sm:rounded-2xl"
+              ref={section3Ref}
+            >
+              <EditEventSection3
+                eventForm={eventForm}
+                setEventForm={setEventForm}
+              />
+            </div>
           </div>
         </main>
 
-        <footer className="fixed bottom-0 left-0 w-full h-16 px-4 bg-neutral-200 rounded-t-2xl z-50 grid grid-cols-4 gap-2 place-items-center">
+        <footer className="sm:hidden fixed bottom-0 left-0 w-full h-16 px-4 bg-neutral-200 rounded-t-4xl z-50 grid grid-cols-4 gap-2 place-items-center">
           <IonIcon
             name="List"
             size="18px"
@@ -229,6 +316,7 @@ const EventEditTemplate = () => {
             className="text-primary cursor-pointer"
             onClick={() => {
               setShowExample(true);
+              setPreviewMode(EditPreviewType.PREVIEW);
             }}
           />
           <IonIcon
