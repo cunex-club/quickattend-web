@@ -233,7 +233,7 @@ const EventEditTemplate = () => {
               valid
                 ? "cursor-pointer border-primary"
                 : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
-            } w-fit h-9 px-1 pr-2 flex items-center cursor-pointer`}
+            } w-fit h-9 px-1 pr-2 flex items-center`}
           >
             <IonIcon
               name="Checkmark"

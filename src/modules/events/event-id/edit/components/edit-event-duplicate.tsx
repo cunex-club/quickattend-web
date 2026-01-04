@@ -6,7 +6,10 @@ import {
   PopoverTrigger,
 } from "@assets/components/ui/popover";
 import { cn } from "@assets/lib/utils";
-import { EventFormInterface } from "@modules/events/create/template";
+import {
+  AttendanceType,
+  EventFormInterface,
+} from "@modules/events/create/template";
 import IonIcon from "@shared/IonIcon";
 import { format, startOfDay } from "date-fns";
 import { useLocale, useTranslations } from "next-intl";
@@ -29,8 +32,44 @@ const EditEventDuplicate = ({
 
   const [mounted, setMounted] = useState(false);
   const [duplicatedEventForm, setDuplicatedEventForm] = useState(eventForm);
+  const [valid, setValid] = useState(false);
+
+  const isValidUrl = (value: string) => {
+    try {
+      new URL(value);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    if (
+      // Section 1
+      duplicatedEventForm.name &&
+      duplicatedEventForm.date &&
+      duplicatedEventForm.startTime &&
+      duplicatedEventForm.endTime &&
+      duplicatedEventForm.location &&
+      duplicatedEventForm.organizer &&
+      // Section 2
+      (duplicatedEventForm.attendance_type == AttendanceType.ALL ||
+        (duplicatedEventForm.attendance_type == AttendanceType.FACULTIES &&
+          duplicatedEventForm.selectedFaculties.length > 0) ||
+        (duplicatedEventForm.attendance_type == AttendanceType.WHITELIST &&
+          duplicatedEventForm.selectedStudents.length > 0)) &&
+      duplicatedEventForm.revealed_fields.length > 0 &&
+      // Section 3
+      (!duplicatedEventForm.evaluation_form ||
+        isValidUrl(duplicatedEventForm.evaluation_form))
+    ) {
+      setValid(true);
+    } else {
+      setValid(false);
+    }
+  }, [duplicatedEventForm]);
 
   const isDateSelected = !!duplicatedEventForm.date;
 
@@ -251,15 +290,22 @@ const EditEventDuplicate = ({
         bordered="round"
         expanded={false}
         onClick={() => {
-          // ===============
-          // TODO: create an event using API
-          // ===============
+          if (valid) {
+            // ===============
+            // TODO: create an event using API
+            // ===============
 
-          window.location.href = "/events";
-          setEditMode(null);
+            window.location.href = "/events";
+            setEditMode(null);
+          }
         }}
+        className={`${
+          valid
+            ? "cursor-pointer border-primary"
+            : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
+        } h-9 px-1 pr-2 flex items-center`}
       >
-        <span className="translate-y-0.5">{tEditEvent("duplicate")}</span>
+        <span className="translate-y-1">{tEditEvent("duplicate")}</span>
       </Button>
     </div>
   );
