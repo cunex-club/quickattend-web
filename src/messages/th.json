@@ -143,6 +143,10 @@
     "detailPreview": "รายละเอียดกิจกรรม",
     "category": "หมวดหมู่",
     "eventDuplicate": "ทำซ้ำกิจกรรม",
-    "duplicate": "ยืนยันการสร้างกิจกรรม"
+    "duplicate": "ยืนยันการสร้างกิจกรรม",
+    "eventDelete": "ยืนยันการลบกิจกรรม",
+    "eventDeleteDescription": "การลบกิจกรรมนี้จะเป็นการลบแบบถาวร และไม่สามารถกู้คืนข้อมูลได้",
+    "cancelDelete": "ยกเลิก",
+    "submitDelete": "ลบกิจกรรม"
   }
 }

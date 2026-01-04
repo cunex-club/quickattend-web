@@ -255,7 +255,7 @@ const EditEventDuplicate = ({
           // TODO: create an event using API
           // ===============
 
-          window.location.href = "/";
+          window.location.href = "/events";
           setEditMode(null);
         }}
       >

@@ -140,6 +140,10 @@
     "detailPreview": "Event Detail",
     "category": "Category",
     "eventDuplicate": "Duplicate this event",
-    "duplicate": "Submit an event"
+    "duplicate": "Submit an event",
+    "eventDelete": "Delete this event",
+    "eventDeleteDescription": "This action will permanently delete this event and cannot be undone.",
+    "cancelDelete": "Cancel",
+    "submitDelete": "Delete"
   }
 }

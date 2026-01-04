@@ -469,6 +469,8 @@ const EventCreateTemplate = () => {
                 Manager and Staff: ${managerAndStaffText}
                 Allow All to Scan: ${eventForm.allow_all_to_scan}
                 Evaluation Form: ${eventForm.evaluation_form}`);
+
+                window.location.href = "/events";
               }
             }}
           >

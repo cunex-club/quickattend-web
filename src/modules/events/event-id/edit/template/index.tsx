@@ -35,12 +35,13 @@ import {
   DialogTitle,
 } from "@assets/components/ui/dialog";
 import EditEventDuplicate from "../components/edit-event-duplicate";
+import EditEventDelete from "../components/edit-event-delete";
 
 export const EditModeType = {
   NAVIGATE: "navigate",
   PREVIEW: "preview",
   DUPLICATE: "duplicate",
-  REMOVE: "remove",
+  DELETE: "delete",
 };
 
 export type EditModeType = (typeof EditModeType)[keyof typeof EditModeType];
@@ -165,6 +166,8 @@ const EventEditTemplate = () => {
     Manager and Staff: ${managerAndStaffText}
     Allow All to Scan: ${eventForm.allow_all_to_scan}
     Evaluation Form: ${eventForm.evaluation_form}`);
+
+    window.location.href = "/events";
   };
 
   return (
@@ -230,7 +233,7 @@ const EventEditTemplate = () => {
               size="18px"
               className="text-primary cursor-pointer"
               onClick={() => {
-                setEditMode(EditModeType.REMOVE);
+                setEditMode(EditModeType.DELETE);
               }}
             />
           </div>
@@ -366,7 +369,7 @@ const EventEditTemplate = () => {
             size="18px"
             className="text-primary cursor-pointer"
             onClick={() => {
-              setEditMode(EditModeType.REMOVE);
+              setEditMode(EditModeType.DELETE);
             }}
           />
         </footer>
@@ -528,6 +531,31 @@ const EventEditTemplate = () => {
               </div>
             </DrawerContent>
           </Drawer>
+
+          {/* Delete */}
+          <Dialog
+            open={editMode == EditModeType.DELETE}
+            onOpenChange={() => {
+              if (editMode == EditModeType.DELETE) {
+                setEditMode(null);
+              } else {
+                setEditMode(EditModeType.DELETE);
+              }
+            }}
+          >
+            <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
+              {/* Header */}
+              <DialogTitle className="flex flex-col items-center gap-4 headline-medium-emphasized text-primary">
+                <IonIcon name="Trash" size="48px" />
+                <p>{tEditEvent("eventDelete")}</p>
+              </DialogTitle>
+
+              {/* Content */}
+              <>
+                <EditEventDelete setEditMode={setEditMode} />
+              </>
+            </DialogContent>
+          </Dialog>
         </>
       )}
 
@@ -592,7 +620,7 @@ const EventEditTemplate = () => {
               }
             }}
           >
-            <DialogContent className="[&>button]:hidden min-w-[60vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
+            <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
               {/* Header */}
               <DialogTitle className="headline-small-emphasized text-primary">
                 {tEditEvent("eventDuplicate")}
@@ -604,6 +632,31 @@ const EventEditTemplate = () => {
                   eventForm={eventForm}
                   setEditMode={setEditMode}
                 />
+              </>
+            </DialogContent>
+          </Dialog>
+
+          {/* Delete */}
+          <Dialog
+            open={editMode == EditModeType.DELETE}
+            onOpenChange={() => {
+              if (editMode == EditModeType.DELETE) {
+                setEditMode(null);
+              } else {
+                setEditMode(EditModeType.DELETE);
+              }
+            }}
+          >
+            <DialogContent className="[&>button]:hidden min-w-[60vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
+              {/* Header */}
+              <DialogTitle className="flex flex-col items-center gap-4 headline-large-emphasized text-primary">
+                <IonIcon name="Trash" size="60px" />
+                <p>{tEditEvent("eventDelete")}</p>
+              </DialogTitle>
+
+              {/* Content */}
+              <>
+                <EditEventDelete setEditMode={setEditMode} />
               </>
             </DialogContent>
           </Dialog>
