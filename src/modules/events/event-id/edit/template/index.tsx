@@ -34,7 +34,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@assets/components/ui/dialog";
-import { el } from "date-fns/locale";
+import EditEventDuplicate from "../components/edit-event-duplicate";
 
 export const EditModeType = {
   NAVIGATE: "navigate",
@@ -246,7 +246,7 @@ const EventEditTemplate = () => {
             <div
               className={`flex flex-col gap-6 max-w-full h-fit rounded-4xl mb-6`}
             >
-              <p
+              <span
                 className="flex gap-2 items-center cursor-pointer"
                 onClick={() => {
                   section1Ref.current?.scrollIntoView({
@@ -260,12 +260,10 @@ const EventEditTemplate = () => {
                   size="18px"
                   className="text-primary"
                 />
-                <span className="translate-y-1">
-                  {tEditEvent("eventDetail")}
-                </span>
-              </p>
+                <p className="translate-y-1">{tEditEvent("eventDetail")}</p>
+              </span>
 
-              <p
+              <span
                 className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
                 onClick={() => {
                   section2Ref.current?.scrollIntoView({
@@ -279,10 +277,10 @@ const EventEditTemplate = () => {
                   size="18px"
                   className="text-primary"
                 />
-                <span className="translate-y-1">{tEditEvent("setting")}</span>
-              </p>
+                <p className="translate-y-1">{tEditEvent("setting")}</p>
+              </span>
 
-              <p
+              <span
                 className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
                 onClick={() => {
                   section3Ref.current?.scrollIntoView({
@@ -296,10 +294,8 @@ const EventEditTemplate = () => {
                   size="18px"
                   className="text-primary"
                 />
-                <span className="translate-y-1">
-                  {tEditEvent("evaluationForm")}
-                </span>
-              </p>
+                <p className="translate-y-1">{tEditEvent("evaluationForm")}</p>
+              </span>
             </div>
           </div>
 
@@ -400,7 +396,7 @@ const EventEditTemplate = () => {
               <div
                 className={`flex flex-col gap-8 max-w-full h-fit rounded-4xl p-4 mb-6`}
               >
-                <p
+                <span
                   className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
                   onClick={() => {
                     setEditMode(null);
@@ -415,12 +411,10 @@ const EventEditTemplate = () => {
                     size="18px"
                     className="text-primary"
                   />
-                  <span className="translate-y-1">
-                    {tEditEvent("eventDetail")}
-                  </span>
-                </p>
+                  <p className="translate-y-1">{tEditEvent("eventDetail")}</p>
+                </span>
 
-                <p
+                <span
                   className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
                   onClick={() => {
                     setEditMode(null);
@@ -435,10 +429,10 @@ const EventEditTemplate = () => {
                     size="18px"
                     className="text-primary"
                   />
-                  <span className="translate-y-1">{tEditEvent("setting")}</span>
-                </p>
+                  <p className="translate-y-1">{tEditEvent("setting")}</p>
+                </span>
 
-                <p
+                <span
                   className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
                   onClick={() => {
                     setEditMode(null);
@@ -453,10 +447,10 @@ const EventEditTemplate = () => {
                     size="18px"
                     className="text-primary"
                   />
-                  <span className="translate-y-1">
+                  <p className="translate-y-1">
                     {tEditEvent("evaluationForm")}
-                  </span>
-                </p>
+                  </p>
+                </span>
               </div>
             </DrawerContent>
           </Drawer>
@@ -505,6 +499,35 @@ const EventEditTemplate = () => {
               </div>
             </DrawerContent>
           </Drawer>
+
+          {/* Duplicate */}
+          <Drawer
+            open={editMode == EditModeType.DUPLICATE}
+            onOpenChange={() => {
+              if (editMode == EditModeType.DUPLICATE) {
+                setEditMode(null);
+              } else {
+                setEditMode(EditModeType.DUPLICATE);
+              }
+            }}
+          >
+            <DrawerContent className="px-4 py-2 bg-neutral-white h-fit max-h-[80vh]">
+              <DrawerHeader>
+                <DrawerTitle className="title-large-emphasized text-primary">
+                  {tEditEvent("eventDuplicate")}
+                </DrawerTitle>
+              </DrawerHeader>
+
+              <div
+                className={`max-w-full h-fit max-h-[60vh] rounded-4xl p-4 mb-6 overflow-y-auto break-all`}
+              >
+                <EditEventDuplicate
+                  eventForm={eventForm}
+                  setEditMode={setEditMode}
+                />
+              </div>
+            </DrawerContent>
+          </Drawer>
         </>
       )}
 
@@ -522,7 +545,7 @@ const EventEditTemplate = () => {
               }
             }}
           >
-            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] min-h-[60vh]">
+            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] h-fit max-h-[80vh]">
               {/* Header */}
               <div className="flex justify-between gap-2 px-6 py-4 bg-neutral-white rounded-2xl h-fit">
                 <DialogTitle className="headline-small-emphasized text-primary">
@@ -548,13 +571,40 @@ const EventEditTemplate = () => {
               </div>
 
               {/* Content */}
-              <div className="flex items-center justify-center bg-neutral-white px-6 py-4 rounded-2xl min-h-[50vh]">
+              <div className="flex items-center justify-center bg-neutral-white px-6 py-4 rounded-2xl h-fit max-h-full">
                 <div
                   className={`max-w-[60%] h-fit max-h-full ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100"} rounded-4xl p-4 overflow-y-auto break-all`}
                 >
                   <EditEventPreview eventForm={eventForm} cardMode={cardMode} />
                 </div>
               </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Duplicate */}
+          <Dialog
+            open={editMode == EditModeType.DUPLICATE}
+            onOpenChange={() => {
+              if (editMode == EditModeType.DUPLICATE) {
+                setEditMode(null);
+              } else {
+                setEditMode(EditModeType.DUPLICATE);
+              }
+            }}
+          >
+            <DialogContent className="[&>button]:hidden min-w-[60vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
+              {/* Header */}
+              <DialogTitle className="headline-small-emphasized text-primary">
+                {tEditEvent("eventDuplicate")}
+              </DialogTitle>
+
+              {/* Content */}
+              <>
+                <EditEventDuplicate
+                  eventForm={eventForm}
+                  setEditMode={setEditMode}
+                />
+              </>
             </DialogContent>
           </Dialog>
         </>

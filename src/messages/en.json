@@ -138,6 +138,8 @@
     "eventPreview": "Preview",
     "cardPreview": "Event Card",
     "detailPreview": "Event Detail",
-    "category": "Category"
+    "category": "Category",
+    "eventDuplicate": "Duplicate this event",
+    "duplicate": "Submit an event"
   }
 }

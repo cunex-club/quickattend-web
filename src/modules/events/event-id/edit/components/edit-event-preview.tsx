@@ -27,7 +27,7 @@ const EditEventPreview = ({ eventForm, cardMode }: EditEventPreviewProps) => {
 
   return (
     <div className="w-full h-fit flex flex-col">
-      {/* Header */}
+      {/* ์ Name */}
       <h1 className="headline-small-emphasized mb-2 ml-2 line-clamp-2">
         {eventForm.name || tEditEvent("namePlaceholder")}
       </h1>
@@ -70,7 +70,7 @@ const EditEventPreview = ({ eventForm, cardMode }: EditEventPreviewProps) => {
       {/* Description */}
       <div className="flex flex-col gap-2 mb-4 ml-2">
         <h2 className="title-medium-emphasized text-neutral-600">
-          {tEditEvent("description")}
+          {tEditEvent("descriptionPreview")}
         </h2>
         <p className="body-small-primary text-neutral-600 line-clamp-5 whitespace-pre-wrap">
           {eventForm.description || tEditEvent("descriptionPlaceholder")}

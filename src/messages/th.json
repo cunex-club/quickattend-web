@@ -39,7 +39,8 @@
     "name": "ชื่อกิจกรรม",
     "namePlaceholder": "ชื่อกิจกรรม",
     "description": "คำอธิบายกิจกรรม",
-    "descriptionPlaceholder": "รายละเอียดกิจกรรม",
+    "descriptionPreview": "รายละเอียดกิจกรรม",
+    "descriptionPlaceholder": "คำอธิบายกิจกรรม",
     "date": "วันที่",
     "datePlaceholder": "วัน / เดือน / ปี",
     "time": "เวลา",
@@ -94,7 +95,8 @@
     "name": "ชื่อกิจกรรม",
     "namePlaceholder": "ชื่อกิจกรรม",
     "description": "คำอธิบายกิจกรรม",
-    "descriptionPlaceholder": "รายละเอียดกิจกรรม",
+    "descriptionPreview": "รายละเอียดกิจกรรม",
+    "descriptionPlaceholder": "คำอธิบายกิจกรรม",
     "date": "วันที่",
     "datePlaceholder": "วัน / เดือน / ปี",
     "time": "เวลา",
@@ -139,6 +141,8 @@
     "eventPreview": "ดูตัวอย่างกิจกรรม",
     "cardPreview": "การ์ดกิจกรรม",
     "detailPreview": "รายละเอียดกิจกรรม",
-    "category": "หมวดหมู่"
+    "category": "หมวดหมู่",
+    "eventDuplicate": "ทำซ้ำกิจกรรม",
+    "duplicate": "ยืนยันการสร้างกิจกรรม"
   }
 }
