@@ -246,7 +246,7 @@ export function DeepInsightView() {
         <div className="w-full h-full overflow-auto">
           <BarChartHorizontal data={horizontalChartData} />
         </div>
-        <Link href="/dashboard-compare" target="_blank">
+        <Link href="/dashboard-compare">
           <Button mode="filled" bordered="square" expanded={false}>
             <p className="title-medium-emphasized">{t("compareButton")}</p>
           </Button>

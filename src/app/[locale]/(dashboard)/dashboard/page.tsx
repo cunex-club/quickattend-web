@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { OverviewView } from "@components/dashboard/templete/OverviewView";
 

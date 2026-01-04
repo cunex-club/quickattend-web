@@ -18,8 +18,6 @@ import {
 import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
 import { BarChartVerticalProps } from "@customTypes/chart";
 
-export const description = "A bar chart with a custom label";
-
 const chartConfig = {
   total: {
     label: "Total",
@@ -78,7 +76,7 @@ export function BarChartVertical({ data }: { data: BarChartVerticalProps[] }) {
               <ChartContainer
                 config={chartConfig}
                 style={{ maxHeight: `${BAR_SIZE}px` }}
-                className="w-full chart-hover-bar"
+                className="w-full chart-hover-bar "
               >
                 <BarChart
                   accessibilityLayer

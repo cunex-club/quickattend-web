@@ -109,7 +109,10 @@ export function BarChartVerticalStacked({
                       axisLine={false}
                       hide
                     />
-                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <ChartTooltip
+                      content={<ChartTooltipContent />}
+                      allowEscapeViewBox={{ x: true, y: true }}
+                    />
                     {/* left stacked */}
                     <Bar
                       dataKey="unregistered"

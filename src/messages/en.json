@@ -58,6 +58,7 @@
     "compare": {
       "title": "Compare Data",
       "faculty": "Faculty/Department",
+      "back": "Back",
       "timePeriod": "Time Period",
       "clearData": "Clear Data",
       "compareData": "Compare Data",

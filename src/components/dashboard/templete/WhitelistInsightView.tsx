@@ -282,7 +282,7 @@ export function WhitelistInsightView() {
         </div>
       </section>
 
-      <Link href="/dashboard-compare" target="_blank">
+      <Link href="/dashboard-compare">
         <Button mode="filled" bordered="square" expanded={false}>
           <p className="title-medium-emphasized">{t("compareButton")}</p>
         </Button>
