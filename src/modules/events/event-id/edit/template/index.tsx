@@ -34,14 +34,16 @@ import {
   DialogContent,
   DialogTitle,
 } from "@assets/components/ui/dialog";
+import { el } from "date-fns/locale";
 
-export const EditPreviewType = {
+export const EditModeType = {
   NAVIGATE: "navigate",
   PREVIEW: "preview",
+  DUPLICATE: "duplicate",
+  REMOVE: "remove",
 };
 
-export type EditPreviewType =
-  (typeof EditPreviewType)[keyof typeof EditPreviewType];
+export type EditModeType = (typeof EditModeType)[keyof typeof EditModeType];
 
 const EventEditTemplate = () => {
   const { id: eventId } = useParams();
@@ -54,8 +56,7 @@ const EventEditTemplate = () => {
   const tEditEvent = useTranslations("EditEvent");
 
   const [width, setWidth] = useState(0);
-  const [showPreview, setShowPreview] = useState(false);
-  const [showNavigation, setShowNavigation] = useState(false);
+  const [editMode, setEditMode] = useState<EditModeType | null>(null);
   const [cardMode, setCardMode] = useState<CardPreviewType>(
     CardPreviewType.CARD_PREVIEW
   );
@@ -204,8 +205,7 @@ const EventEditTemplate = () => {
               size="18px"
               className="text-primary cursor-pointer"
               onClick={() => {
-                setShowNavigation(true);
-                setShowPreview(false);
+                setEditMode(EditModeType.NAVIGATE);
               }}
             />
             <IonIcon
@@ -213,8 +213,7 @@ const EventEditTemplate = () => {
               size="18px"
               className="text-primary cursor-pointer"
               onClick={() => {
-                setShowNavigation(false);
-                setShowPreview(true);
+                setEditMode(EditModeType.PREVIEW);
               }}
             />
             <hr className="border-neutral-300 border w-[60%]" />
@@ -222,11 +221,17 @@ const EventEditTemplate = () => {
               name="DuplicateOutline"
               size="18px"
               className="text-primary cursor-pointer"
+              onClick={() => {
+                setEditMode(EditModeType.DUPLICATE);
+              }}
             />
             <IonIcon
               name="TrashOutline"
               size="18px"
               className="text-primary cursor-pointer"
+              onClick={() => {
+                setEditMode(EditModeType.REMOVE);
+              }}
             />
           </div>
 
@@ -341,8 +346,7 @@ const EventEditTemplate = () => {
             size="18px"
             className="text-primary cursor-pointer"
             onClick={() => {
-              setShowNavigation(true);
-              setShowPreview(false);
+              setEditMode(EditModeType.NAVIGATE);
             }}
           />
           <IonIcon
@@ -350,19 +354,24 @@ const EventEditTemplate = () => {
             size="18px"
             className="text-primary cursor-pointer"
             onClick={() => {
-              setShowNavigation(false);
-              setShowPreview(true);
+              setEditMode(EditModeType.PREVIEW);
             }}
           />
           <IonIcon
             name="DuplicateOutline"
             size="18px"
             className="text-primary cursor-pointer"
+            onClick={() => {
+              setEditMode(EditModeType.DUPLICATE);
+            }}
           />
           <IonIcon
             name="TrashOutline"
             size="18px"
             className="text-primary cursor-pointer"
+            onClick={() => {
+              setEditMode(EditModeType.REMOVE);
+            }}
           />
         </footer>
       </div>
@@ -371,7 +380,16 @@ const EventEditTemplate = () => {
       {width < 640 && (
         <>
           {/* Navigation */}
-          <Drawer open={showNavigation} onOpenChange={setShowNavigation}>
+          <Drawer
+            open={editMode == EditModeType.NAVIGATE}
+            onOpenChange={() => {
+              if (editMode == EditModeType.NAVIGATE) {
+                setEditMode(null);
+              } else {
+                setEditMode(EditModeType.NAVIGATE);
+              }
+            }}
+          >
             <DrawerContent className="px-4 py-2 bg-neutral-white h-fit min-h-[50vh] max-h-[80vh]">
               <DrawerHeader>
                 <DrawerTitle className="title-large-emphasized text-primary">
@@ -385,7 +403,7 @@ const EventEditTemplate = () => {
                 <p
                   className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
                   onClick={() => {
-                    setShowNavigation(false);
+                    setEditMode(null);
                     section1Ref.current?.scrollIntoView({
                       behavior: "smooth",
                       block: "start",
@@ -405,7 +423,7 @@ const EventEditTemplate = () => {
                 <p
                   className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
                   onClick={() => {
-                    setShowNavigation(false);
+                    setEditMode(null);
                     section2Ref.current?.scrollIntoView({
                       behavior: "smooth",
                       block: "start",
@@ -423,7 +441,7 @@ const EventEditTemplate = () => {
                 <p
                   className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
                   onClick={() => {
-                    setShowNavigation(false);
+                    setEditMode(null);
                     section3Ref.current?.scrollIntoView({
                       behavior: "smooth",
                       block: "start",
@@ -444,7 +462,16 @@ const EventEditTemplate = () => {
           </Drawer>
 
           {/* Preview */}
-          <Drawer open={showPreview} onOpenChange={setShowPreview}>
+          <Drawer
+            open={editMode == EditModeType.PREVIEW}
+            onOpenChange={() => {
+              if (editMode == EditModeType.PREVIEW) {
+                setEditMode(null);
+              } else {
+                setEditMode(EditModeType.PREVIEW);
+              }
+            }}
+          >
             <DrawerContent className="px-4 py-2 bg-neutral-white h-fit max-h-[80vh]">
               <DrawerHeader>
                 <div className="flex justify-between gap-2 flex-wrap">
@@ -485,7 +512,16 @@ const EventEditTemplate = () => {
       {width >= 640 && (
         <>
           {/* Preview */}
-          <Dialog open={showPreview} onOpenChange={setShowPreview}>
+          <Dialog
+            open={editMode == EditModeType.PREVIEW}
+            onOpenChange={() => {
+              if (editMode == EditModeType.PREVIEW) {
+                setEditMode(null);
+              } else {
+                setEditMode(EditModeType.PREVIEW);
+              }
+            }}
+          >
             <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] min-h-[60vh]">
               {/* Header */}
               <div className="flex justify-between gap-2 px-6 py-4 bg-neutral-white rounded-2xl h-fit">
