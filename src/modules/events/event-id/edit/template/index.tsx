@@ -62,6 +62,8 @@ const EventEditTemplate = () => {
     CardPreviewType.CARD_PREVIEW
   );
 
+  const [valid, setValid] = useState(false);
+
   // NOTE: MOCK VERSION
   const [eventForm, setEventForm] = useState<EventFormInterface>({
     name: "Sample Event",
@@ -107,6 +109,40 @@ const EventEditTemplate = () => {
   useEffect(() => {
     // TODO: Fetch event information using eventID
   }, []);
+
+  const isValidUrl = (value: string) => {
+    try {
+      new URL(value);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if (
+      // Section 1
+      eventForm.name &&
+      eventForm.date &&
+      eventForm.startTime &&
+      eventForm.endTime &&
+      eventForm.location &&
+      eventForm.organizer &&
+      // Section 2
+      (eventForm.attendance_type == AttendanceType.ALL ||
+        (eventForm.attendance_type == AttendanceType.FACULTIES &&
+          eventForm.selectedFaculties.length > 0) ||
+        (eventForm.attendance_type == AttendanceType.WHITELIST &&
+          eventForm.selectedStudents.length > 0)) &&
+      eventForm.revealed_fields.length > 0 &&
+      // Section 3
+      (!eventForm.evaluation_form || isValidUrl(eventForm.evaluation_form))
+    ) {
+      setValid(true);
+    } else {
+      setValid(false);
+    }
+  }, [eventForm]);
 
   useEffect(() => {
     const update = () => setWidth(window.innerWidth);
@@ -188,8 +224,16 @@ const EventEditTemplate = () => {
             mode="filled"
             bordered="square"
             expanded={false}
-            onClick={saveEvent}
-            className="w-fit h-9 px-1 pr-2 flex items-center cursor-pointer"
+            onClick={() => {
+              if (valid) {
+                saveEvent();
+              }
+            }}
+            className={`${
+              valid
+                ? "cursor-pointer border-primary"
+                : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
+            } w-fit h-9 px-1 pr-2 flex items-center cursor-pointer`}
           >
             <IonIcon
               name="Checkmark"
