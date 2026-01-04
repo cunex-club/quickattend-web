@@ -16,13 +16,9 @@ import {
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
 import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
+import { BarChartVerticalProps } from "@customTypes/chart";
 
 export const description = "A bar chart with a custom label";
-
-type BarChartVerticalProps = {
-  faculty: string;
-  total: number;
-};
 
 const chartConfig = {
   total: {
@@ -42,9 +38,9 @@ export function BarChartVertical({ data }: { data: BarChartVerticalProps[] }) {
   const BAR_CHART_RADIUS: [number, number, number, number] = [2, 2, 2, 2];
   const LABEL_OFFSET: number = 8;
   const LABEL_FONT_SIZE: number = 14;
-  
+
   const isMobile = useIsMobile();
-  const isTablet = useIsTablet(); 
+  const isTablet = useIsTablet();
   let BAR_SIZE: number = 28;
   if (isMobile) {
     BAR_SIZE = 16;
@@ -67,7 +63,10 @@ export function BarChartVertical({ data }: { data: BarChartVerticalProps[] }) {
       <CardContent className="mr-2 max-h-[470px] overflow-auto">
         <div className="chart-list-group flex flex-col space-y-4">
           {chartDataWithMeta.map((item, idx) => (
-            <div key={`faculty-chart-${idx}`} className="flex flex-col space-y-3 md:space-y-5 lg:space-y-4 chart-item">
+            <div
+              key={`faculty-chart-${idx}`}
+              className="flex flex-col space-y-3 md:space-y-5 lg:space-y-4 chart-item"
+            >
               <div className="flex items-center justify-between">
                 <p className="title-medium-primary md:title-large-primary">
                   {item.faculty}
@@ -95,7 +94,12 @@ export function BarChartVertical({ data }: { data: BarChartVerticalProps[] }) {
                     axisLine={false}
                     hide
                   />
-                  <XAxis dataKey="total" type="number" hide domain={[0, xDomainMax]} />
+                  <XAxis
+                    dataKey="total"
+                    type="number"
+                    hide
+                    domain={[0, xDomainMax]}
+                  />
                   <ChartTooltip
                     cursor={false}
                     content={<ChartTooltipContent indicator="line" />}

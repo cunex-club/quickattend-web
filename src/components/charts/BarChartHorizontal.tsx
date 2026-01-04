@@ -1,4 +1,3 @@
-"use client";
 import {
   Bar,
   BarChart,
@@ -15,19 +14,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
-
-export const description = "A bar chart with a label";
-
-type BarChartHorizontalProps = {
-  time: string;
-  total: number;
-};
+import { BarChartHorizontalProps } from "@customTypes/chart";
+import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
 
 const chartConfig = {
-  total: {
-    label: "total",
-    color: "var(--color-primary)",
-  },
   XAxis: {
     color: "var(--color-neutral-400)",
   },
@@ -36,6 +26,10 @@ const chartConfig = {
   },
   CartesianGrid: {
     color: "var(--color-neutral-300)",
+  },
+  total: {
+    label: "total",
+    color: "var(--color-primary)",
   },
 } satisfies ChartConfig;
 
@@ -48,9 +42,16 @@ export function BarChartHorizontal({
   const BAR_CATEGORY_GAP: number = 1;
   const LABEL_OFFSET: number = 12;
   const LABEL_FONT_SIZE: number = 12;
-  const MIN_BAR_WIDTH: number = 150;
 
-  const chartWidth = Math.max(1920, data.length * MIN_BAR_WIDTH);
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+
+  let chartWidth = data.length * 180;
+  if (isMobile) {
+    chartWidth = data.length * 100;
+  } else if (isTablet) {
+    chartWidth = data.length * 150;
+  }
 
   return (
     <Card className="p-0 border-none shadow-none">
@@ -58,8 +59,8 @@ export function BarChartHorizontal({
         <div className="w-full overflow-x-auto">
           <ChartContainer
             config={chartConfig}
-            className="max-h-[300px] lg:max-h-[400px] w-full pr-3 mb-4 chart-hover-bar"
-            style={{ width: `${chartWidth}px` }}
+            className="max-h-[280px] md:max-h-[350px] lg:max-h-[400px] w-full pr-3 mb-4 chart-hover-bar"
+            style={{ minWidth: `${chartWidth}px` }}
           >
             <BarChart
               accessibilityLayer

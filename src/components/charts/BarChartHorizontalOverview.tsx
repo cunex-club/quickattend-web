@@ -14,19 +14,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
-import type { BarChartHorizontalData } from "@customTypes/chart";
-
-export const description = "A bar chart";
-
-export type { BarChartHorizontalData };
-
-type ChartDataPoint = {
-  month: string;
-  desktop: number;
-};
-interface BarChartHorizontalOverviewProps {
-  data: ChartDataPoint[];
-}
+import { BarChartHorizontalOverviewProps } from "@customTypes/chart";
 
 const chartConfig = {
   XAxis: {
@@ -38,8 +26,8 @@ const chartConfig = {
   CartesianGrid: {
     color: "var(--color-neutral-200)",
   },
-  desktop: {
-    label: "Desktop",
+  total: {
+    label: "Total",
     color: "var(--color-primary)",
   },
 } satisfies ChartConfig;
@@ -47,27 +35,30 @@ const chartConfig = {
 export function BarChartHorizontalOverview({
   data,
 }: BarChartHorizontalOverviewProps) {
-  const chartData = data;
   const BAR_RADIUS: [number, number, number, number] = [8, 8, 0, 0];
   const BAR_CATEGORY_GAP: number = 1;
   const STROKE_DASH_ARRAY: string = "3 3";
   const LABEL_OFFSET: number = 12;
   const LABEL_FONT_SIZE: number = 12;
-  
+
   // Calculate dynamic height based on number of bars
-  const chartWidth = chartData.length * 90;
+  const chartWidth = data.length * 120;
+  const domainY = data.reduce((max, item) => Math.max(max, item.total), 0);
 
   return (
     <Card className="py-0 px-0 h-full relative border-none shadow-none">
       <CardContent className="px-0 py-0 h-full">
-        <div className="min-w-full h-full md:w-full" style={{ width: `${chartWidth}px` }}>
+        <div
+          className="min-w-full h-full md:w-full"
+          style={{ minWidth: `${chartWidth}px` }}
+        >
           <ChartContainer
             config={chartConfig}
             className="w-full h-full chart-hover-bar"
           >
             <BarChart
               accessibilityLayer
-              data={chartData}
+              data={data}
               barCategoryGap={BAR_CATEGORY_GAP}
             >
               <CartesianGrid
@@ -76,29 +67,31 @@ export function BarChartHorizontalOverview({
                 strokeDasharray={STROKE_DASH_ARRAY}
               />
               <XAxis
-                dataKey="month"
+                dataKey="time"
                 tickLine={false}
                 tickMargin={10}
                 axisLine={true}
-                tickFormatter={(value) => value.slice(0, 3)}
                 stroke={"var(--color-XAxis)"}
               />
               <YAxis
                 type="number"
-                dataKey="desktop"
+                dataKey="total"
                 tickLine={false}
                 tickMargin={10}
                 axisLine={true}
                 stroke={"var(--color-YAxis)"}
+                domain={[0, domainY * 1.35]}
+                tickCount={7}
+                tickFormatter={(value) => value.toFixed(0)}
               />
               <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
               <Bar
-                dataKey="desktop"
-                fill="var(--color-desktop)"
+                dataKey="total"
+                fill="var(--color-total)"
                 radius={BAR_RADIUS}
               >
                 <LabelList
-                  dataKey="desktop"
+                  dataKey="total"
                   position="top"
                   className="fill-neutral-black"
                   offset={LABEL_OFFSET}

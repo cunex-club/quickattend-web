@@ -28,7 +28,9 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <body className="antialiased">
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <main className="w-full min-h-screen">{children}</main>
+          <main className="w-full min-h-screen bg-neutral-white">
+            {children}
+          </main>
           <Toaster />
         </NextIntlClientProvider>
       </body>

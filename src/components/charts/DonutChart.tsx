@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@assets/lib/utils";
-import { Label, Pie, PieChart, Cell } from "recharts";
+import { Label, Pie, PieChart } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
 import {
@@ -9,13 +9,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
-
-export const description = "A donut chart with text";
-
-type DonutChartProps = {
-  category: string;
-  total: number;
-};
+import { DonutChartProps } from "@customTypes/chart";
+import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
 
 const chartConfig = {
   total: {
@@ -25,6 +20,9 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function DonutChart({ data }: { data: DonutChartProps[] }) {
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+
   const chartData = data.map((item, index) => ({
     ...item,
     fill: index === 0 ? "var(--color-primary)" : "var(--color-gray-300)",
@@ -36,6 +34,21 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
     return ((registered / total) * 100).toFixed(0);
   })();
 
+  // Responsive sizing based on breakpoints
+  let innerRadius = 110;
+  let outerRadius = 170;
+  let showLabels = true;
+
+  if (isMobile) {
+    innerRadius = 70;
+    outerRadius = 125;
+    showLabels = false;
+  } else if (isTablet) {
+    innerRadius = 100;
+    outerRadius = 180;
+    showLabels = false;
+  }
+
   interface LabelProps {
     cx?: number;
     cy?: number;
@@ -46,8 +59,7 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
     percent?: number;
   }
 
-
-  const customLabel = (() => { 
+  const customLabel = (() => {
     const LabelComponent = (props: LabelProps) => {
       const CUSTOM_DISTANCE = 1.6;
       const RADIAN = Math.PI / 180;
@@ -106,24 +118,18 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
               content={<ChartTooltipContent className="label-small-primary" />}
             />
 
-            {/* Mobile version - largest radius, no labels */}
             <Pie
-              className="md:hidden"
               data={chartData}
               dataKey="total"
               nameKey="category"
-              innerRadius={70}
-              outerRadius={125}
+              innerRadius={innerRadius}
+              outerRadius={outerRadius}
               strokeWidth={3}
               startAngle={90}
               endAngle={-270}
-              label={false}
+              labelLine={showLabels ? { strokeWidth: 2 } : false}
+              label={showLabels ? customLabel : false}
             >
-              {chartData.map((entry, index) => (
-                <Cell
-                  key={`cell-mobile-${index}`}
-                />
-              ))}
               <Label
                 content={({ viewBox }) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
@@ -133,94 +139,10 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
                         y={viewBox.cy}
                         textAnchor="middle"
                         dominantBaseline="middle"
-                        className="headline-large-emphasized"
-                      >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-primary"
-                        >
-                          {registeredPercent.toLocaleString()}%
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </Pie>
-
-            {/* Tablet version - medium radius, no labels */}
-            <Pie
-              className="hidden md:block lg:hidden"
-              data={chartData}
-              dataKey="total"
-              nameKey="category"
-              innerRadius={100}
-              outerRadius={180}
-              strokeWidth={3}
-              startAngle={90}
-              endAngle={-270}
-              label={false}
-            >
-              {chartData.map((entry, index) => (
-                <Cell
-                  key={`cell-tablet-${index}`}
-                />
-              ))}
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        className="headline-large-emphasized"
-                      >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-primary"
-                        >
-                          {registeredPercent.toLocaleString()}%
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </Pie>
-
-            {/* Desktop version - normal radius, with custom labels */}
-            <Pie
-              className="hidden lg:block"
-              data={chartData}
-              dataKey="total"
-              nameKey="category"
-              innerRadius={110}
-              outerRadius={170}
-              strokeWidth={3}
-              startAngle={90}
-              endAngle={-270}
-              labelLine={{ strokeWidth: 2 }}
-              label={customLabel}
-            >
-              {chartData.map((entry, index) => (
-                <Cell
-                  key={`cell-desktop-${index}`}
-                />
-              ))}
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        className="headline-large-emphasized -translate-y-2"
+                        className={cn(
+                          "headline-large-emphasized",
+                          showLabels && "-translate-y-2"
+                        )}
                       >
                         <tspan
                           x={viewBox.cx}

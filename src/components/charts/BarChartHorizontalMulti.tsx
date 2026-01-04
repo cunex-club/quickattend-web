@@ -12,24 +12,11 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent
+  ChartTooltipContent,
 } from "@assets/components/ui/chart";
+import { BarChartHorizontalMultiProps } from "@customTypes/chart";
 
 export const description = "A multiple bar chart";
-
-type TimeData = {
-  time: string;
-  total: number;
-};
-
-type FacultyData = {
-  faculty: string;
-  data: TimeData[];
-};
-
-interface BarChartHorizontalMultiProps {
-  data: FacultyData[];
-}
 
 const chartConfig = {
   XAxis: {
@@ -51,7 +38,9 @@ const CHART_COLORS = [
   "var(--color-chart-5)",
 ];
 
-export function BarChartHorizontalMulti({ data }: BarChartHorizontalMultiProps) {
+export function BarChartHorizontalMulti({
+  data,
+}: BarChartHorizontalMultiProps) {
   const BAR_SPACING = 0;
   const BAR_RADIUS = 2;
   const LABEL_OFFSET: number = 8;
@@ -63,9 +52,9 @@ export function BarChartHorizontalMulti({ data }: BarChartHorizontalMultiProps) 
   // To: [{time, faculty1: total, faculty2: total, ...}]
   const transformData = () => {
     if (!data || data.length === 0) return [];
-    
+
     const timeMap = new Map<string, Record<string, string | number>>();
-    
+
     // Collect all unique times and faculty data
     data.forEach(({ faculty, data: timeData }) => {
       timeData.forEach(({ time, total }) => {
@@ -76,14 +65,14 @@ export function BarChartHorizontalMulti({ data }: BarChartHorizontalMultiProps) 
         entry[faculty] = total;
       });
     });
-    
+
     return Array.from(timeMap.values());
   };
 
   const chartData = transformData();
-  
+
   // Extract faculty names for series
-  const faculties = data.map(item => item.faculty);
+  const faculties = data.map((item) => item.faculty);
 
   return (
     <Card className="px-0 border-none shadow-none">
@@ -119,7 +108,7 @@ export function BarChartHorizontalMulti({ data }: BarChartHorizontalMultiProps) 
               />
               {faculties.map((faculty, index) => (
                 <Bar
-                  key={faculty} 
+                  key={faculty}
                   dataKey={faculty}
                   fill={CHART_COLORS[index % CHART_COLORS.length]}
                   radius={BAR_RADIUS}
@@ -143,13 +132,13 @@ export function BarChartHorizontalMulti({ data }: BarChartHorizontalMultiProps) 
         <div className="flex flex-row flex-wrap gap-4 justify-center items-center space-x-8 md:space-x-16 px-10">
           {faculties.map((faculty, index) => (
             <div key={faculty} className="flex flex-row space-x-2 items-center">
-              <div 
-                className="w-4 h-4" 
-                style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}
+              <div
+                className="w-4 h-4"
+                style={{
+                  backgroundColor: CHART_COLORS[index % CHART_COLORS.length],
+                }}
               />
-              <p className="label-small-primary">
-                {faculty}
-              </p>
+              <p className="label-small-primary">{faculty}</p>
             </div>
           ))}
         </div>

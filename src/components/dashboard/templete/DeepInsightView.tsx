@@ -8,6 +8,8 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@assets/components/ui/skeleton";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useRole } from "@context/RoleContext";
 
 // Dynamically import heavy chart components
 const BarChartHorizontal = dynamic(
@@ -37,7 +39,7 @@ import {
   PopoverTrigger,
 } from "@assets/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
-import { FilterableList } from "./FilterableList";
+import { FilterableList } from "../FilterableList";
 import {
   dataCategorizeByFaculty,
   dataCategorizeByTime,
@@ -52,6 +54,8 @@ const verticalChartData = dataCategorizeByFaculty;
 const horizontalChartData = dataCategorizeByTime;
 
 export function DeepInsightView() {
+  const router = useRouter();
+  const { role } = useRole();
   const t = useTranslations("Dashboard.insights");
   const [selectedFilter, setSelectedFilter] = useState<
     "student" | "staff" | null
@@ -62,6 +66,11 @@ export function DeepInsightView() {
   const [selectedTimes, setSelectedTimes] = useState<Record<string, boolean>>(
     {}
   );
+
+  if (role !== "manager" && role !== "owner") {
+    router.push("/dashboard");
+    return null;
+  }
   const createSelectionHandler =
     (
       setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
@@ -95,7 +104,7 @@ export function DeepInsightView() {
     setSelectedTimes({});
   };
 
-  const handleSortChange = (value: string) => {};
+  const handleSortChange = () => {};
 
   return (
     <div className="w-full rounded-xl bg-neutral-white space-y-16">
@@ -239,9 +248,7 @@ export function DeepInsightView() {
         </div>
         <Link href="/dashboard-compare" target="_blank">
           <Button mode="filled" bordered="square" expanded={false}>
-            <p className="title-medium-emphasized">
-              {t("compareButton")}
-            </p>
+            <p className="title-medium-emphasized">{t("compareButton")}</p>
           </Button>
         </Link>
       </section>

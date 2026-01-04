@@ -15,12 +15,7 @@ import {
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
 import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
-
-type BarChartVerticalStackedProps = {
-  faculty: string;
-  registered: number;
-  unregistered: number;
-};
+import { BarChartVerticalStackedProps } from "@customTypes/chart";
 
 const chartConfig = {
   unregistered: {
@@ -45,11 +40,11 @@ export function BarChartVerticalStacked({
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
-  let BAR_SIZE: number = 28;
+  let BAR_SIZE: number = 30;
   if (isMobile) {
-    BAR_SIZE = 16;
+    BAR_SIZE = 20;
   } else if (isTablet) {
-    BAR_SIZE = 15;
+    BAR_SIZE = 28;
   }
 
   const maxDataValue = Math.max(
@@ -72,7 +67,7 @@ export function BarChartVerticalStacked({
 
   return (
     <Card className="bg-neutral-white lg:bg-neutral-100 border-none shadow-none lg:py-8 pl-0 lg:pl-8 lg:pr-6 rounded-[28px] w-full">
-      <CardContent className="mr-2 max-h-[470px] overflow-auto">
+      <CardContent className="mr-2 max-h-[280px] md:max-h-[350px] lg:max-h-[400px] xl:max-h-[470px] overflow-auto">
         <div className="flex flex-col space-y-4">
           {chartDataWithMeta.map((item, idx) => {
             return (

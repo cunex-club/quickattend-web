@@ -1,10 +1,4 @@
-import {
-  Bar,
-  BarChart,
-  LabelList,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
 import {
@@ -13,22 +7,9 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
+import { BarChartVerticalMultiProps } from "@customTypes/chart";
 
 export const description = "A multiple bar chart";
-
-type TimeData = {
-  time: string;
-  total: number;
-};
-
-type FacultyData = {
-  faculty: string;
-  data: TimeData[];
-};
-
-interface BarChartVerticalMultiProps {
-  data: FacultyData[];
-}
 
 const chartConfig = {
   XAxis: {
@@ -83,7 +64,7 @@ export function BarChartVerticalMulti({ data }: BarChartVerticalMultiProps) {
   const timeArray = Array.from(times);
 
   // Calculate dynamic height based on number of faculties
-  const dynamicHeight: number = data.length * (BAR_SIZE) * timeArray.length;
+  const dynamicHeight: number = data.length * BAR_SIZE * timeArray.length;
 
   return (
     <Card className="bg-neutral-100 border-none shadow-none">

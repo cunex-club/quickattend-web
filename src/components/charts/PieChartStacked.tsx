@@ -10,11 +10,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
-
-type PieChartStackedProps = {
-  category: string;
-  total: number;
-};
+import { PieChartStackedProps } from "@customTypes/chart";
 
 const chartConfig = {
   total: {
@@ -23,11 +19,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function PieChartStacked({
-  data,
-}: {
-  data: PieChartStackedProps[];
-}) {
+export function PieChartStacked({ data }: { data: PieChartStackedProps[] }) {
   const chartDataInner = data.map((item, index) => ({
     ...item,
     fill: index === 0 ? "var(--color-primary)" : "var(--color-gray-100)",

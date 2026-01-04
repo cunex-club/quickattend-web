@@ -14,14 +14,14 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
-import type { BarChartVerticalData } from "@customTypes/chart";
+import {
+  BarChartVerticalData,
+  BarChartVerticalOverviewProps,
+} from "@customTypes/chart";
 import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
 
 export const description = "A bar chart with a custom label";
 export type { BarChartVerticalData };
-interface BarChartVerticalOverviewProps {
-  data: BarChartVerticalData[];
-}
 
 const chartConfig = {
   total: {
@@ -42,14 +42,14 @@ export function BarChartVerticalOverview({
   const LABEL_FONT_SIZE: number = 14;
 
   const isMobile = useIsMobile();
-  const isTablet = useIsTablet(); 
+  const isTablet = useIsTablet();
   let BAR_SIZE: number = 28;
   if (isMobile) {
     BAR_SIZE = 16;
   } else if (isTablet) {
     BAR_SIZE = 19;
   }
-  
+
   const maxDataValue = Math.max(...chartData.map((d) => d.total));
   const xDomainMax = (maxDataValue || 0) * 1.15;
 
@@ -64,7 +64,10 @@ export function BarChartVerticalOverview({
       <CardContent className="shadow-none border-none">
         <div className="chart-list-group flex flex-col space-y-4">
           {chartDataWithMeta.map((item, idx) => (
-            <div key={`faculty-chart-${idx}`} className="flex flex-col space-y-2 chart-item">
+            <div
+              key={`faculty-chart-${idx}`}
+              className="flex flex-col space-y-2 chart-item"
+            >
               <div className="flex items-center justify-between">
                 <p className="title-medium-primary md:title-large-primary ">
                   {item.faculty}
@@ -92,7 +95,12 @@ export function BarChartVerticalOverview({
                     axisLine={false}
                     hide
                   />
-                  <XAxis dataKey="total" type="number" hide domain={[0, xDomainMax]} />
+                  <XAxis
+                    dataKey="total"
+                    type="number"
+                    hide
+                    domain={[0, xDomainMax]}
+                  />
                   <ChartTooltip
                     cursor={false}
                     content={<ChartTooltipContent indicator="line" />}

@@ -1,5 +1,6 @@
 "use client";
 import { cn } from "@assets/lib/utils";
+import IonIcon from "@components/IonIcon";
 
 type FilterVariant = "primary" | "secondary";
 
@@ -21,19 +22,23 @@ export const SelectedItemsList: React.FC<SelectedItemsListProps> = ({
       {items.map((item) => (
         <div
           key={item.id}
-          className="relative flex items-center bg-transparent text-neutral-500 border border-neutral-500 rounded-lg px-3 py-1.5 animate-in fade-in-0 zoom-in-95"
+          className="relative flex items-center bg-transparent text-neutral-500 border border-neutral-500 rounded-lg px-4 py-2 animate-in fade-in-0 zoom-in-95"
         >
-          <p className="label-large-primary">
-            {item.label}
-          </p>
+          <p className="label-large-primary">{item.label}</p>
           <button
             onClick={() => onRemove(item.id)}
             className={cn(
               "absolute -top-3 -right-3 bg-primary border-4 rounded-full w-[28px] h-[28px] flex items-center justify-center",
-              filterVariant === "secondary" ? "border-white" : "border-neutral-100"
+              filterVariant === "secondary"
+                ? "border-white"
+                : "border-neutral-100"
             )}
           >
-            <p className="text-neutral-white">x</p>
+            <IonIcon
+              name="CloseOutline"
+              size="20px"
+              className="text-neutral-white"
+            />
           </button>
         </div>
       ))}

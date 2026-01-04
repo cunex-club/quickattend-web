@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { cn } from "@assets/lib/utils";
+
 import IonIcon from "@components/IonIcon";
 import Image from "next/image";
 import {
