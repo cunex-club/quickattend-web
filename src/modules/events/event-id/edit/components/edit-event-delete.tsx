@@ -1,12 +1,12 @@
 import { useTranslations } from "next-intl";
-import { EditModeType } from "../template";
+import { SideTabType } from "../template";
 import Button from "@shared/Button";
 
 interface EditEventDeleteProps {
-  setEditMode: (editMode: EditModeType | null) => void;
+  setOpenDelete: (bool: boolean) => void;
 }
 
-const EditEventDelete = ({ setEditMode }: EditEventDeleteProps) => {
+const EditEventDelete = ({ setOpenDelete }: EditEventDeleteProps) => {
   const tEditEvent = useTranslations("EditEvent");
   return (
     <div className="flex flex-col gap-8">
@@ -21,7 +21,7 @@ const EditEventDelete = ({ setEditMode }: EditEventDeleteProps) => {
           bordered="square"
           expanded={true}
           onClick={() => {
-            setEditMode(null);
+            setOpenDelete(false);
           }}
           className="h-12 px-1 pr-2 flex items-center cursor-pointer"
         >
@@ -33,7 +33,7 @@ const EditEventDelete = ({ setEditMode }: EditEventDeleteProps) => {
           expanded={true}
           onClick={() => {
             window.location.href = "/events";
-            setEditMode(null);
+            setOpenDelete(false);
           }}
           className="h-12 px-1 pr-2 flex items-center cursor-pointer"
         >

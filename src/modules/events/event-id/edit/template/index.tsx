@@ -37,14 +37,12 @@ import {
 import EditEventDuplicate from "../components/edit-event-duplicate";
 import EditEventDelete from "../components/edit-event-delete";
 
-export const EditModeType = {
+export const SideTabType = {
   NAVIGATE: "navigate",
   PREVIEW: "preview",
-  DUPLICATE: "duplicate",
-  DELETE: "delete",
 };
 
-export type EditModeType = (typeof EditModeType)[keyof typeof EditModeType];
+export type SideTabType = (typeof SideTabType)[keyof typeof SideTabType];
 
 const EventEditTemplate = () => {
   const { id: eventId } = useParams();
@@ -57,7 +55,9 @@ const EventEditTemplate = () => {
   const tEditEvent = useTranslations("EditEvent");
 
   const [width, setWidth] = useState(0);
-  const [editMode, setEditMode] = useState<EditModeType | null>(null);
+  const [editMode, setEditMode] = useState<SideTabType | null>(null);
+  const [openDuplicate, setOpenDuplicate] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const [cardMode, setCardMode] = useState<CardPreviewType>(
     CardPreviewType.CARD_PREVIEW
   );
@@ -156,6 +156,12 @@ const EventEditTemplate = () => {
     return () => setShowSidebar(true);
   }, [setShowSidebar]);
 
+  useEffect(() => {
+    if (openDelete || (openDuplicate && width < 768)) {
+      setEditMode(null);
+    }
+  }, [openDelete, openDuplicate, width]);
+
   const saveEvent = () => {
     const agendaText = eventForm.agenda
       .map((item, index) => {
@@ -244,15 +250,15 @@ const EventEditTemplate = () => {
           </Button>
         </header>
 
-        <main className="w-full flex gap-4 px-4 py-8">
+        <main className={`w-full flex gap-4 px-4 py-8`}>
           {/* Buttons */}
-          <div className="h-fit py-4 bg-neutral-white rounded-4xl grid-cols-1 gap-8 place-items-center flex-1 hidden sm:grid">
+          <div className="h-fit py-4 bg-neutral-white rounded-4xl grid-cols-1 gap-8 place-items-center flex-1 hidden md:grid">
             <IonIcon
               name="List"
               size="18px"
               className="text-primary cursor-pointer"
               onClick={() => {
-                setEditMode(EditModeType.NAVIGATE);
+                setEditMode(SideTabType.NAVIGATE);
               }}
             />
             <IonIcon
@@ -260,7 +266,7 @@ const EventEditTemplate = () => {
               size="18px"
               className="text-primary cursor-pointer"
               onClick={() => {
-                setEditMode(EditModeType.PREVIEW);
+                setEditMode(SideTabType.PREVIEW);
               }}
             />
             <hr className="border-neutral-300 border w-[60%]" />
@@ -269,7 +275,7 @@ const EventEditTemplate = () => {
               size="18px"
               className="text-primary cursor-pointer"
               onClick={() => {
-                setEditMode(EditModeType.DUPLICATE);
+                setOpenDuplicate(true);
               }}
             />
             <IonIcon
@@ -277,80 +283,122 @@ const EventEditTemplate = () => {
               size="18px"
               className="text-primary cursor-pointer"
               onClick={() => {
-                setEditMode(EditModeType.DELETE);
+                setOpenDelete(true);
               }}
             />
           </div>
 
-          {/* Navigation */}
-          <div className="hidden sm:flex flex-6 flex-col gap-8 h-fit max-h-[80vh] bg-neutral-white rounded-4xl p-4 mb-6 overflow-y-auto break-all">
-            {/* Header */}
-            <h2 className="headline-medium-emphasized text-primary pl-2">
-              {tEditEvent("category")}
-            </h2>
+          <>
+            {(editMode == SideTabType.NAVIGATE || editMode == null) && (
+              // Navigatation
+              <div className="hidden md:flex flex-6 flex-col gap-8 h-fit max-h-[80vh] bg-neutral-white rounded-4xl p-4 overflow-y-auto break-all">
+                {/* Header */}
+                <h2 className="headline-medium-emphasized text-primary pl-2">
+                  {tEditEvent("category")}
+                </h2>
 
-            {/* Content */}
-            <div
-              className={`flex flex-col gap-6 max-w-full h-fit rounded-4xl mb-6`}
-            >
-              <span
-                className="flex gap-2 items-center cursor-pointer"
-                onClick={() => {
-                  section1Ref.current?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
-                }}
-              >
-                <IonIcon
-                  name="DocumentText"
-                  size="18px"
-                  className="text-primary"
-                />
-                <p className="translate-y-1">{tEditEvent("eventDetail")}</p>
-              </span>
+                {/* Content */}
+                <div
+                  className={`flex flex-col gap-6 max-w-full h-fit rounded-4xl mb-6`}
+                >
+                  <span
+                    className="flex gap-2 items-center cursor-pointer"
+                    onClick={() => {
+                      section1Ref.current?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }}
+                  >
+                    <IonIcon
+                      name="DocumentText"
+                      size="18px"
+                      className="text-primary"
+                    />
+                    <p className="translate-y-1">{tEditEvent("eventDetail")}</p>
+                  </span>
 
-              <span
-                className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
-                onClick={() => {
-                  section2Ref.current?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
-                }}
-              >
-                <IonIcon
-                  name="DocumentText"
-                  size="18px"
-                  className="text-primary"
-                />
-                <p className="translate-y-1">{tEditEvent("setting")}</p>
-              </span>
+                  <span
+                    className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
+                    onClick={() => {
+                      section2Ref.current?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }}
+                  >
+                    <IonIcon
+                      name="DocumentText"
+                      size="18px"
+                      className="text-primary"
+                    />
+                    <p className="translate-y-1">{tEditEvent("setting")}</p>
+                  </span>
 
-              <span
-                className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
-                onClick={() => {
-                  section3Ref.current?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
-                }}
-              >
-                <IonIcon
-                  name="DocumentText"
-                  size="18px"
-                  className="text-primary"
-                />
-                <p className="translate-y-1">{tEditEvent("evaluationForm")}</p>
-              </span>
-            </div>
-          </div>
+                  <span
+                    className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
+                    onClick={() => {
+                      section3Ref.current?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }}
+                  >
+                    <IonIcon
+                      name="DocumentText"
+                      size="18px"
+                      className="text-primary"
+                    />
+                    <p className="translate-y-1">
+                      {tEditEvent("evaluationForm")}
+                    </p>
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {editMode == SideTabType.PREVIEW && (
+              // Preview
+              <div className="w-full hidden md:flex md:flex-col md:flex-6 md:gap-4 p-4">
+                {/* Header */}
+                <div className="flex justify-between gap-2 flex-wrap">
+                  <h2 className="title-large-emphasized text-primary">
+                    {tEditEvent("eventPreview")}
+                  </h2>
+
+                  <Select value={cardMode} onValueChange={setCardMode}>
+                    <SelectTrigger className="w-[150px] bg-neutral-white">
+                      <SelectValue placeholder={tEditEvent("eventPreview")} />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value={CardPreviewType.CARD_PREVIEW}>
+                          {tEditEvent(CardPreviewType.CARD_PREVIEW)}
+                        </SelectItem>
+                        <SelectItem value={CardPreviewType.DETAIL_PREVIEW}>
+                          {tEditEvent(CardPreviewType.DETAIL_PREVIEW)}
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Content */}
+                <div
+                  className={`max-w-full ${cardMode == CardPreviewType.CARD_PREVIEW ? "max-h-[55vh]" : "max-h-screen"} h-fit bg-neutral-white rounded-4xl px-4 py-6 overflow-y-auto break-all`}
+                >
+                  <EditEventPreview eventForm={eventForm} cardMode={cardMode} />
+                </div>
+              </div>
+            )}
+          </>
 
           {/* Form */}
-          <div className="py-4 sm:py-0 pb-24 w-full flex flex-col gap-8 bg-neutral-white sm:bg-transparent flex-13">
+          <div className="py-4 md:py-0 pb-24 w-full flex flex-col gap-8 bg-neutral-white md:bg-transparent flex-13">
             {/* Section 1 */}
             <div
-              className="flex flex-col px-4 sm:py-8 bg-neutral-white sm:rounded-4xl"
+              className="flex flex-col px-4 md:py-8 bg-neutral-white md:rounded-4xl"
               ref={section1Ref}
             >
               <EditEventSection1
@@ -361,7 +409,7 @@ const EventEditTemplate = () => {
 
             {/* Section 2 */}
             <div
-              className="flex flex-col px-4 sm:py-8 bg-neutral-white sm:rounded-2xl"
+              className="flex flex-col px-4 md:py-8 bg-neutral-white md:rounded-2xl"
               ref={section2Ref}
             >
               <EditEventSection2
@@ -372,7 +420,7 @@ const EventEditTemplate = () => {
 
             {/* Section 3 */}
             <div
-              className="flex flex-col px-4 sm:py-8 bg-neutral-white sm:rounded-2xl"
+              className="flex flex-col px-4 md:py-8 bg-neutral-white md:rounded-2xl"
               ref={section3Ref}
             >
               <EditEventSection3
@@ -383,13 +431,13 @@ const EventEditTemplate = () => {
           </div>
         </main>
 
-        <footer className="sm:hidden fixed bottom-0 left-0 w-full h-16 px-4 bg-neutral-200 rounded-t-4xl z-50 grid grid-cols-4 gap-2 place-items-center">
+        <footer className="md:hidden fixed bottom-0 left-0 w-full h-16 px-4 bg-neutral-200 rounded-t-4xl z-50 grid grid-cols-4 gap-2 place-items-center">
           <IonIcon
             name="List"
             size="18px"
             className="text-primary cursor-pointer"
             onClick={() => {
-              setEditMode(EditModeType.NAVIGATE);
+              setEditMode(SideTabType.NAVIGATE);
             }}
           />
           <IonIcon
@@ -397,7 +445,7 @@ const EventEditTemplate = () => {
             size="18px"
             className="text-primary cursor-pointer"
             onClick={() => {
-              setEditMode(EditModeType.PREVIEW);
+              setEditMode(SideTabType.PREVIEW);
             }}
           />
           <IonIcon
@@ -405,7 +453,7 @@ const EventEditTemplate = () => {
             size="18px"
             className="text-primary cursor-pointer"
             onClick={() => {
-              setEditMode(EditModeType.DUPLICATE);
+              setOpenDuplicate(true);
             }}
           />
           <IonIcon
@@ -413,7 +461,7 @@ const EventEditTemplate = () => {
             size="18px"
             className="text-primary cursor-pointer"
             onClick={() => {
-              setEditMode(EditModeType.DELETE);
+              setOpenDelete(true);
             }}
           />
         </footer>
@@ -424,12 +472,12 @@ const EventEditTemplate = () => {
         <>
           {/* Navigation */}
           <Drawer
-            open={editMode == EditModeType.NAVIGATE}
+            open={editMode == SideTabType.NAVIGATE}
             onOpenChange={() => {
-              if (editMode == EditModeType.NAVIGATE) {
+              if (editMode == SideTabType.NAVIGATE) {
                 setEditMode(null);
               } else {
-                setEditMode(EditModeType.NAVIGATE);
+                setEditMode(SideTabType.NAVIGATE);
               }
             }}
           >
@@ -504,12 +552,12 @@ const EventEditTemplate = () => {
 
           {/* Preview */}
           <Drawer
-            open={editMode == EditModeType.PREVIEW}
+            open={editMode == SideTabType.PREVIEW}
             onOpenChange={() => {
-              if (editMode == EditModeType.PREVIEW) {
+              if (editMode == SideTabType.PREVIEW) {
                 setEditMode(null);
               } else {
-                setEditMode(EditModeType.PREVIEW);
+                setEditMode(SideTabType.PREVIEW);
               }
             }}
           >
@@ -548,16 +596,7 @@ const EventEditTemplate = () => {
           </Drawer>
 
           {/* Duplicate */}
-          <Drawer
-            open={editMode == EditModeType.DUPLICATE}
-            onOpenChange={() => {
-              if (editMode == EditModeType.DUPLICATE) {
-                setEditMode(null);
-              } else {
-                setEditMode(EditModeType.DUPLICATE);
-              }
-            }}
-          >
+          <Drawer open={openDuplicate} onOpenChange={setOpenDuplicate}>
             <DrawerContent className="px-4 py-2 bg-neutral-white h-fit max-h-[80vh]">
               <DrawerHeader>
                 <DrawerTitle className="title-large-emphasized text-primary">
@@ -570,23 +609,14 @@ const EventEditTemplate = () => {
               >
                 <EditEventDuplicate
                   eventForm={eventForm}
-                  setEditMode={setEditMode}
+                  setOpenDuplicate={setOpenDuplicate}
                 />
               </div>
             </DrawerContent>
           </Drawer>
 
           {/* Delete */}
-          <Dialog
-            open={editMode == EditModeType.DELETE}
-            onOpenChange={() => {
-              if (editMode == EditModeType.DELETE) {
-                setEditMode(null);
-              } else {
-                setEditMode(EditModeType.DELETE);
-              }
-            }}
-          >
+          <Dialog open={openDelete} onOpenChange={setOpenDelete}>
             <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
               {/* Header */}
               <DialogTitle className="flex flex-col items-center gap-4 headline-medium-emphasized text-primary">
@@ -596,24 +626,104 @@ const EventEditTemplate = () => {
 
               {/* Content */}
               <>
-                <EditEventDelete setEditMode={setEditMode} />
+                <EditEventDelete setOpenDelete={setOpenDelete} />
               </>
             </DialogContent>
           </Dialog>
         </>
       )}
 
-      {/* For Tablet and PC */}
-      {width >= 640 && (
+      {/* For Tablet */}
+      {width >= 640 && width < 768 && (
         <>
-          {/* Preview */}
+          {/* Navigation */}
           <Dialog
-            open={editMode == EditModeType.PREVIEW}
+            open={editMode == SideTabType.NAVIGATE}
             onOpenChange={() => {
-              if (editMode == EditModeType.PREVIEW) {
+              if (editMode == SideTabType.NAVIGATE) {
                 setEditMode(null);
               } else {
-                setEditMode(EditModeType.PREVIEW);
+                setEditMode(SideTabType.NAVIGATE);
+              }
+            }}
+          >
+            <DialogContent className="[&>button]:hidden min-w-[60vw] h-fit max-h-[80vh] bg-neutral-white rounded-2xl">
+              {/* Header */}
+              <DialogTitle className="headline-medium-emphasized text-primary pl-2">
+                {tEditEvent("category")}
+              </DialogTitle>
+
+              {/* Content */}
+              <div
+                className={`flex flex-col gap-8 max-w-full h-fit rounded-4xl py-6`}
+              >
+                <span
+                  className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl label-large-primary hover:label-large-emphasized"
+                  onClick={() => {
+                    setEditMode(null);
+                    section1Ref.current?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                >
+                  <IonIcon
+                    name="DocumentText"
+                    size="24px"
+                    className="text-primary"
+                  />
+                  <p className="translate-y-1">{tEditEvent("eventDetail")}</p>
+                </span>
+
+                <span
+                  className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl label-large-primary hover:label-large-emphasized"
+                  onClick={() => {
+                    setEditMode(null);
+                    section2Ref.current?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                >
+                  <IonIcon
+                    name="DocumentText"
+                    size="24px"
+                    className="text-primary"
+                  />
+                  <p className="translate-y-1">{tEditEvent("setting")}</p>
+                </span>
+
+                <span
+                  className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl label-large-primary hover:label-large-emphasized"
+                  onClick={() => {
+                    setEditMode(null);
+                    section3Ref.current?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                >
+                  <IonIcon
+                    name="DocumentText"
+                    size="24px"
+                    className="text-primary"
+                  />
+                  <p className="translate-y-1">
+                    {tEditEvent("evaluationForm")}
+                  </p>
+                </span>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Preview */}
+          <Dialog
+            open={editMode == SideTabType.PREVIEW}
+            onOpenChange={() => {
+              if (editMode == SideTabType.PREVIEW) {
+                setEditMode(null);
+              } else {
+                setEditMode(SideTabType.PREVIEW);
               }
             }}
           >
@@ -654,16 +764,7 @@ const EventEditTemplate = () => {
           </Dialog>
 
           {/* Duplicate */}
-          <Dialog
-            open={editMode == EditModeType.DUPLICATE}
-            onOpenChange={() => {
-              if (editMode == EditModeType.DUPLICATE) {
-                setEditMode(null);
-              } else {
-                setEditMode(EditModeType.DUPLICATE);
-              }
-            }}
-          >
+          <Dialog open={openDuplicate} onOpenChange={setOpenDuplicate}>
             <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
               {/* Header */}
               <DialogTitle className="headline-small-emphasized text-primary">
@@ -674,23 +775,14 @@ const EventEditTemplate = () => {
               <>
                 <EditEventDuplicate
                   eventForm={eventForm}
-                  setEditMode={setEditMode}
+                  setOpenDuplicate={setOpenDuplicate}
                 />
               </>
             </DialogContent>
           </Dialog>
 
           {/* Delete */}
-          <Dialog
-            open={editMode == EditModeType.DELETE}
-            onOpenChange={() => {
-              if (editMode == EditModeType.DELETE) {
-                setEditMode(null);
-              } else {
-                setEditMode(EditModeType.DELETE);
-              }
-            }}
-          >
+          <Dialog open={openDelete} onOpenChange={setOpenDelete}>
             <DialogContent className="[&>button]:hidden min-w-[60vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
               {/* Header */}
               <DialogTitle className="flex flex-col items-center gap-4 headline-large-emphasized text-primary">
@@ -700,7 +792,46 @@ const EventEditTemplate = () => {
 
               {/* Content */}
               <>
-                <EditEventDelete setEditMode={setEditMode} />
+                <EditEventDelete setOpenDelete={setOpenDelete} />
+              </>
+            </DialogContent>
+          </Dialog>
+        </>
+      )}
+
+      {/* For PC */}
+      {width >= 768 && (
+        <>
+          {/* Duplicate */}
+          <Dialog open={openDuplicate} onOpenChange={setOpenDuplicate}>
+            <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
+              {/* Header */}
+              <DialogTitle className="headline-small-emphasized text-primary">
+                {tEditEvent("eventDuplicate")}
+              </DialogTitle>
+
+              {/* Content */}
+              <>
+                <EditEventDuplicate
+                  eventForm={eventForm}
+                  setOpenDuplicate={setOpenDuplicate}
+                />
+              </>
+            </DialogContent>
+          </Dialog>
+
+          {/* Delete */}
+          <Dialog open={openDelete} onOpenChange={setOpenDelete}>
+            <DialogContent className="[&>button]:hidden min-w-[60vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
+              {/* Header */}
+              <DialogTitle className="flex flex-col items-center gap-4 headline-large-emphasized text-primary">
+                <IonIcon name="Trash" size="60px" />
+                <p>{tEditEvent("eventDelete")}</p>
+              </DialogTitle>
+
+              {/* Content */}
+              <>
+                <EditEventDelete setOpenDelete={setOpenDelete} />
               </>
             </DialogContent>
           </Dialog>

@@ -14,17 +14,17 @@ import IonIcon from "@shared/IonIcon";
 import { format, startOfDay } from "date-fns";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { EditModeType } from "../template";
+import { SideTabType } from "../template";
 import Button from "@shared/Button";
 
 interface EditEventDuplicateProps {
   eventForm: EventFormInterface;
-  setEditMode: (editMode: EditModeType | null) => void;
+  setOpenDuplicate: (bool: boolean) => void;
 }
 
 const EditEventDuplicate = ({
   eventForm,
-  setEditMode,
+  setOpenDuplicate,
 }: EditEventDuplicateProps) => {
   const tEditEvent = useTranslations("EditEvent");
   const today = startOfDay(new Date());
@@ -296,7 +296,7 @@ const EditEventDuplicate = ({
             // ===============
 
             window.location.href = "/events";
-            setEditMode(null);
+            setOpenDuplicate(false);
           }
         }}
         className={`${
