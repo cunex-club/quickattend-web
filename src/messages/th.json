@@ -92,6 +92,8 @@
   "EditEvent": {
     "editEvent": "แก้ไขกิจกรรม",
     "save": "บันทึก",
+    "back": "ย้อนกลับ",
+    "next": "ถัดไป",
     "eventDetail": "รายละเอียดกิจกรรม",
     "name": "ชื่อกิจกรรม",
     "namePlaceholder": "ชื่อกิจกรรม",
@@ -145,7 +147,7 @@
     "detailPreview": "รายละเอียดกิจกรรม",
     "category": "หมวดหมู่",
     "eventDuplicate": "ทำซ้ำกิจกรรม",
-    "duplicate": "ยืนยันการสร้างกิจกรรม",
+    "submitDuplicate": "ยืนยันการสร้างกิจกรรม",
     "eventDelete": "ยืนยันการลบกิจกรรม",
     "eventDeleteDescription": "การลบกิจกรรมนี้จะเป็นการลบแบบถาวร และไม่สามารถกู้คืนข้อมูลได้",
     "cancelDelete": "ยกเลิก",

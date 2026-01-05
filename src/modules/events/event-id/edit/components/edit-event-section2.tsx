@@ -74,13 +74,13 @@ const EditEventSection2 = ({
   }, [facultyQuery]);
 
   return (
-    <div className="flex flex-col gap-4">
-      <h1 className="title-large-emphasized text-primary mb-4">
+    <div className="flex flex-col gap-8">
+      <h1 className="title-large-emphasized text-primary">
         {tEditEvent("setting")}
       </h1>
 
       {/* Permission */}
-      <div className="flex flex-col gap-2 mb-4">
+      <div className="flex flex-col gap-2">
         <p className="title-large-emphasized mb-4">
           {tEditEvent("permission")} <span className="text-primary">*</span>
         </p>
@@ -386,7 +386,7 @@ const EditEventSection2 = ({
       </div>
 
       {/* Scan Setting */}
-      <div className="flex flex-col gap-4 mb-4">
+      <div className="flex flex-col gap-4">
         <p className="title-large-emphasized mb-4">
           {tEditEvent("scanSetting")} <span className="text-primary">*</span>
         </p>
@@ -531,7 +531,7 @@ const EditEventSection2 = ({
       </div>
 
       {/* Accessibility */}
-      <div className="flex flex-col gap-4 mb-4">
+      <div className="flex flex-col gap-4">
         {/* Role */}
         <div className="flex flex-col gap-2 mb-4">
           <p className="title-large-emphasized mb-4">

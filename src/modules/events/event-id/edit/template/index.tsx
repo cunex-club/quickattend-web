@@ -65,7 +65,7 @@ const EventEditTemplate = () => {
   const [valid, setValid] = useState(false);
 
   // NOTE: MOCK VERSION
-  const [eventForm, setEventForm] = useState<EventFormInterface>({
+  const oldEventForm: EventFormInterface = {
     name: "Sample Event",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     date: new Date("2026-02-10"),
@@ -100,7 +100,9 @@ const EventEditTemplate = () => {
     ],
     allow_all_to_scan: true,
     evaluation_form: "https://forms.google.com/sample-evaluation-form",
-  });
+  };
+
+  const [eventForm, setEventForm] = useState<EventFormInterface>(oldEventForm);
 
   const section1Ref = useRef<HTMLDivElement>(null);
   const section2Ref = useRef<HTMLDivElement>(null);
@@ -395,7 +397,7 @@ const EventEditTemplate = () => {
           </>
 
           {/* Form */}
-          <div className="py-4 md:py-0 pb-24 w-full flex flex-col gap-8 bg-neutral-white md:bg-transparent flex-13">
+          <div className="py-4 md:py-0 pb-12 w-full flex flex-col gap-8 bg-neutral-white md:bg-transparent flex-13">
             {/* Section 1 */}
             <div
               className="flex flex-col px-4 md:py-8 bg-neutral-white md:rounded-4xl"
@@ -608,8 +610,9 @@ const EventEditTemplate = () => {
                 className={`max-w-full h-fit max-h-[60vh] rounded-4xl p-4 mb-6 overflow-y-auto break-all`}
               >
                 <EditEventDuplicate
-                  eventForm={eventForm}
+                  eventForm={oldEventForm}
                   setOpenDuplicate={setOpenDuplicate}
+                  width={width}
                 />
               </div>
             </DrawerContent>
@@ -774,8 +777,9 @@ const EventEditTemplate = () => {
               {/* Content */}
               <>
                 <EditEventDuplicate
-                  eventForm={eventForm}
+                  eventForm={oldEventForm}
                   setOpenDuplicate={setOpenDuplicate}
+                  width={width}
                 />
               </>
             </DialogContent>
@@ -813,8 +817,9 @@ const EventEditTemplate = () => {
               {/* Content */}
               <>
                 <EditEventDuplicate
-                  eventForm={eventForm}
+                  eventForm={oldEventForm}
                   setOpenDuplicate={setOpenDuplicate}
+                  width={width}
                 />
               </>
             </DialogContent>
