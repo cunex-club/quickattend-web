@@ -48,6 +48,7 @@
     "location": "Location",
     "locationPlaceholder": "Location",
     "agenda": "Agenda",
+    "agendaText": "Add new activity",
     "addAgenda": "Add to agenda",
     "organizer": "Organizer",
     "organizerPlaceholder": "Organizer",
