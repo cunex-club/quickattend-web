@@ -530,7 +530,7 @@ const EventCreateTemplate = () => {
         <>
           {/* Preview */}
           <Dialog open={showPreview} onOpenChange={setShowPreview}>
-            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] h-fit max-h-[80vh]">
+            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh]">
               {/* Header */}
               <div className="flex justify-between gap-2 px-6 py-4 bg-neutral-white rounded-2xl h-fit items-center">
                 <DialogTitle className="headline-small-emphasized text-primary">

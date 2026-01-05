@@ -55,7 +55,7 @@ const EventEditTemplate = () => {
   const tEditEvent = useTranslations("EditEvent");
 
   const [width, setWidth] = useState(0);
-  const [editMode, setEditMode] = useState<SideTabType | null>(null);
+  const [sidetabMode, setSidetabMode] = useState<SideTabType | null>(null);
   const [openDuplicate, setOpenDuplicate] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [cardMode, setCardMode] = useState<CardPreviewType>(
@@ -157,8 +157,8 @@ const EventEditTemplate = () => {
   }, [setShowSidebar]);
 
   useEffect(() => {
-    if (openDelete || (openDuplicate && width < 768)) {
-      setEditMode(null);
+    if ((openDelete || openDuplicate) && width < 768) {
+      setSidetabMode(null);
     }
   }, [openDelete, openDuplicate, width]);
 
@@ -258,7 +258,7 @@ const EventEditTemplate = () => {
               size="18px"
               className="text-primary cursor-pointer"
               onClick={() => {
-                setEditMode(SideTabType.NAVIGATE);
+                setSidetabMode(null);
               }}
             />
             <IonIcon
@@ -266,7 +266,7 @@ const EventEditTemplate = () => {
               size="18px"
               className="text-primary cursor-pointer"
               onClick={() => {
-                setEditMode(SideTabType.PREVIEW);
+                setSidetabMode(SideTabType.PREVIEW);
               }}
             />
             <hr className="border-neutral-300 border w-[60%]" />
@@ -289,7 +289,7 @@ const EventEditTemplate = () => {
           </div>
 
           <>
-            {(editMode == SideTabType.NAVIGATE || editMode == null) && (
+            {(sidetabMode == SideTabType.NAVIGATE || sidetabMode == null) && (
               // Navigatation
               <div className="hidden md:flex flex-6 flex-col gap-8 h-fit max-h-[80vh] bg-neutral-white rounded-4xl p-4 overflow-y-auto break-all">
                 {/* Header */}
@@ -357,7 +357,7 @@ const EventEditTemplate = () => {
               </div>
             )}
 
-            {editMode == SideTabType.PREVIEW && (
+            {sidetabMode == SideTabType.PREVIEW && (
               // Preview
               <div className="w-full hidden md:flex md:flex-col md:flex-6 md:gap-4 p-4">
                 {/* Header */}
@@ -437,7 +437,7 @@ const EventEditTemplate = () => {
             size="18px"
             className="text-primary cursor-pointer"
             onClick={() => {
-              setEditMode(SideTabType.NAVIGATE);
+              setSidetabMode(SideTabType.NAVIGATE);
             }}
           />
           <IonIcon
@@ -445,7 +445,7 @@ const EventEditTemplate = () => {
             size="18px"
             className="text-primary cursor-pointer"
             onClick={() => {
-              setEditMode(SideTabType.PREVIEW);
+              setSidetabMode(SideTabType.PREVIEW);
             }}
           />
           <IonIcon
@@ -468,16 +468,16 @@ const EventEditTemplate = () => {
       </div>
 
       {/* For Mobile */}
-      {width < 640 && (
+      {width < 425 && (
         <>
           {/* Navigation */}
           <Drawer
-            open={editMode == SideTabType.NAVIGATE}
+            open={sidetabMode == SideTabType.NAVIGATE}
             onOpenChange={() => {
-              if (editMode == SideTabType.NAVIGATE) {
-                setEditMode(null);
+              if (sidetabMode == SideTabType.NAVIGATE) {
+                setSidetabMode(null);
               } else {
-                setEditMode(SideTabType.NAVIGATE);
+                setSidetabMode(SideTabType.NAVIGATE);
               }
             }}
           >
@@ -494,7 +494,7 @@ const EventEditTemplate = () => {
                 <span
                   className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
                   onClick={() => {
-                    setEditMode(null);
+                    setSidetabMode(null);
                     section1Ref.current?.scrollIntoView({
                       behavior: "smooth",
                       block: "start",
@@ -512,7 +512,7 @@ const EventEditTemplate = () => {
                 <span
                   className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
                   onClick={() => {
-                    setEditMode(null);
+                    setSidetabMode(null);
                     section2Ref.current?.scrollIntoView({
                       behavior: "smooth",
                       block: "start",
@@ -530,7 +530,7 @@ const EventEditTemplate = () => {
                 <span
                   className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl"
                   onClick={() => {
-                    setEditMode(null);
+                    setSidetabMode(null);
                     section3Ref.current?.scrollIntoView({
                       behavior: "smooth",
                       block: "start",
@@ -552,18 +552,18 @@ const EventEditTemplate = () => {
 
           {/* Preview */}
           <Drawer
-            open={editMode == SideTabType.PREVIEW}
+            open={sidetabMode == SideTabType.PREVIEW}
             onOpenChange={() => {
-              if (editMode == SideTabType.PREVIEW) {
-                setEditMode(null);
+              if (sidetabMode == SideTabType.PREVIEW) {
+                setSidetabMode(null);
               } else {
-                setEditMode(SideTabType.PREVIEW);
+                setSidetabMode(SideTabType.PREVIEW);
               }
             }}
           >
             <DrawerContent className="px-4 py-2 bg-neutral-white h-fit max-h-[80vh]">
               <DrawerHeader>
-                <div className="flex justify-between gap-2 flex-wrap">
+                <div className="flex justify-between gap-2 flex-wrap items-center">
                   <DrawerTitle className="title-large-emphasized text-primary">
                     {tEditEvent("eventPreview")}
                   </DrawerTitle>
@@ -634,20 +634,20 @@ const EventEditTemplate = () => {
       )}
 
       {/* For Tablet */}
-      {width >= 640 && width < 768 && (
+      {width >= 425 && width < 768 && (
         <>
           {/* Navigation */}
           <Dialog
-            open={editMode == SideTabType.NAVIGATE}
+            open={sidetabMode == SideTabType.NAVIGATE}
             onOpenChange={() => {
-              if (editMode == SideTabType.NAVIGATE) {
-                setEditMode(null);
+              if (sidetabMode == SideTabType.NAVIGATE) {
+                setSidetabMode(null);
               } else {
-                setEditMode(SideTabType.NAVIGATE);
+                setSidetabMode(SideTabType.NAVIGATE);
               }
             }}
           >
-            <DialogContent className="[&>button]:hidden min-w-[60vw] h-fit max-h-[80vh] bg-neutral-white rounded-2xl">
+            <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white rounded-2xl">
               {/* Header */}
               <DialogTitle className="headline-medium-emphasized text-primary pl-2">
                 {tEditEvent("category")}
@@ -655,12 +655,12 @@ const EventEditTemplate = () => {
 
               {/* Content */}
               <div
-                className={`flex flex-col gap-8 max-w-full h-fit rounded-4xl py-6`}
+                className={`flex flex-col gap-8 max-w-full h-fit rounded-4xl pt-2 pb-6`}
               >
                 <span
                   className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl label-large-primary hover:label-large-emphasized"
                   onClick={() => {
-                    setEditMode(null);
+                    setSidetabMode(null);
                     section1Ref.current?.scrollIntoView({
                       behavior: "smooth",
                       block: "start",
@@ -678,7 +678,7 @@ const EventEditTemplate = () => {
                 <span
                   className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl label-large-primary hover:label-large-emphasized"
                   onClick={() => {
-                    setEditMode(null);
+                    setSidetabMode(null);
                     section2Ref.current?.scrollIntoView({
                       behavior: "smooth",
                       block: "start",
@@ -696,7 +696,7 @@ const EventEditTemplate = () => {
                 <span
                   className="flex gap-2 items-center cursor-pointer hover:bg-neutral-200 rounded-2xl label-large-primary hover:label-large-emphasized"
                   onClick={() => {
-                    setEditMode(null);
+                    setSidetabMode(null);
                     section3Ref.current?.scrollIntoView({
                       behavior: "smooth",
                       block: "start",
@@ -718,18 +718,18 @@ const EventEditTemplate = () => {
 
           {/* Preview */}
           <Dialog
-            open={editMode == SideTabType.PREVIEW}
+            open={sidetabMode == SideTabType.PREVIEW}
             onOpenChange={() => {
-              if (editMode == SideTabType.PREVIEW) {
-                setEditMode(null);
+              if (sidetabMode == SideTabType.PREVIEW) {
+                setSidetabMode(null);
               } else {
-                setEditMode(SideTabType.PREVIEW);
+                setSidetabMode(SideTabType.PREVIEW);
               }
             }}
           >
-            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] h-fit max-h-[80vh]">
+            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] p-0">
               {/* Header */}
-              <div className="flex justify-between gap-2 px-6 py-4 bg-neutral-white rounded-2xl h-fit">
+              <div className="w-full h-full flex justify-between gap-2 px-6 py-4 bg-neutral-white rounded-2xl items-center">
                 <DialogTitle className="headline-small-emphasized text-primary">
                   {tEditEvent("eventPreview")}
                 </DialogTitle>
@@ -753,9 +753,9 @@ const EventEditTemplate = () => {
               </div>
 
               {/* Content */}
-              <div className="flex items-center justify-center bg-neutral-white px-6 py-4 rounded-2xl h-fit max-h-full">
+              <div className="w-full flex items-center justify-center bg-neutral-white py-4 rounded-2xl h-fit max-h-full">
                 <div
-                  className={`max-w-[60%] h-fit max-h-full ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100"} rounded-4xl p-4 overflow-y-auto break-all`}
+                  className={`w-full h-fit max-h-full ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100 max-w-[60vw]"} rounded-4xl p-4 overflow-y-auto break-all`}
                 >
                   <EditEventPreview eventForm={eventForm} cardMode={cardMode} />
                 </div>
@@ -765,7 +765,7 @@ const EventEditTemplate = () => {
 
           {/* Duplicate */}
           <Dialog open={openDuplicate} onOpenChange={setOpenDuplicate}>
-            <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
+            <DialogContent className="[&>button]:hidden min-w-[60vw] overflow-auto max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
               {/* Header */}
               <DialogTitle className="headline-small-emphasized text-primary">
                 {tEditEvent("eventDuplicate")}
@@ -783,7 +783,7 @@ const EventEditTemplate = () => {
 
           {/* Delete */}
           <Dialog open={openDelete} onOpenChange={setOpenDelete}>
-            <DialogContent className="[&>button]:hidden min-w-[60vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
+            <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
               {/* Header */}
               <DialogTitle className="flex flex-col items-center gap-4 headline-large-emphasized text-primary">
                 <IonIcon name="Trash" size="60px" />
@@ -804,7 +804,7 @@ const EventEditTemplate = () => {
         <>
           {/* Duplicate */}
           <Dialog open={openDuplicate} onOpenChange={setOpenDuplicate}>
-            <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
+            <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4 overflow-auto">
               {/* Header */}
               <DialogTitle className="headline-small-emphasized text-primary">
                 {tEditEvent("eventDuplicate")}
