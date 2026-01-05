@@ -271,7 +271,7 @@ const CreateEventStep1 = ({
       </div>
 
       {/* Date and Time */}
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex flex-col md:flex-row gap-4">
         {/* Date */}
         <div className="flex flex-col gap-2 w-full">
           <p className="title-medium-emphasized">
@@ -501,7 +501,7 @@ const CreateEventStep1 = ({
             value={agendaName}
             placeholder={tCreateEvent("descriptionPlaceholder")}
             onChange={(e) => setAgendaName(e.target.value)}
-            className="w-full sm:flex-1 body-large-primary"
+            className="w-full md:flex-1 body-large-primary"
           />
 
           {/* Button */}

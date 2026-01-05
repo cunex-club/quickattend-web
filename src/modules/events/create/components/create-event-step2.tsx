@@ -215,7 +215,7 @@ const CreateEventStep2 = ({
             </div>
 
             {/* Faculty Input */}
-            <div className="flex gap-4 flex-col sm:flex-row w-full">
+            <div className="flex gap-4 flex-col md:flex-row w-full">
               <div className="flex flex-col gap-2 flex-1">
                 <Input
                   value={facultyQuery}
@@ -352,7 +352,7 @@ const CreateEventStep2 = ({
             </div>
 
             {/* Individual Input */}
-            <div className="flex gap-4 flex-col sm:flex-row w-full">
+            <div className="flex gap-4 flex-col md:flex-row w-full">
               <Input
                 inputMode="numeric"
                 maxLength={10}
@@ -629,7 +629,7 @@ const CreateEventStep2 = ({
             </p>
 
             {/* Accessibility Input */}
-            <div className="flex gap-4 flex-col sm:flex-row w-full">
+            <div className="flex gap-4 flex-col md:flex-row w-full">
               <Input
                 inputMode="numeric"
                 maxLength={10}
@@ -733,7 +733,7 @@ const CreateEventStep2 = ({
             {eventForm.managers_and_staff.map((student) => (
               <div
                 key={student.id}
-                className={`w-full flex items-center border rounded-md px-3 py-2 space-x-4 sm:space-x-8 space-y-2 flex-wrap sm:flex-nowrap`}
+                className={`w-full flex items-center border rounded-md px-3 py-2 space-x-4 md:space-x-8 space-y-2 flex-wrap md:flex-nowrap`}
               >
                 {/* Remove */}
                 <button
