@@ -67,7 +67,7 @@ export function BarChartVerticalStacked({
 
   return (
     <Card className="bg-neutral-white lg:bg-neutral-100 border-none shadow-none lg:py-8 pl-0 lg:pl-8 lg:pr-6 rounded-[28px] w-full">
-      <CardContent className="mr-2 max-h-[280px] md:max-h-[350px] lg:max-h-[400px] xl:max-h-[470px] overflow-auto">
+      <CardContent className="mr-2 max-h-[280px] md:max-h-[350px] lg:max-h-[400px] xl:max-h-[470px] overflow-auto pb-2">
         <div className="flex flex-col space-y-4">
           {chartDataWithMeta.map((item, idx) => {
             return (
@@ -109,10 +109,11 @@ export function BarChartVerticalStacked({
                       axisLine={false}
                       hide
                     />
-                    <ChartTooltip
+                    {/* really hard to make responsive tooltip */}
+                    {/* <ChartTooltip
                       content={<ChartTooltipContent />}
                       allowEscapeViewBox={{ x: true, y: true }}
-                    />
+                    /> */}
                     {/* left stacked */}
                     <Bar
                       dataKey="unregistered"

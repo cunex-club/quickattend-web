@@ -92,10 +92,7 @@ export function BarChartHorizontal({
                 axisLine={true}
                 stroke={"var(--color-YAxis)"}
               />
-              <ChartTooltip
-                cursor={true}
-                content={<ChartTooltipContent hideLabel />}
-              />
+              <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
               <Bar
                 dataKey="total"
                 fill="var(--color-total)"

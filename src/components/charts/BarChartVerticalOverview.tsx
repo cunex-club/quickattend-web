@@ -60,7 +60,7 @@ export function BarChartVerticalOverview({
     percentage: totalSum > 0 ? ((item.total / totalSum) * 100).toFixed(1) : "0",
   }));
   return (
-    <Card className="bg-neutral-white lg:bg-neutral-100 shadow-none p-0 md:p-5 border-none rounded-[28px] w-full h-auto">
+    <Card className="bg-neutral-white lg:bg-neutral-100 shadow-none p-0 md:p-8 xl:p-5 border-none rounded-[28px] w-full h-auto">
       <CardContent className="shadow-none border-none">
         <div className="chart-list-group flex flex-col space-y-4">
           {chartDataWithMeta.map((item, idx) => (
@@ -103,7 +103,7 @@ export function BarChartVerticalOverview({
                   />
                   <ChartTooltip
                     cursor={false}
-                    content={<ChartTooltipContent indicator="line" />}
+                    content={<ChartTooltipContent />}
                   />
                   <Bar
                     dataKey="total"
