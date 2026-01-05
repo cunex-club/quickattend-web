@@ -400,117 +400,125 @@ const CreateEventStep1 = ({
       <div className="flex flex-col gap-4">
         <p className="title-medium-emphasized">{tCreateEvent("agenda")}</p>
 
-        {/* Time */}
-        <div className="flex gap-4 w-full">
-          {/* Start Time */}
-          <div className="flex flex-col gap-2 w-full">
-            <label className="relative">
-              <input
-                type="time"
-                step="60"
-                value={agendaStart}
-                min={formatTime(eventForm.startTime) ?? undefined}
-                max={formatTime(eventForm.endTime) ?? undefined}
-                disabled={!eventForm.startTime || !eventForm.endTime}
-                onChange={(e) => {
-                  const value = clampTime(
-                    e.target.value,
-                    eventForm.startTime,
-                    eventForm.endTime
-                  );
+        <div className="flex flex-col gap-4 px-4 py-6 rounded-4xl bg-neutral-100">
+          {/* Title */}
+          <p className="title-medium-emphasized">
+            {tCreateEvent("agendaText")}
+          </p>
 
-                  setAgendaStart(value);
+          {/* Time */}
+          <div className="flex gap-4 w-full">
+            {/* Start Time */}
+            <div className="flex flex-col gap-2 w-full">
+              <label className="relative">
+                <input
+                  type="time"
+                  step="60"
+                  value={agendaStart}
+                  min={formatTime(eventForm.startTime) ?? undefined}
+                  max={formatTime(eventForm.endTime) ?? undefined}
+                  disabled={!eventForm.startTime || !eventForm.endTime}
+                  onChange={(e) => {
+                    const value = clampTime(
+                      e.target.value,
+                      eventForm.startTime,
+                      eventForm.endTime
+                    );
 
-                  if (agendaEnd && value >= agendaEnd) {
-                    setAgendaEnd(value);
+                    setAgendaStart(value);
+
+                    if (agendaEnd && value >= agendaEnd) {
+                      setAgendaEnd(value);
+                    }
+                  }}
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
+
+                <div
+                  className={cn(
+                    "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
+                    !isDateSelected && "opacity-50 pointer-events-none"
+                  )}
+                >
+                  <span>{agendaStart || tCreateEvent("timePlaceholder")}</span>
+                  <IonIcon name="Time" size="16px" className="text-primary" />
+                </div>
+              </label>
+
+              <p className="pl-3 body-small-primary text-neutral-500">
+                {tCreateEvent("startTime")}
+              </p>
+            </div>
+
+            {/* End Time */}
+            <div className="flex flex-col gap-2 w-full">
+              <label className="relative">
+                <input
+                  type="time"
+                  step="60"
+                  value={agendaEnd}
+                  min={
+                    (agendaStart || formatTime(eventForm.startTime)) ??
+                    undefined
                   }
-                }}
-                className="absolute inset-0 opacity-0 cursor-pointer"
-              />
+                  max={formatTime(eventForm.endTime) ?? undefined}
+                  disabled={!eventForm.startTime || !eventForm.endTime}
+                  onChange={(e) => {
+                    const value = clampTime(
+                      e.target.value,
+                      eventForm.startTime,
+                      eventForm.endTime
+                    );
 
-              <div
-                className={cn(
-                  "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                  !isDateSelected && "opacity-50 pointer-events-none"
-                )}
-              >
-                <span>{agendaStart || tCreateEvent("timePlaceholder")}</span>
-                <IonIcon name="Time" size="16px" className="text-primary" />
-              </div>
-            </label>
+                    if (agendaStart && value <= agendaStart) {
+                      setAgendaEnd(agendaStart);
+                    } else {
+                      setAgendaEnd(value);
+                    }
+                  }}
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
 
-            <p className="pl-3 body-small-primary text-neutral-500">
-              {tCreateEvent("startTime")}
-            </p>
+                <div
+                  className={cn(
+                    "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
+                    !isDateSelected && "opacity-50 pointer-events-none"
+                  )}
+                >
+                  <span>{agendaEnd || tCreateEvent("timePlaceholder")}</span>
+                  <IonIcon name="Time" size="16px" className="text-primary" />
+                </div>
+              </label>
+
+              <p className="pl-3 body-small-primary text-neutral-500">
+                {tCreateEvent("endTime")}
+              </p>
+            </div>
           </div>
 
-          {/* End Time */}
-          <div className="flex flex-col gap-2 w-full">
-            <label className="relative">
-              <input
-                type="time"
-                step="60"
-                value={agendaEnd}
-                min={
-                  (agendaStart || formatTime(eventForm.startTime)) ?? undefined
-                }
-                max={formatTime(eventForm.endTime) ?? undefined}
-                disabled={!eventForm.startTime || !eventForm.endTime}
-                onChange={(e) => {
-                  const value = clampTime(
-                    e.target.value,
-                    eventForm.startTime,
-                    eventForm.endTime
-                  );
+          {/* Description */}
+          <Input
+            value={agendaName}
+            placeholder={tCreateEvent("descriptionPlaceholder")}
+            onChange={(e) => setAgendaName(e.target.value)}
+            className="w-full sm:flex-1 body-large-primary"
+          />
 
-                  if (agendaStart && value <= agendaStart) {
-                    setAgendaEnd(agendaStart);
-                  } else {
-                    setAgendaEnd(value);
-                  }
-                }}
-                className="absolute inset-0 opacity-0 cursor-pointer"
-              />
-
-              <div
-                className={cn(
-                  "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                  !isDateSelected && "opacity-50 pointer-events-none"
-                )}
-              >
-                <span>{agendaEnd || tCreateEvent("timePlaceholder")}</span>
-                <IonIcon name="Time" size="16px" className="text-primary" />
-              </div>
-            </label>
-
-            <p className="pl-3 body-small-primary text-neutral-500">
-              {tCreateEvent("endTime")}
-            </p>
-          </div>
+          {/* Button */}
+          <Button
+            mode="filled"
+            bordered="square"
+            expanded={false}
+            onClick={handleAddAgenda}
+            className={`h-9 w-fit ${
+              agendaStart && agendaEnd && agendaName
+                ? "cursor-pointer"
+                : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
+            }`}
+          >
+            {tCreateEvent("addAgenda")}
+          </Button>
         </div>
-
-        {/* Description */}
-        <Input
-          value={agendaName}
-          placeholder={tCreateEvent("descriptionPlaceholder")}
-          onChange={(e) => setAgendaName(e.target.value)}
-          className="w-full sm:flex-1 body-large-primary"
-        />
-
-        {/* Button */}
-        <Button
-          mode="filled"
-          bordered="square"
-          expanded={false}
-          onClick={handleAddAgenda}
-          className={`h-9 w-fit ${
-            agendaStart && agendaEnd && agendaName
-              ? "cursor-pointer"
-              : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
-          }`}
-        >
-          {tCreateEvent("addAgenda")}
-        </Button>
       </div>
 
       {/* Agenda List */}
