@@ -822,7 +822,7 @@ const EventEditTemplate = () => {
 
           {/* Delete */}
           <Dialog open={openDelete} onOpenChange={setOpenDelete}>
-            <DialogContent className="[&>button]:hidden min-w-[60vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
+            <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
               {/* Header */}
               <DialogTitle className="flex flex-col items-center gap-4 headline-large-emphasized text-primary">
                 <IonIcon name="Trash" size="60px" />
