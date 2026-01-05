@@ -25,6 +25,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@assets/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@assets/components/ui/dialog";
 
 export interface Agenda {
   id: string;
@@ -111,7 +116,7 @@ const EventCreateTemplate = () => {
   const router = useRouter();
 
   const [step, setStep] = useState<number>(1);
-  const [showExample, setShowExample] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const [width, setWidth] = useState(0);
 
   const [eventForm, setEventForm] = useState<EventFormInterface>({
@@ -217,7 +222,7 @@ const EventCreateTemplate = () => {
           className="absolute left-4 top-4 text-primary font-semibold cursor-pointer flex items-center"
         >
           <IonIcon name="ChevronBack" size="16px" />
-          <p className="hidden sm:block label-large-emphasized">
+          <p className="hidden md:block label-large-emphasized">
             {tCreateEvent("back")}
           </p>
         </button>
@@ -230,11 +235,11 @@ const EventCreateTemplate = () => {
         <div
           className={`
             w-full flex gap-4 ${width < 320 ? "flex-col" : "flex-row flex-wrap justify-between"}
-            sm:items-center sm:justify-center px-4 py-8`}
+            md:items-center md:justify-center px-4 py-8`}
         >
           {/* Progress Bar */}
           <div
-            className={`w-full ${width < 320 ? "max-w-4/5" : "max-w-1/2"} sm:max-w-4/5 sm:mx-auto flex items-center`}
+            className={`w-full ${width < 320 ? "max-w-4/5" : "max-w-1/2"} md:max-w-4/5 md:mx-auto flex items-center`}
           >
             {[1, 2, 3].map((stepNumber) => {
               const isActive = stepNumber === step;
@@ -295,8 +300,8 @@ const EventCreateTemplate = () => {
             mode="outline"
             bordered="square"
             expanded
-            className="w-fit h-9 sm:hidden"
-            onClick={() => setShowExample(true)}
+            className="w-fit h-9 md:hidden"
+            onClick={() => setShowPreview(true)}
           >
             <p className="label-large-primary -translate-y-1">
               {tCreateEvent("showExample")}
@@ -304,9 +309,9 @@ const EventCreateTemplate = () => {
           </Button>
         </div>
 
-        <div className="flex gap-6 sm:px-4">
+        <div className="flex gap-6 md:px-4">
           {/* Preview */}
-          <div className="w-full flex-1 hidden sm:flex sm:flex-col sm:flex-2 sm:gap-4">
+          <div className="w-full flex-1 hidden md:flex md:flex-col md:flex-2 md:gap-4">
             {/* Header */}
             <div className="flex justify-between gap-2 flex-wrap">
               <h2 className="title-large-emphasized text-primary">
@@ -342,7 +347,7 @@ const EventCreateTemplate = () => {
           {/* Content */}
           <div className="flex flex-col flex-4">
             {/* Form */}
-            <div className="w-full flex-4 min-h-fit bg-neutral-white px-4 py-8 sm:rounded-4xl">
+            <div className="w-full flex-4 min-h-fit bg-neutral-white px-4 py-8 md:rounded-4xl">
               {step === 1 && (
                 <CreateEventStep1
                   eventForm={eventForm}
@@ -483,11 +488,12 @@ const EventCreateTemplate = () => {
         </div>
       </main>
 
-      {width < 640 && (
-        <Drawer open={showExample} onOpenChange={setShowExample}>
+      {/* For Mobile */}
+      {width < 425 && (
+        <Drawer open={showPreview} onOpenChange={setShowPreview}>
           <DrawerContent className="px-4 py-2 bg-neutral-white h-fit max-h-[80vh]">
             <DrawerHeader>
-              <div className="flex justify-between gap-2 flex-wrap">
+              <div className="flex justify-between gap-2 flex-wrap items-center">
                 <DrawerTitle className="title-large-emphasized text-primary">
                   {tCreateEvent("eventPreview")}
                 </DrawerTitle>
@@ -518,6 +524,52 @@ const EventCreateTemplate = () => {
             </div>
           </DrawerContent>
         </Drawer>
+      )}
+
+      {/* For Tablet */}
+      {width >= 425 && width < 768 && (
+        <>
+          {/* Preview */}
+          <Dialog open={showPreview} onOpenChange={setShowPreview}>
+            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] h-fit max-h-[80vh]">
+              {/* Header */}
+              <div className="flex justify-between gap-2 px-6 py-4 bg-neutral-white rounded-2xl h-fit items-center">
+                <DialogTitle className="headline-small-emphasized text-primary">
+                  {tCreateEvent("eventPreview")}
+                </DialogTitle>
+
+                <Select value={cardMode} onValueChange={setCardMode}>
+                  <SelectTrigger className="w-[150px]">
+                    <SelectValue placeholder={tCreateEvent("eventPreview")} />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value={CardPreviewType.CARD_PREVIEW}>
+                        {tCreateEvent(CardPreviewType.CARD_PREVIEW)}
+                      </SelectItem>
+                      <SelectItem value={CardPreviewType.DETAIL_PREVIEW}>
+                        {tCreateEvent(CardPreviewType.DETAIL_PREVIEW)}
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Content */}
+              <div className="w-full flex items-center justify-center bg-neutral-white py-4 rounded-2xl h-fit max-h-full">
+                <div
+                  className={`w-full h-fit max-h-full ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100 max-w-[60vw]"} rounded-4xl p-4 overflow-y-auto break-all`}
+                >
+                  <CreateEventPreview
+                    eventForm={eventForm}
+                    cardMode={cardMode}
+                  />
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </>
       )}
     </div>
   );
