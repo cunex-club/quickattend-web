@@ -39,8 +39,8 @@ const BAR_CONSTANTS = {
   LABEL_OFFSET: 8,
   LABEL_FONT_SIZE: 14,
   SIZE_DESKTOP: 28,
-  SIZE_TABLET: 15,
-  SIZE_MOBILE: 22,
+  SIZE_TABLET: 22,
+  SIZE_MOBILE: 19,
   OPACITY_ACTIVE: 1,
   OPACITY_INACTIVE: 0.2,
 } as const;
@@ -110,14 +110,14 @@ export function BarChartVerticalMulti({ data }: BarChartVerticalMultiProps) {
   };
 
   return (
-    <Card className="bg-neutral-100 border-none shadow-none">
+    <Card className="bg-neutral-white lg:bg-neutral-100 border-none shadow-none">
       <CardContent
-        className="mx-0 sm:mx-8 md:mx-16 lg:mx-24 xl:mx-10 py-6 md:py-2 overflow-y-auto h-[450px] md:h-[500px] lg:h-[550px] xl:h-[600px] "
+        className="overflow-y-auto h-[450px] md:h-[500px] lg:h-[550px] xl:h-[600px] "
         onClick={() => {
           handleBackgroundClick();
         }}
       >
-        <div className="chart-list-group flex flex-col space-y-8">
+        <div className="flex flex-col space-y-8 m-0 lg:m-8">
           {data.map((facultyData, idx) => (
             <div
               key={`faculty-chart-${idx}`}
@@ -125,7 +125,9 @@ export function BarChartVerticalMulti({ data }: BarChartVerticalMultiProps) {
             >
               {/* Custom label for faculty name */}
               <div className="flex lg:col-span-1">
-                <p className="title-large-primary">{facultyData.faculty}</p>
+                <p className="title-medium-primary lg:title-large-primary">
+                  {facultyData.faculty}
+                </p>
               </div>
 
               {/* Chart container for this faculty's bars */}
