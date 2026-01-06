@@ -23,13 +23,21 @@ import {
 } from "@assets/components/ui/avatar";
 import Button from "@shared/Button";
 import IonIcon from "@shared/IonIcon";
+import { ShareModalData } from "@customTypes/events";
+import {
+  ROLE_OPTIONS,
+  MANAGER_ROLE_OPTIONS,
+  SCAN_PERMISSION_OPTIONS,
+  REVEALED_FIELDS_OPTIONS,
+} from "@modules/events/event-id/constants/constant";
 
 interface ShareModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  eventData: ShareModalData;
 }
 
-const ShareModal = ({ open, onOpenChange }: ShareModalProps) => {
+const ShareModal = ({ open, onOpenChange, eventData }: ShareModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -58,9 +66,11 @@ const ShareModal = ({ open, onOpenChange }: ShareModalProps) => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="manager">Manager</SelectItem>
-                    <SelectItem value="owner">Owner</SelectItem>
-                    <SelectItem value="viewer">Viewer</SelectItem>
+                    {ROLE_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -78,60 +88,70 @@ const ShareModal = ({ open, onOpenChange }: ShareModalProps) => {
             <div className="space-y-3">
               <h3 className="font-semibold text-lg">ผู้เข้าถึงกิจกรรม</h3>
 
-              {/* User 1 */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-12 w-12 border border-neutral-100">
-                    <AvatarImage src="/placeholder-avatar.jpg" />
-                    <AvatarFallback>นค</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <div className="font-medium">นายคหฤทธิ์ ครเนือง</div>
-                    <div className="text-sm text-gray-600">
-                      คณะวิศวกรรมศาสตร์
+              {eventData.managers_and_staff.map((user) => {
+                const isOwner = user.role === "owner";
+                const initials = user.name
+                  .split(" ")
+                  .slice(0, 2)
+                  .map((n) => n[0])
+                  .join("");
+
+                return (
+                  <div
+                    key={user.id}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-12 w-12 border border-neutral-100">
+                        <AvatarImage src={user.avatar} />
+                        <AvatarFallback>{initials}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="font-medium">{user.name}</div>
+                        <div className="text-sm text-gray-600">
+                          {user.organization}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      {isOwner ? (
+                        <Select defaultValue="owner" disabled>
+                          <SelectTrigger className="w-32 border-0 shadow-none">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {ROLE_OPTIONS.slice(0, 2).map((option) => (
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <Select defaultValue={user.role}>
+                          <SelectTrigger className="w-32 border-0 shadow-none">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {MANAGER_ROLE_OPTIONS.map((option) => (
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                                className={option.className}
+                              >
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
                     </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Select defaultValue="owner" disabled>
-                    <SelectTrigger className="w-32 border-0 shadow-none">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="owner">Owner</SelectItem>
-                      <SelectItem value="manager">Manager</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {/* User 2 */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-12 w-12 border border-neutral-100">
-                    <AvatarImage src="/placeholder-avatar.jpg" />
-                    <AvatarFallback>นจ</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <div className="font-medium">นางสาวพฤศิตี สีกตี</div>
-                    <div className="text-sm text-gray-600">คณะวิทยาศาสตร์</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Select defaultValue="manager">
-                    <SelectTrigger className="w-32 border-0 shadow-none">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="manager">Manager</SelectItem>
-                      <SelectItem value="viewer">ผู้ดูแลงาน</SelectItem>
-                      <SelectItem value="remove" className="text-red-500">
-                        ผู้จัดการกิจกรรม
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
+                );
+              })}
             </div>
             <div className="border-b-2 mx-4 border-primary mt-6"></div>
             {/* Permissions Section */}
@@ -140,15 +160,18 @@ const ShareModal = ({ open, onOpenChange }: ShareModalProps) => {
                 สิทธิ์ผู้สามารถสแกน
               </div>
               <div>
-                <Select defaultValue="all">
+                <Select
+                  defaultValue={eventData.allow_all_to_scan ? "all" : "manager"}
+                >
                   <SelectTrigger className="w-40 bg-neutral-white rounded-xl border-0 shadow-none">
                     <SelectValue placeholder="เลือกผู้สามารถแชทแทน" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">ทุกคน</SelectItem>
-                    <SelectItem value="manager">Manager</SelectItem>
-                    <SelectItem value="owner">Owner</SelectItem>
-                    <SelectItem value="viewer">Viewer</SelectItem>
+                    {SCAN_PERMISSION_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -160,26 +183,17 @@ const ShareModal = ({ open, onOpenChange }: ShareModalProps) => {
                 ตั้งค่าผลลัพธ์การสแกน
               </h3>
               <div className="flex flex-wrap justify-between gap-x-8 gap-y-4">
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="general" defaultChecked />
-                  <p className="title-medium-primary">แสดงทั้งหมด</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="datetime" defaultChecked />
-                  <p className="title-medium-primary">รูปภาพ</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="upload" defaultChecked />
-                  <p className="title-medium-primary">ชื่อ-นามสกุล</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="location" defaultChecked />
-                  <p className="title-medium-primary">รหัสประจำตัว</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="additional" defaultChecked />
-                  <p className="title-medium-primary">คณะ/หน่วยงาน</p>
-                </div>
+                {REVEALED_FIELDS_OPTIONS.map((field) => (
+                  <div key={field.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={field.id}
+                      defaultChecked={eventData.revealed_fields.includes(
+                        field.field
+                      )}
+                    />
+                    <p className="title-medium-primary">{field.label}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
