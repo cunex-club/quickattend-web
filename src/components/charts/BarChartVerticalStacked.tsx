@@ -86,7 +86,10 @@ export function BarChartVerticalStacked({
                 <ChartContainer
                   config={chartConfig}
                   className="w-full chart-hover-bar"
-                  style={{ maxHeight: `${BAR_SIZE}px` }}
+                  style={{
+                    height: `${BAR_SIZE}px`,
+                    maxHeight: `${BAR_SIZE}px`,
+                  }}
                 >
                   <BarChart
                     data={[item]}

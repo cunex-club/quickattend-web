@@ -50,7 +50,7 @@ export function BarChartHorizontalOverview({
       <CardContent className="px-0 py-0 h-full">
         <div
           className="min-w-full h-full md:w-full"
-          style={{ minWidth: `${chartWidth}px` }}
+          style={{ width: `${chartWidth}px` }}
         >
           <ChartContainer
             config={chartConfig}

@@ -80,7 +80,7 @@ export function BarChartHorizontalMulti({
         <div className="min-w-[1000px] sm:min-w-[2000px] md:min-w-[1500px] lg:min-w-[1300px] w-full">
           <ChartContainer
             config={chartConfig}
-            className="w-full pr-3 max-h-[250px] md:max-h-[450px] chart-hover-bar"
+            className="w-full pr-3 h-[250px] md:h-[450px] chart-hover-bar"
           >
             <BarChart accessibilityLayer data={chartData} barGap={BAR_SPACING}>
               <CartesianGrid

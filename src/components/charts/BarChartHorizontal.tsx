@@ -59,7 +59,7 @@ export function BarChartHorizontal({
         <div className="w-full overflow-x-auto">
           <ChartContainer
             config={chartConfig}
-            className="max-h-[280px] md:max-h-[350px] lg:max-h-[400px] w-full pr-3 mb-4 chart-hover-bar"
+            className="h-[280px] md:h-[350px] lg:h-[400px] w-full pr-3 mb-4 chart-hover-bar"
             style={{ minWidth: `${chartWidth}px` }}
           >
             <BarChart

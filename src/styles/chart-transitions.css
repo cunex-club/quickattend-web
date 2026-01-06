@@ -5,6 +5,7 @@
       opacity 0.3s ease;
   }
 
+  /* bar chart vertical */
   .chart-hover-bar .recharts-bar-rectangle,
   .chart-hover-bar .recharts-rectangle {
     transition: fill-opacity 0.3s ease-in-out;
@@ -20,6 +21,7 @@
     fill-opacity: 0.5;
   }
 
+  /* pie chart */
   .chart-hover-pie .recharts-pie-sector {
     transition: opacity 0.3s ease-in-out;
   }
@@ -28,6 +30,7 @@
     opacity: 0.3;
   }
 
+  /* bar chart vertical overview */
   .chart-list-group:hover .recharts-rectangle {
     fill-opacity: 0.3;
   }

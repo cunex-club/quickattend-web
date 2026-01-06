@@ -78,7 +78,7 @@ export function BarChartVerticalOverview({
               </div>
               <ChartContainer
                 config={chartConfig}
-                style={{ maxHeight: `${BAR_SIZE}px` }}
+                style={{ height: `${BAR_SIZE}px` }}
                 className="w-full chart-hover-bar"
               >
                 <BarChart
