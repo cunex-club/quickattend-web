@@ -16,6 +16,8 @@ import {
 } from "@assets/components/ui/chart";
 import { BarChartHorizontalOverviewProps } from "@customTypes/chart";
 
+// CONSTANTS
+
 const chartConfig = {
   XAxis: {
     color: "var(--color-neutral-400)",
@@ -32,17 +34,22 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+const CHART_CONSTANTS = {
+  BAR_RADIUS: [8, 8, 0, 0] as [number, number, number, number],
+  BAR_CATEGORY_GAP: 1,
+  STROKE_DASH_ARRAY: "3 3",
+  LABEL_OFFSET: 12,
+  LABEL_FONT_SIZE: 12,
+  WIDTH_PER_BAR: 120,
+  DOMAIN_MULTIPLIER: 1.35,
+} as const;
+
+// Component
+
 export function BarChartHorizontalOverview({
   data,
 }: BarChartHorizontalOverviewProps) {
-  const BAR_RADIUS: [number, number, number, number] = [8, 8, 0, 0];
-  const BAR_CATEGORY_GAP: number = 1;
-  const STROKE_DASH_ARRAY: string = "3 3";
-  const LABEL_OFFSET: number = 12;
-  const LABEL_FONT_SIZE: number = 12;
-
-  // Calculate dynamic height based on number of bars
-  const chartWidth = data.length * 120;
+  const chartWidth = data.length * CHART_CONSTANTS.WIDTH_PER_BAR;
   const domainY = data.reduce((max, item) => Math.max(max, item.total), 0);
 
   return (
@@ -59,12 +66,12 @@ export function BarChartHorizontalOverview({
             <BarChart
               accessibilityLayer
               data={data}
-              barCategoryGap={BAR_CATEGORY_GAP}
+              barCategoryGap={CHART_CONSTANTS.BAR_CATEGORY_GAP}
             >
               <CartesianGrid
                 vertical={false}
                 stroke="var(--color-CartesianGrid)"
-                strokeDasharray={STROKE_DASH_ARRAY}
+                strokeDasharray={CHART_CONSTANTS.STROKE_DASH_ARRAY}
               />
               <XAxis
                 dataKey="time"
@@ -80,7 +87,7 @@ export function BarChartHorizontalOverview({
                 tickMargin={10}
                 axisLine={true}
                 stroke={"var(--color-YAxis)"}
-                domain={[0, domainY * 1.35]}
+                domain={[0, domainY * CHART_CONSTANTS.DOMAIN_MULTIPLIER]}
                 tickCount={7}
                 tickFormatter={(value) => value.toFixed(0)}
               />
@@ -88,14 +95,14 @@ export function BarChartHorizontalOverview({
               <Bar
                 dataKey="total"
                 fill="var(--color-total)"
-                radius={BAR_RADIUS}
+                radius={CHART_CONSTANTS.BAR_RADIUS}
               >
                 <LabelList
                   dataKey="total"
                   position="top"
                   className="fill-neutral-black"
-                  offset={LABEL_OFFSET}
-                  fontSize={LABEL_FONT_SIZE}
+                  offset={CHART_CONSTANTS.LABEL_OFFSET}
+                  fontSize={CHART_CONSTANTS.LABEL_FONT_SIZE}
                 />
               </Bar>
             </BarChart>

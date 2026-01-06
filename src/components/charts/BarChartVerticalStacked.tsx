@@ -11,8 +11,6 @@ import { Card, CardContent } from "@assets/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
 } from "@assets/components/ui/chart";
 import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
 import { BarChartVerticalStackedProps } from "@customTypes/chart";
@@ -112,11 +110,13 @@ export function BarChartVerticalStacked({
                       axisLine={false}
                       hide
                     />
+                    
                     {/* really hard to make responsive tooltip */}
                     {/* <ChartTooltip
                       content={<ChartTooltipContent />}
                       allowEscapeViewBox={{ x: true, y: true }}
                     /> */}
+
                     {/* left stacked */}
                     <Bar
                       dataKey="unregistered"

@@ -12,7 +12,7 @@ import {
 import { BarChartVerticalMultiProps } from "@customTypes/chart";
 import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
 
-export const description = "A multiple bar chart";
+// CONSTANTS
 
 const chartConfig = {
   XAxis: {
@@ -32,58 +32,82 @@ const CHART_COLORS = [
   "var(--color-chart-3)",
   "var(--color-chart-4)",
   "var(--color-chart-5)",
-];
+] as const;
 
-export function BarChartVerticalMulti({ data }: BarChartVerticalMultiProps) {
-  const BAR_RADIUS = 2;
-  const LABEL_OFFSET: number = 8;
-  const LABEL_FONT_SIZE: number = 14;
+const BAR_CONSTANTS = {
+  RADIUS: 2,
+  LABEL_OFFSET: 8,
+  LABEL_FONT_SIZE: 14,
+  SIZE_DESKTOP: 28,
+  SIZE_TABLET: 15,
+  SIZE_MOBILE: 22,
+  OPACITY_ACTIVE: 1,
+  OPACITY_INACTIVE: 0.2,
+} as const;
 
-  // Track which series (time/color) is being hovered
-  const [hoveredSeriesIndex, setHoveredSeriesIndex] = useState<number | null>(
-    null
-  );
-  const [isLocked, setIsLocked] = useState<boolean>(false);
+// TYPES
 
-  // Transform nested data structure to flat structure for vertical display
-  // From: [{faculty, data: [{time, total}]}]
-  // To: [{faculty: faculty1, time1: total, time2: total, ...}, {faculty: faculty2, ...}]
-  const transformData = () => {
-    if (!data || data.length === 0) return [];
+interface TransformedDataEntry extends Record<string, string | number> {
+  faculty: string;
+}
 
-    return data.map(({ faculty, data: timeData }) => {
-      const entry: Record<string, string | number> = { faculty };
-      timeData.forEach(({ time, total }) => {
-        entry[time] = total;
-      });
-      return entry;
+// HELPER FUNCTIONS
+
+const transformDataForChart = (
+  data: BarChartVerticalMultiProps["data"]
+): TransformedDataEntry[] => {
+  if (!data || data.length === 0) return [];
+
+  return data.map(({ faculty, data: timeData }) => {
+    const entry: TransformedDataEntry = { faculty };
+    timeData.forEach(({ time, total }) => {
+      entry[time] = total;
     });
-  };
+    return entry;
+  });
+};
 
-  const chartData = transformData();
-
-  // Extract time labels for series (all unique times from all faculty data)
+const extractTimeLabels = (
+  data: BarChartVerticalMultiProps["data"]
+): string[] => {
   const times = new Set<string>();
   data.forEach(({ data: timeData }) => {
     timeData.forEach(({ time }) => {
       times.add(time);
     });
   });
-  const timeArray = Array.from(times);
+  return Array.from(times);
+};
 
+const getResponsiveBarSize = (isMobile: boolean, isTablet: boolean): number => {
+  if (isMobile) return BAR_CONSTANTS.SIZE_MOBILE;
+  if (isTablet) return BAR_CONSTANTS.SIZE_TABLET;
+  return BAR_CONSTANTS.SIZE_DESKTOP;
+};
+
+// Component
+
+export function BarChartVerticalMulti({ data }: BarChartVerticalMultiProps) {
+  // Hooks - must be called first
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+
+  // State
+  const [hoveredSeriesIndex, setHoveredSeriesIndex] = useState<number | null>(
+    null
+  );
+  const [isLocked, setIsLocked] = useState<boolean>(false);
+
+  // Computed values
+  const chartData = transformDataForChart(data);
+  const timeArray = extractTimeLabels(data);
+  const barSize = getResponsiveBarSize(isMobile, isTablet);
+
+  // Event handlers
   const handleBackgroundClick = () => {
     setIsLocked(false);
     setHoveredSeriesIndex(null);
   };
-
-  const isMobile = useIsMobile();
-  const isTablet = useIsTablet();
-  let BAR_SIZE: number = 28;
-  if (isMobile) {
-    BAR_SIZE = 22;
-  } else if (isTablet) {
-    BAR_SIZE = 15;
-  }
 
   return (
     <Card className="bg-neutral-100 border-none shadow-none">
@@ -107,7 +131,7 @@ export function BarChartVerticalMulti({ data }: BarChartVerticalMultiProps) {
               {/* Chart container for this faculty's bars */}
               <ChartContainer
                 config={chartConfig}
-                style={{ height: `${timeArray.length * BAR_SIZE}px` }}
+                style={{ height: `${timeArray.length * barSize}px` }}
                 className="w-full lg:col-span-2"
               >
                 <BarChart
@@ -134,16 +158,22 @@ export function BarChartVerticalMulti({ data }: BarChartVerticalMultiProps) {
                       key={time}
                       dataKey={time}
                       fill={CHART_COLORS[seriesIndex % CHART_COLORS.length]}
-                      radius={BAR_RADIUS}
-                      barSize={BAR_SIZE}
+                      radius={BAR_CONSTANTS.RADIUS}
+                      barSize={barSize}
                       // the shape prop is used to customize the shape of the bar
-                      shape={(props: any) => {
-                        const { x, y, width, height, fill } = props;
+                      shape={(props: unknown) => {
+                        const { x, y, width, height, fill } = props as {
+                          x: number;
+                          y: number;
+                          width: number;
+                          height: number;
+                          fill: string;
+                        };
                         const opacity =
                           hoveredSeriesIndex === null ||
                           hoveredSeriesIndex === seriesIndex
-                            ? 1
-                            : 0.2;
+                            ? BAR_CONSTANTS.OPACITY_ACTIVE
+                            : BAR_CONSTANTS.OPACITY_INACTIVE;
 
                         return (
                           <rect
@@ -151,9 +181,9 @@ export function BarChartVerticalMulti({ data }: BarChartVerticalMultiProps) {
                             y={y}
                             width={width}
                             height={height}
-                            fill={fill} // use fill from props
-                            rx={BAR_RADIUS}
-                            ry={BAR_RADIUS}
+                            fill={fill}
+                            rx={BAR_CONSTANTS.RADIUS}
+                            ry={BAR_CONSTANTS.RADIUS}
                             opacity={opacity}
                             className="transition-opacity duration-200"
                             // add event handlers that will handle the hover and click events
@@ -179,9 +209,9 @@ export function BarChartVerticalMulti({ data }: BarChartVerticalMultiProps) {
                       <LabelList
                         dataKey={time}
                         position="right"
-                        offset={LABEL_OFFSET}
+                        offset={BAR_CONSTANTS.LABEL_OFFSET}
                         className="fill-foreground hidden md:block"
-                        fontSize={LABEL_FONT_SIZE}
+                        fontSize={BAR_CONSTANTS.LABEL_FONT_SIZE}
                       />
                     </Bar>
                   ))}

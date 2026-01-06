@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import {
   Bar,
   BarChart,
@@ -16,7 +18,7 @@ import {
 } from "@assets/components/ui/chart";
 import { BarChartHorizontalMultiProps } from "@customTypes/chart";
 
-export const description = "A multiple bar chart";
+// CONSTANTS
 
 const chartConfig = {
   XAxis: {
@@ -36,59 +38,96 @@ const CHART_COLORS = [
   "var(--color-chart-3)",
   "var(--color-chart-4)",
   "var(--color-chart-5)",
-];
+] as const;
+
+const CHART_CONSTANTS = {
+  BAR_SPACING: 0,
+  BAR_RADIUS: 2,
+  LABEL_OFFSET: 8,
+  LABEL_FONT_SIZE: 14,
+  STROKE_DASH_ARRAY: "3 3",
+  OPACITY_ACTIVE: 1,
+  OPACITY_INACTIVE: 0.2,
+} as const;
+
+// TYPES
+
+interface TransformedDataEntry extends Record<string, string | number> {
+  time: string;
+}
+
+// HELPER FUNCTIONS
+
+const transformDataForChart = (
+  data: BarChartHorizontalMultiProps["data"]
+): TransformedDataEntry[] => {
+  if (!data || data.length === 0) return [];
+
+  const timeMap = new Map<string, TransformedDataEntry>();
+
+  // Collect all unique times and faculty data
+  data.forEach(({ faculty, data: timeData }) => {
+    timeData.forEach(({ time, total }) => {
+      if (!timeMap.has(time)) {
+        timeMap.set(time, { time });
+      }
+      const entry = timeMap.get(time)!;
+      entry[faculty] = total;
+    });
+  });
+
+  return Array.from(timeMap.values());
+};
+
+const extractFacultyNames = (
+  data: BarChartHorizontalMultiProps["data"]
+): string[] => {
+  return data.map((item) => item.faculty);
+};
+
+// COMPONENT
 
 export function BarChartHorizontalMulti({
   data,
 }: BarChartHorizontalMultiProps) {
-  const BAR_SPACING = 0;
-  const BAR_RADIUS = 2;
-  const LABEL_OFFSET: number = 8;
-  const LABEL_FONT_SIZE: number = 14;
-  const STROKE_DASH_ARRAY: string = "3 3";
+  // State
+  const [hoveredSeriesIndex, setHoveredSeriesIndex] = useState<number | null>(
+    null
+  );
+  const [isLocked, setIsLocked] = useState<boolean>(false);
 
-  // Transform nested data structure to flat structure for Recharts
-  // From: [{faculty, data: [{time, total}]}]
-  // To: [{time, faculty1: total, faculty2: total, ...}]
-  const transformData = () => {
-    if (!data || data.length === 0) return [];
+  // Computed values
+  const chartData = transformDataForChart(data);
+  const faculties = extractFacultyNames(data);
 
-    const timeMap = new Map<string, Record<string, string | number>>();
-
-    // Collect all unique times and faculty data
-    data.forEach(({ faculty, data: timeData }) => {
-      timeData.forEach(({ time, total }) => {
-        if (!timeMap.has(time)) {
-          timeMap.set(time, { time });
-        }
-        const entry = timeMap.get(time)!;
-        entry[faculty] = total;
-      });
-    });
-
-    return Array.from(timeMap.values());
+  // Event handlers
+  const handleBackgroundClick = () => {
+    setIsLocked(false);
+    setHoveredSeriesIndex(null);
   };
-
-  const chartData = transformData();
-
-  // Extract faculty names for series
-  const faculties = data.map((item) => item.faculty);
 
   return (
     <Card className="px-0 border-none shadow-none">
-      <CardContent className="px-0 overflow-auto">
+      <CardContent
+        className="px-0 overflow-auto"
+        onClick={handleBackgroundClick}
+      >
         <div className="min-w-[1000px] sm:min-w-[2000px] md:min-w-[1500px] lg:min-w-[1300px] w-full">
           <ChartContainer
             config={chartConfig}
-            className="w-full pr-3 h-[250px] md:h-[450px] chart-hover-bar"
+            className="w-full pr-3 h-[250px] md:h-[450px]"
           >
-            <BarChart accessibilityLayer data={chartData} barGap={BAR_SPACING}>
+            <BarChart
+              accessibilityLayer
+              data={chartData}
+              barGap={CHART_CONSTANTS.BAR_SPACING}
+            >
               <CartesianGrid
                 horizontal={true}
                 vertical={false}
                 stroke="var(--color-gray-300)"
                 strokeWidth={0.4}
-                strokeDasharray={STROKE_DASH_ARRAY}
+                strokeDasharray={CHART_CONSTANTS.STROKE_DASH_ARRAY}
               />
               <XAxis
                 dataKey="time"
@@ -111,14 +150,63 @@ export function BarChartHorizontalMulti({
                   key={faculty}
                   dataKey={faculty}
                   fill={CHART_COLORS[index % CHART_COLORS.length]}
-                  radius={BAR_RADIUS}
+                  radius={CHART_CONSTANTS.BAR_RADIUS}
+                  shape={(props: unknown) => {
+                    const { x, y, width, height, fill } = props as {
+                      x: number;
+                      y: number;
+                      width: number;
+                      height: number;
+                      fill: string;
+                    };
+                    const opacity =
+                      hoveredSeriesIndex === null ||
+                      hoveredSeriesIndex === index
+                        ? CHART_CONSTANTS.OPACITY_ACTIVE
+                        : CHART_CONSTANTS.OPACITY_INACTIVE;
+
+                    return (
+                      <rect
+                        x={x}
+                        y={y}
+                        width={width}
+                        height={height}
+                        fill={fill}
+                        opacity={opacity}
+                        rx={CHART_CONSTANTS.BAR_RADIUS}
+                        ry={CHART_CONSTANTS.BAR_RADIUS}
+                        className="transition-opacity duration-200"
+                        onMouseEnter={() => {
+                          if (!isLocked) {
+                            setHoveredSeriesIndex(index);
+                          }
+                        }}
+                        onMouseLeave={() => {
+                          if (!isLocked) {
+                            setHoveredSeriesIndex(null);
+                          }
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (isLocked && hoveredSeriesIndex === index) {
+                            setIsLocked(false);
+                            setHoveredSeriesIndex(null);
+                          } else {
+                            setIsLocked(true);
+                            setHoveredSeriesIndex(index);
+                          }
+                        }}
+                        style={{ cursor: "pointer" }}
+                      />
+                    );
+                  }}
                 >
                   <LabelList
                     dataKey={faculty}
                     position="top"
-                    offset={LABEL_OFFSET}
+                    offset={CHART_CONSTANTS.LABEL_OFFSET}
                     className="fill-foreground"
-                    fontSize={LABEL_FONT_SIZE}
+                    fontSize={CHART_CONSTANTS.LABEL_FONT_SIZE}
                   />
                 </Bar>
               ))}

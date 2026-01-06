@@ -12,12 +12,16 @@ import {
 import { DonutChartProps } from "@customTypes/chart";
 import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
 
+// CONSTANTS
+
 const chartConfig = {
   total: {
     label: "Total",
     color: "var(--chart-pink-500)",
   },
 } satisfies ChartConfig;
+
+// Component
 
 export function DonutChart({ data }: { data: DonutChartProps[] }) {
   const isMobile = useIsMobile();

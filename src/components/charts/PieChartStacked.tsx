@@ -12,12 +12,16 @@ import {
 } from "@assets/components/ui/chart";
 import { PieChartStackedProps } from "@customTypes/chart";
 
+// CONSTANTS
+
 const chartConfig = {
   total: {
     label: "Total",
     color: "var(--chart-pink-500)",
   },
 } satisfies ChartConfig;
+
+// Component
 
 export function PieChartStacked({ data }: { data: PieChartStackedProps[] }) {
   const chartDataInner = data.map((item, index) => ({

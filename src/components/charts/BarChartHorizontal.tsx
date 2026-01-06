@@ -17,6 +17,8 @@ import {
 import { BarChartHorizontalProps } from "@customTypes/chart";
 import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
 
+// CONSTANTS
+
 const chartConfig = {
   XAxis: {
     color: "var(--color-neutral-400)",
@@ -33,25 +35,39 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+const CHART_CONSTANTS = {
+  BAR_RADIUS: [8, 8, 0, 0] as [number, number, number, number],
+  BAR_CATEGORY_GAP: 1,
+  LABEL_OFFSET: 12,
+  LABEL_FONT_SIZE: 12,
+  WIDTH_PER_BAR_DESKTOP: 180,
+  WIDTH_PER_BAR_TABLET: 150,
+  WIDTH_PER_BAR_MOBILE: 100,
+  STROKE_DASH_ARRAY: "3 3",
+} as const;
+
+// HELPER FUNCTIONS
+
+const getChartWidth = (
+  dataLength: number,
+  isMobile: boolean,
+  isTablet: boolean
+): number => {
+  if (isMobile) return dataLength * CHART_CONSTANTS.WIDTH_PER_BAR_MOBILE;
+  if (isTablet) return dataLength * CHART_CONSTANTS.WIDTH_PER_BAR_TABLET;
+  return dataLength * CHART_CONSTANTS.WIDTH_PER_BAR_DESKTOP;
+};
+
+// Component
+
 export function BarChartHorizontal({
   data,
 }: {
   data: BarChartHorizontalProps[];
 }) {
-  const BAR_RADIUS: [number, number, number, number] = [8, 8, 0, 0];
-  const BAR_CATEGORY_GAP: number = 1;
-  const LABEL_OFFSET: number = 12;
-  const LABEL_FONT_SIZE: number = 12;
-
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
-
-  let chartWidth = data.length * 180;
-  if (isMobile) {
-    chartWidth = data.length * 100;
-  } else if (isTablet) {
-    chartWidth = data.length * 150;
-  }
+  const chartWidth = getChartWidth(data.length, isMobile, isTablet);
 
   return (
     <Card className="p-0 border-none shadow-none">
@@ -68,14 +84,14 @@ export function BarChartHorizontal({
               margin={{
                 top: 20,
               }}
-              barCategoryGap={BAR_CATEGORY_GAP}
+              barCategoryGap={CHART_CONSTANTS.BAR_CATEGORY_GAP}
             >
               <CartesianGrid
                 horizontal={true}
                 vertical={false}
                 stroke="var(--color-CartesianGrid)"
                 strokeWidth={0.4}
-                strokeDasharray="3 3"
+                strokeDasharray={CHART_CONSTANTS.STROKE_DASH_ARRAY}
               />
               <XAxis
                 dataKey="time"
@@ -96,13 +112,13 @@ export function BarChartHorizontal({
               <Bar
                 dataKey="total"
                 fill="var(--color-total)"
-                radius={BAR_RADIUS}
+                radius={CHART_CONSTANTS.BAR_RADIUS}
               >
                 <LabelList
                   position="top"
-                  offset={LABEL_OFFSET}
+                  offset={CHART_CONSTANTS.LABEL_OFFSET}
                   className="fill-neutral-black"
-                  fontSize={LABEL_FONT_SIZE}
+                  fontSize={CHART_CONSTANTS.LABEL_FONT_SIZE}
                 />
               </Bar>
             </BarChart>

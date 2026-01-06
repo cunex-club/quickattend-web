@@ -20,6 +20,8 @@ import {
 } from "@customTypes/chart";
 import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
 
+// CONSTANTS
+
 export const description = "A bar chart with a custom label";
 export type { BarChartVerticalData };
 
@@ -33,32 +35,48 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BarChartVerticalOverview({
-  data,
-}: BarChartVerticalOverviewProps) {
-  const chartData = data;
-  const BAR_CHART_RADIUS: [number, number, number, number] = [2, 2, 2, 2];
-  const LABEL_OFFSET: number = 8;
-  const LABEL_FONT_SIZE: number = 14;
+const BAR_CONSTANTS = {
+  RADIUS: [2, 2, 2, 2] as [number, number, number, number],
+  LABEL_OFFSET: 8,
+  LABEL_FONT_SIZE: 14,
+  SIZE_DESKTOP: 28,
+  SIZE_TABLET: 19,
+  SIZE_MOBILE: 16,
+  DOMAIN_MULTIPLIER: 1.15,
+} as const;
 
-  const isMobile = useIsMobile();
-  const isTablet = useIsTablet();
-  let BAR_SIZE: number = 28;
-  if (isMobile) {
-    BAR_SIZE = 16;
-  } else if (isTablet) {
-    BAR_SIZE = 19;
-  }
+// HELPER FUNCTIONS
 
-  const maxDataValue = Math.max(...chartData.map((d) => d.total));
-  const xDomainMax = (maxDataValue || 0) * 1.15;
+const getBarSize = (isMobile: boolean, isTablet: boolean): number => {
+  if (isMobile) return BAR_CONSTANTS.SIZE_MOBILE;
+  if (isTablet) return BAR_CONSTANTS.SIZE_TABLET;
+  return BAR_CONSTANTS.SIZE_DESKTOP;
+};
 
-  // Compute percentage once to optionally show in tooltips (no transparent overlay)
-  const totalSum = chartData.reduce((sum, item) => sum + item.total, 0);
-  const chartDataWithMeta = chartData.map((item) => ({
+const calculateXDomain = (data: BarChartVerticalData[]): number => {
+  const maxValue = Math.max(...data.map((d) => d.total));
+  return (maxValue || 0) * BAR_CONSTANTS.DOMAIN_MULTIPLIER;
+};
+
+const addPercentageMetadata = (data: BarChartVerticalData[]) => {
+  const totalSum = data.reduce((sum, item) => sum + item.total, 0);
+  return data.map((item) => ({
     ...item,
     percentage: totalSum > 0 ? ((item.total / totalSum) * 100).toFixed(1) : "0",
   }));
+};
+
+// Component
+
+export function BarChartVerticalOverview({
+  data,
+}: BarChartVerticalOverviewProps) {
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+
+  const barSize = getBarSize(isMobile, isTablet);
+  const xDomainMax = calculateXDomain(data);
+  const chartDataWithMeta = addPercentageMetadata(data);
   return (
     <Card className="bg-neutral-white lg:bg-neutral-100 shadow-none p-0 md:p-8 xl:p-5 border-none rounded-[28px] w-full h-auto">
       <CardContent className="shadow-none border-none">
@@ -78,7 +96,7 @@ export function BarChartVerticalOverview({
               </div>
               <ChartContainer
                 config={chartConfig}
-                style={{ height: `${BAR_SIZE}px` }}
+                style={{ height: `${barSize}px` }}
                 className="w-full chart-hover-bar"
               >
                 <BarChart
@@ -109,15 +127,15 @@ export function BarChartVerticalOverview({
                     dataKey="total"
                     layout="vertical"
                     fill="var(--color-total)"
-                    radius={BAR_CHART_RADIUS}
-                    barSize={BAR_SIZE}
+                    radius={BAR_CONSTANTS.RADIUS}
+                    barSize={barSize}
                   >
                     <LabelList
                       dataKey="total"
                       position="right"
-                      offset={LABEL_OFFSET}
+                      offset={BAR_CONSTANTS.LABEL_OFFSET}
                       className="fill-foreground"
-                      fontSize={LABEL_FONT_SIZE}
+                      fontSize={BAR_CONSTANTS.LABEL_FONT_SIZE}
                     />
                   </Bar>
                 </BarChart>
