@@ -11,7 +11,10 @@ import { useTranslations } from "next-intl";
 
 // Dynamically import heavy chart components
 const BarChartHorizontal = dynamic(
-  () => import("@components/charts/BarChartHorizontal").then((mod) => mod.BarChartHorizontal),
+  () =>
+    import("@components/charts/BarChartHorizontal").then(
+      (mod) => mod.BarChartHorizontal
+    ),
   {
     loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />,
     ssr: false,
@@ -19,7 +22,10 @@ const BarChartHorizontal = dynamic(
 );
 
 const DonutChart = dynamic(
-  () => import("@components/charts/PieChartStacked").then((mod) => mod.PieChartStacked),
+  () =>
+    import("@components/charts/PieChartStacked").then(
+      (mod) => mod.PieChartStacked
+    ),
   {
     loading: () => <Skeleton className="h-full w-full rounded-lg" />,
     ssr: false,
@@ -27,7 +33,10 @@ const DonutChart = dynamic(
 );
 
 const BarChartVerticalStacked = dynamic(
-  () => import("@components/charts/BarChartVerticalStacked").then((mod) => mod.BarChartVerticalStacked),
+  () =>
+    import("@components/charts/BarChartVerticalStacked").then(
+      (mod) => mod.BarChartVerticalStacked
+    ),
   {
     loading: () => <Skeleton className="h-full w-full rounded-lg" />,
     ssr: false,
@@ -46,8 +55,9 @@ import {
   registeredData,
   registrationStatusData,
   timeData,
-} from "@utils/data"; 
+} from "@utils/data";
 import SortMenu from "@components/sort-menu";
+import InfoCard from "@components/InfoCard";
 
 const horizontalChartData = dataCategorizeByTime;
 const verticalStackData = registeredData;
@@ -62,12 +72,12 @@ export default function FilterView() {
     Record<string, boolean>
   >({});
   const [selectedTimes, setSelectedTimes] = useState<Record<string, boolean>>(
-    {},
+    {}
   );
   const createSelectionHandler =
     (
       setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-      allItemId: string,
+      allItemId: string
     ) =>
     (itemId: string, checked: boolean) => {
       setter((prevSelected) => {
@@ -88,7 +98,7 @@ export default function FilterView() {
 
   const handleFacultyChange = createSelectionHandler(
     setSelectedFaculties,
-    "f-0",
+    "f-0"
   );
   const handleTimeChange = createSelectionHandler(setSelectedTimes, "t-0");
 
@@ -97,8 +107,7 @@ export default function FilterView() {
     setSelectedTimes({});
   };
 
-  const handleSortChange = (value: string) => {
-  };
+  const handleSortChange = (value: string) => {};
 
   return (
     <div className="w-full rounded-xl bg-neutral-white space-y-16">
@@ -193,7 +202,7 @@ export default function FilterView() {
               title={t("totalAttendees")}
               value={500}
               unit={t("unit")}
-              variant="primary-outline"
+              variant="outline"
             >
               <div className="mt-4 hidden md:flex justify-center items-center px-8">
                 <span className="headline-small-emphasized pr-4 sm:pr-10 md:pr-16 text-center">
@@ -212,21 +221,19 @@ export default function FilterView() {
         </section>
         <section className="grid grid-cols-1 md:grid-cols-2 min-h-[400px] gap-8">
           <div className="h-full w-full">
-            <StatCard
-              title={t("totalEligible")}
+            <InfoCard
+              titleFull={t("totalEligible")}
+              titleShort={t("totalEligible")}
               value={600}
               unit={t("unit")}
-              variant="secondary"
-              className="shadow-elevation-4"
             />
           </div>
           <div className="h-full w-full">
-            <StatCard
-              title={t("totalUnregistered")}
+            <InfoCard
+              titleFull={t("totalUnregistered")}
+              titleShort={t("totalUnregistered")}
               value={100}
               unit={t("unit")}
-              variant="secondary"
-              className="shadow-elevation-4"
             />
           </div>
         </section>
@@ -267,9 +274,7 @@ export default function FilterView() {
 
       <Link href="/dashboard-compare" target="_blank">
         <Button mode="filled" bordered="square" expanded={false}>
-          <p className="title-medium-emphasized">
-            {t("compareButton")}
-          </p>
+          <p className="title-medium-emphasized">{t("compareButton")}</p>
         </Button>
       </Link>
     </div>
