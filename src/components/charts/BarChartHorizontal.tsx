@@ -69,6 +69,8 @@ export function BarChartHorizontal({
   const isTablet = useIsTablet();
   const chartWidth = getChartWidth(data.length, isMobile, isTablet);
 
+  // const reversedData = [...data].reverse();
+
   return (
     <Card className="p-0 border-none shadow-none">
       <CardContent className="px-0">

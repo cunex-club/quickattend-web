@@ -242,7 +242,7 @@ export function CompareView() {
                 title={t("totalAttendees")}
                 value={860}
                 unit={t("unit")}
-                variant="primary-outline"
+                variant="outline"
               >
                 <div className="flex flex-col justify-center items-center gap-4">
                   <p className="title-medium-emphasized lg:title-large-emphasized">

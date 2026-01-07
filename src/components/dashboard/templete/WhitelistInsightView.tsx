@@ -3,6 +3,7 @@
 import Button from "@components/Button";
 import React from "react";
 import StatCard from "@components/StatCard";
+import InfoCard from "@components/InfoCard";
 import Link from "next/link";
 import { useState } from "react";
 import dynamic from "next/dynamic";
@@ -207,19 +208,22 @@ export function WhitelistInsightView() {
 
       <div className="flex flex-col space-y-8">
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="h-[250px] md:h-[450px] w-full">
+          <div className="w-full">
             <StatCard
               title={t("totalAttendees")}
               value={500}
               unit={t("unit")}
-              variant="primary-outline"
+              variant="outline"
+              switchNumberPosition={true}
+              mobileLeftAlign={true}
+              className="lg:py-16"
             >
-              <div className="mt-0 md:mt-4 hidden md:flex justify-center items-center px-8">
-                <span className="headline-small-emphasized pr-4 sm:pr-10 md:pr-16 text-center">
+              <div className="md:mt-2 lg:mt-4 flex justify-start lg:justify-center px-0 lg:px-8">
+                <span className="title-medium-emphasized lg:headline-small-emphasized pr-4 lg:pr-16 text-center">
                   {t("students")}: 455 {t("unit")}
                 </span>
                 <div className="inline-block w-0.5 self-stretch bg-neutral-400"></div>
-                <span className="headline-small-emphasized pl-4 sm:pl-10 md:pl-16 text-center">
+                <span className="title-medium-emphasized lg:headline-small-emphasized pl-4 lg:pl-16 text-center">
                   {t("staffs")}: 5 {t("unit")}
                 </span>
               </div>
@@ -229,23 +233,19 @@ export function WhitelistInsightView() {
             <DonutChart data={donutChartData} />
           </div>
         </section>
-        <section className="grid grid-cols-1 md:grid-cols-2 min-h-[400px] gap-8">
-          <div className="h-full w-full">
-            <StatCard
-              title={t("totalEligible")}
-              value={600}
-              unit={t("unit")}
-              variant="secondary"
-            />
-          </div>
-          <div className="h-full w-full">
-            <StatCard
-              title={t("totalUnregistered")}
-              value={100}
-              unit={t("unit")}
-              variant="secondary"
-            />
-          </div>
+        <section className="grid grid-cols-2 gap-4 md:gap-8">
+          <InfoCard
+            value={600}
+            unit={t("unit")}
+            titleFull={t("totalEligible")}
+            titleShort={t("totalEligibleShort")}
+          />
+          <InfoCard
+            value={100}
+            unit={t("unit")}
+            titleFull={t("totalUnregistered")}
+            titleShort={t("totalUnregisteredShort")}
+          />
         </section>
       </div>
 

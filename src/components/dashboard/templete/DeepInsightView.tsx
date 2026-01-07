@@ -196,19 +196,21 @@ export function DeepInsightView() {
         </div>
       </section>
 
-      <div className="h-[250px] md:h-[450px] w-full">
+      <div className="h-auto lg:h-[450px] w-full">
         <StatCard
           title={t("totalAttendees")}
           value={eventData.totalAttendees}
           unit={t("unit")}
-          variant="primary-outline"
+          variant="outline"
+          switchNumberPosition={true}
+          mobileLeftAlign={true}
         >
-          <div className="mt-4 hidden md:flex justify-center items-center px-8">
-            <span className="headline-small-emphasized pr-2 md:pr-16 text-center">
+          <div className="lg:mt-4 flex justify-start lg:justify-center px-0 lg:px-8">
+            <span className="title-medium-emphasized lg:headline-small-emphasized pr-4 lg:pr-16 text-center">
               {t("students")}: {eventData.studentCount} {t("unit")}
             </span>
             <div className="inline-block w-0.5 self-stretch bg-neutral-400"></div>
-            <span className="headline-small-emphasized pl-2 md:pl-16 text-center">
+            <span className="title-medium-emphasized lg:headline-small-emphasized pl-4 lg:pl-16 text-center">
               {t("staffs")}: {eventData.staffCount} {t("unit")}
             </span>
           </div>

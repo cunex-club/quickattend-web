@@ -185,7 +185,8 @@ export function OverviewView() {
                 title={t("totalAttendees")}
                 value={event.totalAttendees}
                 unit={t("unit")}
-                variant="primary-filled"
+                variant="filled"
+                className="p-8 min-h-[230px]"
               />
             </div>
           </section>
