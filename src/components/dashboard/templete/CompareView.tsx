@@ -255,6 +255,8 @@ export function CompareView() {
               <PieChartWithLabel />
             </div>
           </section>
+
+          {/* Chart Section */}
           <section className="flex flex-col space-y-8">
             <p className="headline-large-emphasized">
               {t("facultyStatsTitle")}

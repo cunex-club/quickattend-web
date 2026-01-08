@@ -1,6 +1,4 @@
-// =============================================================================
-// Common Chart Configuration Types
-// =============================================================================
+// Common Chart Configuration Type
 
 export interface ChartStyleConfig {
   barSize?: number;
@@ -10,9 +8,7 @@ export interface ChartStyleConfig {
   labelFontSize?: number;
 }
 
-// =============================================================================
 // Bar Chart - Horizontal
-// =============================================================================
 
 export type BarChartHorizontalProps = {
   time: string;
@@ -38,9 +34,7 @@ export interface BarChartHorizontalMultiProps {
   data: BarChartHorizontalMultiFacultyData[];
 }
 
-// =============================================================================
 // Bar Chart - Vertical
-// =============================================================================
 
 export interface BarChartVerticalData {
   faculty: string;
@@ -78,9 +72,7 @@ export interface BarChartVerticalMultiProps {
   data: BarChartVerticalMultiFacultyData[];
 }
 
-// =============================================================================
 // Pie Chart Types
-// =============================================================================
 
 export type PieChartStackedProps = {
   category: string;
@@ -94,9 +86,7 @@ export interface PieChartWithLabelProps {
   }[];
 }
 
-// =============================================================================
 // Donut Chart Types
-// =============================================================================
 
 export type DonutChartProps = {
   category: string;

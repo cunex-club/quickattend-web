@@ -217,6 +217,7 @@ export function DeepInsightView() {
         </StatCard>
       </div>
 
+      {/* Chart Section */}
       <section className="flex flex-col space-y-8">
         <div className="flex justify-between">
           <p className="headline-small-emphasized md:headline-large-emphasized">
