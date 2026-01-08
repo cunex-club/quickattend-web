@@ -63,6 +63,8 @@ const horizontalChartData = dataCategorizeByTime;
 const verticalStackData = registeredData;
 const donutChartData = registrationStatusData;
 
+// init filter page
+
 export default function FilterView() {
   const t = useTranslations("Dashboard.insights");
   const [selectedFilter, setSelectedFilter] = useState<
