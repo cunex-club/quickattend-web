@@ -293,7 +293,7 @@ const CreateEventStep2 = ({
                   setFacultyQuery("");
                 }}
               >
-                <p className="label-large-primary -translate-y-0.5">
+                <p className="label-large-primary -translate-y-1">
                   {tCreateEvent("facultiesAdd")}
                 </p>
               </Button>
@@ -419,7 +419,7 @@ const CreateEventStep2 = ({
                   setStudentIdPermissionQuery("");
                 }}
               >
-                <p className="label-large-primary -translate-y-0.5">
+                <p className="label-large-primary -translate-y-1">
                   {tCreateEvent("whitelistAdd")}
                 </p>
               </Button>
@@ -472,7 +472,7 @@ const CreateEventStep2 = ({
 
       {/* Scan Setting */}
       <div className="flex flex-col gap-4 mb-4">
-        <p className="title-large-emphasized mb-4">
+        <p className="title-large-emphasized mb-2">
           {tCreateEvent("scanSetting")} <span className="text-primary">*</span>
         </p>
 
@@ -723,7 +723,7 @@ const CreateEventStep2 = ({
                   setStudentIdAccessibilityQuery("");
                 }}
               >
-                <p className="label-large-primary -translate-y-0.5">
+                <p className="label-large-primary -translate-y-1">
                   {tCreateEvent("addEventManager")}
                 </p>
               </Button>

@@ -1,10 +1,32 @@
 @import url("https://fonts.googleapis.com/css2?family=Sarabun&display=swap");
+@import "tailwindcss";
+
+@font-face {
+  font-family: "CHULALONGKORNBold";
+  src: url("../../../public/font/CHULALONGKORNBold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  ascent-override: 95%;
+  descent-override: 25%;
+}
+
+@font-face {
+  font-family: "CHULALONGKORNReg";
+  src: url("../../../public/font/CHULALONGKORNReg.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  ascent-override: 95%;
+  descent-override: 25%;
+}
 
 @font-face {
   font-family: "Material Symbols Outlined";
   font-style: normal;
   font-display: block;
-  src: url("@assets/font/material-symbols-outlined.woff2") format("woff2");
+  src: url("../../../public/font/material-symbols-outlined.woff2")
+    format("woff2");
 }
 
 :root {
@@ -20,249 +42,225 @@
   --font-sarabun: "Sarabun", "sans-serif";
 }
 
-/* Display */
-.display-large-primary {
+/* Display styles */
+@utility display-large-primary {
   font-family: var(--font-chula-regular);
-  font-size: 3.5625rem; /* 57px */
-  line-height: 4rem; /* 64px */
-  letter-spacing: -0.015625rem; /* -0.25px */
-  transform: translateY(1rem); /* 16px */
+  font-size: 57px;
+  line-height: 64px;
+  letter-spacing: -0.25px;
 }
 
-.display-medium-primary {
+@utility display-medium-primary {
   font-family: var(--font-chula-regular);
-  font-size: 2.8125rem; /* 45px */
-  line-height: 3.25rem; /* 52px */
-  letter-spacing: 0;
-  transform: translateY(0.75rem); /* 12px */
+  font-size: 45px;
+  line-height: 52px;
+  letter-spacing: 0px;
 }
 
-.display-small-primary {
+@utility display-small-primary {
   font-family: var(--font-chula-regular);
-  font-size: 2.25rem; /* 36px */
-  line-height: 2.75rem; /* 44px */
-  letter-spacing: 0;
-  transform: translateY(0.5rem); /* 8px */
+  font-size: 36px;
+  line-height: 44px;
+  letter-spacing: 0px;
 }
 
-.display-large-emphasized {
+@utility display-large-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 3.5625rem; /* 57px */
-  line-height: 4rem; /* 64px */
-  letter-spacing: -0.015625rem; /* -0.25px */
-  transform: translateY(1rem); /* 16px */
+  font-size: 57px;
+  line-height: 64px;
+  letter-spacing: -0.25px;
 }
 
-.display-medium-emphasized {
+@utility display-medium-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 2.8125rem; /* 45px */
-  line-height: 3.25rem; /* 52px */
-  letter-spacing: 0;
-  transform: translateY(0.75rem); /* 12px */
+  font-size: 45px;
+  line-height: 52px;
+  letter-spacing: 0px;
 }
 
-.display-small-emphasized {
+@utility display-small-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 2.25rem; /* 36px */
-  line-height: 2.75rem; /* 44px */
-  letter-spacing: 0;
-  transform: translateY(0.5rem); /* 8px */
+  font-size: 36px;
+  line-height: 44px;
+  letter-spacing: 0px;
 }
 
-/* Headline */
-.headline-large-primary {
+/* Headline styles */
+@utility headline-large-primary {
   font-family: var(--font-chula-regular);
-  font-size: 2rem; /* 32px */
-  line-height: 2.5rem; /* 40px */
-  letter-spacing: 0;
-  transform: translateY(0.5rem); /* 8px */
+  font-size: 32px;
+  line-height: 40px;
+  letter-spacing: 0px;
 }
 
-.headline-medium-primary {
+@utility headline-medium-primary {
   font-family: var(--font-chula-regular);
-  font-size: 1.75rem; /* 28px */
-  line-height: 2.25rem; /* 36px */
-  letter-spacing: 0;
-  transform: translateY(0.5rem); /* 8px */
+  font-size: 28px;
+  line-height: 36px;
+  letter-spacing: 0px;
 }
 
-.headline-small-primary {
+@utility headline-small-primary {
   font-family: var(--font-chula-regular);
-  font-size: 1.5rem; /* 24px */
-  line-height: 2rem; /* 32px */
-  letter-spacing: 0;
-  transform: translateY(0.375rem); /* 6px */
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: 0px;
 }
 
-.headline-large-emphasized {
+@utility headline-large-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 2rem; /* 32px */
-  line-height: 2.5rem; /* 40px */
-  letter-spacing: 0;
-  transform: translateY(0.5rem); /* 8px */
+  font-size: 32px;
+  line-height: 40px;
+  letter-spacing: 0px;
 }
 
-.headline-medium-emphasized {
+@utility headline-medium-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 1.75rem; /* 28px */
-  line-height: 2.25rem; /* 36px */
-  letter-spacing: 0;
-  transform: translateY(0.5rem); /* 8px */
+  font-size: 28px;
+  line-height: 36px;
+  letter-spacing: 0px;
 }
 
-.headline-small-emphasized {
+@utility headline-small-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 1.5rem; /* 24px */
-  line-height: 2rem; /* 32px */
-  letter-spacing: 0;
-  transform: translateY(0.375rem); /* 6px */
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: 0px;
 }
 
-/* Title */
-.title-large-primary {
+/* Title styles */
+@utility title-large-primary {
   font-family: var(--font-chula-regular);
-  font-size: 1.375rem; /* 22px */
-  line-height: 1.75rem; /* 28px */
-  letter-spacing: 0;
-  transform: translateY(0.375rem); /* 6px */
+  font-size: 22px;
+  line-height: 28px;
+  letter-spacing: 0px;
 }
 
-.title-medium-primary {
+@utility title-medium-primary {
   font-family: var(--font-chula-regular);
-  font-size: 1rem; /* 16px */
-  line-height: 1.5rem; /* 24px */
-  letter-spacing: 0.009375rem; /* 0.15px */
-  transform: translateY(0.25rem); /* 4px */
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.15px;
 }
 
-.title-small-primary {
+@utility title-small-primary {
   font-family: var(--font-chula-regular);
-  font-size: 0.875rem; /* 14px */
-  line-height: 1.25rem; /* 20px */
-  letter-spacing: 0.00625rem; /* 0.1px */
-  transform: translateY(0.25rem); /* 4px */
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
 }
 
-.title-large-emphasized {
+@utility title-large-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 1.375rem; /* 22px */
-  line-height: 1.75rem; /* 28px */
-  letter-spacing: 0;
-  transform: translateY(0.375rem); /* 6px */
+  font-size: 22px;
+  line-height: 28px;
+  letter-spacing: 0px;
 }
 
-.title-medium-emphasized {
+@utility title-medium-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 1rem; /* 16px */
-  line-height: 1.5rem; /* 24px */
-  letter-spacing: 0.009375rem; /* 0.15px */
-  transform: translateY(0.25rem); /* 4px */
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.15px;
 }
 
-.title-small-emphasized {
+@utility title-small-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 0.875rem; /* 14px */
-  line-height: 1.25rem; /* 20px */
-  letter-spacing: 0.00625rem; /* 0.1px */
-  transform: translateY(0.25rem); /* 4px */
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
 }
 
-/* Label */
-.label-large-primary {
+/* Label styles */
+@utility label-large-primary {
   font-family: var(--font-chula-regular);
-  font-size: 0.875rem; /* 14px */
-  line-height: 1.25rem; /* 20px */
-  letter-spacing: 0.00625rem; /* 0.1px */
-  transform: translateY(0.25rem); /* 4px */
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
 }
 
-.label-medium-primary {
+@utility label-medium-primary {
   font-family: var(--font-chula-regular);
-  font-size: 0.75rem; /* 12px */
-  line-height: 1rem; /* 16px */
-  letter-spacing: 0.03125rem; /* 0.5px */
-  transform: translateY(0.25rem); /* 4px */
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
 }
 
-.label-small-primary {
+@utility label-small-primary {
   font-family: var(--font-chula-regular);
-  font-size: 0.6875rem; /* 11px */
-  line-height: 1rem; /* 16px */
-  letter-spacing: 0.03125rem; /* 0.5px */
-  transform: translateY(0.125rem); /* 2px */
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
 }
 
-.label-large-emphasized {
+@utility label-large-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 0.875rem; /* 14px */
-  line-height: 1.25rem; /* 20px */
-  letter-spacing: 0.00625rem; /* 0.1px */
-  transform: translateY(0.25rem); /* 4px */
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
 }
 
-.label-medium-emphasized {
+@utility label-medium-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 0.75rem; /* 12px */
-  line-height: 1rem; /* 16px */
-  letter-spacing: 0.03125rem; /* 0.5px */
-  transform: translateY(0.25rem); /* 4px */
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
 }
 
-.label-small-emphasized {
+@utility label-small-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 0.6875rem; /* 11px */
-  line-height: 1rem; /* 16px */
-  letter-spacing: 0.03125rem; /* 0.5px */
-  transform: translateY(0.125rem); /* 2px */
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
 }
 
-/* Body */
-.body-large-primary {
+/* Body styles */
+@utility body-large-primary {
   font-family: var(--font-sarabun);
   font-weight: 400;
-  font-size: 1rem; /* 16px */
-  line-height: 1.75rem; /* 28px */
-  letter-spacing: 0.03125rem; /* 0.5px */
+  font-size: 16px;
+  line-height: 28px;
+  letter-spacing: 0.5px;
 }
 
-.body-medium-primary {
+@utility body-medium-primary {
   font-family: var(--font-sarabun);
   font-weight: 400;
-  font-size: 0.875rem; /* 14px */
-  line-height: 1.5rem; /* 24px */
-  letter-spacing: 0.015625rem; /* 0.25px */
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.25px;
 }
 
-.body-small-primary {
+@utility body-small-primary {
   font-family: var(--font-sarabun);
   font-weight: 400;
-  font-size: 0.75rem; /* 12px */
-  line-height: 1.375rem; /* 22px */
-  letter-spacing: 0.025rem; /* 0.4px */
+  font-size: 12px;
+  line-height: 22px;
+  letter-spacing: 0.4px;
 }
 
-.body-large-emphasized {
+@utility body-large-emphasized {
   font-family: var(--font-sarabun);
   font-weight: 700;
-  font-size: 1rem; /* 16px */
-  line-height: 1.75rem; /* 28px */
-  letter-spacing: 0.03125rem; /* 0.5px */
+  font-size: 16px;
+  line-height: 28px;
+  letter-spacing: 0.5px;
 }
 
-.body-medium-emphasized {
+@utility body-medium-emphasized {
   font-family: var(--font-sarabun);
   font-weight: 700;
-  font-size: 0.875rem; /* 14px */
-  line-height: 1.5rem; /* 24px */
-  letter-spacing: 0.015625rem; /* 0.25px */
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.25px;
 }
 
-.body-small-emphasized {
+@utility body-small-emphasized {
   font-family: var(--font-sarabun);
   font-weight: 700;
-  font-size: 0.75rem; /* 12px */
-  line-height: 1.375rem; /* 22px */
-  letter-spacing: 0.025rem; /* 0.4px */
+  font-size: 12px;
+  line-height: 22px;
+  letter-spacing: 0.4px;
 }
 
 .font-ion {

@@ -386,7 +386,7 @@ const EventCreateTemplate = () => {
                   }
                 }}
               >
-                {tCreateEvent("back")}
+                <p className="-translate-y-1">{tCreateEvent("back")}</p>
               </Button>
               {step != 3 && (
                 <Button
@@ -411,7 +411,7 @@ const EventCreateTemplate = () => {
                     }
                   }}
                 >
-                  {tCreateEvent("next")}
+                  <p className="-translate-y-1">{tCreateEvent("next")}</p>
                 </Button>
               )}
               {step == 3 && (
@@ -479,7 +479,7 @@ const EventCreateTemplate = () => {
                     }
                   }}
                 >
-                  {tCreateEvent("create")}
+                  <p className="-translate-y-1">{tCreateEvent("create")}</p>
                 </Button>
               )}
             </div>
