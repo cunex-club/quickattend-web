@@ -514,7 +514,7 @@ const EditEventSection1 = ({
                 : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
             }`}
           >
-            {tEditEvent("addAgenda")}
+            <p className="-translate-y-1">{tEditEvent("addAgenda")}</p>
           </Button>
         </div>
       </div>

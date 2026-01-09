@@ -1,7 +1,4 @@
-import {
-  AttendanceType,
-  EventFormInterface,
-} from "@modules/events/create/template";
+import { EventFormInterface } from "@modules/events/create/template";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import Button from "@shared/Button";
@@ -97,9 +94,7 @@ const EditEventDuplicate = ({
                 : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
             } h-9 px-1 pr-2 flex items-center`}
           >
-            <span className="translate-y-1">
-              {tEditEvent("submitDuplicate")}
-            </span>
+            <p className="-translate-y-1">{tEditEvent("submitDuplicate")}</p>
           </Button>
         </>
       ) : (
@@ -128,7 +123,7 @@ const EditEventDuplicate = ({
                       : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
                   } w-full max-w-40 h-9 px-1 pr-2 flex items-center`}
                 >
-                  <span className="translate-y-1">{tEditEvent("next")}</span>
+                  {tEditEvent("next")}
                 </Button>
               </div>
             </>
@@ -149,9 +144,9 @@ const EditEventDuplicate = ({
                   onClick={() => {
                     setStep(1);
                   }}
-                  className="w-full max-w-40 h-9 px-1 pr-2 flex items-center text-primary"
+                  className="w-full max-w-40 h-9 px-1 pr-2 flex items-center text-primary cursor-pointer"
                 >
-                  <span className="translate-y-1">{tEditEvent("back")}</span>
+                  {tEditEvent("back")}
                 </Button>
 
                 <Button
@@ -174,9 +169,7 @@ const EditEventDuplicate = ({
                       : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
                   } w-full max-w-40 h-9 px-1 pr-2 flex items-center`}
                 >
-                  <span className="translate-y-1">
-                    {tEditEvent("submitDuplicate")}
-                  </span>
+                  {tEditEvent("submitDuplicate")}
                 </Button>
               </div>
             </>

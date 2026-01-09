@@ -208,7 +208,7 @@ const EditEventSection2 = ({
                   setFacultyQuery("");
                 }}
               >
-                <p className="label-large-primary -translate-y-0.5">
+                <p className="label-large-primary -translate-y-1">
                   {tEditEvent("facultiesAdd")}
                 </p>
               </Button>
@@ -334,7 +334,7 @@ const EditEventSection2 = ({
                   setStudentIdPermissionQuery("");
                 }}
               >
-                <p className="label-large-primary -translate-y-0.5">
+                <p className="label-large-primary -translate-y-1">
                   {tEditEvent("whitelistAdd")}
                 </p>
               </Button>
@@ -638,7 +638,7 @@ const EditEventSection2 = ({
                   setStudentIdAccessibilityQuery("");
                 }}
               >
-                <p className="label-large-primary -translate-y-0.5">
+                <p className="label-large-primary -translate-y-1">
                   {tEditEvent("addEventManager")}
                 </p>
               </Button>

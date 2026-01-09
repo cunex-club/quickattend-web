@@ -6,7 +6,7 @@ import Button from "@shared/Button";
 import IonIcon from "@shared/IonIcon";
 import { format } from "date-fns";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface EditEventDuplicateStep2Props {
   duplicatedEventForm: EventFormInterface;
@@ -22,6 +22,12 @@ const EditEventDuplicateStep2 = ({
   const [agendaStart, setAgendaStart] = useState<string>("");
   const [agendaEnd, setAgendaEnd] = useState<string>("");
   const [agendaName, setAgendaName] = useState<string>("");
+
+  useEffect(() => {
+    if (!duplicatedEventForm.startTime || !duplicatedEventForm.endTime) return;
+    setAgendaStart(format(duplicatedEventForm.startTime, "HH:mm"));
+    setAgendaEnd(format(duplicatedEventForm.endTime, "HH:mm"));
+  }, [duplicatedEventForm.startTime, duplicatedEventForm.endTime]);
 
   const isDateSelected = !!duplicatedEventForm.date;
 
@@ -267,7 +273,7 @@ const EditEventDuplicateStep2 = ({
                 : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
             }`}
           >
-            {tEditEvent("addAgenda")}
+            <p className="-translate-y-1">{tEditEvent("addAgenda")}</p>
           </Button>
         </div>
       </div>
