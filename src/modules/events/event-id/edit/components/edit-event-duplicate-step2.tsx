@@ -258,7 +258,7 @@ const EditEventDuplicateStep2 = ({
             value={agendaName}
             placeholder={tEditEvent("descriptionPlaceholder")}
             onChange={(e) => setAgendaName(e.target.value)}
-            className="w-full sm:flex-1 body-large-primary"
+            className="w-full h-10 body-large-primary"
           />
 
           {/* Button */}

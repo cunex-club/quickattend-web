@@ -500,7 +500,7 @@ const EditEventSection1 = ({
             placeholder={tEditEvent("descriptionPlaceholder")}
             disabled={!eventForm.startTime || !eventForm.endTime}
             onChange={(e) => setAgendaName(e.target.value)}
-            className="w-full sm:flex-1 body-large-primary disabled:cursor-not-allowed"
+            className="w-full h-10 body-large-primary disabled:cursor-not-allowed"
           />
 
           {/* Button */}
