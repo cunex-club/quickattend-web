@@ -232,6 +232,7 @@ const EventEditTemplate = () => {
             mode="filled"
             bordered="square"
             expanded={false}
+            disabled={!valid}
             onClick={() => {
               if (valid) {
                 saveEvent();
@@ -770,7 +771,7 @@ const EventEditTemplate = () => {
           <Dialog open={openDuplicate} onOpenChange={setOpenDuplicate}>
             <DialogContent className="[&>button]:hidden min-w-[60vw] overflow-auto max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
               {/* Header */}
-              <DialogTitle className="headline-small-emphasized text-primary">
+              <DialogTitle className="headline-large-emphasized text-primary">
                 {tEditEvent("eventDuplicate")}
               </DialogTitle>
 
@@ -810,7 +811,7 @@ const EventEditTemplate = () => {
           <Dialog open={openDuplicate} onOpenChange={setOpenDuplicate}>
             <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4 overflow-auto">
               {/* Header */}
-              <DialogTitle className="headline-small-emphasized text-primary">
+              <DialogTitle className="headline-large-emphasized text-primary">
                 {tEditEvent("eventDuplicate")}
               </DialogTitle>
 

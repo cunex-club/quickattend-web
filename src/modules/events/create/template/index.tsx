@@ -373,6 +373,7 @@ const EventCreateTemplate = () => {
                 mode="outline"
                 bordered="square"
                 expanded
+                disabled={step == 1}
                 className={`${
                   step != 1
                     ? "cursor-pointer border-primary text-neutral-black"
@@ -393,6 +394,9 @@ const EventCreateTemplate = () => {
                   mode="outline"
                   bordered="square"
                   expanded
+                  disabled={
+                    (step == 1 && !validStep1) || (step == 2 && !validStep2)
+                  }
                   className={`${
                     (step == 1 && validStep1) || (step == 2 && validStep2)
                       ? "cursor-pointer border-primary text-neutral-black"
@@ -419,6 +423,7 @@ const EventCreateTemplate = () => {
                   mode="filled"
                   bordered="square"
                   expanded
+                  disabled={step == 3 && !validStep3}
                   className={`cursor-pointer max-w-40 h-9 ${
                     validStep3
                       ? "cursor-pointer border-primary"

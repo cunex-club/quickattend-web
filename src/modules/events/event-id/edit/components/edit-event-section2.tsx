@@ -183,6 +183,11 @@ const EditEventSection2 = ({
                 mode="filled"
                 bordered="square"
                 expanded={false}
+                disabled={
+                  eventForm.attendance_type != AttendanceType.FACULTIES ||
+                  !FacultyList.includes(facultyQuery) ||
+                  eventForm.selectedFaculties.includes(facultyQuery)
+                }
                 className={`h-9 shrink-0 ${
                   eventForm.attendance_type == AttendanceType.FACULTIES &&
                   FacultyList.includes(facultyQuery) &&
@@ -287,6 +292,13 @@ const EditEventSection2 = ({
                 mode="filled"
                 bordered="square"
                 expanded={false}
+                disabled={
+                  eventForm.attendance_type != AttendanceType.WHITELIST ||
+                  studentIdPermissionQuery?.length != 10 ||
+                  selectedStudentIdsPermission?.includes(
+                    studentIdPermissionQuery
+                  )
+                }
                 className={`w-fit h-9 shrink-0 ${
                   eventForm.attendance_type == AttendanceType.WHITELIST &&
                   studentIdPermissionQuery?.length == 10 &&
@@ -590,6 +602,13 @@ const EditEventSection2 = ({
                 mode="filled"
                 bordered="square"
                 expanded={false}
+                disabled={
+                  studentIdAccessibilityQuery?.length != 10 ||
+                  selectedStudentIdsAccessibility?.includes(
+                    studentIdAccessibilityQuery
+                  ) ||
+                  roleAccessibilityQuery == ""
+                }
                 className={`w-fit h-9 shrink-0 ${
                   studentIdAccessibilityQuery?.length == 10 &&
                   !selectedStudentIdsAccessibility?.includes(

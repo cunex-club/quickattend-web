@@ -429,7 +429,7 @@ const EditEventSection1 = ({
                       setAgendaEnd(value);
                     }
                   }}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
                 />
 
                 <div
@@ -474,7 +474,7 @@ const EditEventSection1 = ({
                       setAgendaEnd(value);
                     }
                   }}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
                 />
 
                 <div
@@ -498,8 +498,9 @@ const EditEventSection1 = ({
           <Input
             value={agendaName}
             placeholder={tEditEvent("descriptionPlaceholder")}
+            disabled={!eventForm.startTime || !eventForm.endTime}
             onChange={(e) => setAgendaName(e.target.value)}
-            className="w-full sm:flex-1 body-large-primary"
+            className="w-full sm:flex-1 body-large-primary disabled:cursor-not-allowed"
           />
 
           {/* Button */}
@@ -507,6 +508,13 @@ const EditEventSection1 = ({
             mode="filled"
             bordered="square"
             expanded={false}
+            disabled={
+              !eventForm.startTime ||
+              !eventForm.endTime ||
+              !agendaStart ||
+              !agendaEnd ||
+              !agendaName
+            }
             onClick={handleAddAgenda}
             className={`h-9 w-fit ${
               agendaStart && agendaEnd && agendaName

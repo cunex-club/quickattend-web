@@ -431,7 +431,7 @@ const CreateEventStep1 = ({
                       setAgendaEnd(value);
                     }
                   }}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
                 />
 
                 <div
@@ -476,7 +476,7 @@ const CreateEventStep1 = ({
                       setAgendaEnd(value);
                     }
                   }}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
                 />
 
                 <div
@@ -500,8 +500,9 @@ const CreateEventStep1 = ({
           <Input
             value={agendaName}
             placeholder={tCreateEvent("descriptionPlaceholder")}
+            disabled={!eventForm.startTime || !eventForm.endTime}
             onChange={(e) => setAgendaName(e.target.value)}
-            className="w-full md:flex-1 body-large-primary"
+            className="w-full md:flex-1 body-large-primary disabled:cursor-not-allowed"
           />
 
           {/* Button */}
@@ -510,6 +511,13 @@ const CreateEventStep1 = ({
             bordered="square"
             expanded={false}
             onClick={handleAddAgenda}
+            disabled={
+              !eventForm.startTime ||
+              !eventForm.endTime ||
+              !agendaStart ||
+              !agendaEnd ||
+              !agendaName
+            }
             className={`h-9 w-fit -translate-y-0.5 ${
               agendaStart && agendaEnd && agendaName
                 ? "cursor-pointer"

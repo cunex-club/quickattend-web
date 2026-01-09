@@ -266,6 +266,7 @@ const EditEventDuplicateStep2 = ({
             mode="filled"
             bordered="square"
             expanded={false}
+            disabled={!agendaStart || !agendaEnd || !agendaName}
             onClick={handleAddAgenda}
             className={`h-9 w-fit ${
               agendaStart && agendaEnd && agendaName

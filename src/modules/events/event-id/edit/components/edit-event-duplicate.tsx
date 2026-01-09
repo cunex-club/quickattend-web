@@ -40,8 +40,7 @@ const EditEventDuplicate = ({
       duplicatedEventForm.date &&
       duplicatedEventForm.startTime &&
       duplicatedEventForm.endTime &&
-      duplicatedEventForm.location &&
-      duplicatedEventForm.organizer
+      duplicatedEventForm.location
     ) {
       setValidStep1(true);
     } else {
@@ -50,8 +49,9 @@ const EditEventDuplicate = ({
 
     if (
       // Step 2
-      !duplicatedEventForm.evaluation_form ||
-      isValidUrl(duplicatedEventForm.evaluation_form)
+      duplicatedEventForm.organizer &&
+      (!duplicatedEventForm.evaluation_form ||
+        isValidUrl(duplicatedEventForm.evaluation_form))
     ) {
       setValidStep2(true);
     } else {
@@ -78,6 +78,7 @@ const EditEventDuplicate = ({
             mode="filled"
             bordered="round"
             expanded={false}
+            disabled={!validStep1 || !validStep2}
             onClick={() => {
               if (validStep1 && validStep2) {
                 // ===============
@@ -112,6 +113,7 @@ const EditEventDuplicate = ({
                   mode="filled"
                   bordered="round"
                   expanded={false}
+                  disabled={!validStep1}
                   onClick={() => {
                     if (validStep1) {
                       setStep(2);
@@ -153,6 +155,7 @@ const EditEventDuplicate = ({
                   mode="filled"
                   bordered="round"
                   expanded={false}
+                  disabled={!validStep2}
                   onClick={() => {
                     if (validStep2) {
                       // ===============
