@@ -38,6 +38,7 @@
     "name": "Event name",
     "namePlaceholder": "Event name",
     "description": "Event description",
+    "descriptionPreview": "Event description",
     "descriptionPlaceholder": "Event description",
     "date": "Date",
     "datePlaceholder": "DD / MM / YYYY",
