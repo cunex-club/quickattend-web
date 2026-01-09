@@ -510,13 +510,13 @@ const CreateEventStep1 = ({
             bordered="square"
             expanded={false}
             onClick={handleAddAgenda}
-            className={`h-9 w-fit ${
+            className={`h-9 w-fit -translate-y-0.5 ${
               agendaStart && agendaEnd && agendaName
                 ? "cursor-pointer"
                 : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
             }`}
           >
-            {tCreateEvent("addAgenda")}
+            <p className="-translate-y-1">{tCreateEvent("addAgenda")}</p>
           </Button>
         </div>
       </div>
