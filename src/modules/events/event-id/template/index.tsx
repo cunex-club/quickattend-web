@@ -5,6 +5,7 @@ import IonIcon from "@shared/IonIcon";
 import Icon from "@shared/Icon";
 import Button from "@shared/Button";
 import ShareModal from "@modules/events/event-id/components/shareModal";
+import DuplicateModal from "@modules/events/event-id/components/duplicateModal";
 import {
   MOCK_EVENT_INFO,
   MOCK_SHARE_MODAL_DATA,
@@ -12,6 +13,7 @@ import {
 
 const EventIdPageTemplate = () => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false);
 
   const eventData = MOCK_EVENT_INFO;
 
@@ -147,7 +149,12 @@ const EventIdPageTemplate = () => {
           </div>
         </Button>
         <div className="flex gap-2">
-          <Button mode="outline" bordered="round" expanded={false}>
+          <Button 
+            mode="outline" 
+            bordered="round" 
+            expanded={false}
+            onClick={() => setIsDuplicateModalOpen(true)}
+          >
             <IonIcon
               name="DuplicateOutline"
               size="36px"
@@ -173,6 +180,12 @@ const EventIdPageTemplate = () => {
         open={isShareModalOpen}
         onOpenChange={setIsShareModalOpen}
         eventData={MOCK_SHARE_MODAL_DATA}
+      />
+
+      <DuplicateModal
+        open={isDuplicateModalOpen}
+        onOpenChange={setIsDuplicateModalOpen}
+        eventData={eventData}
       />
     </div>
   );
