@@ -214,24 +214,28 @@ export function CompareView() {
               />
             </div>
             <div className="flex justify-end">
-              <div className="flex flex-col-reverse md:flex-row gap-4 md:gap-8 w-full md:w-[40%]">
-                <Button
-                  mode="outline"
-                  bordered="round"
-                  expanded={true}
-                  className="bg-transparent"
-                  onClick={handleClearSelection}
-                >
-                  <p className="title-large-emphasized">{t("clearData")}</p>
-                </Button>
-                <Button
-                  mode="filled"
-                  bordered="round"
-                  expanded={true}
-                  onClick={handleSubmitComparison}
-                >
-                  <p className="title-large-emphasized">{t("compareData")}</p>
-                </Button>
+              <div className="flex flex-col-reverse md:flex-row gap-4 md:gap-8 w-full md:w-auto">
+                <div className="w-full md:w-[240px]">
+                  <Button
+                    mode="outline"
+                    bordered="round"
+                    expanded={true}
+                    className="bg-transparent"
+                    onClick={handleClearSelection}
+                  >
+                    <p className="title-large-emphasized">{t("clearData")}</p>
+                  </Button>
+                </div>
+                <div className="w-full md:w-[240px]">
+                  <Button
+                    mode="filled"
+                    bordered="round"
+                    expanded={true}
+                    onClick={handleSubmitComparison}
+                  >
+                    <p className="title-large-emphasized">{t("compareData")}</p>
+                  </Button>
+                </div>
               </div>
             </div>
           </section>

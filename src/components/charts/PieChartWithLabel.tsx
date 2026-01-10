@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@assets/lib/utils";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Pie, PieChart, Cell } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
@@ -32,10 +32,11 @@ const CHART_COLORS = [
 
 const chartConfig = {} satisfies ChartConfig;
 
-// Component
-
 export function PieChartWithLabel() {
-  // Memoize chart total to avoid recalculating on every label render
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isLocked, setIsLocked] = useState(false);
+
+  // Memoize chart total
   const chartTotal = useMemo(
     () => chartData.reduce((sum, it) => sum + Number(it?.total ?? 0), 0),
     []
@@ -50,7 +51,6 @@ export function PieChartWithLabel() {
     payload?: { faculty?: string; total?: number } | undefined;
   };
 
-  // this function is adapted from Recharts' example: https://recharts.org/en-US/examples/CustomizedLabelPieChart
   const customLabel = useCallback(
     (props: unknown) => {
       const CUSTOM_DISTANCE: number = 1.25;
@@ -70,10 +70,7 @@ export function PieChartWithLabel() {
 
       const name = payload?.faculty ?? "";
       const total = Number(payload?.total ?? 0);
-
       const percent = ((total / (chartTotal || 1)) * 100).toFixed(0);
-
-      // anchor left/right depending on which side of the center the label sits
       const anchor = x > Number(cx ?? 0) ? "start" : "end";
 
       return (
@@ -91,23 +88,29 @@ export function PieChartWithLabel() {
         </text>
       );
     },
-    [chartTotal]
+    [chartTotal, hoveredIndex] // เพิ่ม hoveredIndex เข้าไปใน dependency
   );
+
+  const handleBackgroundClick = () => {
+    setHoveredIndex(null);
+    setIsLocked(false);
+  };
 
   return (
     <Card className="flex flex-col justify-center h-full w-full border-none shadow-none">
-      <CardContent className="pb-0 h-full">
+      <CardContent className="pb-0 h-full" onClick={handleBackgroundClick}>
         <ChartContainer
           config={chartConfig}
           className={cn(
             "mx-auto aspect-square max-h-[300px] pb-0 flex flex-col justify-center h-full w-full",
             "[&_.recharts-pie-label-text]:fill-foreground",
-            "[&_.recharts-surface]:overflow-visible",
-            "chart-hover-pie"
+            "[&_.recharts-surface]:overflow-visible"
           )}
         >
           <PieChart>
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+
+            {/* Main Pie Chart */}
             <Pie
               data={chartData}
               dataKey="total"
@@ -115,11 +118,57 @@ export function PieChartWithLabel() {
               nameKey="faculty"
               startAngle={90}
               endAngle={-270}
+              isAnimationActive={false}
+            >
+              {chartData.map((entry, index) => {
+                const opacity = hoveredIndex !== null && hoveredIndex !== index ? 0.3 : 1;
+                return (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={CHART_COLORS[index % CHART_COLORS.length]}
+                    onMouseEnter={() => !isLocked && setHoveredIndex(index)}
+                    onMouseLeave={() => !isLocked && setHoveredIndex(null)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (hoveredIndex === index && isLocked) {
+                        setIsLocked(false);
+                        setHoveredIndex(null);
+                      } else {
+                        setHoveredIndex(index);
+                        setIsLocked(true);
+                      }
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      opacity: opacity,
+                      transition: "opacity 0.3s ease-in-out",
+                      outline: "none",
+                    }}
+                  />
+                );
+              })}
+            </Pie>
+
+            {/* Outer Ring (Highlight) */}
+            <Pie
+              data={chartData}
+              dataKey="total"
+              nameKey="faculty"
+              startAngle={90}
+              endAngle={-270}
+              innerRadius={119}
+              outerRadius={125}
+              isAnimationActive={false}
             >
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={CHART_COLORS[index % CHART_COLORS.length]}
+                  fillOpacity={hoveredIndex === index ? 0.5 : 0}
+                  style={{
+                    transition: "fill-opacity 0.3s ease-in-out",
+                    pointerEvents: "none",
+                  }}
                 />
               ))}
             </Pie>

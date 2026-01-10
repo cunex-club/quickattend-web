@@ -32,16 +32,17 @@ const DonutChart = dynamic(
   }
 );
 
-const BarChartVerticalStacked = dynamic(
+const BarChartVertical = dynamic(
   () =>
-    import("@components/charts/BarChartVerticalStacked").then(
-      (mod) => mod.BarChartVerticalStacked
+    import("@components/charts/BarChartVertical").then(
+      (mod) => mod.BarChartVertical
     ),
   {
     loading: () => <Skeleton className="h-full w-full rounded-lg" />,
     ssr: false,
   }
 );
+
 import {
   Popover,
   PopoverContent,
@@ -60,7 +61,7 @@ import SortMenu from "@components/sort-menu";
 import InfoCard from "@components/InfoCard";
 
 const horizontalChartData = dataCategorizeByTime;
-const verticalStackData = registeredData;
+const verticalChartData = registeredData;
 const donutChartData = registrationStatusData;
 
 // init filter page
@@ -197,49 +198,29 @@ export default function FilterView() {
         </div>
       </section>
 
-      <div className="flex flex-col space-y-8">
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="h-[250px] md:h-[450px] w-full">
-            <StatCard
-              title={t("totalAttendees")}
-              value={500}
-              unit={t("unit")}
-              variant="outline"
-            >
-              <div className="mt-4 hidden md:flex justify-center items-center px-8">
-                <span className="headline-small-emphasized pr-4 sm:pr-10 md:pr-16 text-center">
-                  {t("students")}: 455 {t("unit")}
-                </span>
-                <div className="inline-block w-0.5 self-stretch bg-neutral-100 dark:bg-white/10"></div>
-                <span className="headline-small-emphasized pl-4 sm:pl-10 md:pl-16 text-center">
-                  {t("staffs")}: 5 {t("unit")}
-                </span>
-              </div>
-            </StatCard>
-          </div>
-          <div className="h-[250px] md:h-[450px] w-full">
-            <DonutChart data={donutChartData} />
-          </div>
-        </section>
-        <section className="grid grid-cols-1 md:grid-cols-2 min-h-[400px] gap-8">
-          <div className="h-full w-full">
-            <InfoCard
-              titleFull={t("totalEligible")}
-              titleShort={t("totalEligible")}
-              value={600}
-              unit={t("unit")}
-            />
-          </div>
-          <div className="h-full w-full">
-            <InfoCard
-              titleFull={t("totalUnregistered")}
-              titleShort={t("totalUnregistered")}
-              value={100}
-              unit={t("unit")}
-            />
-          </div>
-        </section>
-      </div>
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="h-[250px] md:h-[450px] w-full">
+          <StatCard
+            title={t("totalAttendees")}
+            value={500}
+            unit={t("unit")}
+            variant="outline"
+          >
+            <div className="mt-4 hidden md:flex justify-center items-center px-8">
+              <span className="headline-small-emphasized pr-4 sm:pr-10 md:pr-16 text-center">
+                {t("students")}: 455 {t("unit")}
+              </span>
+              <div className="inline-block w-0.5 self-stretch bg-neutral-100 dark:bg-white/10"></div>
+              <span className="headline-small-emphasized pl-4 sm:pl-10 md:pl-16 text-center">
+                {t("staffs")}: 5 {t("unit")}
+              </span>
+            </div>
+          </StatCard>
+        </div>
+        <div className="h-[250px] md:h-[450px] w-full">
+          <DonutChart data={donutChartData} />
+        </div>
+      </section>
 
       <section className="flex flex-col space-y-8">
         <div className="flex justify-between">
@@ -261,7 +242,7 @@ export default function FilterView() {
           />
         </div>
         <div className="h-auto">
-          <BarChartVerticalStacked data={verticalStackData} />
+          <BarChartVertical data={verticalChartData} />
         </div>
       </section>
 

@@ -186,15 +186,24 @@ export function BarChartVerticalMulti({ data }: BarChartVerticalMultiProps) {
                             fill={fill}
                             rx={BAR_CONSTANTS.RADIUS}
                             ry={BAR_CONSTANTS.RADIUS}
-                            opacity={opacity}
+                            style={{
+                              opacity: opacity,
+                              cursor: "pointer",
+                            }}
                             className="transition-opacity duration-200"
                             // add event handlers that will handle the hover and click events
                             onClick={(e) => {
                               e.stopPropagation();
-                              setHoveredSeriesIndex(
-                                !isLocked ? seriesIndex : null
-                              );
-                              setIsLocked(!isLocked);
+                              if (
+                                hoveredSeriesIndex === seriesIndex &&
+                                isLocked
+                              ) {
+                                setIsLocked(false);
+                                setHoveredSeriesIndex(null);
+                              } else {
+                                setHoveredSeriesIndex(seriesIndex);
+                                setIsLocked(true);
+                              }
                             }}
                             // add mouse enter and leave events to handle the hover state
                             onMouseEnter={() => {
