@@ -31,7 +31,9 @@
       "viewFullscreen": "View Fullscreen",
       "copyLink": "Copy Link",
       "linkCopied": "Event link copied successfully",
-      "linkCopyFailed": "Failed to copy link"
+      "linkCopyFailed": "Failed to copy link",
+      "student": "Students",
+      "staff": "Staff"
     },
     "insights": {
       "all": "All",
@@ -43,6 +45,7 @@
       "timePeriod": "Time Period",
       "clearFilter": "Clear Filters",
       "applyFilter": "Apply Filters",
+      "applyFilterWarning": "Please select at least one filter",
       "totalAttendees": "Total Attendees",
       "unit": "people",
       "students": "Students",

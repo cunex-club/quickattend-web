@@ -4,7 +4,7 @@ import Button from "@components/Button";
 import React from "react";
 import StatCard from "@components/StatCard";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@assets/components/ui/skeleton";
 import { useTranslations } from "next-intl";
@@ -56,27 +56,36 @@ import {
   registeredData,
   registrationStatusData,
   timeData,
+  detailedFacultyData,
+  detailedTimeData,
 } from "@utils/data";
+import {
+  applyFacultyFilters,
+  applyTimeFilters,
+  applyRegisteredDataFilters,
+  calculateSummaryStats,
+  calculateRegistrationStats,
+} from "@utils/filterHelpers";
 import SortMenu from "@components/sort-menu";
 import InfoCard from "@components/InfoCard";
 
-const horizontalChartData = dataCategorizeByTime;
-const verticalChartData = registeredData;
-const donutChartData = registrationStatusData;
-
-// init filter page
-
 export default function FilterView() {
   const t = useTranslations("Dashboard.insights");
-  const [selectedFilter, setSelectedFilter] = useState<
-    "student" | "staff" | null
-  >(null);
+  const [userFilter, setUserFilter] = useState<"student" | "staff" | null>(
+    null
+  );
   const [selectedFaculties, setSelectedFaculties] = useState<
     Record<string, boolean>
   >({});
   const [selectedTimes, setSelectedTimes] = useState<Record<string, boolean>>(
     {}
   );
+
+  // Applied filters - only updated when user clicks "Apply Filter"
+  const [appliedFaculties, setAppliedFaculties] = useState<
+    Record<string, boolean>
+  >({});
+  const [appliedTimes, setAppliedTimes] = useState<Record<string, boolean>>({});
   const createSelectionHandler =
     (
       setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
@@ -108,35 +117,114 @@ export default function FilterView() {
   const handleClearFilters = () => {
     setSelectedFaculties({});
     setSelectedTimes({});
+    // Also clear applied filters immediately
+    setAppliedFaculties({});
+    setAppliedTimes({});
+  };
+
+  const handleApplyFilters = () => {
+    setAppliedFaculties(selectedFaculties);
+    setAppliedTimes(selectedTimes);
   };
 
   const handleSortChange = (value: string) => {};
+
+  // Apply filters to data using useMemo for performance
+  // Note: User type filter (student/staff) applies immediately
+  // Faculty and time filters only apply when "Apply Filter" is clicked
+  const filteredFacultyData = useMemo(
+    () =>
+      applyFacultyFilters(detailedFacultyData, {
+        selectedFaculties: appliedFaculties,
+        userType: userFilter,
+      }),
+    [appliedFaculties, userFilter]
+  );
+
+  const filteredTimeData = useMemo(
+    () =>
+      applyTimeFilters(detailedTimeData, {
+        selectedTimes: appliedTimes,
+        userType: userFilter,
+      }),
+    [appliedTimes, userFilter]
+  );
+
+  const filteredRegisteredData = useMemo(
+    () =>
+      applyRegisteredDataFilters(registeredData, {
+        selectedFaculties: appliedFaculties,
+        userType: userFilter,
+      }),
+    [appliedFaculties, userFilter]
+  );
+
+  // Calculate summary statistics
+  const summaryStats = useMemo(
+    () => calculateSummaryStats(filteredFacultyData, userFilter),
+    [filteredFacultyData, userFilter]
+  );
+
+  const registrationStats = useMemo(
+    () => calculateRegistrationStats(filteredRegisteredData, userFilter),
+    [filteredRegisteredData, userFilter]
+  );
+
+  // Prepare chart data
+  const horizontalChartData = useMemo(
+    () =>
+      filteredTimeData.map((item) => ({ time: item.time, total: item.total })),
+    [filteredTimeData]
+  );
+
+  const verticalChartData = filteredFacultyData.map((item) => ({
+    faculty: item.faculty,
+    total: item.total,
+  }));
+
+  const donutChartData = useMemo(
+    () => [
+      {
+        category: "ลงทะเบียนแล้ว",
+        total: registrationStats.registered,
+        students: userFilter === "staff" ? 0 : registrationStats.students,
+        staff: userFilter === "student" ? 0 : registrationStats.staff,
+      },
+      {
+        category: "ยังไม่ลงทะเบียน",
+        total: registrationStats.unregistered,
+        students: userFilter === "staff" ? 0 : registrationStats.students,
+        staff: userFilter === "student" ? 0 : registrationStats.staff,
+      },
+    ],
+    [registrationStats, userFilter]
+  );
 
   return (
     <div className="w-full rounded-xl bg-neutral-white space-y-16">
       <section className="flex justify-between">
         <div className="space-x-4">
           <Button
-            mode={selectedFilter === null ? "filled" : "outline"}
+            mode={userFilter === null ? "filled" : "outline"}
             bordered="square"
             expanded={false}
-            onClick={() => setSelectedFilter(null)}
+            onClick={() => setUserFilter(null)}
           >
             <p className="label-large-emphasized">{t("all")}</p>
           </Button>
           <Button
-            mode={selectedFilter === "student" ? "filled" : "outline"}
+            mode={userFilter === "student" ? "filled" : "outline"}
             bordered="square"
             expanded={false}
-            onClick={() => setSelectedFilter("student")}
+            onClick={() => setUserFilter("student")}
           >
             <p className="label-large-emphasized">{t("student")}</p>
           </Button>
           <Button
-            mode={selectedFilter === "staff" ? "filled" : "outline"}
+            mode={userFilter === "staff" ? "filled" : "outline"}
             bordered="square"
             expanded={false}
-            onClick={() => setSelectedFilter("staff")}
+            onClick={() => setUserFilter("staff")}
           >
             <p className="label-large-emphasized">{t("staff")}</p>
           </Button>
@@ -184,7 +272,12 @@ export default function FilterView() {
                     </Button>
 
                     <PopoverClose asChild>
-                      <Button mode="filled" bordered="round" expanded={true}>
+                      <Button
+                        mode="filled"
+                        bordered="round"
+                        expanded={true}
+                        onClick={handleApplyFilters}
+                      >
                         <p className="title-large-emphasized">
                           {t("applyFilter")}
                         </p>
@@ -202,17 +295,17 @@ export default function FilterView() {
         <div className="h-[250px] md:h-[450px] w-full">
           <StatCard
             title={t("totalAttendees")}
-            value={500}
+            value={summaryStats.totalAttendees}
             unit={t("unit")}
             variant="outline"
           >
             <div className="mt-4 hidden md:flex justify-center items-center px-8">
               <span className="headline-small-emphasized pr-4 sm:pr-10 md:pr-16 text-center">
-                {t("students")}: 455 {t("unit")}
+                {t("students")}: {summaryStats.studentCount} {t("unit")}
               </span>
               <div className="inline-block w-0.5 self-stretch bg-neutral-100 dark:bg-white/10"></div>
-              <span className="headline-small-emphasized pl-4 sm:pl-10 md:pl-16 text-center">
-                {t("staffs")}: 5 {t("unit")}
+              <span className="headline-small-emphasized pl-4 sm:pl-10 md:pr-16 text-center">
+                {t("staffs")}: {summaryStats.staffCount} {t("unit")}
               </span>
             </div>
           </StatCard>

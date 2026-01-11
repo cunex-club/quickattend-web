@@ -1,11 +1,16 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import Button from "@components/Button";
 import { StatCard } from "@components/StatCard";
-import { chartDataID1, dataCategorizeByTime, eventData } from "@utils/data";
 import IonIcon from "@components/IonIcon";
 import { toast } from "sonner";
 import { Skeleton } from "@assets/components/ui/skeleton";
@@ -41,9 +46,37 @@ const FullscreenContent = dynamic(
   { ssr: false }
 );
 
-const event = eventData;
-const chartDataTop3 = chartDataID1;
-const chartDataTime = dataCategorizeByTime;
+const mockEvent = {
+  id: "freshmen-night",
+  title: "Freshmen night",
+  date: "3 สิงหาคม 2568",
+  time: "16:00 - 20:00 น.",
+  location: "สนามกีฬาจุฬาลงกรณ์มหาวิทยาลัย",
+  description:
+    "กิจกรรมต้อนรับนิสิตใหม่ CU รุ่น 109 สู่รั้วมหาวิทยาลัย และกระชับสัมพันธ์ อันดีระหว่างน้องใหม่คณะต่าง ๆ ภายในงานมีการจัดแสดงดนตรีโดยวงดนตรี เช่น Landokmai, Dept, Polycat, Tilly Birds การแสดงพิเศษจาก CUDC และละครนิเทศ จุฬาฯ",
+  totalAttendees: 1096,
+  studentCount: 1090,
+  staffCount: 6,
+};
+
+const mockTop3 = [
+  { faculty: "วิศวกรรมศาสตร์", student: 320, staff: 70 },
+  { faculty: "บริหารธุรกิจ", student: 210, staff: 60 },
+  { faculty: "วิทยาศาสตร์", student: 180, staff: 45 },
+].map((item) => ({ ...item, total: item.student + item.staff }));
+
+const mockTime = [
+  { time: "08:00", student: 35, staff: 18 },
+  { time: "09:00", student: 68, staff: 22 },
+  { time: "10:00", student: 94, staff: 26 },
+  { time: "11:00", student: 86, staff: 24 },
+  { time: "12:00", student: 72, staff: 23 },
+  { time: "13:00", student: 78, staff: 26 },
+  { time: "14:00", student: 82, staff: 28 },
+  { time: "15:00", student: 71, staff: 25 },
+  { time: "16:00", student: 64, staff: 18 },
+  { time: "17:00", student: 50, staff: 20 },
+].map((item) => ({ ...item, total: item.student + item.staff }));
 
 export function OverviewView() {
   const t = useTranslations("Dashboard.overview");
@@ -55,6 +88,22 @@ export function OverviewView() {
   >(null);
   const { role } = useRole();
   const canViewInsights = role === "manager" || role === "owner";
+
+  const filteredTime = useMemo(
+    () =>
+      mockTime.map((item) => ({
+        time: item.time,
+        total:
+          selectedFilter === "student"
+            ? item.student
+            : selectedFilter === "staff"
+              ? item.staff
+              : item.total,
+      })),
+    [selectedFilter]
+  );
+
+  const eventTotal = mockEvent.totalAttendees;
 
   const handleToggleFullscreen = useCallback(() => {
     if (!fullscreenContainerRef.current) return;
@@ -72,11 +121,11 @@ export function OverviewView() {
   };
 
   const handleCopyEventLink = async () => {
-    const eventLink = `${window.location.origin}/events/${event.id}`;
+    const eventLink = `${window.location.origin}/events/${mockEvent.id}`;
     try {
       await navigator.clipboard.writeText(eventLink);
       toast.success(
-        <p className="title-medium-emphasized text-neutral-white">
+        <p className="title-medium-primary text-neutral-white">
           {t("linkCopied")}
         </p>,
         {
@@ -90,7 +139,7 @@ export function OverviewView() {
     } catch (err) {
       console.error("Failed to copy link:", err);
       toast.error(
-        <p className="title-medium-emphasized text-neutral-white">
+        <p className="title-medium-primary text-neutral-white">
           {t("linkCopyFailed")}
         </p>,
         {
@@ -124,7 +173,7 @@ export function OverviewView() {
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="flex flex-col space-y-6 order-2 lg:order-1">
               <div className="flex justify-between items-center">
-                <p className="headline-large-emphasized">{event.title}</p>
+                <p className="headline-large-emphasized">{mockEvent.title}</p>
                 <button
                   className="border border-primary rounded-full w-auto h-auto p-0.5 hover:bg-neutral-100 transition-colors duration-200"
                   onClick={handleCopyEventLink}
@@ -140,7 +189,7 @@ export function OverviewView() {
                       size="20px"
                       className="text-primary"
                     />
-                    <p>{event.date}</p>
+                    <p>{mockEvent.date}</p>
                   </span>
                   <span className="flex flex-row space-x-2 items-center">
                     <IonIcon
@@ -148,7 +197,7 @@ export function OverviewView() {
                       size="20px"
                       className="text-secondary"
                     />
-                    <p>{event.time}</p>
+                    <p>{mockEvent.time}</p>
                   </span>
                   <span className="flex flex-row space-x-2 items-center">
                     <IonIcon
@@ -156,14 +205,14 @@ export function OverviewView() {
                       size="20px"
                       className="text-primary"
                     />
-                    <p>{event.location}</p>
+                    <p>{mockEvent.location}</p>
                   </span>
                 </div>
                 <div className="flex flex-col space-y-2 px-4 ">
                   <p className="headline-small-emphasized">
                     {t("eventDetails")}
                   </p>
-                  <p className="body-large-primary">{event.description}</p>
+                  <p className="body-large-primary">{mockEvent.description}</p>
                 </div>
               </div>
 
@@ -183,7 +232,7 @@ export function OverviewView() {
             <div className="h-full w-full order-1 lg:order-2">
               <StatCard
                 title={t("totalAttendees")}
-                value={event.totalAttendees}
+                value={eventTotal}
                 unit={t("unit")}
                 variant="filled"
                 className="p-8 min-h-[230px]"
@@ -196,7 +245,7 @@ export function OverviewView() {
             <div className="space-y-6 md:space-y-4">
               <p className="headline-medium-emphasized">{t("top3Title")}</p>
               <div className="max-h-[280px] md:max-h-[320px]">
-                <BarChartVerticalOverview data={chartDataTop3} />
+                <BarChartVerticalOverview data={mockTop3} />
               </div>
               <Button
                 mode="filled"
@@ -217,7 +266,7 @@ export function OverviewView() {
               </p>
               <div className="w-full relative">
                 <div className="h-[400px] md:h-[360px] lg:h-[350px] xl:max-h-[320px] overflow-auto">
-                  <BarChartHorizontalOverview data={chartDataTime} />
+                  <BarChartHorizontalOverview data={filteredTime} />
                 </div>
                 <div className="absolute z-10 right-0 top-0">
                   <div className="space-x-4 bg-transparent">
@@ -231,7 +280,7 @@ export function OverviewView() {
                         )
                       }
                     >
-                      <p className="label-large-emphasized">นิสิต</p>
+                      <p className="label-large-emphasized">{t("student")}</p>
                     </Button>
                     <Button
                       mode={selectedFilter === "staff" ? "filled" : "outline"}
@@ -243,7 +292,7 @@ export function OverviewView() {
                         )
                       }
                     >
-                      <p className="label-large-emphasized">บุคลากร</p>
+                      <p className="label-large-emphasized">{t("staff")}</p>
                     </Button>
                   </div>
                 </div>
@@ -261,7 +310,7 @@ export function OverviewView() {
         {isFullscreen && (
           <FullscreenContent
             onExit={handleToggleFullscreen}
-            data={event}
+            data={mockEvent}
             translations={{
               eventDetails: t("eventDetails"),
               totalAttendees: t("totalAttendees"),

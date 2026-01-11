@@ -31,7 +31,9 @@
       "viewFullscreen": "ดูเต็มหน้าจอ",
       "copyLink": "คัดลอกลิงก์",
       "linkCopied": "คัดลอกลิงก์กิจกรรมเรียบร้อยแล้ว",
-      "linkCopyFailed": "ไม่สามารถคัดลอกลิงก์ได้"
+      "linkCopyFailed": "ไม่สามารถคัดลอกลิงก์ได้",
+      "student": "นิสิต",
+      "staff": "บุคลากร"
     },
     "insights": {
       "all": "ทั้งหมด",
@@ -43,6 +45,7 @@
       "timePeriod": "ช่วงเวลา",
       "clearFilter": "ล้างตัวกรอง",
       "applyFilter": "กรองข้อมูล",
+      "applyFilterWarning": "กรุณาเลือกอย่างน้อยหนึ่งตัวเลือกเพื่อกรองข้อมูล",
       "totalAttendees": "จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด",
       "unit": "คน",
       "students": "นิสิต",

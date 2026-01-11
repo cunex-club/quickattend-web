@@ -5,7 +5,7 @@ import React from "react";
 import StatCard from "@components/StatCard";
 import InfoCard from "@components/InfoCard";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@assets/components/ui/skeleton";
 import { useTranslations } from "next-intl";
@@ -55,21 +55,29 @@ import {
   registeredData,
   registrationStatusData,
   timeData,
+  detailedFacultyData,
+  detailedTimeData,
 } from "@utils/data";
+import {
+  applyFacultyFilters,
+  applyTimeFilters,
+  applyRegisteredDataFilters,
+  calculateSummaryStats,
+  calculateRegistrationStats,
+} from "@utils/filterHelpers";
 import SortMenu from "@components/sort-menu";
 import IonIcon from "@components/IonIcon";
-
-const horizontalChartData = dataCategorizeByTime;
-const verticalStackData = registeredData;
-const donutChartData = registrationStatusData;
+import { toast } from "sonner";
 
 export function WhitelistInsightView() {
   const router = useRouter();
   const { role } = useRole();
   const t = useTranslations("Dashboard.insights");
-  const [selectedFilter, setSelectedFilter] = useState<
-    "student" | "staff" | null
-  >(null);
+  const [userFilter, setUserFilter] = useState<"student" | "staff" | null>(
+    null
+  );
+
+  // Selected filters - updated when user clicks on filter items
   const [selectedFaculties, setSelectedFaculties] = useState<
     Record<string, boolean>
   >({});
@@ -77,21 +85,36 @@ export function WhitelistInsightView() {
     {}
   );
 
-  if (role !== "manager" && role !== "owner") {
-    router.push("/dashboard");
-    return null;
-  }
-  const createSelectionHandler =
-    (
-      setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-      allItemId: string
-    ) =>
+  // Applied filters - only updated when user clicks "Apply Filter"
+  const [appliedFaculties, setAppliedFaculties] = useState<
+    Record<string, boolean>
+  >({});
+  const [appliedTimes, setAppliedTimes] = useState<Record<string, boolean>>({});
+
+  const facultyFilterOptions = useMemo(
+    () => facultyData.filter((item) => item.id !== "f-0"),
+    []
+  );
+  const timeFilterOptions = useMemo(
+    () => timeData.filter((item) => item.id !== "t-0"),
+    []
+  );
+
+  const canViewInsights = role === "manager" || role === "owner";
+
+  useEffect(() => {
+    if (!canViewInsights) {
+      router.push("/dashboard");
+    }
+  }, [canViewInsights, router]);
+
+  const createSelectionHandler = (
+    setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>
+  ) =>
     (itemId: string, checked: boolean) => {
       setter((prevSelected) => {
         const newSelected = { ...prevSelected };
         if (checked) {
-          if (itemId === allItemId) return { [allItemId]: true };
-          delete newSelected[allItemId];
           const selectedCount =
             Object.values(newSelected).filter(Boolean).length;
           if (selectedCount >= 5) return prevSelected;
@@ -103,44 +126,150 @@ export function WhitelistInsightView() {
       });
     };
 
-  const handleFacultyChange = createSelectionHandler(
-    setSelectedFaculties,
-    "f-0"
-  );
-  const handleTimeChange = createSelectionHandler(setSelectedTimes, "t-0");
+  const handleFacultyChange = createSelectionHandler(setSelectedFaculties);
+  const handleTimeChange = createSelectionHandler(setSelectedTimes);
 
   const handleClearFilters = () => {
     setSelectedFaculties({});
     setSelectedTimes({});
+    // Also clear applied filters immediately
+    setAppliedFaculties({});
+    setAppliedTimes({});
+  };
+
+  const handleApplyFilters = () => {
+    if (
+      Object.keys(selectedFaculties).length === 0 &&
+      Object.keys(selectedTimes).length === 0
+    ) {
+      toast.warning(
+        <p className="title-small-primary">{t("applyFilterWarning")}</p>,
+        {
+          style: {
+            background: "var(--warning)",
+            color: "#fff",
+          },
+        }
+      );
+      return;
+    }
+
+    setAppliedFaculties(selectedFaculties);
+    setAppliedTimes(selectedTimes);
   };
 
   const handleSortChange = () => {};
+
+  // Check if any filters are active
+  const hasActiveFilters = useMemo(() => {
+    const hasFacultyFilter =
+      Object.keys(appliedFaculties).filter((key) => appliedFaculties[key])
+        .length > 0;
+    const hasTimeFilter =
+      Object.keys(appliedTimes).filter((key) => appliedTimes[key]).length > 0;
+    return hasFacultyFilter || hasTimeFilter;
+  }, [appliedFaculties, appliedTimes]);
+
+  // Apply filters to data using useMemo for performance
+  // Note: User type filter (student/staff) applies immediately
+  // Faculty and time filters only apply when "Apply Filter" is clicked
+  const filteredFacultyData = useMemo(
+    () =>
+      applyFacultyFilters(detailedFacultyData, {
+        selectedFaculties: appliedFaculties,
+        userType: userFilter,
+      }),
+    [appliedFaculties, userFilter]
+  );
+
+  const filteredTimeData = useMemo(
+    () =>
+      applyTimeFilters(detailedTimeData, {
+        selectedTimes: appliedTimes,
+        userType: userFilter,
+      }),
+    [appliedTimes, userFilter]
+  );
+
+  const filteredRegisteredData = useMemo(
+    () =>
+      applyRegisteredDataFilters(registeredData, {
+        selectedFaculties: appliedFaculties,
+        userType: userFilter,
+      }),
+    [appliedFaculties, userFilter]
+  );
+
+  // Calculate summary statistics
+  const summaryStats = useMemo(
+    () => calculateSummaryStats(filteredFacultyData, userFilter),
+    [filteredFacultyData, userFilter]
+  );
+
+  const registrationStats = useMemo(
+    () => calculateRegistrationStats(filteredRegisteredData, userFilter),
+    [filteredRegisteredData, userFilter]
+  );
+
+  // Prepare chart data
+  const horizontalChartData = useMemo(
+    () =>
+      filteredTimeData.map((item) => ({ time: item.time, total: item.total })),
+    [filteredTimeData]
+  );
+
+  const verticalStackData = filteredRegisteredData;
+
+  const donutChartData = useMemo(
+    () => [
+      {
+        category: "ลงทะเบียนแล้ว",
+        total: registrationStats.registered,
+        students: userFilter === "staff" ? 0 : registrationStats.students,
+        staff: userFilter === "student" ? 0 : registrationStats.staff,
+      },
+      {
+        category: "ยังไม่ลงทะเบียน",
+        total: registrationStats.unregistered,
+        students: userFilter === "staff" ? 0 : registrationStats.students,
+        staff: userFilter === "student" ? 0 : registrationStats.staff,
+      },
+    ],
+    [registrationStats, userFilter]
+  );
+
+  // Calculate totals for InfoCards
+  const totalEligible =
+    summaryStats.totalAttendees + registrationStats.unregistered;
+  const totalUnregistered = registrationStats.unregistered;
+
+  if (!canViewInsights) return null;
 
   return (
     <div className="w-full rounded-xl bg-neutral-white space-y-16">
       <section className="flex justify-between">
         <div className="space-x-4 flex items-center">
           <Button
-            mode={selectedFilter === null ? "filled" : "outline"}
+            mode={userFilter === null ? "filled" : "outline"}
             bordered="square"
             expanded={false}
-            onClick={() => setSelectedFilter(null)}
+            onClick={() => setUserFilter(null)}
           >
             <p className="label-large-emphasized">{t("all")}</p>
           </Button>
           <Button
-            mode={selectedFilter === "student" ? "filled" : "outline"}
+            mode={userFilter === "student" ? "filled" : "outline"}
             bordered="square"
             expanded={false}
-            onClick={() => setSelectedFilter("student")}
+            onClick={() => setUserFilter("student")}
           >
             <p className="label-large-emphasized">{t("student")}</p>
           </Button>
           <Button
-            mode={selectedFilter === "staff" ? "filled" : "outline"}
+            mode={userFilter === "staff" ? "filled" : "outline"}
             bordered="square"
             expanded={false}
-            onClick={() => setSelectedFilter("staff")}
+            onClick={() => setUserFilter("staff")}
           >
             <p className="label-large-emphasized">{t("staff")}</p>
           </Button>
@@ -164,7 +293,7 @@ export function WhitelistInsightView() {
                   </p>
                   <FilterableList
                     title={t("faculty")}
-                    items={facultyData}
+                    items={facultyFilterOptions}
                     selectedItems={selectedFaculties}
                     onCheckedChange={handleFacultyChange}
                     filterVariant="secondary"
@@ -172,7 +301,7 @@ export function WhitelistInsightView() {
 
                   <FilterableList
                     title={t("timePeriod")}
-                    items={timeData}
+                    items={timeFilterOptions}
                     selectedItems={selectedTimes}
                     onCheckedChange={handleTimeChange}
                     filterVariant="secondary"
@@ -192,7 +321,12 @@ export function WhitelistInsightView() {
                     </Button>
 
                     <PopoverClose asChild>
-                      <Button mode="filled" bordered="round" expanded={true}>
+                      <Button
+                        mode="filled"
+                        bordered="round"
+                        expanded={true}
+                        onClick={handleApplyFilters}
+                      >
                         <p className="title-large-emphasized">
                           {t("applyFilter")}
                         </p>
@@ -211,7 +345,7 @@ export function WhitelistInsightView() {
           <div className="w-full">
             <StatCard
               title={t("totalAttendees")}
-              value={500}
+              value={summaryStats.totalAttendees}
               unit={t("unit")}
               variant="outline"
               switchNumberPosition={true}
@@ -220,11 +354,11 @@ export function WhitelistInsightView() {
             >
               <div className="md:mt-2 lg:mt-4 flex justify-start lg:justify-center px-0 lg:px-8">
                 <span className="title-medium-emphasized lg:headline-small-emphasized pr-4 lg:pr-16 text-center">
-                  {t("students")}: 455 {t("unit")}
+                  {t("students")}: {summaryStats.studentCount} {t("unit")}
                 </span>
                 <div className="inline-block w-0.5 self-stretch bg-neutral-400"></div>
                 <span className="title-medium-emphasized lg:headline-small-emphasized pl-4 lg:pl-16 text-center">
-                  {t("staffs")}: 5 {t("unit")}
+                  {t("staffs")}: {summaryStats.staffCount} {t("unit")}
                 </span>
               </div>
             </StatCard>
@@ -233,20 +367,22 @@ export function WhitelistInsightView() {
             <DonutChart data={donutChartData} />
           </div>
         </section>
-        <section className="grid grid-cols-2 gap-4 md:gap-8">
-          <InfoCard
-            value={600}
-            unit={t("unit")}
-            titleFull={t("totalEligible")}
-            titleShort={t("totalEligibleShort")}
-          />
-          <InfoCard
-            value={100}
-            unit={t("unit")}
-            titleFull={t("totalUnregistered")}
-            titleShort={t("totalUnregisteredShort")}
-          />
-        </section>
+        {!hasActiveFilters && (
+          <section className="grid grid-cols-2 gap-4 md:gap-8">
+            <InfoCard
+              value={totalEligible}
+              unit={t("unit")}
+              titleFull={t("totalEligible")}
+              titleShort={t("totalEligibleShort")}
+            />
+            <InfoCard
+              value={totalUnregistered}
+              unit={t("unit")}
+              titleFull={t("totalUnregistered")}
+              titleShort={t("totalUnregisteredShort")}
+            />
+          </section>
+        )}
       </div>
 
       {/* Chart Section */}

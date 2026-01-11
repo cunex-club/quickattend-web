@@ -4,7 +4,7 @@ import Button from "@components/Button";
 import React from "react";
 import StatCard from "@components/StatCard";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@assets/components/ui/skeleton";
 import { useTranslations } from "next-intl";
@@ -46,20 +46,24 @@ import {
   facultyData,
   timeData,
   eventData,
+  detailedFacultyData,
+  detailedTimeData,
 } from "@utils/data";
+import {
+  applyFacultyFilters,
+  applyTimeFilters,
+  calculateSummaryStats,
+} from "@utils/filterHelpers";
 import SortMenu from "@components/sort-menu";
 import IonIcon from "@components/IonIcon";
-
-const verticalChartData = dataCategorizeByFaculty;
-const horizontalChartData = dataCategorizeByTime;
 
 export function DeepInsightView() {
   const router = useRouter();
   const { role } = useRole();
   const t = useTranslations("Dashboard.insights");
-  const [selectedFilter, setSelectedFilter] = useState<
-    "student" | "staff" | null
-  >(null);
+  const [userFilter, setUserFilter] = useState<"student" | "staff" | null>(
+    null
+  );
   const [selectedFaculties, setSelectedFaculties] = useState<
     Record<string, boolean>
   >({});
@@ -67,21 +71,35 @@ export function DeepInsightView() {
     {}
   );
 
-  if (role !== "manager" && role !== "owner") {
-    router.push("/dashboard");
-    return null;
-  }
-  const createSelectionHandler =
-    (
-      setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-      allItemId: string
-    ) =>
+  // Applied filters - only updated when user clicks "Apply Filter"
+  const [appliedFaculties, setAppliedFaculties] = useState<
+    Record<string, boolean>
+  >({});
+  const [appliedTimes, setAppliedTimes] = useState<Record<string, boolean>>({});
+
+  const facultyFilterOptions = useMemo(
+    () => facultyData.filter((item) => item.id !== "f-0"),
+    []
+  );
+  const timeFilterOptions = useMemo(
+    () => timeData.filter((item) => item.id !== "t-0"),
+    []
+  );
+
+  const canViewInsights = role === "manager" || role === "owner";
+
+  useEffect(() => {
+    if (!canViewInsights) {
+      router.push("/dashboard");
+    }
+  }, [canViewInsights, router]);
+  const createSelectionHandler = (
+    setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>
+  ) =>
     (itemId: string, checked: boolean) => {
       setter((prevSelected) => {
         const newSelected = { ...prevSelected };
         if (checked) {
-          if (itemId === allItemId) return { [allItemId]: true };
-          delete newSelected[allItemId];
           const selectedCount =
             Object.values(newSelected).filter(Boolean).length;
           if (selectedCount >= 5) return prevSelected;
@@ -93,44 +111,94 @@ export function DeepInsightView() {
       });
     };
 
-  const handleFacultyChange = createSelectionHandler(
-    setSelectedFaculties,
-    "f-0"
-  );
-  const handleTimeChange = createSelectionHandler(setSelectedTimes, "t-0");
+  const handleFacultyChange = createSelectionHandler(setSelectedFaculties);
+  const handleTimeChange = createSelectionHandler(setSelectedTimes);
 
   const handleClearFilters = () => {
     setSelectedFaculties({});
     setSelectedTimes({});
+    // Also clear applied filters immediately
+    setAppliedFaculties({});
+    setAppliedTimes({});
+  };
+
+  const handleApplyFilters = () => {
+    setAppliedFaculties(selectedFaculties);
+    setAppliedTimes(selectedTimes);
   };
 
   const handleSortChange = () => {};
+
+  // Apply filters to data using useMemo for performance
+  // Note: User type filter (student/staff) applies immediately
+  // Faculty and time filters only apply when "Apply Filter" is clicked
+  const filteredFacultyData = useMemo(
+    () =>
+      applyFacultyFilters(detailedFacultyData, {
+        selectedFaculties: appliedFaculties,
+        userType: userFilter,
+      }),
+    [appliedFaculties, userFilter]
+  );
+
+  const filteredTimeData = useMemo(
+    () =>
+      applyTimeFilters(detailedTimeData, {
+        selectedTimes: appliedTimes,
+        userType: userFilter,
+      }),
+    [appliedTimes, userFilter]
+  );
+
+  // Calculate summary statistics
+  const summaryStats = useMemo(
+    () => calculateSummaryStats(filteredFacultyData, userFilter),
+    [filteredFacultyData, userFilter]
+  );
+
+  // Prepare chart data
+  const verticalChartData = useMemo(
+    () =>
+      filteredFacultyData.map((item) => ({
+        faculty: item.faculty,
+        total: item.total,
+      })),
+    [filteredFacultyData]
+  );
+
+  const horizontalChartData = useMemo(
+    () =>
+      filteredTimeData.map((item) => ({ time: item.time, total: item.total })),
+    [filteredTimeData]
+  );
+
+  if (!canViewInsights) return null;
 
   return (
     <div className="w-full rounded-xl bg-neutral-white space-y-16">
       <section className="flex justify-between">
         <div className="space-x-4 flex items-center">
           <Button
-            mode={selectedFilter === null ? "filled" : "outline"}
+            mode={userFilter === null ? "filled" : "outline"}
             bordered="square"
             expanded={false}
-            onClick={() => setSelectedFilter(null)}
+            onClick={() => setUserFilter(null)}
           >
             <p className="label-large-emphasized">{t("all")}</p>
           </Button>
           <Button
-            mode={selectedFilter === "student" ? "filled" : "outline"}
+            mode={userFilter === "student" ? "filled" : "outline"}
             bordered="square"
             expanded={false}
-            onClick={() => setSelectedFilter("student")}
+            onClick={() => setUserFilter("student")}
           >
             <p className="label-large-emphasized">{t("student")}</p>
           </Button>
           <Button
-            mode={selectedFilter === "staff" ? "filled" : "outline"}
+            mode={userFilter === "staff" ? "filled" : "outline"}
             bordered="square"
             expanded={false}
-            onClick={() => setSelectedFilter("staff")}
+            onClick={() => setUserFilter("staff")}
           >
             <p className="label-large-emphasized">{t("staff")}</p>
           </Button>
@@ -154,7 +222,7 @@ export function DeepInsightView() {
                   </p>
                   <FilterableList
                     title={t("faculty")}
-                    items={facultyData}
+                    items={facultyFilterOptions}
                     selectedItems={selectedFaculties}
                     onCheckedChange={handleFacultyChange}
                     filterVariant="secondary"
@@ -162,7 +230,7 @@ export function DeepInsightView() {
 
                   <FilterableList
                     title={t("timePeriod")}
-                    items={timeData}
+                    items={timeFilterOptions}
                     selectedItems={selectedTimes}
                     onCheckedChange={handleTimeChange}
                     filterVariant="secondary"
@@ -182,7 +250,12 @@ export function DeepInsightView() {
                     </Button>
 
                     <PopoverClose asChild>
-                      <Button mode="filled" bordered="round" expanded={true}>
+                      <Button
+                        mode="filled"
+                        bordered="round"
+                        expanded={true}
+                        onClick={handleApplyFilters}
+                      >
                         <p className="title-large-emphasized">
                           {t("applyFilter")}
                         </p>
@@ -199,7 +272,7 @@ export function DeepInsightView() {
       <div className="h-auto lg:h-[450px] w-full">
         <StatCard
           title={t("totalAttendees")}
-          value={eventData.totalAttendees}
+          value={summaryStats.totalAttendees}
           unit={t("unit")}
           variant="outline"
           switchNumberPosition={true}
@@ -207,11 +280,11 @@ export function DeepInsightView() {
         >
           <div className="lg:mt-4 flex justify-start lg:justify-center px-0 lg:px-8">
             <span className="title-medium-emphasized lg:headline-small-emphasized pr-4 lg:pr-16 text-center">
-              {t("students")}: {eventData.studentCount} {t("unit")}
+              {t("students")}: {summaryStats.studentCount} {t("unit")}
             </span>
             <div className="inline-block w-0.5 self-stretch bg-neutral-400"></div>
             <span className="title-medium-emphasized lg:headline-small-emphasized pl-4 lg:pl-16 text-center">
-              {t("staffs")}: {eventData.staffCount} {t("unit")}
+              {t("staffs")}: {summaryStats.staffCount} {t("unit")}
             </span>
           </div>
         </StatCard>
