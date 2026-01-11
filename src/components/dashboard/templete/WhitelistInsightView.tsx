@@ -11,6 +11,7 @@ import { Skeleton } from "@assets/components/ui/skeleton";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useRole } from "@context/RoleContext";
+import { cn } from "@assets/lib/utils";
 
 // Dynamically import heavy chart components
 const BarChartHorizontal = dynamic(
@@ -27,7 +28,15 @@ const BarChartHorizontal = dynamic(
 const DonutChart = dynamic(
   () => import("../../charts/DonutChart").then((mod) => mod.DonutChart),
   {
-    loading: () => <Skeleton className="h-full w-full rounded-lg" />,
+    loading: () => <Skeleton className="h-full w-full rounded-lg bg-neutral-white" />,
+    ssr: false,
+  }
+);
+
+const PieChartStacked = dynamic(
+  () => import("../../charts/PieChartStacked").then((mod) => mod.PieChartStacked),
+  {
+    loading: () => <Skeleton className="h-full w-full rounded-lg bg-neutral-white" />,
     ssr: false,
   }
 );
@@ -364,25 +373,34 @@ export function WhitelistInsightView() {
             </StatCard>
           </div>
           <div className="w-full">
-            <DonutChart data={donutChartData} />
+            {hasActiveFilters ? (
+              <PieChartStacked data={donutChartData} />
+            ) : (
+              <DonutChart data={donutChartData} />
+            )}
           </div>
         </section>
-        {!hasActiveFilters && (
-          <section className="grid grid-cols-2 gap-4 md:gap-8">
-            <InfoCard
-              value={totalEligible}
-              unit={t("unit")}
-              titleFull={t("totalEligible")}
-              titleShort={t("totalEligibleShort")}
-            />
-            <InfoCard
-              value={totalUnregistered}
-              unit={t("unit")}
-              titleFull={t("totalUnregistered")}
-              titleShort={t("totalUnregisteredShort")}
-            />
-          </section>
-        )}
+        <section
+          className={cn(
+            "grid grid-cols-2 gap-4 md:gap-8 transition-all duration-500 ease-in-out overflow-hidden",
+            hasActiveFilters
+              ? "opacity-0 max-h-0 pointer-events-none"
+              : "opacity-100 max-h-[500px]"
+          )}
+        >
+          <InfoCard
+            value={totalEligible}
+            unit={t("unit")}
+            titleFull={t("totalEligible")}
+            titleShort={t("totalEligibleShort")}
+          />
+          <InfoCard
+            value={totalUnregistered}
+            unit={t("unit")}
+            titleFull={t("totalUnregistered")}
+            titleShort={t("totalUnregisteredShort")}
+          />
+        </section>
       </div>
 
       {/* Chart Section */}

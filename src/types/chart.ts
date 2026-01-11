@@ -17,6 +17,7 @@ export type BarChartHorizontalProps = {
 
 export type BarChartHorizontalOverviewProps = {
   data: BarChartHorizontalProps[];
+  maxValue?: number;
 };
 
 // Multi-select horizontal bar chart types

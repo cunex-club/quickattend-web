@@ -32,7 +32,7 @@ const CHART_CONSTANTS = {
   RADIUS_IPAD_PRO_OUTER: 130,
   RADIUS_TABLET_INNER: 80,
   RADIUS_TABLET_OUTER: 130,
-  RADIUS_MOBILE_INNER: 70,
+  RADIUS_MOBILE_INNER: 75,
   RADIUS_MOBILE_OUTER: 125,
   LABEL_DISTANCE: 1.6,
   STROKE_WIDTH: 3,
@@ -211,10 +211,7 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
                         y={viewBox.cy}
                         textAnchor="middle"
                         dominantBaseline="middle"
-                        className={cn(
-                          "headline-large-emphasized",
-                          showLabels && "-translate-y-2"
-                        )}
+                        className={cn("headline-large-emphasized", showLabels)}
                       >
                         <tspan
                           x={viewBox.cx}

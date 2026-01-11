@@ -90,7 +90,7 @@ export function CompareView() {
             Object.values(newSelected).filter(Boolean).length;
           if (selectedCount >= 5) {
             toast.error(
-              <p className="title-medium-emphasized text-neutral-white">
+              <p className="title-medium-primary text-neutral-white">
                 {t("maxSelectionError")}
               </p>,
               {
@@ -98,7 +98,7 @@ export function CompareView() {
                   background: "var(--error)",
                   color: "var(--neutral-white)",
                 },
-                duration: 1500,
+                duration: 2500,
               }
             );
             return prevSelected;
@@ -126,7 +126,7 @@ export function CompareView() {
       Object.keys(selectedTimes).length === 0
     ) {
       toast.error(
-        <p className="title-medium-emphasized text-neutral-white">
+        <p className="title-medium-primary text-neutral-white">
           {t("minSelectionError")}
         </p>,
         {
@@ -135,7 +135,7 @@ export function CompareView() {
             color: "var(--neutral-white)",
             width: "max-content",
           },
-          duration: 1500,
+          duration: 2500,
         }
       );
       return;
@@ -144,7 +144,7 @@ export function CompareView() {
     // Check if both "All" options are selected
     if (selectedFaculties["f-0"] && selectedTimes["t-0"]) {
       toast.error(
-        <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
+        <p className="title-medium-primary text-neutral-white">
           {t("bothAllError")}
         </p>,
         {
@@ -153,14 +153,14 @@ export function CompareView() {
             color: "var(--neutral-white)",
             width: "max-content",
           },
-          duration: 2000,
+          duration: 2500,
         }
       );
       return;
     }
 
     toast.success(
-      <p className="title-medium-emphasized text-neutral-white -translate-y-[3px]">
+      <p className="title-medium-primary text-neutral-white">
         {t("comparingData")}
       </p>,
       {
@@ -168,7 +168,7 @@ export function CompareView() {
           background: "var(--success)",
           color: "var(--neutral-white)",
         },
-        duration: 1500,
+        duration: 2500,
       }
     );
   };

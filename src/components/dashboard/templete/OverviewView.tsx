@@ -78,6 +78,8 @@ const mockTime = [
   { time: "17:00", student: 50, staff: 20 },
 ].map((item) => ({ ...item, total: item.student + item.staff }));
 
+const maxTimeValue = Math.max(...mockTime.map((item) => item.total));
+
 export function OverviewView() {
   const t = useTranslations("Dashboard.overview");
   const router = useRouter();
@@ -266,7 +268,7 @@ export function OverviewView() {
               </p>
               <div className="w-full relative">
                 <div className="h-[400px] md:h-[360px] lg:h-[350px] xl:max-h-[320px] overflow-auto">
-                  <BarChartHorizontalOverview data={filteredTime} />
+                  <BarChartHorizontalOverview data={filteredTime} maxValue={maxTimeValue} />
                 </div>
                 <div className="absolute z-10 right-0 top-0">
                   <div className="space-x-4 bg-transparent">
