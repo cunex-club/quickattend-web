@@ -41,11 +41,8 @@ import {
 import { PopoverClose } from "@radix-ui/react-popover";
 import { FilterableList } from "../FilterableList";
 import {
-  dataCategorizeByFaculty,
-  dataCategorizeByTime,
   facultyData,
   timeData,
-  eventData,
   detailedFacultyData,
   detailedTimeData,
 } from "@utils/data";

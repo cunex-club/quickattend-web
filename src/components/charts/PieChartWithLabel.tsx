@@ -88,7 +88,7 @@ export function PieChartWithLabel() {
         </text>
       );
     },
-    [chartTotal, hoveredIndex] // เพิ่ม hoveredIndex เข้าไปใน dependency
+    [chartTotal]
   );
 
   const handleBackgroundClick = () => {

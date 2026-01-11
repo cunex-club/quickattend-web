@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@assets/lib/utils";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { Pie, PieChart, Cell } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
@@ -56,9 +56,6 @@ export function PieChartStacked({ data }: { data: DonutChartProps[] }) {
       : isTablet
         ? CHART_CONSTANTS.RADIUS_TABLET_OUTER
         : CHART_CONSTANTS.RADIUS_DESKTOP_OUTER;
-
-  const innerRadius =
-    outerRadius - CHART_CONSTANTS.RING_GAP - CHART_CONSTANTS.RING_THICKNESS;
 
   const chartDataInner = data.map((item, index) => ({
     ...item,
