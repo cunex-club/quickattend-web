@@ -212,7 +212,7 @@ const EventCreateTemplate = () => {
     <div className="w-full h-fit min-h-screen bg-neutral-200">
       <header
         ref={topRef}
-        className="w-full h-16 relative flex items-center justify-center shadow-elevation-3"
+        className="w-full min-h-16 relative flex items-center justify-center shadow-elevation-3 py-4"
       >
         <button
           onClick={() => {

@@ -36,6 +36,7 @@ import {
 } from "@assets/components/ui/dialog";
 import EditEventDuplicate from "../components/edit-event-duplicate";
 import EditEventDelete from "../components/edit-event-delete";
+import { deepEqual } from "@utils/function";
 
 export const SideTabType = {
   NAVIGATE: "navigate",
@@ -65,7 +66,7 @@ const EventEditTemplate = () => {
   const [valid, setValid] = useState(false);
 
   // NOTE: MOCK VERSION
-  const oldEventForm: EventFormInterface = {
+  const fetchedEventForm: EventFormInterface = {
     name: "Sample Event",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     date: new Date("2026-02-10"),
@@ -102,7 +103,11 @@ const EventEditTemplate = () => {
     evaluation_form: "https://forms.google.com/sample-evaluation-form",
   };
 
-  const [eventForm, setEventForm] = useState<EventFormInterface>(oldEventForm);
+  const [lastSavedEventForm, setLastSavedEventForm] =
+    useState<EventFormInterface>(fetchedEventForm);
+  const [eventForm, setEventForm] =
+    useState<EventFormInterface>(fetchedEventForm);
+  const [canSave, setCanSave] = useState(false);
 
   const section1Ref = useRef<HTMLDivElement>(null);
   const section2Ref = useRef<HTMLDivElement>(null);
@@ -120,6 +125,10 @@ const EventEditTemplate = () => {
       return false;
     }
   };
+
+  useEffect(() => {
+    setCanSave(!deepEqual(lastSavedEventForm, eventForm));
+  }, [eventForm, lastSavedEventForm]);
 
   useEffect(() => {
     if (
@@ -211,46 +220,79 @@ const EventEditTemplate = () => {
     Allow All to Scan: ${eventForm.allow_all_to_scan}
     Evaluation Form: ${eventForm.evaluation_form}`);
 
+    setLastSavedEventForm(eventForm);
+  };
+
+  const saveAndExit = () => {
+    saveEvent();
     window.location.href = "/events";
   };
 
   return (
     <>
       <div className="w-full h-fit min-h-screen max-w-screen bg-neutral-100">
-        <header className="w-full h-16 px-4 relative flex items-center justify-between gap-2 shadow-elevation-3">
-          <IonIcon
-            name="ChevronBack"
-            size="16px"
-            className="text-primary font-semibold cursor-pointer"
+        <header className="w-full min-h-16 relative flex items-center justify-between shadow-elevation-3 gap-2 py-4 pl-2 pr-4">
+          <button
             onClick={() => {
               router.back();
             }}
-          />
+            className="text-primary font-semibold cursor-pointer flex items-center"
+          >
+            <IonIcon name="ChevronBack" size="16px" />
+            <p className="hidden md:block label-large-emphasized">
+              {tEditEvent("back")}
+            </p>
+          </button>
+
           <p className="headline-small-emphasized">{tEditEvent("editEvent")}</p>
 
-          <Button
-            mode="filled"
-            bordered="square"
-            expanded={false}
-            disabled={!valid}
-            onClick={() => {
-              if (valid) {
-                saveEvent();
-              }
-            }}
-            className={`${
-              valid
-                ? "cursor-pointer border-primary"
-                : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
-            } w-fit h-9 px-1 pr-2 flex items-center`}
-          >
-            <IonIcon
-              name="Checkmark"
-              size="16px"
-              className="font-semibold cursor-pointer"
-            />
-            <p className="label-large-emphasized">{tEditEvent("save")}</p>
-          </Button>
+          <div className="flex gap-2 items-center">
+            <Button
+              mode="outline"
+              bordered="round"
+              expanded={false}
+              disabled={!canSave}
+              onClick={() => {
+                if (canSave) {
+                  saveEvent();
+                }
+              }}
+              className={`${
+                canSave
+                  ? "cursor-pointer border-primary text-primary"
+                  : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
+              } w-fit h-9 px-1 pr-2 flex items-center`}
+            >
+              <IonIcon
+                name="SaveOutline"
+                size="16px"
+                className="font-semibold"
+              />
+            </Button>
+            <Button
+              mode="filled"
+              bordered="square"
+              expanded={false}
+              disabled={!valid}
+              onClick={() => {
+                if (valid) {
+                  saveAndExit();
+                }
+              }}
+              className={`${
+                valid
+                  ? "cursor-pointer border-primary"
+                  : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
+              } w-fit h-9 px-1 pr-2 flex items-center`}
+            >
+              <IonIcon
+                name="Checkmark"
+                size="16px"
+                className="font-semibold cursor-pointer"
+              />
+              <p className="label-large-emphasized">{tEditEvent("save")}</p>
+            </Button>
+          </div>
         </header>
 
         <main className={`w-full flex gap-4 px-4 py-8`}>
@@ -611,7 +653,7 @@ const EventEditTemplate = () => {
                 className={`max-w-full h-fit max-h-[60vh] rounded-4xl p-4 mb-6 overflow-y-auto break-all`}
               >
                 <EditEventDuplicate
-                  eventForm={oldEventForm}
+                  eventForm={fetchedEventForm}
                   setOpenDuplicate={setOpenDuplicate}
                   width={width}
                 />
@@ -778,7 +820,7 @@ const EventEditTemplate = () => {
               {/* Content */}
               <>
                 <EditEventDuplicate
-                  eventForm={oldEventForm}
+                  eventForm={fetchedEventForm}
                   setOpenDuplicate={setOpenDuplicate}
                   width={width}
                 />
@@ -818,7 +860,7 @@ const EventEditTemplate = () => {
               {/* Content */}
               <>
                 <EditEventDuplicate
-                  eventForm={oldEventForm}
+                  eventForm={fetchedEventForm}
                   setOpenDuplicate={setOpenDuplicate}
                   width={width}
                 />
