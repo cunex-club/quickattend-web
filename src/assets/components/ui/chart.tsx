@@ -153,7 +153,7 @@ function ChartTooltipContent({
       return null;
     }
 
-    return <div className={cn("label-small-primary", labelClassName)}>{value}</div>;
+    return <div className={cn("text-md", labelClassName)}>{value}</div>;
   }, [
     label,
     labelFormatter,
@@ -173,12 +173,12 @@ function ChartTooltipContent({
   return (
     <div
       className={cn(
-        "border-border/50 bg-background grid min-w-[8rem] items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-xl",
+        "border-border/50 bg-background grid min-w-[8rem] items-start gap-1.5 rounded-lg border p-3 text-[10px] md:text-[12px] lg:text-[13px] shadow-xl z-[9999]",
         className
       )}
     >
       {!nestLabel ? tooltipLabel : null}
-      <div className="grid gap-1.5">
+      <div className="grid gap-2.5 z-[9999]">
         {payload
           .filter((item) => item.type !== "none")
           .map((item, index) => {
@@ -190,7 +190,7 @@ function ChartTooltipContent({
               <div
                 key={item.dataKey}
                 className={cn(
-                  "[&>svg]:text-muted-foreground flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5",
+                  "[&>svg]:text-muted-foreground flex w-full flex-wrap items-stretch gap-2.5 [&>svg]:h-2.5 [&>svg]:w-2.5 z-[9999]",
                   indicator === "dot" ? "items-center" : ""
                 )}
               >
@@ -204,7 +204,7 @@ function ChartTooltipContent({
                       !hideIndicator && (
                         <div
                           className={cn(
-                            "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)",
+                            "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg) z-[9999]",
                             {
                               "h-2.5 w-2.5": indicator === "dot",
                               "w-1": indicator === "line",
@@ -224,18 +224,18 @@ function ChartTooltipContent({
                     )}
                     <div
                       className={cn(
-                        "flex flex-1 justify-between leading-none",
+                        "flex flex-1 justify-between leading-none space-x-8 z-[9999]",
                         nestLabel ? "items-end" : "items-center"
                       )}
                     >
-                      <div className="grid gap-1.5">
+                      <div className="grid gap-10">
                         {nestLabel ? tooltipLabel : null}
-                        <span className="text-muted-foreground translate-y-0.5">
+                        <span className="text-muted-foreground">
                           {itemConfig?.label || item.name}
                         </span>
                       </div>
                       {item.value && (
-                        <span className="text-foreground label-small-primary tabular-nums translate-y-0.5">
+                        <span className="text-foreground tabular-nums">
                           {item.value.toLocaleString()}
                         </span>
                       )}
@@ -300,9 +300,7 @@ function ChartLegendContent({
                   }}
                 />
               )}
-              <div className="translate-y-0.5">
-                {itemConfig?.label}
-              </div>
+              <div className="translate-y-0.5">{itemConfig?.label}</div>
             </div>
           );
         })}

@@ -14,13 +14,14 @@ interface RoleProviderProps {
   initialRole?: UserRole;
 }
 
-export const RoleProvider = ({ children, initialRole = "attendee" }: RoleProviderProps) => {
+export const RoleProvider = ({
+  children,
+  initialRole = "attendee",
+}: RoleProviderProps) => {
   const [role] = useState<UserRole>(initialRole);
-  
+
   return (
-    <RoleContext.Provider value={{ role }}>
-      {children}
-    </RoleContext.Provider>
+    <RoleContext.Provider value={{ role }}>{children}</RoleContext.Provider>
   );
 };
 

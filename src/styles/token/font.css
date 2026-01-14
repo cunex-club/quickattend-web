@@ -2,6 +2,26 @@
 @import "tailwindcss";
 
 @font-face {
+  font-family: "CHULALONGKORNBold";
+  src: url("../../../public/font/CHULALONGKORNBold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  ascent-override: 95%;
+  descent-override: 25%;
+}
+
+@font-face {
+  font-family: "CHULALONGKORNReg";
+  src: url("../../../public/font/CHULALONGKORNReg.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  ascent-override: 95%;
+  descent-override: 25%;
+}
+
+@font-face {
   font-family: "Material Symbols Outlined";
   font-style: normal;
   font-display: block;
@@ -27,7 +47,6 @@
   font-size: 57px;
   line-height: 64px;
   letter-spacing: -0.25px;
-  transform: translateY(12px);
 }
 
 @utility display-medium-primary {
@@ -35,7 +54,6 @@
   font-size: 45px;
   line-height: 52px;
   letter-spacing: 0px;
-  transform: translateY(8px);
 }
 
 @utility display-small-primary {
@@ -43,7 +61,6 @@
   font-size: 36px;
   line-height: 44px;
   letter-spacing: 0px;
-  transform: translateY(6px);
 }
 
 @utility display-large-emphasized {
@@ -51,7 +68,6 @@
   font-size: 57px;
   line-height: 64px;
   letter-spacing: -0.25px;
-  transform: translateY(12px);
 }
 
 @utility display-medium-emphasized {
@@ -59,7 +75,6 @@
   font-size: 45px;
   line-height: 52px;
   letter-spacing: 0px;
-  transform: translateY(8px);
 }
 
 @utility display-small-emphasized {
@@ -75,7 +90,6 @@
   font-size: 32px;
   line-height: 40px;
   letter-spacing: 0px;
-  transform: translateY(12px);
 }
 
 @utility headline-medium-primary {
@@ -83,7 +97,6 @@
   font-size: 28px;
   line-height: 36px;
   letter-spacing: 0px;
-  transform: translateY(8px);
 }
 
 @utility headline-small-primary {
@@ -91,7 +104,6 @@
   font-size: 24px;
   line-height: 32px;
   letter-spacing: 0px;
-  transform: translateY(6px);
 }
 
 @utility headline-large-emphasized {
@@ -99,7 +111,6 @@
   font-size: 32px;
   line-height: 40px;
   letter-spacing: 0px;
-  transform: translateY(12px);
 }
 
 @utility headline-medium-emphasized {
@@ -107,7 +118,6 @@
   font-size: 28px;
   line-height: 36px;
   letter-spacing: 0px;
-  transform: translateY(8px);
 }
 
 @utility headline-small-emphasized {
@@ -115,7 +125,6 @@
   font-size: 24px;
   line-height: 32px;
   letter-spacing: 0px;
-  transform: translateY(6px);
 }
 
 /* Title styles */
@@ -124,7 +133,6 @@
   font-size: 22px;
   line-height: 28px;
   letter-spacing: 0px;
-  transform: translateY(12px);
 }
 
 @utility title-medium-primary {
@@ -132,7 +140,6 @@
   font-size: 16px;
   line-height: 24px;
   letter-spacing: 0.15px;
-  transform: translateY(8px);
 }
 
 @utility title-small-primary {
@@ -140,7 +147,6 @@
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.1px;
-  transform: translateY(6px);
 }
 
 @utility title-large-emphasized {
@@ -148,7 +154,6 @@
   font-size: 22px;
   line-height: 28px;
   letter-spacing: 0px;
-  transform: translateY(12px);
 }
 
 @utility title-medium-emphasized {
@@ -156,7 +161,6 @@
   font-size: 16px;
   line-height: 24px;
   letter-spacing: 0.15px;
-  transform: translateY(8px);
 }
 
 @utility title-small-emphasized {
@@ -164,7 +168,6 @@
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.1px;
-  transform: translateY(4px);
 }
 
 /* Label styles */
@@ -173,7 +176,6 @@
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.1px;
-  transform: translateY(6px);
 }
 
 @utility label-medium-primary {
@@ -181,7 +183,6 @@
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.5px;
-  transform: translateY(6px);
 }
 
 @utility label-small-primary {
@@ -189,7 +190,6 @@
   font-size: 11px;
   line-height: 16px;
   letter-spacing: 0.5px;
-  transform: translateY(6px);
 }
 
 @utility label-large-emphasized {
@@ -197,7 +197,6 @@
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.1px;
-  transform: translateY(6px);
 }
 
 @utility label-medium-emphasized {
@@ -205,7 +204,6 @@
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.5px;
-  transform: translateY(6px);
 }
 
 @utility label-small-emphasized {
@@ -213,7 +211,6 @@
   font-size: 11px;
   line-height: 16px;
   letter-spacing: 0.5px;
-  transform: translateY(6px);
 }
 
 /* Body styles */
@@ -223,7 +220,6 @@
   font-size: 16px;
   line-height: 28px;
   letter-spacing: 0.5px;
-  transform: translateY(6px);
 }
 
 @utility body-medium-primary {
@@ -232,7 +228,6 @@
   font-size: 14px;
   line-height: 24px;
   letter-spacing: 0.25px;
-  transform: translateY(6px);
 }
 
 @utility body-small-primary {
@@ -241,7 +236,6 @@
   font-size: 12px;
   line-height: 22px;
   letter-spacing: 0.4px;
-  transform: translateY(6px);
 }
 
 @utility body-large-emphasized {
@@ -250,7 +244,6 @@
   font-size: 16px;
   line-height: 28px;
   letter-spacing: 0.5px;
-  transform: translateY(6px);
 }
 
 @utility body-medium-emphasized {
@@ -259,7 +252,6 @@
   font-size: 14px;
   line-height: 24px;
   letter-spacing: 0.25px;
-  transform: translateY(6px);
 }
 
 @utility body-small-emphasized {
@@ -268,7 +260,6 @@
   font-size: 12px;
   line-height: 22px;
   letter-spacing: 0.4px;
-  transform: translateY(6px);
 }
 
 .font-ion {

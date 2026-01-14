@@ -1,9 +1,20 @@
-import React from 'react'
+import React from "react";
+import { DeepInsightView } from "@components/dashboard/templete/DeepInsightView";
+import { WhitelistInsightView } from "@components/dashboard/templete/WhitelistInsightView";
 
-const page = () => {
-  return (
-    <div>page</div>
-  )
+// --- mock data ---
+type EventType = "public" | "specific" | "whitelist";
+
+async function getEventData(): Promise<{ type: EventType }> {
+  const eventType: EventType = "specific";
+  return { type: eventType };
 }
+// -------------------------------
 
-export default page
+export default async function InsightsPageController() {
+  const event = await getEventData();
+  if (event.type === "whitelist") {
+    return <WhitelistInsightView />;
+  }
+  return <DeepInsightView />;
+}

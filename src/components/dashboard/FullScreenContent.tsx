@@ -11,12 +11,19 @@ interface FullscreenContentProps {
     time: string;
     location: string;
     description: string;
+    totalAttendees: number;
+  };
+  translations: {
+    eventDetails: string;
+    totalAttendees: string;
+    unit: string;
   };
 }
 
 const FullscreenContent: React.FC<FullscreenContentProps> = ({
   onExit,
   data,
+  translations,
 }) => {
   return (
     <div className="w-full h-full flex flex-col bg-neutral-white relative overflow-auto">
@@ -44,22 +51,34 @@ const FullscreenContent: React.FC<FullscreenContentProps> = ({
               <div className="flex flex-col space-y-4 sm:space-y-6">
                 <div className="space-y-2 sm:space-y-3 body-medium-primary sm:body-large-primary">
                   <span className="flex flex-row space-x-3 items-center">
-                    <IonIcon name="Calendar" size="24px" className="text-primary flex-shrink-0" />
+                    <IonIcon
+                      name="Calendar"
+                      size="24px"
+                      className="text-primary flex-shrink-0"
+                    />
                     <p>{data.date}</p>
                   </span>
                   <span className="flex flex-row space-x-3 items-center">
-                    <IonIcon name="Time" size="24px" className="text-secondary flex-shrink-0" />
+                    <IonIcon
+                      name="Time"
+                      size="24px"
+                      className="text-secondary flex-shrink-0"
+                    />
                     <p>{data.time}</p>
                   </span>
                   <span className="flex flex-row space-x-3 items-center">
-                    <IonIcon name="Location" size="24px" className="text-primary flex-shrink-0" />
+                    <IonIcon
+                      name="Location"
+                      size="24px"
+                      className="text-primary flex-shrink-0"
+                    />
                     <p>{data.location}</p>
                   </span>
                 </div>
 
                 <div className="flex flex-col space-y-2 pt-2">
                   <p className="headline-small-emphasized sm:headline-medium-emphasized">
-                    รายละเอียดกิจกรรม
+                    {translations.eventDetails}
                   </p>
                   <p className="body-medium-primary sm:body-large-primary">
                     {data.description}
@@ -72,10 +91,10 @@ const FullscreenContent: React.FC<FullscreenContentProps> = ({
             <div className="w-full">
               <div className="aspect-[4/3] sm:aspect-[3/2] lg:aspect-square max-h-[50vh] lg:max-h-none">
                 <StatCard
-                  title="จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด"
-                  value={1096}
-                  unit="คน"
-                  variant="primary"
+                  title={translations.totalAttendees}
+                  value={data.totalAttendees}
+                  unit={translations.unit}
+                  variant="filled"
                 />
               </div>
             </div>

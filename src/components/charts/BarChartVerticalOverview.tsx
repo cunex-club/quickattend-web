@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Bar,
   BarChart,
@@ -16,13 +14,16 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
-import type { BarChartVerticalData } from "@customTypes/chart";
+import {
+  BarChartVerticalData,
+  BarChartVerticalOverviewProps,
+} from "@customTypes/chart";
+import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
+
+// CONSTANTS
 
 export const description = "A bar chart with a custom label";
 export type { BarChartVerticalData };
-interface BarChartVerticalOverviewProps {
-  data: BarChartVerticalData[];
-}
 
 const chartConfig = {
   total: {
@@ -34,79 +35,114 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BarChartVerticalOverview({ data }: BarChartVerticalOverviewProps) {
-  const chartData = data;
-  const BAR_SIZE: number = 32;
-  const BAR_GAP: number = 48;
-  const BAR_CHART_RADIUS: [number, number, number, number] = [2, 2, 2, 2];
-  const LABEL_OFFSET: number = 8;
-  const LABEL_FONT_SIZE: number = 14;
-  const dinamicHeight: number = chartData.length * (BAR_SIZE + BAR_GAP) + 24;
+const BAR_CONSTANTS = {
+  RADIUS: [2, 2, 2, 2] as [number, number, number, number],
+  LABEL_OFFSET: 8,
+  LABEL_FONT_SIZE: 14,
+  SIZE_DESKTOP: 28,
+  SIZE_TABLET: 19,
+  SIZE_MOBILE: 16,
+  DOMAIN_MULTIPLIER: 1.15,
+} as const;
+
+// HELPER FUNCTIONS
+
+const getBarSize = (isMobile: boolean, isTablet: boolean): number => {
+  if (isMobile) return BAR_CONSTANTS.SIZE_MOBILE;
+  if (isTablet) return BAR_CONSTANTS.SIZE_TABLET;
+  return BAR_CONSTANTS.SIZE_DESKTOP;
+};
+
+const calculateXDomain = (data: BarChartVerticalData[]): number => {
+  const maxValue = Math.max(...data.map((d) => d.total));
+  return (maxValue || 0) * BAR_CONSTANTS.DOMAIN_MULTIPLIER;
+};
+
+const addPercentageMetadata = (data: BarChartVerticalData[]) => {
+  const totalSum = data.reduce((sum, item) => sum + item.total, 0);
+  return data.map((item) => ({
+    ...item,
+    percentage: totalSum > 0 ? ((item.total / totalSum) * 100).toFixed(1) : "0",
+  }));
+};
+
+// Component
+
+export function BarChartVerticalOverview({
+  data,
+}: BarChartVerticalOverviewProps) {
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+
+  const barSize = getBarSize(isMobile, isTablet);
+  const xDomainMax = calculateXDomain(data);
+  const chartDataWithMeta = addPercentageMetadata(data);
   return (
-    <Card className="bg-neutral-100 shadow-elevation-2 p-4  md:p-8">
-      <CardContent>
-        <ChartContainer
-          config={chartConfig}
-          style={{ maxHeight: `${dinamicHeight}px` }}
-          className="w-full"
-        >
-          <BarChart
-            accessibilityLayer
-            data={chartData}
-            layout="vertical"
-            margin={{
-              right: 16,
-            }}
-          >
-            <CartesianGrid horizontal={false} vertical={false} />
-            <YAxis
-              dataKey="faculty"
-              type="category"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) =>
-                typeof value === "string" ? value.slice(0, 3) : value
-              }
-              hide
-            />
-            <XAxis dataKey="total" type="number" hide />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="line" />}
-            />
-            <Bar
-              dataKey="total"
-              layout="vertical"
-              fill="transparent"
-              radius={BAR_CHART_RADIUS}
-              barSize={BAR_SIZE}
-              tooltipType="none"
+    <Card className="bg-neutral-white lg:bg-neutral-100 shadow-none p-0 md:p-8 xl:p-5 border-none rounded-[28px] w-full h-auto">
+      <CardContent className="shadow-none border-none">
+        <div className="chart-list-group flex flex-col space-y-4">
+          {chartDataWithMeta.map((item, idx) => (
+            <div
+              key={`faculty-chart-${idx}`}
+              className="flex flex-col space-y-2 chart-item"
             >
-              <LabelList
-                dataKey="faculty"
-                position="insideBottomLeft"
-                offset={0}
-                className="fill-[var(--color-label)] title-medium-primary md:title-large-primary -translate-y-[15px] md:-translate-y-[20px]"
-              />
-            </Bar>
-            <Bar
-              dataKey="total"
-              layout="vertical"
-              fill="var(--color-total)"
-              radius={BAR_CHART_RADIUS}
-              barSize={BAR_SIZE}
-            >
-              <LabelList
-                dataKey="total"
-                position="right"
-                offset={LABEL_OFFSET}
-                className="fill-foreground"
-                fontSize={LABEL_FONT_SIZE}
-              />
-            </Bar>
-          </BarChart>
-        </ChartContainer>
+              <div className="flex items-center justify-between">
+                <p className="title-medium-primary md:title-large-primary ">
+                  {item.faculty}
+                </p>
+                <p className="body-medium-primary md:body-large-primary text-[var(--color-label)]">
+                  {item.total} คน ({item.percentage}%)
+                </p>
+              </div>
+              <ChartContainer
+                config={chartConfig}
+                style={{ height: `${barSize}px` }}
+                className="w-full chart-hover-bar"
+              >
+                <BarChart
+                  accessibilityLayer
+                  data={[item]}
+                  layout="vertical"
+                  margin={{ left: 0, right: 16, top: 0, bottom: 0 }}
+                >
+                  <CartesianGrid horizontal={false} vertical={false} />
+                  <YAxis
+                    dataKey="faculty"
+                    type="category"
+                    tickLine={false}
+                    axisLine={false}
+                    hide
+                  />
+                  <XAxis
+                    dataKey="total"
+                    type="number"
+                    hide
+                    domain={[0, xDomainMax]}
+                  />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent />}
+                  />
+                  <Bar
+                    dataKey="total"
+                    layout="vertical"
+                    fill="var(--color-total)"
+                    radius={BAR_CONSTANTS.RADIUS}
+                    barSize={barSize}
+                  >
+                    <LabelList
+                      dataKey="total"
+                      position="right"
+                      offset={BAR_CONSTANTS.LABEL_OFFSET}
+                      className="fill-foreground"
+                      fontSize={BAR_CONSTANTS.LABEL_FONT_SIZE}
+                    />
+                  </Bar>
+                </BarChart>
+              </ChartContainer>
+            </div>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );
