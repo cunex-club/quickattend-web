@@ -2,17 +2,12 @@ import { useLocale, useTranslations } from "next-intl";
 import { CardPreviewType, EventFormInterface } from "../template";
 import IonIcon from "@shared/IonIcon";
 import { format } from "date-fns";
-import dynamic from "next/dynamic";
 import GoogleMapPreview from "./map-preview";
 
 interface CreateEventPreviewProps {
   eventForm: EventFormInterface;
   cardMode: CardPreviewType;
 }
-
-const MapPreview = dynamic(() => import("./map-preview"), {
-  ssr: false,
-});
 
 const CreateEventPreview = ({
   eventForm,

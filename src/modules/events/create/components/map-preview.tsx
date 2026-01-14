@@ -6,18 +6,28 @@ interface MapPreviewProps {
   lat: number;
   lng: number;
   isPreview?: boolean;
+  onChangeLocation?: (lat: number, lng: number) => void;
 }
 
 export const MapPreviewComponent = ({
   lat,
   lng,
   isPreview = false,
+  onChangeLocation,
 }: MapPreviewProps) => {
   return (
     <GoogleMap
       mapContainerStyle={GoogleMapContainerStyle}
       center={{ lat, lng }}
       zoom={15}
+      onClick={
+        !isPreview
+          ? (e) => {
+              if (!e.latLng || !onChangeLocation) return;
+              onChangeLocation(e.latLng.lat(), e.latLng.lng());
+            }
+          : undefined
+      }
       options={
         isPreview
           ? {
@@ -32,15 +42,36 @@ export const MapPreviewComponent = ({
           : undefined
       }
     >
-      <Marker position={{ lat, lng }} />
+      <Marker
+        position={{ lat, lng }}
+        draggable={!isPreview}
+        onDragEnd={
+          !isPreview
+            ? (e) => {
+                if (!e.latLng || !onChangeLocation) return;
+                onChangeLocation(e.latLng.lat(), e.latLng.lng());
+              }
+            : undefined
+        }
+      />
     </GoogleMap>
   );
 };
 
-const GoogleMapPreview = ({ lat, lng, isPreview = false }: MapPreviewProps) => {
+const GoogleMapPreview = ({
+  lat,
+  lng,
+  isPreview = false,
+  onChangeLocation,
+}: MapPreviewProps) => {
   return (
     <GoogleMapsProvider>
-      <MapPreviewComponent lat={lat} lng={lng} isPreview={isPreview} />
+      <MapPreviewComponent
+        lat={lat}
+        lng={lng}
+        isPreview={isPreview}
+        onChangeLocation={onChangeLocation}
+      />
     </GoogleMapsProvider>
   );
 };

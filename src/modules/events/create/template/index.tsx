@@ -540,7 +540,7 @@ const EventCreateTemplate = () => {
         <>
           {/* Preview */}
           <Dialog open={showPreview} onOpenChange={setShowPreview}>
-            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh]">
+            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] max-w-[80vw] h-[80vh]">
               {/* Header */}
               <div className="flex justify-between gap-2 px-6 py-4 bg-neutral-white rounded-2xl h-fit items-center">
                 <DialogTitle className="headline-small-emphasized text-primary">
@@ -549,24 +549,21 @@ const EventCreateTemplate = () => {
 
                 <Select value={cardMode} onValueChange={setCardMode}>
                   <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder={tCreateEvent("eventPreview")} />
+                    <SelectValue />
                   </SelectTrigger>
-
                   <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value={CardPreviewType.CARD_PREVIEW}>
-                        {tCreateEvent(CardPreviewType.CARD_PREVIEW)}
-                      </SelectItem>
-                      <SelectItem value={CardPreviewType.DETAIL_PREVIEW}>
-                        {tCreateEvent(CardPreviewType.DETAIL_PREVIEW)}
-                      </SelectItem>
-                    </SelectGroup>
+                    <SelectItem value={CardPreviewType.CARD_PREVIEW}>
+                      {tCreateEvent(CardPreviewType.CARD_PREVIEW)}
+                    </SelectItem>
+                    <SelectItem value={CardPreviewType.DETAIL_PREVIEW}>
+                      {tCreateEvent(CardPreviewType.DETAIL_PREVIEW)}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               {/* Content */}
-              <div className="w-full flex items-center justify-center bg-neutral-white py-4 rounded-2xl h-fit max-h-full">
+              <div className="w-full flex items-center justify-center bg-neutral-white py-4 rounded-2xl h-full overflow-auto">
                 <div
                   className={`w-full h-fit max-h-full ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100 max-w-[60vw]"} rounded-4xl p-4 overflow-y-auto break-all`}
                 >

@@ -4,7 +4,6 @@ import { EventFormInterface } from "../template";
 import { Input } from "@assets/components/ui/input";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
-import GoogleMapPreview from "./map-preview";
 import GoogleMapsProvider from "../../../../providers/GoogleMapProvider";
 
 export const DEFAULT_CENTER = { lat: 13.7386, lng: 100.5321 };
@@ -17,11 +16,13 @@ const MapPreview = dynamic(() => import("./map-preview"), {
 interface MapSelectionProps {
   eventForm: EventFormInterface;
   setEventForm: (data: EventFormInterface) => void;
+  isPreview: boolean;
 }
 
 const MapSelectionComponent = ({
   eventForm,
   setEventForm,
+  isPreview = false,
 }: MapSelectionProps) => {
   const tCreateEvent = useTranslations("CreateEvent");
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
@@ -51,27 +52,43 @@ const MapSelectionComponent = ({
         }}
       >
         <Input
-          value={eventForm.location}
+          value={eventForm.location.trim()}
           placeholder={tCreateEvent("locationPlaceholder")}
           onChange={(e) =>
-            setEventForm({ ...eventForm, location: e.target.value })
+            setEventForm({ ...eventForm, location: e.target.value.trim() })
           }
         />
       </Autocomplete>
 
       {eventForm.lat && eventForm.lng && (
-        <MapPreview lat={eventForm.lat} lng={eventForm.lng} />
+        <MapPreview
+          lat={eventForm.lat}
+          lng={eventForm.lng}
+          isPreview={isPreview}
+          onChangeLocation={(lat, lng) =>
+            setEventForm({
+              ...eventForm,
+              lat,
+              lng,
+            })
+          }
+        />
       )}
     </div>
   );
 };
 
-const GoogleMapSelection = ({ eventForm, setEventForm }: MapSelectionProps) => {
+const GoogleMapSelection = ({
+  eventForm,
+  setEventForm,
+  isPreview,
+}: MapSelectionProps) => {
   return (
     <GoogleMapsProvider>
       <MapSelectionComponent
         eventForm={eventForm}
         setEventForm={setEventForm}
+        isPreview={isPreview}
       />
     </GoogleMapsProvider>
   );

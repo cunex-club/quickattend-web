@@ -218,9 +218,9 @@ const CreateEventStep2 = ({
             <div className="flex gap-4 flex-col md:flex-row w-full">
               <div className="flex flex-col gap-2 flex-1">
                 <Input
-                  value={facultyQuery}
+                  value={facultyQuery.trim()}
                   onChange={(e) => {
-                    const value = e.target.value;
+                    const value = e.target.value.trim();
 
                     if (/^[\u0E00-\u0E7F]*$/.test(value)) {
                       setFacultyQuery(e.target.value);
@@ -361,9 +361,9 @@ const CreateEventStep2 = ({
               <Input
                 inputMode="numeric"
                 maxLength={10}
-                value={studentIdPermissionQuery}
+                value={studentIdPermissionQuery.trim()}
                 onChange={(e) => {
-                  const value = e.target.value;
+                  const value = e.target.value.trim();
                   if (/^\d{0,10}$/.test(value)) {
                     setStudentIdPermissionQuery(value);
                   }
@@ -645,9 +645,9 @@ const CreateEventStep2 = ({
               <Input
                 inputMode="numeric"
                 maxLength={10}
-                value={studentIdAccessibilityQuery}
+                value={studentIdAccessibilityQuery.trim()}
                 onChange={(e) => {
-                  const value = e.target.value;
+                  const value = e.target.value.trim();
                   if (/^\d{0,10}$/.test(value)) {
                     setStudentIdAccessibilityQuery(value);
                   }
