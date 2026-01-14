@@ -54,9 +54,9 @@ const EventIdPageTemplate = () => {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center items-center px-25 pt-35 gap-7.5">
-      <div className="w-full flex flex-row gap-10">
-        <div className="flex-4 bg-neutral-100 p-10 space-y-5 rounded-3xl shadow-xs">
+    <div className="w-full flex flex-col justify-center items-center px-6 md:px-10 lg:px-25 py-10 lg:pt-35 gap-6 lg:gap-7.5 pb-24">
+      <div className="w-full flex flex-col lg:flex-row gap-6 lg:gap-10">
+        <div className="lg:flex-[4] bg-neutral-100 p-6 lg:p-10 space-y-5 rounded-3xl shadow-xs">
           <div className="flex w-full items-center justify-between">
             <div className="display-medium-emphasized ">{eventData.name}</div>
             <div>
@@ -94,7 +94,10 @@ const EventIdPageTemplate = () => {
             <div className="headline-small-emphasized">กำหนดการกิจกรรม</div>
             <div className="body-large-primary">
               {eventData.agenda.map((item) => (
-                <div key={item.start_time} className="flex w-full justify-between">
+                <div
+                  key={item.start_time}
+                  className="flex w-full justify-between"
+                >
                   <div>{item.activity_name}</div>
                   <div>{formatAgendaTime(item.start_time, item.end_time)}</div>
                 </div>
@@ -102,8 +105,8 @@ const EventIdPageTemplate = () => {
             </div>
           </div>
         </div>
-        <div className="flex-1 flex flex-col justify-between gap-10">
-          <div className="flex flex-col justify-center items-center bg-primary h-full p-10 text-white rounded-3xl shadow-xs">
+        <div className="lg:flex-1 flex flex-col sm:flex-row lg:flex-col justify-between gap-6 lg:gap-10">
+          <div className="flex-1 flex flex-col justify-center items-start lg:items-center bg-primary h-full px-8 py-6 lg:p-10 text-white rounded-3xl shadow-xs">
             <div className="headline-small-emphasized">จำนวนผู้ลงทะเบียน</div>
             <div className="flex items-baseline gap-2">
               <div
@@ -129,29 +132,33 @@ const EventIdPageTemplate = () => {
               <div>บุคลากร : 6 คน</div>
             </div>
           </div>
-          <div className="bg-neutral-100 p-5 rounded-3xl shadow-xs">
+          <div className="flex-1 lg:flex-none flex flex-col justify-center items-start lg:items-center gap-2.5 bg-neutral-100 p-5 rounded-3xl shadow-xs">
             <div className="headline-small-emphasized">กิจกรรมโดย</div>
             <div className="body-large-primary">{eventData.organizer}</div>
           </div>
         </div>
       </div>
-      <div className="flex w-full gap-6">
+      <div className="flex flex-col md:flex-row w-full gap-4 lg:gap-6">
         <Button mode="filled" bordered="round" expanded={true}>
           <div className="flex justify-center items-center gap-2 text-neutral-white">
             <IonIcon name="Scan" size="36px" />
-            <div className="title-large-primary">สแกนผู้เข้าร่วมกิจกรรม</div>
+            <div className="title-large-primary whitespace-nowrap">
+              สแกนผู้เข้าร่วมกิจกรรม
+            </div>
           </div>
         </Button>
         <Button mode="outline" bordered="round" expanded={true}>
           <div className="flex justify-center text-primary items-center gap-2">
             <IonIcon name="TrendingUp" size="36px" />
-            <div className="title-large-primary">สถิติกิจกรรม</div>
+            <div className="title-large-primary whitespace-nowrap">
+              สถิติกิจกรรม
+            </div>
           </div>
         </Button>
-        <div className="flex gap-2">
-          <Button 
-            mode="outline" 
-            bordered="round" 
+        <div className="flex gap-2 justify-center md:justify-start">
+          <Button
+            mode="outline"
+            bordered="round"
             expanded={false}
             onClick={() => setIsDuplicateModalOpen(true)}
           >
@@ -161,9 +168,9 @@ const EventIdPageTemplate = () => {
               className="text-primary"
             />
           </Button>
-          <Button 
-            mode="outline" 
-            bordered="round" 
+          <Button
+            mode="outline"
+            bordered="round"
             expanded={false}
             onClick={() => setIsShareModalOpen(true)}
           >
