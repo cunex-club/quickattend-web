@@ -32,20 +32,26 @@ const DatePicker = ({
   placeholder = "วัน / เดือน / ปี",
   className = "",
 }: DatePickerProps) => {
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const [selectedDate, setSelectedDate] = useState(value || "");
-  const [displayValue, setDisplayValue] = useState("");
 
   // Format date from YYYY-MM-DD to "D / เดือนไทย / YYYY พ.ศ."
   const formatDateToThai = (dateString: string) => {
     if (!dateString) return "";
-    
+
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "";
+
     const day = date.getDate();
     const month = THAI_MONTHS[date.getMonth()];
     const year = date.getFullYear() + 543; // Convert to Buddhist year
-    
+
     return `${day} / ${month} / ${year}`;
   };
+
+  const [displayValue, setDisplayValue] = useState(
+    value ? formatDateToThai(value) : "",
+  );
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -54,28 +60,47 @@ const DatePicker = ({
     onChange?.(newValue);
   };
 
+  const handleContainerClick = () => {
+    const input = inputRef.current;
+    if (!input) return;
+
+    if (typeof (input as any).showPicker === "function") {
+      (input as any).showPicker();
+    } else {
+      input.click();
+    }
+  };
+
   return (
-    <div className={`relative ${className}`}>
+    <div
+      className={`relative cursor-pointer ${className}`}
+      onClick={handleContainerClick}
+    >
       <input
+        ref={inputRef}
         type="date"
         value={selectedDate}
         onChange={handleDateChange}
-        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+        className="absolute inset-0 w-full h-full opacity-0 -z-10 pointer-events-none"
+        tabIndex={-1}
       />
-      <TextField
-        type="text"
-        value={displayValue}
-        placeholder={placeholder}
-        className="bg-neutral-100"
-        inputClassName="body-large-primary cursor-pointer"
-        endIcon={<IonIcon name="Calendar" size="24px" />}
-        endIconWrapperClassName="bg-primary text-white"
-        showSeparator={true}
-        readOnly
-      />
+      <div className="pointer-events-none">
+        <TextField
+          type="text"
+          value={displayValue}
+          placeholder={placeholder}
+          className="bg-neutral-100"
+          inputClassName="body-large-primary cursor-pointer"
+          endIcon={<IonIcon name="Calendar" size="24px" />}
+          endIconWrapperClassName="bg-primary text-white"
+          showSeparator={true}
+          readOnly
+        />
+      </div>
     </div>
   );
 };
+
 
 export default DatePicker;
 

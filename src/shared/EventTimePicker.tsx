@@ -32,36 +32,47 @@ const EventTimePicker = ({
     return time.replace(":", ".") + " น.";
   };
 
-  const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setStartTimeInput(value);
-    onStartTimeChange?.(value);
-  };
+  const handleTimeChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setInput: React.Dispatch<React.SetStateAction<string>>,
+    onChange?: (value: string) => void,
+  ) => {
+    // Remove non-numeric characters
+    const numbers = e.target.value.replace(/\D/g, "");
 
-  const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setEndTimeInput(value);
-    onEndTimeChange?.(value);
+    // Limit to 4 digits
+    const truncated = numbers.slice(0, 4);
+
+    // Format as HH:mm
+    let formatted = truncated;
+    if (truncated.length >= 3) {
+      formatted = `${truncated.slice(0, 2)}:${truncated.slice(2)}`;
+    }
+
+    setInput(formatted);
+    onChange?.(formatted);
   };
 
   return (
     <div className={`grid grid-cols-2 gap-2 ${className}`}>
       <TextField
-        type="time"
+        type="text"
+        maxLength={5}
         value={startTimeInput}
-        onChange={handleStartTimeChange}
+        onChange={(e) =>
+          handleTimeChange(e, setStartTimeInput, onStartTimeChange)
+        }
         placeholder={startPlaceholder}
-        className="bg-neutral-100"
         inputClassName="body-large-primary"
         endIcon={<IonIcon name="Time" size="20px" className="text-primary" />}
         supportingText="เวลาเริ่มกิจกรรม"
       />
       <TextField
-        type="time"
+        type="text"
+        maxLength={5}
         value={endTimeInput}
-        onChange={handleEndTimeChange}
+        onChange={(e) => handleTimeChange(e, setEndTimeInput, onEndTimeChange)}
         placeholder={endPlaceholder}
-        className="bg-neutral-100"
         inputClassName="body-large-primary"
         endIcon={<IonIcon name="Time" size="20px" className="text-primary" />}
         supportingText="เวลาสิ้นสุดกิจกรรม"

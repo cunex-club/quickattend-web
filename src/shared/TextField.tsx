@@ -66,7 +66,7 @@ const TextField: StyleableFC<TextFieldProps> = React.forwardRef<
           {endIcon && (
             <div
               className={cn(
-                "flex items-center justify-center px-4",
+                "flex items-center justify-center",
                 endIconWrapperClassName,
               )}
             >
@@ -79,8 +79,7 @@ const TextField: StyleableFC<TextFieldProps> = React.forwardRef<
         {supportingText && (
           <p
             className={cn(
-              "text-sm mx-4 my-1",
-              error ? "text-red-500" : "text-neutral-600",
+              "body-small-primary mx-4 my-1 text-neutral-500",
             )}
           >
             {supportingText}
@@ -90,7 +89,5 @@ const TextField: StyleableFC<TextFieldProps> = React.forwardRef<
     );
   },
 );
-
-TextField.displayName = "TextField";
 
 export default TextField;
