@@ -1,9 +1,9 @@
-import Button from "@components/Button";
-import GroupFilterButton from "@components/GroupFilterButton";
-import TextField from "@components/TextField";
-import Icon from "@components/Icon";
-import EventNameScan from "@components/EventNameScan";
-import WheelPicker from "@components/WheelPicker";
+import Button from "@shared/Button";
+import GroupFilterButton from "@shared/GroupFilterButton";
+import TextField from "@shared/TextField";
+import Icon from "@shared/Icon";
+import EventNameScan from "@shared/EventNameScan";
+import WheelPicker from "@shared/WheelPicker";
 import { getTranslations } from "next-intl/server";
 
 export default async function Home() {
