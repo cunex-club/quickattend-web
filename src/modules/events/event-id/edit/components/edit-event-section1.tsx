@@ -8,12 +8,14 @@ import {
 import { Textarea } from "@assets/components/ui/textarea";
 import { cn } from "@assets/lib/utils";
 import EditableTime from "@modules/events/create/components/editable-time";
+import MapSelection from "@modules/events/create/components/map-selection";
 import { EventFormInterface } from "@modules/events/create/template";
 import Button from "@shared/Button";
 import IonIcon from "@shared/IonIcon";
 import { format, startOfDay } from "date-fns";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import GoogleMapsProvider from "../../../../../providers/GoogleMapProvider";
 
 interface EditEventSection1Props {
   eventForm: EventFormInterface;
@@ -299,11 +301,11 @@ const EditEventSection1 = ({
               <Calendar
                 mode="single"
                 selected={eventForm.date}
-                onSelect={(date) => {
+                onSelect={(date: Date) => {
                   handleSelectDate(date);
                 }}
                 defaultMonth={today}
-                disabled={(date) => date < today}
+                disabled={(date: Date) => date < today}
               />
             </PopoverContent>
           </Popover>
@@ -386,14 +388,9 @@ const EditEventSection1 = ({
         <p className="title-medium-emphasized">
           {tEditEvent("location")} <span className="text-primary">*</span>
         </p>
-        <Input
-          value={eventForm.location}
-          placeholder={tEditEvent("locationPlaceholder")}
-          className="body-large-primary focus:border-primary focus-visible:ring-0"
-          onChange={(e) =>
-            setEventForm({ ...eventForm, location: e.target.value })
-          }
-        />
+        <GoogleMapsProvider>
+          <MapSelection eventForm={eventForm} setEventForm={setEventForm} />
+        </GoogleMapsProvider>
       </div>
 
       {/* Agenda */}

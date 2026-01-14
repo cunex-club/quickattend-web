@@ -148,11 +148,11 @@ const EditEventDuplicateStep1 = ({
               <Calendar
                 mode="single"
                 selected={duplicatedEventForm.date}
-                onSelect={(date) => {
+                onSelect={(date: Date) => {
                   handleSelectDate(date);
                 }}
                 defaultMonth={today}
-                disabled={(date) => date < today}
+                disabled={(date: Date) => date < today}
               />
             </PopoverContent>
           </Popover>

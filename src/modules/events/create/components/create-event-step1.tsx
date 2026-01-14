@@ -14,6 +14,8 @@ import { cn } from "@assets/lib/utils";
 import Button from "@shared/Button";
 import EditableTime from "./editable-time";
 import { Textarea } from "@assets/components/ui/textarea";
+import MapSelection from "./map-selection";
+import GoogleMapsProvider from "../../../../providers/GoogleMapProvider";
 
 interface CreateEventStep1Props {
   eventForm: EventFormInterface;
@@ -299,11 +301,11 @@ const CreateEventStep1 = ({
               <Calendar
                 mode="single"
                 selected={eventForm.date}
-                onSelect={(date) => {
+                onSelect={(date: Date) => {
                   handleSelectDate(date);
                 }}
                 defaultMonth={today}
-                disabled={(date) => date < today}
+                disabled={(date: Date) => date < today}
               />
             </PopoverContent>
           </Popover>
@@ -386,14 +388,9 @@ const CreateEventStep1 = ({
         <p className="title-medium-emphasized">
           {tCreateEvent("location")} <span className="text-primary">*</span>
         </p>
-        <Input
-          value={eventForm.location}
-          placeholder={tCreateEvent("locationPlaceholder")}
-          className="body-large-primary focus:border-primary focus-visible:ring-0"
-          onChange={(e) =>
-            setEventForm({ ...eventForm, location: e.target.value })
-          }
-        />
+        <GoogleMapsProvider>
+          <MapSelection eventForm={eventForm} setEventForm={setEventForm} />
+        </GoogleMapsProvider>
       </div>
 
       {/* Agenda */}

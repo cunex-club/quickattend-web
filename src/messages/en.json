@@ -86,7 +86,8 @@
 
     "eventPreview": "Preview",
     "cardPreview": "Event Card",
-    "detailPreview": "Event Detail"
+    "detailPreview": "Event Detail",
+    "mapPreview": "Map"
   },
   "EditEvent": {
     "editEvent": "Edit an event",
@@ -144,6 +145,8 @@
     "eventPreview": "Preview",
     "cardPreview": "Event Card",
     "detailPreview": "Event Detail",
+    "mapPreview": "Map",
+
     "category": "Category",
     "eventDuplicate": "Duplicate this event",
     "submitDuplicate": "Submit an event",

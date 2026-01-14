@@ -37,6 +37,7 @@ import {
 import EditEventDuplicate from "../components/edit-event-duplicate";
 import EditEventDelete from "../components/edit-event-delete";
 import { deepEqual } from "@utils/function";
+import { DEFAULT_CENTER } from "@modules/events/create/components/map-selection";
 
 export const SideTabType = {
   NAVIGATE: "navigate",
@@ -70,6 +71,8 @@ const EventEditTemplate = () => {
     name: "Sample Event",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     date: new Date("2026-02-10"),
+    lat: DEFAULT_CENTER.lat,
+    lng: DEFAULT_CENTER.lng,
     startTime: new Date("2026-02-10T09:00:00"),
     endTime: new Date("2026-02-10T16:00:00"),
     location: "Main Auditorium, Building A",

@@ -29,6 +29,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@assets/components/ui/dialog";
+import { DEFAULT_CENTER } from "../components/map-selection";
 
 export interface Agenda {
   id: string;
@@ -98,6 +99,8 @@ export interface EventFormInterface {
   startTime: Date | undefined;
   endTime: Date | undefined;
   location: string;
+  lat: number;
+  lng: number;
   agenda: Agenda[];
   organizer: string;
   attendance_type: AttendanceType;
@@ -127,6 +130,8 @@ const EventCreateTemplate = () => {
     location: "",
     agenda: [],
     organizer: "",
+    lat: DEFAULT_CENTER.lat,
+    lng: DEFAULT_CENTER.lng,
     attendance_type: "all",
     selectedFaculties: [],
     selectedStudents: [],

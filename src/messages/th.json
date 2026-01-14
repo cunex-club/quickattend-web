@@ -87,7 +87,8 @@
 
     "eventPreview": "ดูตัวอย่างกิจกรรม",
     "cardPreview": "การ์ดกิจกรรม",
-    "detailPreview": "รายละเอียดกิจกรรม"
+    "detailPreview": "รายละเอียดกิจกรรม",
+    "mapPreview": "ดูแผนที่"
   },
   "EditEvent": {
     "editEvent": "แก้ไขกิจกรรม",
@@ -145,6 +146,8 @@
     "eventPreview": "ดูตัวอย่างกิจกรรม",
     "cardPreview": "การ์ดกิจกรรม",
     "detailPreview": "รายละเอียดกิจกรรม",
+    "mapPreview": "ดูแผนที่",
+
     "category": "หมวดหมู่",
     "eventDuplicate": "ทำซ้ำกิจกรรม",
     "submitDuplicate": "ยืนยันการสร้างกิจกรรม",

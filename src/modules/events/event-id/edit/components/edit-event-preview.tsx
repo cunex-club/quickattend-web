@@ -5,11 +5,20 @@ import {
   CardPreviewType,
   EventFormInterface,
 } from "@modules/events/create/template";
+import dynamic from "next/dynamic";
+import GoogleMapsProvider from "../../../../../providers/GoogleMapProvider";
 
 interface EditEventPreviewProps {
   eventForm: EventFormInterface;
   cardMode: CardPreviewType;
 }
+
+const MapPreview = dynamic(
+  () => import("../../../create/components/map-preview"),
+  {
+    ssr: false,
+  }
+);
 
 const EditEventPreview = ({ eventForm, cardMode }: EditEventPreviewProps) => {
   const tEditEvent = useTranslations("EditEvent");
@@ -119,6 +128,20 @@ const EditEventPreview = ({ eventForm, cardMode }: EditEventPreviewProps) => {
           </div>
         </div>
       )}
+
+      {/* Map */}
+      <div className="flex flex-col gap-2 mb-4 ml-2">
+        <h2 className="title-medium-emphasized text-neutral-600">
+          {tEditEvent("mapPreview")}
+        </h2>
+        <GoogleMapsProvider>
+          <MapPreview
+            lat={eventForm.lat}
+            lng={eventForm.lng}
+            isPreview={true}
+          />
+        </GoogleMapsProvider>
+      </div>
     </div>
   );
 };
