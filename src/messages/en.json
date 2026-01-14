@@ -9,9 +9,70 @@
   "help": "Help",
   "contactSupport": "Contact Support",
   "Sidebar": {
-    "addevent": "สร้างกิจกรรม",
-    "activities": "กิจกรรม",
-    "scan": "สแกน",
-    "search": "สแกน"
+    "addevent": "Create Event",
+    "activities": "Activities",
+    "scan": "Scan",
+    "search": "Search"
+  },
+  "Dashboard": {
+    "navbar": {
+      "overview": "Overview",
+      "insights": "Insights"
+    },
+    "overview": {
+      "eventDetails": "Event Details",
+      "totalAttendees": "Total Attendees",
+      "unit": "people",
+      "top3Title": "Top 3 Departments by Registration",
+      "timeStatsTitle": "Registration Statistics by Time Period",
+      "facultyStatsTitle": "Registration Statistics by Faculty/Department",
+      "compareData": "Compare Data",
+      "viewAll": "View All",
+      "viewFullscreen": "View Fullscreen",
+      "copyLink": "Copy Link",
+      "linkCopied": "Event link copied successfully",
+      "linkCopyFailed": "Failed to copy link"
+    },
+    "insights": {
+      "all": "All",
+      "student": "Students",
+      "staff": "Staff",
+      "filter": "Filter",
+      "filterDataTitle": "Data Filters",
+      "faculty": "Faculty/Department",
+      "timePeriod": "Time Period",
+      "clearFilter": "Clear Filters",
+      "applyFilter": "Apply Filters",
+      "totalAttendees": "Total Attendees",
+      "unit": "people",
+      "students": "Students",
+      "staffs": "Staff",
+      "totalEligible": "Total Eligible Registrants",
+      "totalEligibleShort": "Total Eligible",
+      "totalUnregistered": "Total Unregistered",
+      "totalUnregisteredShort": "Total Unregistered",
+      "facultyStatsTitle": "Registration Statistics by Faculty/Department",
+      "timeStatsTitle": "Registration Statistics by Time Period",
+      "sortNewest": "Event Date: Newest - Oldest",
+      "sortOldest": "Event Date: Oldest - Newest",
+      "compareButton": "Compare Registration Statistics"
+    },
+    "compare": {
+      "title": "Compare Data",
+      "faculty": "Faculty/Department",
+      "back": "Back",
+      "timePeriod": "Time Period",
+      "clearData": "Clear Data",
+      "compareData": "Compare Data",
+      "maxSelectionError": "You can select up to 5 options",
+      "minSelectionError": "Please select at least one option to compare data",
+      "bothAllError": "Cannot select \"All Faculties/Departments\" and \"All Time Periods\" simultaneously",
+      "comparingData": "Comparing data...",
+      "totalAttendees": "Total Attendees",
+      "outOfTotal": "Out of total",
+      "unit": "people",
+      "facultyStatsTitle": "Registration Statistics by Faculty/Department",
+      "timeStatsTitle": "Registration Statistics by Time Period"
+    }
   }
 }

@@ -1,6 +1,5 @@
 "use client";
 import { cn } from "@assets/lib/utils";
-import * as React from "react";
 import { Label, Pie, PieChart } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
@@ -10,13 +9,14 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
+import { DonutChartProps } from "@customTypes/chart";
+import {
+  useIsIpadPro,
+  useIsMobile,
+  useIsTablet,
+} from "@assets/hooks/use-mobile";
 
-export const description = "A donut chart with text";
-
-type DonutChartProps = {
-  category: string;
-  total: number;
-};
+// CONSTANTS
 
 const chartConfig = {
   total: {
@@ -25,44 +25,108 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function DonutChart({ data }: { data: DonutChartProps[] }) {
-  const chartData = data.map((item, index) => ({
+const CHART_CONSTANTS = {
+  RADIUS_DESKTOP_INNER: 85,
+  RADIUS_DESKTOP_OUTER: 140,
+  RADIUS_IPAD_PRO_INNER: 80,
+  RADIUS_IPAD_PRO_OUTER: 130,
+  RADIUS_TABLET_INNER: 80,
+  RADIUS_TABLET_OUTER: 130,
+  RADIUS_MOBILE_INNER: 70,
+  RADIUS_MOBILE_OUTER: 125,
+  LABEL_DISTANCE: 1.6,
+  STROKE_WIDTH: 3,
+  LABEL_LINE_WIDTH: 2,
+  START_ANGLE: 90,
+  END_ANGLE: -270,
+} as const;
+
+// TYPES
+
+interface LabelProps {
+  cx?: number;
+  cy?: number;
+  midAngle?: number;
+  innerRadius?: number;
+  outerRadius?: number;
+  payload?: { category?: string; total?: number };
+  percent?: number;
+}
+
+interface RadiusConfig {
+  innerRadius: number;
+  outerRadius: number;
+  showLabels: boolean;
+}
+
+// HELPER FUNCTIONS
+
+const mapDataWithColors = (data: DonutChartProps[]) => {
+  return data.map((item, index) => ({
     ...item,
     fill: index === 0 ? "var(--color-primary)" : "var(--color-gray-300)",
   }));
+};
 
-  const registeredPercent = React.useMemo(() => {
-    const total = chartData.reduce((acc, curr) => acc + curr.total, 0);
-    const registered = chartData[0].total;
-    return ((registered / total) * 100).toFixed(0);
-  }, [chartData]);
+const calculateRegisteredPercent = (data: DonutChartProps[]): string => {
+  const total = data.reduce((acc, curr) => acc + curr.total, 0);
+  const registered = data[0]?.total || 0;
+  return ((registered / total) * 100).toFixed(0);
+};
 
-  interface LabelProps {
-    cx?: number;
-    cy?: number;
-    midAngle?: number;
-    innerRadius?: number;
-    outerRadius?: number;
-    payload?: { category?: string; total?: number };
-    percent?: number;
+const getResponsiveRadius = (
+  isMobile: boolean,
+  isTablet: boolean,
+  isIpadPro: boolean
+): RadiusConfig => {
+  if (isMobile) {
+    return {
+      innerRadius: CHART_CONSTANTS.RADIUS_MOBILE_INNER,
+      outerRadius: CHART_CONSTANTS.RADIUS_MOBILE_OUTER,
+      showLabels: false,
+    };
   }
 
-  const customLabel = (props: LabelProps) => {
-    const CUSTOM_DISTANCE = 1.6;
-    const RADIAN = Math.PI / 180;
+  if (isIpadPro) {
+    return {
+      innerRadius: CHART_CONSTANTS.RADIUS_IPAD_PRO_INNER,
+      outerRadius: CHART_CONSTANTS.RADIUS_IPAD_PRO_OUTER,
+      showLabels: true,
+    };
+  }
+
+  if (isTablet) {
+    return {
+      innerRadius: CHART_CONSTANTS.RADIUS_TABLET_INNER,
+      outerRadius: CHART_CONSTANTS.RADIUS_TABLET_OUTER,
+      showLabels: true,
+    };
+  }
+
+  return {
+    innerRadius: CHART_CONSTANTS.RADIUS_DESKTOP_INNER,
+    outerRadius: CHART_CONSTANTS.RADIUS_DESKTOP_OUTER,
+    showLabels: true,
+  };
+};
+
+const createCustomLabel = () => {
+  const RADIAN = Math.PI / 180;
+
+  const LabelComponent = (props: LabelProps) => {
     const { cx, cy, midAngle, innerRadius, outerRadius, payload, percent } =
       props;
 
-    const radius: number =
+    const radius =
       Number(innerRadius ?? 0) +
-      (Number(outerRadius ?? 0) - Number(innerRadius ?? 0)) * CUSTOM_DISTANCE;
+      (Number(outerRadius ?? 0) - Number(innerRadius ?? 0)) *
+        CHART_CONSTANTS.LABEL_DISTANCE;
     const x = Number(cx ?? 0) + radius * Math.cos(-(midAngle ?? 0) * RADIAN);
     const y = Number(cy ?? 0) + radius * Math.sin(-(midAngle ?? 0) * RADIAN);
 
     const name = payload?.category ?? "";
     const value = payload?.total ?? "";
     const pct = `${(Number(percent ?? 0) * 100).toFixed(0)}%`;
-
     const anchor = x > Number(cx ?? 0) ? "start" : "end";
 
     return (
@@ -83,6 +147,26 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
     );
   };
 
+  LabelComponent.displayName = "DonutChartLabel";
+  return LabelComponent;
+};
+
+// Component
+
+export function DonutChart({ data }: { data: DonutChartProps[] }) {
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+  const isIpadPro = useIsIpadPro();
+
+  const chartData = mapDataWithColors(data);
+  const registeredPercent = calculateRegisteredPercent(chartData);
+  const { innerRadius, outerRadius, showLabels } = getResponsiveRadius(
+    isMobile,
+    isTablet,
+    isIpadPro
+  );
+  const customLabel = createCustomLabel();
+
   return (
     <Card className="flex flex-col py-12 sm:py-10 md:py-0 justify-center border-none shadow-none h-full">
       <CardContent className="pb-0">
@@ -93,10 +177,7 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
             "[&_.recharts-surface]:overflow-visible",
             "[&_.recharts-pie-label-line]:stroke-[var(--color-gray-300)]",
             "[&_.recharts-pie-label-text]:fill-[var(--color-primary)]",
-            // "[&_.recharts-pie-label-text]:font-family-[var(--font-chula-regular)]", // this not working
-            // "[&_.recharts-pie-label-text]:font-size-[12px]",
-            // "[&_.recharts-pie-label-text]:line-height-[16px]",
-            // "[&_.recharts-pie-label-text]:letter-spacing-[0.5px]"
+            "chart-hover-pie"
           )}
         >
           <PieChart>
@@ -105,18 +186,21 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
               content={<ChartTooltipContent className="label-small-primary" />}
             />
 
-            {/* Mobile version - largest radius, no labels */}
             <Pie
-              className="md:hidden"
               data={chartData}
               dataKey="total"
               nameKey="category"
-              innerRadius={70}
-              outerRadius={125}
-              strokeWidth={3}
-              startAngle={90}
-              endAngle={-270}
-              label={false}
+              innerRadius={innerRadius}
+              outerRadius={outerRadius}
+              strokeWidth={CHART_CONSTANTS.STROKE_WIDTH}
+              startAngle={CHART_CONSTANTS.START_ANGLE}
+              endAngle={CHART_CONSTANTS.END_ANGLE}
+              labelLine={
+                showLabels
+                  ? { strokeWidth: CHART_CONSTANTS.LABEL_LINE_WIDTH }
+                  : false
+              }
+              label={showLabels ? customLabel : false}
             >
               <Label
                 content={({ viewBox }) => {
@@ -127,84 +211,10 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
                         y={viewBox.cy}
                         textAnchor="middle"
                         dominantBaseline="middle"
-                        className="headline-large-emphasized -translate-y-2.5"
-                      >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-primary"
-                        >
-                          {registeredPercent.toLocaleString()}%
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </Pie>
-
-            {/* Tablet version - medium radius, no labels */}
-            <Pie
-              className="hidden md:block lg:hidden"
-              data={chartData}
-              dataKey="total"
-              nameKey="category"
-              innerRadius={100}
-              outerRadius={180}
-              strokeWidth={3}
-              startAngle={90}
-              endAngle={-270}
-              label={false}
-            >
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        className="headline-large-emphasized -translate-y-2"
-                      >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-primary"
-                        >
-                          {registeredPercent.toLocaleString()}%
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </Pie>
-
-            {/* Desktop version - normal radius, with custom labels */}
-            <Pie
-              className="hidden lg:block"
-              data={chartData}
-              dataKey="total"
-              nameKey="category"
-              innerRadius={110}
-              outerRadius={170}
-              strokeWidth={3}
-              startAngle={90}
-              endAngle={-270}
-              labelLine={{ strokeWidth: 2 }}
-              label={customLabel}
-            >
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        className="headline-large-emphasized -translate-y-2"
+                        className={cn(
+                          "headline-large-emphasized",
+                          showLabels && "-translate-y-2"
+                        )}
                       >
                         <tspan
                           x={viewBox.cx}

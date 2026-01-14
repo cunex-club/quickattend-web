@@ -8,10 +8,10 @@ type mode = "filled" | "outline" | "text" | "Icon";
 type bordered = "square" | "round";
 
 const getPropsByMode: Record<mode, string> = {
-  filled: "bg-primary border border-primary text-neutral-white",
-  outline: "bg-transparent border border-primary text-neutral-black",
-  text: "bg-transparent border-none text-primary",
-  Icon: "bg-primary border-none p-0 text-primary ",
+  filled: "bg-primary border border-primary text-neutral-white hover:brightness-90 hover:scale-105 active:scale-95 active:brightness-75 transition-all duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:brightness-100 disabled:active:scale-100",
+  outline: "bg-transparent border border-primary text-neutral-black hover:bg-primary hover:scale-105 hover:text-neutral-white active:scale-95 active:brightness-90 transition-all duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-neutral-black disabled:active:scale-100",
+  text: "bg-transparent border-none text-primary hover:bg-primary/10 active:bg-primary/20 active:scale-95 transition-all duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:active:scale-100",
+  Icon: "bg-primary border-none p-0 text-primary hover:scale-105 active:scale-90 transition-all duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100",
 };
 
 const getPropsByBordered: Record<bordered, string> = {
@@ -27,6 +27,7 @@ type ButtonProps = {
   expanded: boolean;
   onClick?: (event: MouseEvent) => void;
   children: React.ReactNode;
+  disabled?: boolean;
 };
 
 const Button: StyleableFC<ButtonProps> = ({
@@ -37,6 +38,7 @@ const Button: StyleableFC<ButtonProps> = ({
   onClick,
   children,
   style,
+  disabled,
   ...props
 }) => {
   return (
@@ -50,6 +52,7 @@ const Button: StyleableFC<ButtonProps> = ({
       )}
       onClick={onClick}
       style={style}
+      disabled={disabled}
       {...props}
     >
       {children}

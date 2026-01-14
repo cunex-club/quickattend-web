@@ -6,9 +6,11 @@ export default function EventsGroupLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-neutral-white">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto bg-white">{children}</main>
+      <main className="flex-1 overflow-y-auto bg-neutral-white">
+        {children}
+      </main>
     </div>
   );
 }

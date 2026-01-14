@@ -1,32 +1,70 @@
 "use client";
 
 import Button from "@components/Button";
-import { BarChartHorizontal } from "@components/charts/BarChartHorizontal";
-import { BarChartVertical } from "@components/charts/BarChartVertical";
 import React from "react";
 import StatCard from "@components/StatCard";
-import Link from "next/dist/client/link";
+import Link from "next/link";
 import { useState } from "react";
+import dynamic from "next/dynamic";
+import { Skeleton } from "@assets/components/ui/skeleton";
+import { useTranslations } from "next-intl";
+
+// Dynamically import heavy chart components
+const BarChartHorizontal = dynamic(
+  () =>
+    import("@components/charts/BarChartHorizontal").then(
+      (mod) => mod.BarChartHorizontal
+    ),
+  {
+    loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />,
+    ssr: false,
+  }
+);
+
+const DonutChart = dynamic(
+  () =>
+    import("@components/charts/PieChartStacked").then(
+      (mod) => mod.PieChartStacked
+    ),
+  {
+    loading: () => <Skeleton className="h-full w-full rounded-lg" />,
+    ssr: false,
+  }
+);
+
+const BarChartVerticalStacked = dynamic(
+  () =>
+    import("@components/charts/BarChartVerticalStacked").then(
+      (mod) => mod.BarChartVerticalStacked
+    ),
+  {
+    loading: () => <Skeleton className="h-full w-full rounded-lg" />,
+    ssr: false,
+  }
+);
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@assets/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
-import { FilterableList } from "./FilterableList";
+import { FilterableList } from "@components/dashboard/FilterableList";
 import {
-  dataCategorizeByFaculty,
   dataCategorizeByTime,
   facultyData,
+  registeredData,
+  registrationStatusData,
   timeData,
-  eventData,
 } from "@utils/data";
 import SortMenu from "@components/sort-menu";
+import InfoCard from "@components/InfoCard";
 
-const verticalChartData = dataCategorizeByFaculty;
 const horizontalChartData = dataCategorizeByTime;
+const verticalStackData = registeredData;
+const donutChartData = registrationStatusData;
 
-export function DeepInsightView() {
+export default function FilterView() {
+  const t = useTranslations("Dashboard.insights");
   const [selectedFilter, setSelectedFilter] = useState<
     "student" | "staff" | null
   >(null);
@@ -34,12 +72,12 @@ export function DeepInsightView() {
     Record<string, boolean>
   >({});
   const [selectedTimes, setSelectedTimes] = useState<Record<string, boolean>>(
-    {},
+    {}
   );
   const createSelectionHandler =
     (
       setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-      allItemId: string,
+      allItemId: string
     ) =>
     (itemId: string, checked: boolean) => {
       setter((prevSelected) => {
@@ -60,7 +98,7 @@ export function DeepInsightView() {
 
   const handleFacultyChange = createSelectionHandler(
     setSelectedFaculties,
-    "f-0",
+    "f-0"
   );
   const handleTimeChange = createSelectionHandler(setSelectedTimes, "t-0");
 
@@ -69,9 +107,7 @@ export function DeepInsightView() {
     setSelectedTimes({});
   };
 
-  const handleSortChange = (value: string) => {
-    console.log("sort:", value);
-  };
+  const handleSortChange = (value: string) => {};
 
   return (
     <div className="w-full rounded-xl bg-neutral-white space-y-16">
@@ -83,7 +119,7 @@ export function DeepInsightView() {
             expanded={false}
             onClick={() => setSelectedFilter(null)}
           >
-            <p className="label-large-emphasized">ทั้งหมด</p>
+            <p className="label-large-emphasized">{t("all")}</p>
           </Button>
           <Button
             mode={selectedFilter === "student" ? "filled" : "outline"}
@@ -91,7 +127,7 @@ export function DeepInsightView() {
             expanded={false}
             onClick={() => setSelectedFilter("student")}
           >
-            <p className="label-large-emphasized">นิสิต</p>
+            <p className="label-large-emphasized">{t("student")}</p>
           </Button>
           <Button
             mode={selectedFilter === "staff" ? "filled" : "outline"}
@@ -99,24 +135,24 @@ export function DeepInsightView() {
             expanded={false}
             onClick={() => setSelectedFilter("staff")}
           >
-            <p className="label-large-emphasized">บุคลากร</p>
+            <p className="label-large-emphasized">{t("staff")}</p>
           </Button>
         </div>
         <div>
           <Popover>
             <PopoverTrigger asChild>
               <Button mode="filled" bordered="square" expanded={false}>
-                <p className="label-large-emphasized">ตัวกรอง</p>
+                <p className="label-large-emphasized">{t("filter")}</p>
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-screen max-w-md p-8" align="end">
               <div>
                 <div className="flex flex-col space-y-8">
                   <p className="headline-large-emphasized mx-auto">
-                    ตัวกรองข้อมูล
+                    {t("filterDataTitle")}
                   </p>
                   <FilterableList
-                    title="คณะ/หน่วยงาน"
+                    title={t("faculty")}
                     items={facultyData}
                     selectedItems={selectedFaculties}
                     onCheckedChange={handleFacultyChange}
@@ -124,7 +160,7 @@ export function DeepInsightView() {
                   />
 
                   <FilterableList
-                    title="ช่วงเวลา"
+                    title={t("timePeriod")}
                     items={timeData}
                     selectedItems={selectedTimes}
                     onCheckedChange={handleTimeChange}
@@ -139,15 +175,15 @@ export function DeepInsightView() {
                       className="bg-transparent"
                       onClick={handleClearFilters}
                     >
-                      <p className="title-large-emphasized translate-y-[-6px]">
-                        ล้างตัวกรอง
+                      <p className="title-large-emphasized">
+                        {t("clearFilter")}
                       </p>
                     </Button>
 
                     <PopoverClose asChild>
                       <Button mode="filled" bordered="round" expanded={true}>
-                        <p className="title-large-emphasized translate-y-[-6px]">
-                          กรองข้อมูล
+                        <p className="title-large-emphasized">
+                          {t("applyFilter")}
                         </p>
                       </Button>
                     </PopoverClose>
@@ -159,38 +195,63 @@ export function DeepInsightView() {
         </div>
       </section>
 
-      <div className="h-[250px] md:h-[450px] w-full">
-        <StatCard
-          title="จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด"
-          value={eventData.totalAttendees}
-          unit="คน"
-          variant="primary"
-        >
-          <div className="mt-4 hidden md:flex justify-center items-center px-8">
-            <span className="headline-small-emphasized pr-2 md:pr-16 text-center">
-              นิสิต: {eventData.studentCount} คน
-            </span>
-            <div className="inline-block w-0.5 self-stretch bg-neutral-100"></div>
-            <span className="headline-small-emphasized pl-2 md:pl-16 text-center">
-              บุคลากร: {eventData.staffCount} คน
-            </span>
+      <div className="flex flex-col space-y-8">
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="h-[250px] md:h-[450px] w-full">
+            <StatCard
+              title={t("totalAttendees")}
+              value={500}
+              unit={t("unit")}
+              variant="outline"
+            >
+              <div className="mt-4 hidden md:flex justify-center items-center px-8">
+                <span className="headline-small-emphasized pr-4 sm:pr-10 md:pr-16 text-center">
+                  {t("students")}: 455 {t("unit")}
+                </span>
+                <div className="inline-block w-0.5 self-stretch bg-neutral-100 dark:bg-white/10"></div>
+                <span className="headline-small-emphasized pl-4 sm:pl-10 md:pl-16 text-center">
+                  {t("staffs")}: 5 {t("unit")}
+                </span>
+              </div>
+            </StatCard>
           </div>
-        </StatCard>
+          <div className="h-[250px] md:h-[450px] w-full">
+            <DonutChart data={donutChartData} />
+          </div>
+        </section>
+        <section className="grid grid-cols-1 md:grid-cols-2 min-h-[400px] gap-8">
+          <div className="h-full w-full">
+            <InfoCard
+              titleFull={t("totalEligible")}
+              titleShort={t("totalEligible")}
+              value={600}
+              unit={t("unit")}
+            />
+          </div>
+          <div className="h-full w-full">
+            <InfoCard
+              titleFull={t("totalUnregistered")}
+              titleShort={t("totalUnregistered")}
+              value={100}
+              unit={t("unit")}
+            />
+          </div>
+        </section>
       </div>
 
       <section className="flex flex-col space-y-8">
         <div className="flex justify-between">
-          <p className="headline-small-emphasized md:headline-large-emphasized">
-            สถิติการลงทะเบียนแยกตามคณะ/หน่วยงาน
+          <p className="headline-small-emphasized sm:headline-medium-emphasized md:headline-large-emphasized">
+            {t("facultyStatsTitle")}
           </p>
           <SortMenu
             options={[
               {
-                label: "วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด",
+                label: t("sortNewest"),
                 value: "newest",
               },
               {
-                label: "วันที่จัดกิจกรรม : เก่าสุด - ใหม่สุด",
+                label: t("sortOldest"),
                 value: "oldest",
               },
             ]}
@@ -198,24 +259,22 @@ export function DeepInsightView() {
           />
         </div>
         <div className="h-auto">
-          <BarChartVertical data={verticalChartData} />
+          <BarChartVerticalStacked data={verticalStackData} />
         </div>
       </section>
 
-      <section className="flex flex-col space-y-8">
-        <p className="headline-small-emphasized md:headline-large-emphasized">
-          สถิติการลงทะเบียนแยกตามช่วงเวลา
+      <section className="flex flex-col space-y-8 mb-0sm:mb-10">
+        <p className="headline-small-emphasized sm:headline-medium-emphasized md:headline-large-emphasized">
+          {t("timeStatsTitle")}
         </p>
-        <div className="w-full h-full">
+        <div>
           <BarChartHorizontal data={horizontalChartData} />
         </div>
       </section>
 
       <Link href="/dashboard-compare" target="_blank">
         <Button mode="filled" bordered="square" expanded={false}>
-          <p className="title-medium-emphasized translate-y-[-2px]">
-            เปรียบเทียบสถิติการลงทะเบียนเข้าร่วมกิจกรรม
-          </p>
+          <p className="title-medium-emphasized">{t("compareButton")}</p>
         </Button>
       </Link>
     </div>

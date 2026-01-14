@@ -13,11 +13,17 @@ interface FullscreenContentProps {
     description: string;
     totalAttendees: number;
   };
+  translations: {
+    eventDetails: string;
+    totalAttendees: string;
+    unit: string;
+  };
 }
 
 const FullscreenContent: React.FC<FullscreenContentProps> = ({
   onExit,
   data,
+  translations,
 }) => {
   return (
     <div className="w-full h-full flex flex-col bg-neutral-white relative overflow-auto">
@@ -72,7 +78,7 @@ const FullscreenContent: React.FC<FullscreenContentProps> = ({
 
                 <div className="flex flex-col space-y-2 pt-2">
                   <p className="headline-small-emphasized sm:headline-medium-emphasized">
-                    รายละเอียดกิจกรรม
+                    {translations.eventDetails}
                   </p>
                   <p className="body-medium-primary sm:body-large-primary">
                     {data.description}
@@ -85,10 +91,10 @@ const FullscreenContent: React.FC<FullscreenContentProps> = ({
             <div className="w-full">
               <div className="aspect-[4/3] sm:aspect-[3/2] lg:aspect-square max-h-[50vh] lg:max-h-none">
                 <StatCard
-                  title="จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด"
+                  title={translations.totalAttendees}
                   value={data.totalAttendees}
-                  unit="คน"
-                  variant="primary"
+                  unit={translations.unit}
+                  variant="filled"
                 />
               </div>
             </div>
