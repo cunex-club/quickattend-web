@@ -3,7 +3,7 @@ import { CardPreviewType, EventFormInterface } from "../template";
 import IonIcon from "@shared/IonIcon";
 import { format } from "date-fns";
 import dynamic from "next/dynamic";
-import GoogleMapsProvider from "../../../../providers/GoogleMapProvider";
+import GoogleMapPreview from "./map-preview";
 
 interface CreateEventPreviewProps {
   eventForm: EventFormInterface;
@@ -131,13 +131,11 @@ const CreateEventPreview = ({
         <h2 className="title-medium-emphasized text-neutral-600">
           {tCreateEvent("mapPreview")}
         </h2>
-        <GoogleMapsProvider>
-          <MapPreview
-            lat={eventForm.lat}
-            lng={eventForm.lng}
-            isPreview={true}
-          />
-        </GoogleMapsProvider>
+        <GoogleMapPreview
+          lat={eventForm.lat}
+          lng={eventForm.lng}
+          isPreview={true}
+        />
       </div>
     </div>
   );

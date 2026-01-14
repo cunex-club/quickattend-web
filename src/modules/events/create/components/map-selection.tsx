@@ -4,6 +4,8 @@ import { EventFormInterface } from "../template";
 import { Input } from "@assets/components/ui/input";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
+import GoogleMapPreview from "./map-preview";
+import GoogleMapsProvider from "../../../../providers/GoogleMapProvider";
 
 export const DEFAULT_CENTER = { lat: 13.7386, lng: 100.5321 };
 export const GoogleMapContainerStyle = { width: "100%", height: "180px" };
@@ -17,10 +19,10 @@ interface MapSelectionProps {
   setEventForm: (data: EventFormInterface) => void;
 }
 
-export default function MapSelection({
+const MapSelectionComponent = ({
   eventForm,
   setEventForm,
-}: MapSelectionProps) {
+}: MapSelectionProps) => {
   const tCreateEvent = useTranslations("CreateEvent");
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
@@ -62,4 +64,17 @@ export default function MapSelection({
       )}
     </div>
   );
-}
+};
+
+const GoogleMapSelection = ({ eventForm, setEventForm }: MapSelectionProps) => {
+  return (
+    <GoogleMapsProvider>
+      <MapSelectionComponent
+        eventForm={eventForm}
+        setEventForm={setEventForm}
+      />
+    </GoogleMapsProvider>
+  );
+};
+
+export default GoogleMapSelection;

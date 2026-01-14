@@ -8,14 +8,13 @@ import {
 import { Textarea } from "@assets/components/ui/textarea";
 import { cn } from "@assets/lib/utils";
 import EditableTime from "@modules/events/create/components/editable-time";
-import MapSelection from "@modules/events/create/components/map-selection";
 import { EventFormInterface } from "@modules/events/create/template";
 import Button from "@shared/Button";
 import IonIcon from "@shared/IonIcon";
 import { format, startOfDay } from "date-fns";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import GoogleMapsProvider from "../../../../../providers/GoogleMapProvider";
+import GoogleMapSelection from "@modules/events/create/components/map-selection";
 
 interface EditEventSection1Props {
   eventForm: EventFormInterface;
@@ -388,9 +387,7 @@ const EditEventSection1 = ({
         <p className="title-medium-emphasized">
           {tEditEvent("location")} <span className="text-primary">*</span>
         </p>
-        <GoogleMapsProvider>
-          <MapSelection eventForm={eventForm} setEventForm={setEventForm} />
-        </GoogleMapsProvider>
+        <GoogleMapSelection eventForm={eventForm} setEventForm={setEventForm} />
       </div>
 
       {/* Agenda */}

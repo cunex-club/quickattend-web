@@ -6,7 +6,7 @@ import {
   EventFormInterface,
 } from "@modules/events/create/template";
 import dynamic from "next/dynamic";
-import GoogleMapsProvider from "../../../../../providers/GoogleMapProvider";
+import GoogleMapPreview from "../../../create/components/map-preview";
 
 interface EditEventPreviewProps {
   eventForm: EventFormInterface;
@@ -134,13 +134,11 @@ const EditEventPreview = ({ eventForm, cardMode }: EditEventPreviewProps) => {
         <h2 className="title-medium-emphasized text-neutral-600">
           {tEditEvent("mapPreview")}
         </h2>
-        <GoogleMapsProvider>
-          <MapPreview
-            lat={eventForm.lat}
-            lng={eventForm.lng}
-            isPreview={true}
-          />
-        </GoogleMapsProvider>
+        <GoogleMapPreview
+          lat={eventForm.lat}
+          lng={eventForm.lng}
+          isPreview={true}
+        />
       </div>
     </div>
   );

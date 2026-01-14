@@ -14,8 +14,7 @@ import { cn } from "@assets/lib/utils";
 import Button from "@shared/Button";
 import EditableTime from "./editable-time";
 import { Textarea } from "@assets/components/ui/textarea";
-import MapSelection from "./map-selection";
-import GoogleMapsProvider from "../../../../providers/GoogleMapProvider";
+import GoogleMapSelection from "./map-selection";
 
 interface CreateEventStep1Props {
   eventForm: EventFormInterface;
@@ -388,9 +387,8 @@ const CreateEventStep1 = ({
         <p className="title-medium-emphasized">
           {tCreateEvent("location")} <span className="text-primary">*</span>
         </p>
-        <GoogleMapsProvider>
-          <MapSelection eventForm={eventForm} setEventForm={setEventForm} />
-        </GoogleMapsProvider>
+
+        <GoogleMapSelection eventForm={eventForm} setEventForm={setEventForm} />
       </div>
 
       {/* Agenda */}

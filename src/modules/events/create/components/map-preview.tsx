@@ -1,5 +1,6 @@
 import { GoogleMap, Marker } from "@react-google-maps/api";
 import { GoogleMapContainerStyle } from "./map-selection";
+import GoogleMapsProvider from "../../../../providers/GoogleMapProvider";
 
 interface MapPreviewProps {
   lat: number;
@@ -7,11 +8,11 @@ interface MapPreviewProps {
   isPreview?: boolean;
 }
 
-export default function MapPreview({
+export const MapPreviewComponent = ({
   lat,
   lng,
   isPreview = false,
-}: MapPreviewProps) {
+}: MapPreviewProps) => {
   return (
     <GoogleMap
       mapContainerStyle={GoogleMapContainerStyle}
@@ -34,4 +35,14 @@ export default function MapPreview({
       <Marker position={{ lat, lng }} />
     </GoogleMap>
   );
-}
+};
+
+const GoogleMapPreview = ({ lat, lng, isPreview = false }: MapPreviewProps) => {
+  return (
+    <GoogleMapsProvider>
+      <MapPreviewComponent lat={lat} lng={lng} isPreview={isPreview} />
+    </GoogleMapsProvider>
+  );
+};
+
+export default GoogleMapPreview;
