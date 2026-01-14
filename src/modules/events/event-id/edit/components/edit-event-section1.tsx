@@ -251,10 +251,12 @@ const EditEventSection1 = ({
           {tEditEvent("name")} <span className="text-primary">*</span>
         </p>
         <Input
-          value={eventForm.name}
+          value={eventForm.name.trim()}
           placeholder={tEditEvent("namePlaceholder")}
           className="body-large-primary focus:border-primary focus-visible:ring-0"
-          onChange={(e) => setEventForm({ ...eventForm, name: e.target.value })}
+          onChange={(e) =>
+            setEventForm({ ...eventForm, name: e.target.value.trim() })
+          }
         />
       </div>
 
@@ -262,11 +264,11 @@ const EditEventSection1 = ({
       <div className="flex flex-col gap-2">
         <p className="title-medium-emphasized">{tEditEvent("description")}</p>
         <Textarea
-          value={eventForm.description}
+          value={eventForm.description.trim()}
           placeholder={tEditEvent("descriptionPlaceholder")}
           className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
-            setEventForm({ ...eventForm, description: e.target.value })
+            setEventForm({ ...eventForm, description: e.target.value.trim() })
           }
         />
       </div>
@@ -298,6 +300,7 @@ const EditEventSection1 = ({
 
             <PopoverContent className="w-full p-0" align="start">
               <Calendar
+                required
                 mode="single"
                 selected={eventForm.date}
                 onSelect={(date: Date) => {
@@ -387,7 +390,11 @@ const EditEventSection1 = ({
         <p className="title-medium-emphasized">
           {tEditEvent("location")} <span className="text-primary">*</span>
         </p>
-        <GoogleMapSelection eventForm={eventForm} setEventForm={setEventForm} />
+        <GoogleMapSelection
+          eventForm={eventForm}
+          setEventForm={setEventForm}
+          isPreview={false}
+        />
       </div>
 
       {/* Agenda */}
@@ -490,10 +497,10 @@ const EditEventSection1 = ({
 
           {/* Description */}
           <Input
-            value={agendaName}
+            value={agendaName.trim()}
             placeholder={tEditEvent("descriptionPlaceholder")}
             disabled={!eventForm.startTime || !eventForm.endTime}
-            onChange={(e) => setAgendaName(e.target.value)}
+            onChange={(e) => setAgendaName(e.target.value.trim())}
             className="w-full h-10 body-large-primary disabled:cursor-not-allowed"
           />
 
@@ -523,15 +530,12 @@ const EditEventSection1 = ({
 
       {/* Agenda List */}
       {eventForm.agenda.map((item, index) => (
-        <div
-          key={item.id}
-          className="flex items-center gap-2 border rounded-md px-3 py-2"
-        >
+        <div key={item.id} className="flex items-center gap-2 py-2">
           {/* Remove */}
           <button
             type="button"
             onClick={() => handleRemoveAgenda(index)}
-            className="text-primary mt-2"
+            className="text-primary mt-2 cursor-pointer"
           >
             <IonIcon name="RemoveCircleOutline" size="18px" />
           </button>
@@ -559,8 +563,8 @@ const EditEventSection1 = ({
 
             {/* Name */}
             <Input
-              value={item.activity_name}
-              onChange={(e) => updateAgendaName(index, e.target.value)}
+              value={item.activity_name.trim()}
+              onChange={(e) => updateAgendaName(index, e.target.value.trim())}
               className="body-large-primary"
               placeholder={tEditEvent("descriptionPlaceholder")}
             />
@@ -574,11 +578,11 @@ const EditEventSection1 = ({
           {tEditEvent("organizer")} <span className="text-primary">*</span>
         </p>
         <Input
-          value={eventForm.organizer}
+          value={eventForm.organizer.trim()}
           placeholder={tEditEvent("organizerPlaceholder")}
           className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
-            setEventForm({ ...eventForm, organizer: e.target.value })
+            setEventForm({ ...eventForm, organizer: e.target.value.trim() })
           }
         />
       </div>

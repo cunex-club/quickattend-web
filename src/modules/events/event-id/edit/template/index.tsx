@@ -214,6 +214,8 @@ const EventEditTemplate = () => {
     Start Time: ${eventForm.startTime}
     End Date: ${eventForm.endTime}
     Location: ${eventForm.location}
+    Lat: ${eventForm.lat}
+    Lng: ${eventForm.lng}
     Agenda: ${agendaText}
     Organizer: ${eventForm.organizer}
     Attendance Type: ${eventForm.attendance_type}
@@ -286,7 +288,7 @@ const EventEditTemplate = () => {
                 valid
                   ? "cursor-pointer border-primary"
                   : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
-              } w-fit h-9 px-1 pr-2 flex items-center`}
+              } w-fit h-10 px-1 pr-2 flex items-center`}
             >
               <IonIcon
                 name="Checkmark"
@@ -666,7 +668,7 @@ const EventEditTemplate = () => {
 
           {/* Delete */}
           <Dialog open={openDelete} onOpenChange={setOpenDelete}>
-            <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
+            <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-[80vh] bg-neutral-white flex flex-col gap-4">
               {/* Header */}
               <DialogTitle className="flex flex-col items-center gap-4 headline-medium-emphasized text-primary">
                 <IonIcon name="Trash" size="48px" />
@@ -776,7 +778,7 @@ const EventEditTemplate = () => {
               }
             }}
           >
-            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] p-0">
+            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] max-w-[80vw] h-[80vh] p-0">
               {/* Header */}
               <div className="w-full h-full flex justify-between gap-2 px-6 py-4 bg-neutral-white rounded-2xl items-center">
                 <DialogTitle className="headline-small-emphasized text-primary">
@@ -802,7 +804,7 @@ const EventEditTemplate = () => {
               </div>
 
               {/* Content */}
-              <div className="w-full flex items-center justify-center bg-neutral-white py-4 rounded-2xl h-fit max-h-full">
+              <div className="w-full flex items-center justify-center bg-neutral-white py-4 rounded-2xl h-full overflow-auto">
                 <div
                   className={`w-full h-fit max-h-full ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100 max-w-[60vw]"} rounded-4xl p-4 overflow-y-auto break-all`}
                 >
@@ -814,7 +816,7 @@ const EventEditTemplate = () => {
 
           {/* Duplicate */}
           <Dialog open={openDuplicate} onOpenChange={setOpenDuplicate}>
-            <DialogContent className="[&>button]:hidden min-w-[60vw] overflow-auto max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
+            <DialogContent className="[&>button]:hidden min-w-[60vw] overflow-auto max-w-[80vw] h-[80vh] bg-neutral-white flex flex-col gap-4">
               {/* Header */}
               <DialogTitle className="headline-large-emphasized text-primary">
                 {tEditEvent("eventDuplicate")}

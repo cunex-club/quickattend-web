@@ -6,6 +6,7 @@ import {
   PopoverTrigger,
 } from "@assets/components/ui/popover";
 import { cn } from "@assets/lib/utils";
+import GoogleMapSelection from "@modules/events/create/components/map-selection";
 import { EventFormInterface } from "@modules/events/create/template";
 import IonIcon from "@shared/IonIcon";
 import { format, startOfDay } from "date-fns";
@@ -146,6 +147,7 @@ const EditEventDuplicateStep1 = ({
 
             <PopoverContent className="w-full p-0" align="start">
               <Calendar
+                required
                 mode="single"
                 selected={duplicatedEventForm.date}
                 onSelect={(date: Date) => {
@@ -235,16 +237,10 @@ const EditEventDuplicateStep1 = ({
         <p className="title-large-emphasized">
           {tEditEvent("location")} <span className="text-primary">*</span>
         </p>
-        <Input
-          value={duplicatedEventForm.location}
-          placeholder={tEditEvent("locationPlaceholder")}
-          className="body-large-primary focus:border-primary focus-visible:ring-0"
-          onChange={(e) =>
-            setDuplicatedEventForm({
-              ...duplicatedEventForm,
-              location: e.target.value,
-            })
-          }
+        <GoogleMapSelection
+          eventForm={duplicatedEventForm}
+          setEventForm={setDuplicatedEventForm}
+          isPreview={false}
         />
       </div>
     </>

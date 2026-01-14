@@ -533,7 +533,7 @@ const CreateEventStep1 = ({
 
       {/* Agenda List */}
       {eventForm.agenda.map((item, index) => (
-        <div key={item.id} className="flex items-center gap-2 rounded-md py-2">
+        <div key={item.id} className="flex items-center gap-2 py-2">
           {/* Remove */}
           <button
             type="button"

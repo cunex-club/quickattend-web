@@ -5,20 +5,12 @@ import {
   CardPreviewType,
   EventFormInterface,
 } from "@modules/events/create/template";
-import dynamic from "next/dynamic";
 import GoogleMapPreview from "../../../create/components/map-preview";
 
 interface EditEventPreviewProps {
   eventForm: EventFormInterface;
   cardMode: CardPreviewType;
 }
-
-const MapPreview = dynamic(
-  () => import("../../../create/components/map-preview"),
-  {
-    ssr: false,
-  }
-);
 
 const EditEventPreview = ({ eventForm, cardMode }: EditEventPreviewProps) => {
   const tEditEvent = useTranslations("EditEvent");

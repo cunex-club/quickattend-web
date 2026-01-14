@@ -223,7 +223,7 @@ const CreateEventStep2 = ({
                     const value = e.target.value.trim();
 
                     if (/^[\u0E00-\u0E7F]*$/.test(value)) {
-                      setFacultyQuery(e.target.value);
+                      setFacultyQuery(value);
                       setOpenFacultyFilter(true);
                     }
                   }}
@@ -308,7 +308,7 @@ const CreateEventStep2 = ({
             {eventForm.selectedFaculties.map((faculty) => (
               <div
                 key={faculty}
-                className={`flex items-center gap-2 border rounded-md px-3 py-2 ${eventForm.attendance_type != AttendanceType.FACULTIES && "opacity-50"}`}
+                className={`flex items-center gap-2 border-b py-2 ${eventForm.attendance_type != AttendanceType.FACULTIES && "opacity-50"}`}
               >
                 {/* Remove */}
                 <button
@@ -441,7 +441,7 @@ const CreateEventStep2 = ({
             {eventForm.selectedStudents.map((student) => (
               <div
                 key={student.id}
-                className={`flex items-center gap-2 border rounded-md px-3 py-2 ${eventForm.attendance_type != AttendanceType.WHITELIST && "opacity-50"}`}
+                className={`flex items-center gap-2 border-b py-2 ${eventForm.attendance_type != AttendanceType.WHITELIST && "opacity-50"}`}
               >
                 {/* Remove */}
                 <button
@@ -752,7 +752,7 @@ const CreateEventStep2 = ({
             {eventForm.managers_and_staff.map((student) => (
               <div
                 key={student.id}
-                className={`w-full flex items-center border rounded-md px-3 py-2 space-x-4 md:space-x-8 space-y-2 flex-wrap md:flex-nowrap`}
+                className={`w-full flex items-center border-b py-2 space-x-4 md:space-x-8 space-y-2 flex-wrap md:flex-nowrap`}
               >
                 {/* Remove */}
                 <button

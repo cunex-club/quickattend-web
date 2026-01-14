@@ -133,12 +133,12 @@ const EditEventSection2 = ({
             <div className="flex gap-4 flex-col sm:flex-row w-full">
               <div className="flex flex-col gap-2 flex-1">
                 <Input
-                  value={facultyQuery}
+                  value={facultyQuery.trim()}
                   onChange={(e) => {
-                    const value = e.target.value;
+                    const value = e.target.value.trim();
 
                     if (/^[\u0E00-\u0E7F]*$/.test(value)) {
-                      setFacultyQuery(e.target.value);
+                      setFacultyQuery(value);
                       setOpenFacultyFilter(true);
                     }
                   }}
@@ -223,7 +223,7 @@ const EditEventSection2 = ({
             {eventForm.selectedFaculties.map((faculty) => (
               <div
                 key={faculty}
-                className={`flex items-center gap-2 border rounded-md px-3 py-2 ${eventForm.attendance_type != AttendanceType.FACULTIES && "opacity-50"}`}
+                className={`flex items-center gap-2 border-b-2 py-2 ${eventForm.attendance_type != AttendanceType.FACULTIES && "opacity-50"}`}
               >
                 {/* Remove */}
                 <button
@@ -276,9 +276,9 @@ const EditEventSection2 = ({
               <Input
                 inputMode="numeric"
                 maxLength={10}
-                value={studentIdPermissionQuery}
+                value={studentIdPermissionQuery.trim()}
                 onChange={(e) => {
-                  const value = e.target.value;
+                  const value = e.target.value.trim();
                   if (/^\d{0,10}$/.test(value)) {
                     setStudentIdPermissionQuery(value);
                   }
@@ -356,7 +356,7 @@ const EditEventSection2 = ({
             {eventForm.selectedStudents.map((student) => (
               <div
                 key={student.id}
-                className={`flex items-center gap-2 border rounded-md px-3 py-2 ${eventForm.attendance_type != AttendanceType.WHITELIST && "opacity-50"}`}
+                className={`flex items-center gap-2 border-b-2 py-2 ${eventForm.attendance_type != AttendanceType.WHITELIST && "opacity-50"}`}
               >
                 {/* Remove */}
                 <button
@@ -560,9 +560,9 @@ const EditEventSection2 = ({
               <Input
                 inputMode="numeric"
                 maxLength={10}
-                value={studentIdAccessibilityQuery}
+                value={studentIdAccessibilityQuery.trim()}
                 onChange={(e) => {
-                  const value = e.target.value;
+                  const value = e.target.value.trim();
                   if (/^\d{0,10}$/.test(value)) {
                     setStudentIdAccessibilityQuery(value);
                   }
@@ -667,7 +667,7 @@ const EditEventSection2 = ({
             {eventForm.managers_and_staff.map((student) => (
               <div
                 key={student.id}
-                className={`w-full flex items-center border rounded-md px-3 py-2 space-x-4 sm:space-x-8 space-y-2 flex-wrap sm:flex-nowrap`}
+                className={`w-full flex items-center border-b-2 py-2 space-x-4 sm:space-x-8 space-y-2 flex-wrap sm:flex-nowrap`}
               >
                 {/* Remove */}
                 <button

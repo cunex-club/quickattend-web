@@ -478,6 +478,8 @@ const EventCreateTemplate = () => {
                 Start Time: ${eventForm.startTime}
                 End Date: ${eventForm.endTime}
                 Location: ${eventForm.location}
+                Lat: ${eventForm.lat}
+                Lng: ${eventForm.lng}
                 Agenda: ${agendaText}
                 Organizer: ${eventForm.organizer}
                 Attendance Type: ${eventForm.attendance_type}
