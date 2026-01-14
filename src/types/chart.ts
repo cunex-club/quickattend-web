@@ -75,7 +75,7 @@ export interface BarChartVerticalMultiProps {
 
 // Pie Chart Types
 
-export type PieChartStackedProps = {
+export type PieChartFilterProps = {
   category: string;
   total: number;
 };

@@ -34,14 +34,14 @@ const CHART_CONSTANTS = {
   RADIUS_MOBILE_OUTER: 125,
   STROKE_WIDTH: 3,
   RING_GAP: 2,
-  RING_THICKNESS: 5,
+  RING_THICKNESS: 6,
   START_ANGLE: 90,
   END_ANGLE: -270,
 } as const;
 
 // Component
 
-export function PieChartStacked({ data }: { data: DonutChartProps[] }) {
+export function PieChartFilter({ data }: { data: DonutChartProps[] }) {
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const isIpadPro = useIsIpadPro();
@@ -57,14 +57,12 @@ export function PieChartStacked({ data }: { data: DonutChartProps[] }) {
         ? CHART_CONSTANTS.RADIUS_TABLET_OUTER
         : CHART_CONSTANTS.RADIUS_DESKTOP_OUTER;
 
-  const chartDataInner = data.map((item, index) => ({
+  const chartDataInner = data.map((item) => ({
     ...item,
-    fill: index === 0 ? "var(--color-primary)" : "var(--color-neutral-200)",
   }));
 
-  const chartDataOuter = data.map((item, index) => ({
+  const chartDataOuter = data.map((item) => ({
     ...item,
-    fill: index === 0 ? "var(--color-pink-300)" : "var(--color-neutral-200)",
   }));
 
   const handleBackgroundClick = () => {
@@ -79,7 +77,8 @@ export function PieChartStacked({ data }: { data: DonutChartProps[] }) {
           config={chartConfig}
           className={cn(
             "mx-auto h-full w-full p-4",
-            "[\u0026_.recharts-surface]:overflow-visible"
+            "[&_.recharts-surface]:overflow-visible",
+            "chart-pie-stacked"
           )}
         >
           <PieChart>
@@ -96,14 +95,16 @@ export function PieChartStacked({ data }: { data: DonutChartProps[] }) {
               startAngle={CHART_CONSTANTS.START_ANGLE}
               endAngle={CHART_CONSTANTS.END_ANGLE}
               strokeWidth={CHART_CONSTANTS.STROKE_WIDTH}
-              isAnimationActive={true}
+              isAnimationActive={false}
             >
               {chartDataInner.map((entry, index) => {
                 const opacity =
                   hoveredIndex !== null && hoveredIndex !== index ? 0.5 : 1;
+                const fillColor = index === 0 ? "var(--color-primary)" : "var(--color-neutral-200)";
                 return (
                   <Cell
                     key={`cell-inner-${index}`}
+                    fill={fillColor}
                     onMouseEnter={() => !isLocked && setHoveredIndex(index)}
                     onMouseLeave={() => !isLocked && setHoveredIndex(null)}
                     onClick={(e) => {
@@ -119,7 +120,7 @@ export function PieChartStacked({ data }: { data: DonutChartProps[] }) {
                     style={{
                       cursor: "pointer",
                       opacity: opacity,
-                      transition: "opacity 0.3s ease-in-out",
+                      transition: "opacity 0.3s ease-in-out, fill 0.3s ease-in-out",
                       outline: "none",
                     }}
                   />
@@ -139,18 +140,22 @@ export function PieChartStacked({ data }: { data: DonutChartProps[] }) {
               }
               startAngle={CHART_CONSTANTS.START_ANGLE}
               endAngle={CHART_CONSTANTS.END_ANGLE}
-              isAnimationActive={true}
+              isAnimationActive={false}
             >
-              {chartDataOuter.map((entry, index) => (
-                <Cell
-                  key={`cell-outer-${index}`}
-                  fillOpacity={hoveredIndex === index ? 0.5 : 0}
-                  style={{
-                    transition: "fill-opacity 0.3s ease-in-out",
-                    pointerEvents: "none",
-                  }}
-                />
-              ))}
+              {chartDataOuter.map((entry, index) => {
+                const fillColor = index === 0 ? "var(--color-pink-300)" : "var(--color-neutral-200)";
+                return (
+                  <Cell
+                    key={`cell-outer-${index}`}
+                    fill={fillColor}
+                    fillOpacity={hoveredIndex === index ? 0.5 : 0}
+                    style={{
+                      transition: "fill-opacity 0.3s ease-in-out, fill 0.3s ease-in-out",
+                      pointerEvents: "none",
+                    }}
+                  />
+                );
+              })}
             </Pie>
           </PieChart>
         </ChartContainer>

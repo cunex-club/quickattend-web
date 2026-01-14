@@ -39,7 +39,7 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full">
       <div className="flex flex-col justify-between mb-2">
         <CollapsibleTrigger asChild>
-          <button className="flex justify-between items-center gap-2 px-4 py-2 border border-gray-400 rounded-lg">
+          <button className="flex justify-between items-center gap-2 px-4 py-2 border border-gray-400 rounded-lg cursor-pointer">
             <p className="body-large-primary text-gray-400">{title}</p>
             <IonIcon
               name={isOpen ? "ChevronUpOutline" : "ChevronDownOutline"}
@@ -75,6 +75,7 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
                     onCheckedChange={(checked) =>
                       onCheckedChange(item.id, checked as boolean)
                     }
+                    className="cursor-pointer"
                   />
                   <Label htmlFor={item.id}>
                     <p className="body-large-primary">{item.label}</p>

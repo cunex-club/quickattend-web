@@ -69,6 +69,9 @@ const mockTime = [
   { time: "08:00", student: 35, staff: 18 },
   { time: "09:00", student: 68, staff: 22 },
   { time: "10:00", student: 94, staff: 26 },
+  { time: "08:00", student: 35, staff: 18 },
+  { time: "09:00", student: 68, staff: 22 },
+  { time: "10:00", student: 94, staff: 26 },
   { time: "11:00", student: 86, staff: 24 },
   { time: "12:00", student: 72, staff: 23 },
   { time: "13:00", student: 78, staff: 26 },
@@ -177,7 +180,7 @@ export function OverviewView() {
               <div className="flex justify-between items-center">
                 <p className="headline-large-emphasized">{mockEvent.title}</p>
                 <button
-                  className="border border-primary rounded-full w-auto h-auto p-0.5 hover:bg-neutral-100 transition-colors duration-200"
+                  className="border border-primary rounded-full w-auto h-auto p-0.5 hover:bg-neutral-100 transition-colors duration-200 cursor-pointer"
                   onClick={handleCopyEventLink}
                 >
                   <IonIcon name="Link" size="20px" className="text-primary" />
@@ -268,7 +271,10 @@ export function OverviewView() {
               </p>
               <div className="w-full relative">
                 <div className="h-[400px] md:h-[360px] lg:h-[350px] xl:max-h-[320px] overflow-auto">
-                  <BarChartHorizontalOverview data={filteredTime} maxValue={maxTimeValue} />
+                  <BarChartHorizontalOverview
+                    data={filteredTime}
+                    maxValue={maxTimeValue}
+                  />
                 </div>
                 <div className="absolute z-10 right-0 top-0">
                   <div className="space-x-4 bg-transparent">

@@ -131,7 +131,7 @@ export function CompareView() {
         </p>,
         {
           style: {
-            background: "var(--error)",
+            background: "var(--warning)",
             color: "var(--neutral-white)",
             width: "max-content",
           },
@@ -177,10 +177,11 @@ export function CompareView() {
   return (
     <div className="flex flex-col items-center w-full min-h-screen px-4 md:px-8 py-12 bg-neutral-white">
       <div className="container flex flex-col items-center bg-neutral-white space-y-4">
+        {/* back button */}
         <div className="relative flex items-center w-full h-10">
           <Link
             href="/dashboard/insights"
-            className="flex flex-row space-x-1 items-center cursor-pointer z-10 text-primary"
+            className="flex flex-row space-x-1 items-center cursor-pointer z-10 text-primary transition-all duration-300 ease-in-out hover:scale-110 hover:opacity-80"
           >
             <IonIcon name="ChevronBackOutline" size="20px" />
             <p className="label-large-emphasized hidden md:block">
@@ -194,6 +195,7 @@ export function CompareView() {
             </p>
           </div>
         </div>
+
         <div className="flex flex-col w-full rounded-xl bg-neutral-white space-y-16">
           {/* filter section */}
           <section className="w-full h-auto flex flex-col space-y-8 bg-neutral-100 p-8 sm:p-12 md:p-16 rounded-2xl">

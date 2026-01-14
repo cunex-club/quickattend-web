@@ -28,15 +28,19 @@ const BarChartHorizontal = dynamic(
 const DonutChart = dynamic(
   () => import("../../charts/DonutChart").then((mod) => mod.DonutChart),
   {
-    loading: () => <Skeleton className="h-full w-full rounded-lg bg-neutral-white" />,
+    loading: () => (
+      <Skeleton className="h-full w-full rounded-lg bg-neutral-white" />
+    ),
     ssr: false,
   }
 );
 
-const PieChartStacked = dynamic(
-  () => import("../../charts/PieChartStacked").then((mod) => mod.PieChartStacked),
+const PieChartFilter = dynamic(
+  () => import("../../charts/PieChartFilter").then((mod) => mod.PieChartFilter),
   {
-    loading: () => <Skeleton className="h-full w-full rounded-lg bg-neutral-white" />,
+    loading: () => (
+      <Skeleton className="h-full w-full rounded-lg bg-neutral-white" />
+    ),
     ssr: false,
   }
 );
@@ -98,6 +102,7 @@ export function WhitelistInsightView() {
   >({});
   const [appliedTimes, setAppliedTimes] = useState<Record<string, boolean>>({});
 
+  // items that user can select to filter
   const facultyFilterOptions = useMemo(
     () => facultyData.filter((item) => item.id !== "f-0"),
     []
@@ -115,9 +120,8 @@ export function WhitelistInsightView() {
     }
   }, [canViewInsights, router]);
 
-  const createSelectionHandler = (
-    setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>
-  ) =>
+  const createSelectionHandler =
+    (setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>) =>
     (itemId: string, checked: boolean) => {
       setter((prevSelected) => {
         const newSelected = { ...prevSelected };
@@ -145,6 +149,7 @@ export function WhitelistInsightView() {
   };
 
   const handleApplyFilters = () => {
+    // Prevent applying if no filters are selected
     if (
       Object.keys(selectedFaculties).length === 0 &&
       Object.keys(selectedTimes).length === 0
@@ -208,10 +213,12 @@ export function WhitelistInsightView() {
   );
 
   // Calculate summary statistics
-  const summaryStats = useMemo(
-    () => calculateSummaryStats(filteredFacultyData, userFilter),
-    [filteredFacultyData, userFilter]
-  );
+  // Use time-filtered data when time filters are active, otherwise use faculty-filtered data
+  const summaryStats = useMemo(() => {
+    const hasTimeFilter = Object.keys(appliedTimes).filter((key) => appliedTimes[key]).length > 0;
+    const dataToUse = hasTimeFilter ? filteredTimeData : filteredFacultyData;
+    return calculateSummaryStats(dataToUse, userFilter);
+  }, [filteredFacultyData, filteredTimeData, appliedTimes, userFilter]);
 
   const registrationStats = useMemo(
     () => calculateRegistrationStats(filteredRegisteredData, userFilter),
@@ -284,12 +291,22 @@ export function WhitelistInsightView() {
         <div>
           <Popover>
             <PopoverTrigger asChild>
-              <button className="flex items-center">
+              <button className="flex items-center relative">
+                {/* filter icon */}
                 <IonIcon
                   name="FunnelOutline"
                   size="32px"
-                  className="text-primary"
+                  className="text-primary cursor-pointer"
                 />
+                {/* filter status */}
+                <div
+                  className={cn(
+                    "absolute top-2 right-2 w-2 h-2 bg-error rounded-full transition-all duration-300 ease-in-out",
+                    hasActiveFilters
+                      ? "opacity-100 scale-100"
+                      : "opacity-0 scale-0"
+                  )}
+                ></div>
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-screen max-w-md p-8" align="end">
@@ -372,7 +389,7 @@ export function WhitelistInsightView() {
           </div>
           <div className="w-full">
             {hasActiveFilters ? (
-              <PieChartStacked data={donutChartData} />
+              <PieChartFilter data={donutChartData} />
             ) : (
               <DonutChart data={donutChartData} />
             )}

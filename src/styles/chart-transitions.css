@@ -30,6 +30,11 @@
     opacity: 0.3;
   }
 
+  /* pie chart stacked - smooth fill transitions */
+  .chart-pie-stacked .recharts-pie-sector path {
+    transition: fill 0.3s ease-in-out, opacity 0.3s ease-in-out, fill-opacity 0.3s ease-in-out;
+  }
+
   /* bar chart vertical overview */
   .chart-list-group:hover .recharts-rectangle {
     fill-opacity: 0.3;
