@@ -656,7 +656,7 @@ const EventEditTemplate = () => {
                 className={`max-w-full h-fit max-h-[60vh] rounded-4xl p-4 mb-6 overflow-y-auto break-all`}
               >
                 <EditEventDuplicate
-                  eventForm={fetchedEventForm}
+                  eventForm={lastSavedEventForm}
                   setOpenDuplicate={setOpenDuplicate}
                   width={width}
                 />
@@ -823,7 +823,7 @@ const EventEditTemplate = () => {
               {/* Content */}
               <>
                 <EditEventDuplicate
-                  eventForm={fetchedEventForm}
+                  eventForm={lastSavedEventForm}
                   setOpenDuplicate={setOpenDuplicate}
                   width={width}
                 />
@@ -863,7 +863,7 @@ const EventEditTemplate = () => {
               {/* Content */}
               <>
                 <EditEventDuplicate
-                  eventForm={fetchedEventForm}
+                  eventForm={lastSavedEventForm}
                   setOpenDuplicate={setOpenDuplicate}
                   width={width}
                 />
