@@ -57,7 +57,7 @@ import {
   timeData,
 } from "@utils/data";
 import SortMenu from "@components/sort-menu";
-import IonIcon from "@components/IonIcon";
+import IonIcon from "@shared/IonIcon";
 
 const horizontalChartData = dataCategorizeByTime;
 const verticalStackData = registeredData;

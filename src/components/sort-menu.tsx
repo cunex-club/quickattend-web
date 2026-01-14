@@ -1,6 +1,6 @@
 "use client";
 
-import IonIcon from "./IonIcon";
+import IonIcon from "@shared/IonIcon";
 import {
   DropdownMenu,
   DropdownMenuContent,

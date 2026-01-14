@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 
-import IonIcon from "@components/IonIcon";
+import IonIcon from "@shared/IonIcon";
 import Image from "next/image";
 import {
   Popover,

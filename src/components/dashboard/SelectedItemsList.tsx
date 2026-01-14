@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@assets/lib/utils";
-import IonIcon from "@components/IonIcon";
+import IonIcon from "@shared/IonIcon";
 
 type FilterVariant = "primary" | "secondary";
 

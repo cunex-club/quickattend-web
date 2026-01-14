@@ -12,7 +12,7 @@ import { useRole } from "@context/RoleContext";
 import { toast } from "sonner";
 import { Skeleton } from "@assets/components/ui/skeleton";
 import { useTranslations } from "next-intl";
-import IonIcon from "@components/IonIcon";
+import IonIcon from "@shared/IonIcon";
 import Link from "next/link";
 
 const BarChartHorizontalMulti = dynamic(

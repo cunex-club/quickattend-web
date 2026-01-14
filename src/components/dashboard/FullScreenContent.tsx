@@ -1,6 +1,6 @@
 "use client";
 import Button from "@components/Button";
-import IonIcon from "@components/IonIcon";
+import IonIcon from "@shared/IonIcon";
 import StatCard from "@components/StatCard";
 
 interface FullscreenContentProps {

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Button from "@components/Button";
 import { StatCard } from "@components/StatCard";
 import { chartDataID1, dataCategorizeByTime, eventData } from "@utils/data";
-import IonIcon from "@components/IonIcon";
+import IonIcon from "@shared/IonIcon";
 import { toast } from "sonner";
 import { Skeleton } from "@assets/components/ui/skeleton";
 import { useTranslations } from "next-intl";
