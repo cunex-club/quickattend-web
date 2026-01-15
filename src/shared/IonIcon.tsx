@@ -8,12 +8,14 @@ type IconName = keyof typeof Ionicons;
 interface IconProps {
   name: IconName;
   size?: string;
+  onClick?: () => void;
 }
 
 const IonIcon: StyleableFC<IconProps> = ({
   name,
   size = "24px",
   className,
+  onClick,
 }) => {
   const IconComponent = Ionicons[name] as React.ElementType;
 
@@ -27,6 +29,7 @@ const IonIcon: StyleableFC<IconProps> = ({
         color="currentColor"
         cssColorProp
         className={className}
+        onClick={onClick}
       />
     </div>
   );

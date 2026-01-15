@@ -1,7 +1,7 @@
-import React from "react";
+import EventPageTemplate from "@modules/events/main-page/template";
 
-const page = () => {
-  return <div>Event</div>;
+const EventPage = () => {
+  return <EventPageTemplate />;
 };
 
-export default page;
+export default EventPage;

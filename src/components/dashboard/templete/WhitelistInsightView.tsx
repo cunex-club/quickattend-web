@@ -77,8 +77,11 @@ import {
   calculateRegistrationStats,
 } from "@utils/filterHelpers";
 import SortMenu from "@components/sort-menu";
-import IonIcon from "@components/IonIcon";
-import { toast } from "sonner";
+import IonIcon from "@shared/IonIcon";
+
+const horizontalChartData = dataCategorizeByTime;
+const verticalStackData = registeredData;
+const donutChartData = registrationStatusData;
 
 export function WhitelistInsightView() {
   const router = useRouter();

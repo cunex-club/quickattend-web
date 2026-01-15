@@ -9,7 +9,7 @@ import {
   CollapsibleTrigger,
 } from "@assets/components/ui/collapsible";
 import { cn } from "@assets/lib/utils";
-import IonIcon from "@components/IonIcon";
+import IonIcon from "@shared/IonIcon";
 
 type FilterVariant = "primary" | "secondary";
 
