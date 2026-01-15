@@ -2,7 +2,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { CardPreviewType, EventFormInterface } from "../template";
 import IonIcon from "@shared/IonIcon";
 import { format } from "date-fns";
-import GoogleMapPreview from "./map-preview";
+import MapPreviewComponent from "./map-preview";
 
 interface CreateEventPreviewProps {
   eventForm: EventFormInterface;
@@ -120,11 +120,11 @@ const CreateEventPreview = ({
           </div>
 
           {/* Map */}
-          <div className="flex flex-col gap-2 mb-4 ml-2">
+          <div className="flex flex-col gap-2">
             <h2 className="title-medium-emphasized text-neutral-600">
               {tCreateEvent("mapPreview")}
             </h2>
-            <GoogleMapPreview
+            <MapPreviewComponent
               lat={eventForm.lat}
               lng={eventForm.lng}
               isPreview={true}

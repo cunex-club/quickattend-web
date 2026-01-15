@@ -218,9 +218,9 @@ const CreateEventStep2 = ({
             <div className="flex gap-4 flex-col md:flex-row w-full">
               <div className="flex flex-col gap-2 flex-1">
                 <Input
-                  value={facultyQuery.trim()}
+                  value={facultyQuery}
                   onChange={(e) => {
-                    const value = e.target.value.trim();
+                    const value = e.target.value;
 
                     if (/^[\u0E00-\u0E7F]*$/.test(value)) {
                       setFacultyQuery(value);
@@ -361,9 +361,9 @@ const CreateEventStep2 = ({
               <Input
                 inputMode="numeric"
                 maxLength={10}
-                value={studentIdPermissionQuery.trim()}
+                value={studentIdPermissionQuery}
                 onChange={(e) => {
-                  const value = e.target.value.trim();
+                  const value = e.target.value;
                   if (/^\d{0,10}$/.test(value)) {
                     setStudentIdPermissionQuery(value);
                   }
@@ -379,14 +379,16 @@ const CreateEventStep2 = ({
                 expanded={false}
                 disabled={
                   eventForm.attendance_type != AttendanceType.WHITELIST ||
-                  studentIdPermissionQuery?.length != 10 ||
+                  (studentIdPermissionQuery?.length != 10 &&
+                    studentIdPermissionQuery?.length != 8) ||
                   selectedStudentIdsPermission?.includes(
                     studentIdPermissionQuery
                   )
                 }
                 className={`w-fit h-9 shrink-0 ${
                   eventForm.attendance_type == AttendanceType.WHITELIST &&
-                  studentIdPermissionQuery?.length == 10 &&
+                  (studentIdPermissionQuery?.length == 10 ||
+                    studentIdPermissionQuery?.length == 8) &&
                   !selectedStudentIdsPermission?.includes(
                     studentIdPermissionQuery
                   )
@@ -397,7 +399,11 @@ const CreateEventStep2 = ({
                   if (eventForm.attendance_type != AttendanceType.WHITELIST)
                     return;
 
-                  if (studentIdPermissionQuery.length != 10) return;
+                  if (
+                    studentIdPermissionQuery.length != 10 &&
+                    studentIdPermissionQuery.length != 8
+                  )
+                    return;
                   if (
                     selectedStudentIdsPermission?.includes(
                       studentIdPermissionQuery
@@ -645,9 +651,9 @@ const CreateEventStep2 = ({
               <Input
                 inputMode="numeric"
                 maxLength={10}
-                value={studentIdAccessibilityQuery.trim()}
+                value={studentIdAccessibilityQuery}
                 onChange={(e) => {
-                  const value = e.target.value.trim();
+                  const value = e.target.value;
                   if (/^\d{0,10}$/.test(value)) {
                     setStudentIdAccessibilityQuery(value);
                   }
@@ -687,7 +693,8 @@ const CreateEventStep2 = ({
                 mode="filled"
                 bordered="square"
                 disabled={
-                  studentIdAccessibilityQuery?.length != 10 ||
+                  (studentIdAccessibilityQuery?.length != 10 &&
+                    studentIdAccessibilityQuery?.length != 8) ||
                   selectedStudentIdsAccessibility?.includes(
                     studentIdAccessibilityQuery
                   ) ||
@@ -695,7 +702,8 @@ const CreateEventStep2 = ({
                 }
                 expanded={false}
                 className={`w-fit h-9 shrink-0 ${
-                  studentIdAccessibilityQuery?.length == 10 &&
+                  (studentIdAccessibilityQuery?.length == 10 ||
+                    studentIdAccessibilityQuery?.length == 8) &&
                   !selectedStudentIdsAccessibility?.includes(
                     studentIdAccessibilityQuery
                   ) &&
@@ -704,7 +712,11 @@ const CreateEventStep2 = ({
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
                 }`}
                 onClick={() => {
-                  if (studentIdAccessibilityQuery.length != 10) return;
+                  if (
+                    studentIdAccessibilityQuery.length != 8 &&
+                    studentIdAccessibilityQuery.length != 10
+                  )
+                    return;
                   if (
                     selectedStudentIdsAccessibility?.includes(
                       studentIdAccessibilityQuery

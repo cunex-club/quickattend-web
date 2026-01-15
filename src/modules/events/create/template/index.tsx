@@ -151,12 +151,12 @@ const EventCreateTemplate = () => {
 
   useEffect(() => {
     if (
-      eventForm.name &&
+      eventForm.name.trim() &&
       eventForm.date &&
       eventForm.startTime &&
       eventForm.endTime &&
-      eventForm.location &&
-      eventForm.organizer
+      eventForm.location.trim() &&
+      eventForm.organizer.trim()
     ) {
       setValidStep1(true);
     } else {
@@ -176,7 +176,10 @@ const EventCreateTemplate = () => {
       setValidStep2(false);
     }
 
-    if (!eventForm.evaluation_form || isValidUrl(eventForm.evaluation_form)) {
+    if (
+      !eventForm.evaluation_form.trim() ||
+      isValidUrl(eventForm.evaluation_form.trim())
+    ) {
       setValidStep3(true);
     } else {
       setValidStep3(false);
@@ -542,9 +545,13 @@ const EventCreateTemplate = () => {
         <>
           {/* Preview */}
           <Dialog open={showPreview} onOpenChange={setShowPreview}>
-            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] max-w-[80vw] h-[80vh]">
+            <DialogContent
+              className={`bg-transparent border-none [&>button]:hidden min-w-[60vw] max-w-[80vw] ${cardMode == CardPreviewType.CARD_PREVIEW ? "h-fit" : "h-[80vh]"} p-0`}
+            >
               {/* Header */}
-              <div className="flex justify-between gap-2 px-6 py-4 bg-neutral-white rounded-2xl h-fit items-center">
+              <div
+                className={`w-full ${cardMode == CardPreviewType.CARD_PREVIEW ? "h-fit" : "h-full"} flex justify-between gap-2 px-6 py-4 bg-neutral-white rounded-2xl items-center`}
+              >
                 <DialogTitle className="headline-small-emphasized text-primary">
                   {tCreateEvent("eventPreview")}
                 </DialogTitle>

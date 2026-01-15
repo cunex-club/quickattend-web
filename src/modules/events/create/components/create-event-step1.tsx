@@ -13,8 +13,8 @@ import { cn } from "@assets/lib/utils";
 import Button from "@shared/Button";
 import EditableTime from "./editable-time";
 import { Textarea } from "@assets/components/ui/textarea";
-import GoogleMapSelection from "./map-selection";
 import { Calendar } from "@assets/components/ui/calendar";
+import MapSelectionComponent from "./map-selection";
 
 interface CreateEventStep1Props {
   eventForm: EventFormInterface;
@@ -251,12 +251,10 @@ const CreateEventStep1 = ({
           {tCreateEvent("name")} <span className="text-primary">*</span>
         </p>
         <Input
-          value={eventForm.name.trim()}
+          value={eventForm.name}
           placeholder={tCreateEvent("namePlaceholder")}
           className="body-large-primary focus:border-primary focus-visible:ring-0"
-          onChange={(e) =>
-            setEventForm({ ...eventForm, name: e.target.value.trim() })
-          }
+          onChange={(e) => setEventForm({ ...eventForm, name: e.target.value })}
         />
       </div>
 
@@ -264,11 +262,11 @@ const CreateEventStep1 = ({
       <div className="flex flex-col gap-2">
         <p className="title-medium-emphasized">{tCreateEvent("description")}</p>
         <Textarea
-          value={eventForm.description.trim()}
+          value={eventForm.description}
           placeholder={tCreateEvent("descriptionPlaceholder")}
           className="h-16 max-h-16 resize-none overflow-y-auto body-large-primary focus:border-primary focus-visible:ring-0 break-all"
           onChange={(e) =>
-            setEventForm({ ...eventForm, description: e.target.value.trim() })
+            setEventForm({ ...eventForm, description: e.target.value })
           }
         />
       </div>
@@ -391,7 +389,7 @@ const CreateEventStep1 = ({
           {tCreateEvent("location")} <span className="text-primary">*</span>
         </p>
 
-        <GoogleMapSelection
+        <MapSelectionComponent
           eventForm={eventForm}
           setEventForm={setEventForm}
           isPreview={false}
@@ -500,10 +498,10 @@ const CreateEventStep1 = ({
 
           {/* Description */}
           <Input
-            value={agendaName.trim()}
+            value={agendaName}
             placeholder={tCreateEvent("descriptionPlaceholder")}
             disabled={!eventForm.startTime || !eventForm.endTime}
-            onChange={(e) => setAgendaName(e.target.value.trim())}
+            onChange={(e) => setAgendaName(e.target.value)}
             className="w-full h-10 body-large-primary disabled:cursor-not-allowed"
           />
 
@@ -566,8 +564,8 @@ const CreateEventStep1 = ({
 
             {/* Name */}
             <Input
-              value={item.activity_name.trim()}
-              onChange={(e) => updateAgendaName(index, e.target.value.trim())}
+              value={item.activity_name}
+              onChange={(e) => updateAgendaName(index, e.target.value)}
               className="body-large-primary"
               placeholder={tCreateEvent("descriptionPlaceholder")}
             />
@@ -581,11 +579,11 @@ const CreateEventStep1 = ({
           {tCreateEvent("organizer")} <span className="text-primary">*</span>
         </p>
         <Input
-          value={eventForm.organizer.trim()}
+          value={eventForm.organizer}
           placeholder={tCreateEvent("organizerPlaceholder")}
           className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
-            setEventForm({ ...eventForm, organizer: e.target.value.trim() })
+            setEventForm({ ...eventForm, organizer: e.target.value })
           }
         />
       </div>

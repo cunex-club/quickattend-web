@@ -26,13 +26,13 @@ const EditEventSection3 = ({
         </p>
         <Input
           type="url"
-          value={eventForm.evaluation_form.trim()}
+          value={eventForm.evaluation_form}
           placeholder={tEditEvent("evaluationFormLinkPlaceholder")}
           className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) => {
             setEventForm({
               ...eventForm,
-              evaluation_form: e.target.value.trim(),
+              evaluation_form: e.target.value,
             });
           }}
         />
