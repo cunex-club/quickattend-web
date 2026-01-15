@@ -14,7 +14,6 @@ import {
   Drawer,
   DrawerContent,
   DrawerHeader,
-  DrawerOverlay,
   DrawerTitle,
 } from "@assets/components/ui/drawer";
 import {
@@ -30,6 +29,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@assets/components/ui/dialog";
+import { DEFAULT_CENTER } from "../components/map-selection";
 
 export interface Agenda {
   id: string;
@@ -99,6 +99,8 @@ export interface EventFormInterface {
   startTime: Date | undefined;
   endTime: Date | undefined;
   location: string;
+  lat: number;
+  lng: number;
   agenda: Agenda[];
   organizer: string;
   attendance_type: AttendanceType;
@@ -128,6 +130,8 @@ const EventCreateTemplate = () => {
     location: "",
     agenda: [],
     organizer: "",
+    lat: DEFAULT_CENTER.lat,
+    lng: DEFAULT_CENTER.lng,
     attendance_type: "all",
     selectedFaculties: [],
     selectedStudents: [],
@@ -213,7 +217,7 @@ const EventCreateTemplate = () => {
     <div className="w-full h-fit min-h-screen bg-neutral-200">
       <header
         ref={topRef}
-        className="w-full h-16 relative flex items-center justify-center shadow-elevation-3"
+        className="w-full min-h-16 relative flex items-center justify-center shadow-elevation-3 py-4"
       >
         <button
           onClick={() => {
@@ -374,6 +378,7 @@ const EventCreateTemplate = () => {
                 mode="outline"
                 bordered="square"
                 expanded
+                disabled={step == 1}
                 className={`${
                   step != 1
                     ? "cursor-pointer border-primary text-neutral-black"
@@ -394,6 +399,9 @@ const EventCreateTemplate = () => {
                   mode="outline"
                   bordered="square"
                   expanded
+                  disabled={
+                    (step == 1 && !validStep1) || (step == 2 && !validStep2)
+                  }
                   className={`${
                     (step == 1 && validStep1) || (step == 2 && validStep2)
                       ? "cursor-pointer border-primary text-neutral-black"
@@ -420,6 +428,7 @@ const EventCreateTemplate = () => {
                   mode="filled"
                   bordered="square"
                   expanded
+                  disabled={step == 3 && !validStep3}
                   className={`cursor-pointer max-w-40 h-9 ${
                     validStep3
                       ? "cursor-pointer border-primary"
@@ -469,6 +478,8 @@ const EventCreateTemplate = () => {
                 Start Time: ${eventForm.startTime}
                 End Date: ${eventForm.endTime}
                 Location: ${eventForm.location}
+                Lat: ${eventForm.lat}
+                Lng: ${eventForm.lng}
                 Agenda: ${agendaText}
                 Organizer: ${eventForm.organizer}
                 Attendance Type: ${eventForm.attendance_type}
@@ -531,7 +542,7 @@ const EventCreateTemplate = () => {
         <>
           {/* Preview */}
           <Dialog open={showPreview} onOpenChange={setShowPreview}>
-            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] h-fit max-h-[80vh]">
+            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] max-w-[80vw] h-[80vh]">
               {/* Header */}
               <div className="flex justify-between gap-2 px-6 py-4 bg-neutral-white rounded-2xl h-fit items-center">
                 <DialogTitle className="headline-small-emphasized text-primary">
@@ -540,24 +551,21 @@ const EventCreateTemplate = () => {
 
                 <Select value={cardMode} onValueChange={setCardMode}>
                   <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder={tCreateEvent("eventPreview")} />
+                    <SelectValue />
                   </SelectTrigger>
-
                   <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value={CardPreviewType.CARD_PREVIEW}>
-                        {tCreateEvent(CardPreviewType.CARD_PREVIEW)}
-                      </SelectItem>
-                      <SelectItem value={CardPreviewType.DETAIL_PREVIEW}>
-                        {tCreateEvent(CardPreviewType.DETAIL_PREVIEW)}
-                      </SelectItem>
-                    </SelectGroup>
+                    <SelectItem value={CardPreviewType.CARD_PREVIEW}>
+                      {tCreateEvent(CardPreviewType.CARD_PREVIEW)}
+                    </SelectItem>
+                    <SelectItem value={CardPreviewType.DETAIL_PREVIEW}>
+                      {tCreateEvent(CardPreviewType.DETAIL_PREVIEW)}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               {/* Content */}
-              <div className="w-full flex items-center justify-center bg-neutral-white py-4 rounded-2xl h-fit max-h-full">
+              <div className="w-full flex items-center justify-center bg-neutral-white py-4 rounded-2xl h-full overflow-auto">
                 <div
                   className={`w-full h-fit max-h-full ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100 max-w-[60vw]"} rounded-4xl p-4 overflow-y-auto break-all`}
                 >

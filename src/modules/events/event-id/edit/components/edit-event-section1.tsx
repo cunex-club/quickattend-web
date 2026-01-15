@@ -1,31 +1,31 @@
-import { useLocale, useTranslations } from "next-intl";
-import { EventFormInterface } from "../template";
+import { Calendar } from "@assets/components/ui/calendar";
 import { Input } from "@assets/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@assets/components/ui/popover";
-import { format, startOfDay } from "date-fns";
-import IonIcon from "@shared/IonIcon";
-import { useEffect, useState } from "react";
-import { cn } from "@assets/lib/utils";
-import Button from "@shared/Button";
-import EditableTime from "./editable-time";
 import { Textarea } from "@assets/components/ui/textarea";
-import GoogleMapSelection from "./map-selection";
-import { Calendar } from "@assets/components/ui/calendar";
+import { cn } from "@assets/lib/utils";
+import EditableTime from "@modules/events/create/components/editable-time";
+import { EventFormInterface } from "@modules/events/create/template";
+import Button from "@shared/Button";
+import IonIcon from "@shared/IonIcon";
+import { format, startOfDay } from "date-fns";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import GoogleMapSelection from "@modules/events/create/components/map-selection";
 
-interface CreateEventStep1Props {
+interface EditEventSection1Props {
   eventForm: EventFormInterface;
   setEventForm: (formdata: EventFormInterface) => void;
 }
 
-const CreateEventStep1 = ({
+const EditEventSection1 = ({
   eventForm,
   setEventForm,
-}: CreateEventStep1Props) => {
-  const tCreateEvent = useTranslations("CreateEvent");
+}: EditEventSection1Props) => {
+  const tEditEvent = useTranslations("EditEvent");
   const today = startOfDay(new Date());
   const locale = useLocale();
 
@@ -241,18 +241,18 @@ const CreateEventStep1 = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="title-large-emphasized mb-4 text-center">
-        {tCreateEvent("eventDetail")}
+      <h1 className="title-large-emphasized text-primary mb-4">
+        {tEditEvent("eventDetail")}
       </h1>
 
       {/* Name */}
       <div className="flex flex-col gap-2">
         <p className="title-medium-emphasized">
-          {tCreateEvent("name")} <span className="text-primary">*</span>
+          {tEditEvent("name")} <span className="text-primary">*</span>
         </p>
         <Input
           value={eventForm.name.trim()}
-          placeholder={tCreateEvent("namePlaceholder")}
+          placeholder={tEditEvent("namePlaceholder")}
           className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
             setEventForm({ ...eventForm, name: e.target.value.trim() })
@@ -262,11 +262,11 @@ const CreateEventStep1 = ({
 
       {/* Description */}
       <div className="flex flex-col gap-2">
-        <p className="title-medium-emphasized">{tCreateEvent("description")}</p>
+        <p className="title-medium-emphasized">{tEditEvent("description")}</p>
         <Textarea
           value={eventForm.description.trim()}
-          placeholder={tCreateEvent("descriptionPlaceholder")}
-          className="h-16 max-h-16 resize-none overflow-y-auto body-large-primary focus:border-primary focus-visible:ring-0 break-all"
+          placeholder={tEditEvent("descriptionPlaceholder")}
+          className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
             setEventForm({ ...eventForm, description: e.target.value.trim() })
           }
@@ -274,11 +274,11 @@ const CreateEventStep1 = ({
       </div>
 
       {/* Date and Time */}
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row gap-4">
         {/* Date */}
         <div className="flex flex-col gap-2 w-full">
           <p className="title-medium-emphasized">
-            {tCreateEvent("date")} <span className="text-primary">*</span>
+            {tEditEvent("date")} <span className="text-primary">*</span>
           </p>
 
           <Popover>
@@ -286,10 +286,10 @@ const CreateEventStep1 = ({
               <div className="w-full h-10 flex items-center justify-between border rounded-md cursor-pointer pl-3 body-large-primary">
                 <span>
                   {!mounted
-                    ? tCreateEvent("datePlaceholder")
+                    ? tEditEvent("datePlaceholder")
                     : eventForm.date
                       ? formatDate(eventForm.date.toISOString(), locale)
-                      : tCreateEvent("datePlaceholder")}
+                      : tEditEvent("datePlaceholder")}
                 </span>
 
                 <div className="h-full w-10 flex items-center justify-center bg-primary text-white rounded-r-md">
@@ -300,8 +300,8 @@ const CreateEventStep1 = ({
 
             <PopoverContent className="w-full p-0" align="start">
               <Calendar
-                mode="single"
                 required
+                mode="single"
                 selected={eventForm.date}
                 onSelect={(date: Date) => {
                   handleSelectDate(date);
@@ -316,7 +316,7 @@ const CreateEventStep1 = ({
         {/* Time */}
         <div className="flex flex-col gap-2 w-full">
           <p className="title-medium-emphasized">
-            {tCreateEvent("time")} <span className="text-primary">*</span>
+            {tEditEvent("time")} <span className="text-primary">*</span>
           </p>
 
           <div className="flex gap-4">
@@ -340,14 +340,14 @@ const CreateEventStep1 = ({
                 >
                   <span>
                     {formatTime(eventForm.startTime) ??
-                      tCreateEvent("timePlaceholder")}
+                      tEditEvent("timePlaceholder")}
                   </span>
                   <IonIcon name="Time" size="16px" className="text-primary" />
                 </div>
               </label>
 
               <p className="pl-3 body-small-primary text-neutral-500">
-                {tCreateEvent("startTime")}
+                {tEditEvent("startTime")}
               </p>
             </div>
 
@@ -371,14 +371,14 @@ const CreateEventStep1 = ({
                 >
                   <span>
                     {formatTime(eventForm.endTime) ??
-                      tCreateEvent("timePlaceholder")}
+                      tEditEvent("timePlaceholder")}
                   </span>
                   <IonIcon name="Time" size="16px" className="text-primary" />
                 </div>
               </label>
 
               <p className="pl-3 body-small-primary text-neutral-500">
-                {tCreateEvent("endTime")}
+                {tEditEvent("endTime")}
               </p>
             </div>
           </div>
@@ -388,9 +388,8 @@ const CreateEventStep1 = ({
       {/* Location */}
       <div className="flex flex-col gap-2">
         <p className="title-medium-emphasized">
-          {tCreateEvent("location")} <span className="text-primary">*</span>
+          {tEditEvent("location")} <span className="text-primary">*</span>
         </p>
-
         <GoogleMapSelection
           eventForm={eventForm}
           setEventForm={setEventForm}
@@ -400,13 +399,11 @@ const CreateEventStep1 = ({
 
       {/* Agenda */}
       <div className="flex flex-col gap-4">
-        <p className="title-medium-emphasized">{tCreateEvent("agenda")}</p>
+        <p className="title-medium-emphasized">{tEditEvent("agenda")}</p>
 
         <div className="flex flex-col gap-4 px-4 py-6 rounded-4xl bg-neutral-100">
           {/* Title */}
-          <p className="title-medium-emphasized">
-            {tCreateEvent("agendaText")}
-          </p>
+          <p className="title-medium-emphasized">{tEditEvent("agendaText")}</p>
 
           {/* Time */}
           <div className="flex gap-4 w-full">
@@ -442,13 +439,13 @@ const CreateEventStep1 = ({
                     !isDateSelected && "opacity-50 pointer-events-none"
                   )}
                 >
-                  <span>{agendaStart || tCreateEvent("timePlaceholder")}</span>
+                  <span>{agendaStart || tEditEvent("timePlaceholder")}</span>
                   <IonIcon name="Time" size="16px" className="text-primary" />
                 </div>
               </label>
 
               <p className="pl-3 body-small-primary text-neutral-500">
-                {tCreateEvent("startTime")}
+                {tEditEvent("startTime")}
               </p>
             </div>
 
@@ -487,13 +484,13 @@ const CreateEventStep1 = ({
                     !isDateSelected && "opacity-50 pointer-events-none"
                   )}
                 >
-                  <span>{agendaEnd || tCreateEvent("timePlaceholder")}</span>
+                  <span>{agendaEnd || tEditEvent("timePlaceholder")}</span>
                   <IonIcon name="Time" size="16px" className="text-primary" />
                 </div>
               </label>
 
               <p className="pl-3 body-small-primary text-neutral-500">
-                {tCreateEvent("endTime")}
+                {tEditEvent("endTime")}
               </p>
             </div>
           </div>
@@ -501,7 +498,7 @@ const CreateEventStep1 = ({
           {/* Description */}
           <Input
             value={agendaName.trim()}
-            placeholder={tCreateEvent("descriptionPlaceholder")}
+            placeholder={tEditEvent("descriptionPlaceholder")}
             disabled={!eventForm.startTime || !eventForm.endTime}
             onChange={(e) => setAgendaName(e.target.value.trim())}
             className="w-full h-10 body-large-primary disabled:cursor-not-allowed"
@@ -512,7 +509,6 @@ const CreateEventStep1 = ({
             mode="filled"
             bordered="square"
             expanded={false}
-            onClick={handleAddAgenda}
             disabled={
               !eventForm.startTime ||
               !eventForm.endTime ||
@@ -520,13 +516,14 @@ const CreateEventStep1 = ({
               !agendaEnd ||
               !agendaName
             }
-            className={`h-9 w-fit -translate-y-0.5 ${
+            onClick={handleAddAgenda}
+            className={`h-9 w-fit ${
               agendaStart && agendaEnd && agendaName
                 ? "cursor-pointer"
                 : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
             }`}
           >
-            <p className="-translate-y-1">{tCreateEvent("addAgenda")}</p>
+            <p className="-translate-y-1">{tEditEvent("addAgenda")}</p>
           </Button>
         </div>
       </div>
@@ -569,7 +566,7 @@ const CreateEventStep1 = ({
               value={item.activity_name.trim()}
               onChange={(e) => updateAgendaName(index, e.target.value.trim())}
               className="body-large-primary"
-              placeholder={tCreateEvent("descriptionPlaceholder")}
+              placeholder={tEditEvent("descriptionPlaceholder")}
             />
           </div>
         </div>
@@ -578,11 +575,11 @@ const CreateEventStep1 = ({
       {/* Organizer */}
       <div className="flex flex-col gap-2">
         <p className="title-medium-emphasized">
-          {tCreateEvent("organizer")} <span className="text-primary">*</span>
+          {tEditEvent("organizer")} <span className="text-primary">*</span>
         </p>
         <Input
           value={eventForm.organizer.trim()}
-          placeholder={tCreateEvent("organizerPlaceholder")}
+          placeholder={tEditEvent("organizerPlaceholder")}
           className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
             setEventForm({ ...eventForm, organizer: e.target.value.trim() })
@@ -593,4 +590,4 @@ const CreateEventStep1 = ({
   );
 };
 
-export default CreateEventStep1;
+export default EditEventSection1;
