@@ -1,6 +1,6 @@
 "use client";
 
-import Icon from "@shared/Icon";
+import IonIcon from "@shared/IonIcon";
 import { useState } from "react";
 
 type SearchBarProps = {
@@ -37,7 +37,7 @@ const SearchBar = ({ placeholder, onsearch }: SearchBarProps) => {
         aria-label="Search"
         className="cursor-pointer"
       >
-        <Icon name="search" size={24} className="text-primary" />
+        <IonIcon name="SearchOutline" size="24px" className="text-primary" />
       </button>
     </div>
   );
