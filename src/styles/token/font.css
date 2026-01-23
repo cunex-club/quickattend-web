@@ -25,7 +25,8 @@
   font-family: "Material Symbols Outlined";
   font-style: normal;
   font-display: block;
-  src: url("@assets/font/material-symbols-outlined.woff2") format("woff2");
+  src: url("../../../public/font/material-symbols-outlined.woff2")
+    format("woff2");
 }
 
 @theme inline {
@@ -211,49 +212,49 @@
 @utility body-large-primary {
   font-family: var(--font-sarabun);
   font-weight: 400;
-  font-size: 1rem; /* 16px */
-  line-height: 1.75rem; /* 28px */
-  letter-spacing: 0.03125rem; /* 0.5px */
+  font-size: 16px;
+  line-height: 28px;
+  letter-spacing: 0.5px;
 }
 
 @utility body-medium-primary {
   font-family: var(--font-sarabun);
   font-weight: 400;
-  font-size: 0.875rem; /* 14px */
-  line-height: 1.5rem; /* 24px */
-  letter-spacing: 0.015625rem; /* 0.25px */
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.25px;
 }
 
 @utility body-small-primary {
   font-family: var(--font-sarabun);
   font-weight: 400;
-  font-size: 0.75rem; /* 12px */
-  line-height: 1.375rem; /* 22px */
-  letter-spacing: 0.025rem; /* 0.4px */
+  font-size: 12px;
+  line-height: 22px;
+  letter-spacing: 0.4px;
 }
 
 @utility body-large-emphasized {
   font-family: var(--font-sarabun);
   font-weight: 700;
-  font-size: 1rem; /* 16px */
-  line-height: 1.75rem; /* 28px */
-  letter-spacing: 0.03125rem; /* 0.5px */
+  font-size: 16px;
+  line-height: 28px;
+  letter-spacing: 0.5px;
 }
 
 @utility body-medium-emphasized {
   font-family: var(--font-sarabun);
   font-weight: 700;
-  font-size: 0.875rem; /* 14px */
-  line-height: 1.5rem; /* 24px */
-  letter-spacing: 0.015625rem; /* 0.25px */
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.25px;
 }
 
 @utility body-small-emphasized {
   font-family: var(--font-sarabun);
   font-weight: 700;
-  font-size: 0.75rem; /* 12px */
-  line-height: 1.375rem; /* 22px */
-  letter-spacing: 0.025rem; /* 0.4px */
+  font-size: 12px;
+  line-height: 22px;
+  letter-spacing: 0.4px;
 }
 
 @utility font-ion {

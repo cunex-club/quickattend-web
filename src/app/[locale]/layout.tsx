@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import "@styles/globals.css";
 import { getMessages } from "next-intl/server";
 import { routing } from "@i18n/routing";
-import { AuthProvider } from "../../context/AuthContext";
 
 export const metadata: Metadata = {
   title: "Quick Project",
@@ -26,12 +25,10 @@ export default async function LocaleLayout({
   const messages = await getMessages();
   return (
     <html lang={locale}>
-      <body
-        className="antialiased"
-      >
+      <body className="antialiased">
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <main className="w-full min-h-screen">
-            <AuthProvider>{children}</AuthProvider>
+          <main className="w-full min-h-screen bg-neutral-white">
+            {children}
           </main>
         </NextIntlClientProvider>
       </body>
