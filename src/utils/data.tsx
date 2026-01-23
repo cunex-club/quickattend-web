@@ -11,7 +11,7 @@ export const eventData = {
   staffCount: 6,
 };
 
-export const facultyData = [
+export const DeepInSightFacultyData = [
   { id: "f-0", label: "ทุกคณะ/หน่วยงาน" },
   { id: "f-1", label: "คณะวิศวกรรมศาสตร์" },
   { id: "f-2", label: "คณะอักษรศาสตร์" },
@@ -29,7 +29,7 @@ export const facultyData = [
   { id: "f-14", label: "คณะวิทยาการเรียนรู้และศึกษาศาสตร์" },
 ];
 
-export const timeData = [
+export const DeepInSightTimeData = [
   { id: "t-0", label: "ทุกช่วงเวลา" },
   { id: "t-1", label: "00:00 - 01:00 น." },
   { id: "t-2", label: "01:00 - 02:00 น." },
@@ -41,18 +41,20 @@ export const timeData = [
   { id: "t-8", label: "07:00 - 08:00 น." },
   { id: "t-9", label: "08:00 - 09:00 น." },
   { id: "t-10", label: "09:00 - 10:00 น." },
-];
-
-export const chartDataID1 = [
-  { faculty: "คณะวิศวกรรมศาสตร์", total: 92 },
-  { faculty: "คณะอักษรศาสตร์", total: 45 },
-  { faculty: "คณะสถาปัตกรรมศาสตร์", total: 67 },
-];
-
-export const chartDataID2 = [
-  { faculty: "Faculty of Engineering", total: 121 },
-  { faculty: "Faculty of Arts", total: 405 },
-  { faculty: "Faculty of Architecture", total: 282 },
+  { id: "t-11", label: "10:00 - 11:00 น." },
+  { id: "t-12", label: "11:00 - 12:00 น." },
+  { id: "t-13", label: "12:00 - 13:00 น." },
+  { id: "t-14", label: "13:00 - 14:00 น." },
+  { id: "t-15", label: "14:00 - 15:00 น." },
+  { id: "t-16", label: "15:00 - 16:00 น." },
+  { id: "t-17", label: "16:00 - 17:00 น." },
+  { id: "t-18", label: "17:00 - 18:00 น." },
+  { id: "t-19", label: "18:00 - 19:00 น." },
+  { id: "t-20", label: "19:00 - 20:00 น." },
+  { id: "t-21", label: "20:00 - 21:00 น." },
+  { id: "t-22", label: "21:00 - 22:00 น." },
+  { id: "t-23", label: "22:00 - 23:00 น." },
+  { id: "t-24", label: "23:00 - 00:00 น." },
 ];
 
 // Enhanced detailed faculty data with student/staff breakdown
@@ -245,18 +247,6 @@ export const detailedTimeData = [
   { timeId: "t-24", time: "23:00 - 00:00", students: 24, staff: 1, total: 25 },
 ];
 
-// Backward compatible exports (for existing code)
-export const dataCategorizeByFaculty = detailedFacultyData.map((item) => ({
-  faculty: item.faculty,
-  total: item.total,
-}));
-
-export const dataCategorizeByTime = detailedTimeData.map((item) => ({
-  time: item.time,
-  total: item.total,
-}));
-
-// Enhanced registered data with student/staff breakdown
 export const registeredData = [
   {
     facultyId: "f-1",

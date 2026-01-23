@@ -5,7 +5,7 @@
       opacity 0.3s ease;
   }
 
-  /* bar chart vertical */
+  /* bar chart vertical and horizontal */
   .chart-hover-bar .recharts-bar-rectangle,
   .chart-hover-bar .recharts-rectangle {
     transition: fill-opacity 0.3s ease-in-out;
@@ -16,9 +16,10 @@
     fill-opacity: 0.3;
   }
 
-  .chart-hover-bar:hover .recharts-bar-rectangle:not(:hover),
-  .chart-hover-bar:hover .recharts-rectangle:not(:hover) {
-    fill-opacity: 0.5;
+  .chart-hover-bar .recharts-bar-rectangle:hover,
+  .chart-hover-bar .recharts-rectangle:hover {
+    fill-opacity: 1;
+    cursor: pointer;
   }
 
   /* pie chart */

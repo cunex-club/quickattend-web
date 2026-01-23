@@ -7,7 +7,11 @@ import dynamic from "next/dynamic";
 import { StatCard } from "@components/StatCard";
 import Button from "@components/Button";
 import { FilterableList } from "@components/dashboard/FilterableList";
-import { facultyData, timeData, chartDataForComparePage } from "@utils/data";
+import {
+  DeepInSightFacultyData,
+  DeepInSightTimeData,
+  chartDataForComparePage,
+} from "@utils/data";
 import { useRole } from "@context/RoleContext";
 import { toast } from "sonner";
 import { Skeleton } from "@assets/components/ui/skeleton";
@@ -202,14 +206,14 @@ export function CompareView() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <FilterableList
                 title={t("faculty")}
-                items={facultyData}
+                items={DeepInSightFacultyData}
                 selectedItems={selectedFaculties}
                 onCheckedChange={handleFacultyChange}
                 hasDescription
               />
               <FilterableList
                 title={t("timePeriod")}
-                items={timeData}
+                items={DeepInSightTimeData}
                 selectedItems={selectedTimes}
                 onCheckedChange={handleTimeChange}
                 hasDescription

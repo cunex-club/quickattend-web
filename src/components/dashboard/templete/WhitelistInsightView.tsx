@@ -55,6 +55,7 @@ const BarChartVerticalStacked = dynamic(
     ssr: false,
   }
 );
+
 import {
   Popover,
   PopoverContent,
@@ -63,11 +64,11 @@ import {
 import { PopoverClose } from "@radix-ui/react-popover";
 import { FilterableList } from "../FilterableList";
 import {
-  facultyData,
-  registeredData,
-  timeData,
+  DeepInSightFacultyData,
+  DeepInSightTimeData,
   detailedFacultyData,
   detailedTimeData,
+  registeredData,
 } from "@utils/data";
 import {
   applyFacultyFilters,
@@ -78,10 +79,7 @@ import {
 } from "@utils/filterHelpers";
 import SortMenu from "@components/sort-menu";
 import IonIcon from "@shared/IonIcon";
-
-const horizontalChartData = dataCategorizeByTime;
-const verticalStackData = registeredData;
-const donutChartData = registrationStatusData;
+import { toast } from "sonner";
 
 export function WhitelistInsightView() {
   const router = useRouter();
@@ -107,11 +105,11 @@ export function WhitelistInsightView() {
 
   // items that user can select to filter
   const facultyFilterOptions = useMemo(
-    () => facultyData.filter((item) => item.id !== "f-0"),
+    () => DeepInSightFacultyData.filter((item) => item.id !== "f-0"),
     []
   );
   const timeFilterOptions = useMemo(
-    () => timeData.filter((item) => item.id !== "t-0"),
+    () => DeepInSightTimeData.filter((item) => item.id !== "t-0"),
     []
   );
 
@@ -131,7 +129,7 @@ export function WhitelistInsightView() {
         if (checked) {
           const selectedCount =
             Object.values(newSelected).filter(Boolean).length;
-          if (selectedCount >= 5) return prevSelected;
+
           newSelected[itemId] = true;
         } else {
           delete newSelected[itemId];
@@ -216,12 +214,46 @@ export function WhitelistInsightView() {
   );
 
   // Calculate summary statistics
-  // Use time-filtered data when time filters are active, otherwise use faculty-filtered data
+  // When both faculty and time filters are active, calculate stats from both and use the intersection
   const summaryStats = useMemo(() => {
-    const hasTimeFilter = Object.keys(appliedTimes).filter((key) => appliedTimes[key]).length > 0;
-    const dataToUse = hasTimeFilter ? filteredTimeData : filteredFacultyData;
-    return calculateSummaryStats(dataToUse, userFilter);
-  }, [filteredFacultyData, filteredTimeData, appliedTimes, userFilter]);
+    const hasFacultyFilter =
+      Object.keys(appliedFaculties).filter((key) => appliedFaculties[key])
+        .length > 0;
+    const hasTimeFilter =
+      Object.keys(appliedTimes).filter((key) => appliedTimes[key]).length > 0;
+
+    const facultyStats = calculateSummaryStats(filteredFacultyData, userFilter);
+    const timeStats = calculateSummaryStats(filteredTimeData, userFilter);
+
+    // If both filters are active, use the minimum of both to approximate the intersection
+    if (hasFacultyFilter && hasTimeFilter) {
+      return {
+        totalAttendees: Math.min(
+          facultyStats.totalAttendees,
+          timeStats.totalAttendees
+        ),
+        studentCount: Math.min(
+          facultyStats.studentCount,
+          timeStats.studentCount
+        ),
+        staffCount: Math.min(facultyStats.staffCount, timeStats.staffCount),
+      };
+    }
+
+    // If only time filter is active, use time stats
+    if (hasTimeFilter) {
+      return timeStats;
+    }
+
+    // Default to faculty stats (includes unfiltered case)
+    return facultyStats;
+  }, [
+    filteredFacultyData,
+    filteredTimeData,
+    appliedFaculties,
+    appliedTimes,
+    userFilter,
+  ]);
 
   const registrationStats = useMemo(
     () => calculateRegistrationStats(filteredRegisteredData, userFilter),
@@ -441,7 +473,7 @@ export function WhitelistInsightView() {
             onSelect={handleSortChange}
           />
         </div>
-        <div className="h-auto">
+        <div className="h-full">
           <BarChartVerticalStacked data={verticalStackData} />
         </div>
       </section>

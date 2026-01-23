@@ -41,10 +41,10 @@ import {
 import { PopoverClose } from "@radix-ui/react-popover";
 import { FilterableList } from "../FilterableList";
 import {
-  facultyData,
-  timeData,
   detailedFacultyData,
   detailedTimeData,
+  DeepInSightFacultyData,
+  DeepInSightTimeData,
 } from "@utils/data";
 import {
   applyFacultyFilters,
@@ -75,11 +75,11 @@ export function DeepInsightView() {
   const [appliedTimes, setAppliedTimes] = useState<Record<string, boolean>>({});
 
   const facultyFilterOptions = useMemo(
-    () => facultyData.filter((item) => item.id !== "f-0"),
+    () => DeepInSightFacultyData.filter((item) => item.id !== "f-0"),
     []
   );
   const timeFilterOptions = useMemo(
-    () => timeData.filter((item) => item.id !== "t-0"),
+    () => DeepInSightTimeData.filter((item) => item.id !== "t-0"),
     []
   );
 
@@ -90,16 +90,12 @@ export function DeepInsightView() {
       router.push("/dashboard");
     }
   }, [canViewInsights, router]);
-  const createSelectionHandler = (
-    setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>
-  ) =>
+  const createSelectionHandler =
+    (setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>) =>
     (itemId: string, checked: boolean) => {
       setter((prevSelected) => {
         const newSelected = { ...prevSelected };
         if (checked) {
-          const selectedCount =
-            Object.values(newSelected).filter(Boolean).length;
-          if (selectedCount >= 5) return prevSelected;
           newSelected[itemId] = true;
         } else {
           delete newSelected[itemId];

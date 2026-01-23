@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import {
   Bar,
   BarChart,
@@ -5,15 +8,15 @@ import {
   LabelList,
   XAxis,
   YAxis,
+  Cell,
 } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-} from "@assets/components/ui/chart";
+import { ChartConfig, ChartContainer } from "@assets/components/ui/chart";
 import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
 import { BarChartVerticalStackedProps } from "@customTypes/chart";
+import { cn } from "@assets/lib/utils";
+import IonIcon from "@shared/IonIcon";
 
 const chartConfig = {
   unregistered: {
@@ -31,6 +34,9 @@ export function BarChartVerticalStacked({
 }: {
   data: BarChartVerticalStackedProps[];
 }) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isLocked, setIsLocked] = useState(false);
+
   const LEFT_BAR_BORDER_RADIUS: [number, number, number, number] = [2, 0, 0, 2];
   const RIGHT_BAR_BORDER_RADIUS: [number, number, number, number] = [
     0, 2, 2, 0,
@@ -63,111 +69,243 @@ export function BarChartVerticalStacked({
     };
   });
 
+  const handleBackgroundClick = () => {
+    setHoveredIndex(null);
+    setIsLocked(false);
+  };
+
+  const handleBarClick = (idx: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (hoveredIndex === idx && isLocked) {
+      setIsLocked(false);
+      setHoveredIndex(null);
+    } else {
+      setHoveredIndex(idx);
+      setIsLocked(true);
+    }
+  };
+
+  // Get fill colors based on hover/selection state
+  const getBarColors = (idx: number) => {
+    if (hoveredIndex === null) {
+      return {
+        unregistered: "var(--color-unregistered)",
+        registered: "var(--color-registered)",
+      };
+    }
+    if (hoveredIndex === idx) {
+      return {
+        unregistered: "var(--color-unregistered)",
+        registered: "var(--color-registered)",
+      };
+    }
+    // Non-selected bars get neutral colors
+    return {
+      unregistered: "var(--color-neutral-300)",
+      registered: "var(--color-neutral-400)",
+    };
+  };
+
+  const selectedItem =
+    hoveredIndex !== null ? chartDataWithMeta[hoveredIndex] : null;
+
   return (
-    <Card className="bg-neutral-white lg:bg-neutral-100 border-none shadow-none lg:py-8 pl-0 lg:pl-8 lg:pr-6 rounded-[28px] w-full">
-      <CardContent className="mr-2 mb-10 max-h-[280px] md:max-h-[350px] lg:max-h-[400px] xl:max-h-[470px] overflow-auto pb-2">
-        <div className="flex flex-col space-y-4">
-          {chartDataWithMeta.map((item, idx) => {
-            return (
-              <div
-                key={`faculty-stacked-${idx}`}
-                className="flex flex-col space-y-2"
-              >
-                <div className="flex items-center justify-between">
-                  <p className="title-medium-primary md:title-large-primary">
-                    {item.faculty}
-                  </p>
-                  <p className="body-medium-primary md:body-large-primary text-neutral-black">
-                    {item.total} คน ({item.percentage}%)
-                  </p>
+    <div>
+      <Card className="bg-neutral-white lg:bg-neutral-100 border-none shadow-none lg:py-8 pl-0 lg:pl-8 lg:pr-6 rounded-[28px] w-full">
+        <CardContent
+          className="mr-2 mb-10 max-h-[280px] md:max-h-[350px] lg:max-h-[400px] xl:max-h-[470px] overflow-auto pb-2"
+          onClick={handleBackgroundClick}
+        >
+          <div className="flex flex-col space-y-4">
+            {chartDataWithMeta.map((item, idx) => {
+              const barColors = getBarColors(idx);
+              return (
+                <div
+                  key={`faculty-stacked-${idx}`}
+                  className="chart-item flex flex-col space-y-2 cursor-pointer"
+                  onMouseEnter={() => !isLocked && setHoveredIndex(idx)}
+                  onMouseLeave={() => !isLocked && setHoveredIndex(null)}
+                  onClick={(e) => handleBarClick(idx, e)}
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="title-medium-primary md:title-large-primary">
+                      {item.faculty}
+                    </p>
+                    <p className="body-medium-primary md:body-large-primary text-neutral-black">
+                      {item.total} คน ({item.percentage}%)
+                    </p>
+                  </div>
+                  <ChartContainer
+                    config={chartConfig}
+                    className="w-full cursor-pointer"
+                    style={{
+                      height: `${BAR_SIZE}px`,
+                      maxHeight: `${BAR_SIZE}px`,
+                    }}
+                  >
+                    <BarChart
+                      data={[item]}
+                      layout="vertical"
+                      accessibilityLayer
+                      margin={{ left: 0, right: 20, top: 0, bottom: 0 }}
+                    >
+                      <CartesianGrid horizontal={false} vertical={false} />
+                      <XAxis
+                        type="number"
+                        tickLine={false}
+                        axisLine={false}
+                        hide
+                        domain={[0, xDomainMax]}
+                      />
+                      <YAxis
+                        dataKey="faculty"
+                        type="category"
+                        tickLine={false}
+                        axisLine={false}
+                        hide
+                      />
+
+                      {/* left stacked */}
+                      <Bar
+                        dataKey="unregistered"
+                        stackId="a"
+                        fill={barColors.unregistered}
+                        radius={LEFT_BAR_BORDER_RADIUS}
+                        barSize={BAR_SIZE}
+                        style={{ transition: "fill 0.3s ease-in-out" }}
+                        isAnimationActive={false}
+                        className="transition-all duration-300 ease-in-out cursor-pointer"
+                      >
+                        <LabelList
+                          dataKey="unregistered"
+                          position="insideRight"
+                          className="fill-neutral-white text-xs"
+                        />
+                      </Bar>
+                      {/* right stacked */}
+                      <Bar
+                        dataKey="registered"
+                        stackId="a"
+                        fill={barColors.registered}
+                        radius={RIGHT_BAR_BORDER_RADIUS}
+                        barSize={BAR_SIZE}
+                        style={{ transition: "fill 0.3s ease-in-out" }}
+                        isAnimationActive={false}
+                        className="transition-all duration-300 ease-in-out cursor-pointer"
+                      >
+                        <LabelList
+                          dataKey="registered"
+                          position="insideRight"
+                          className="fill-neutral-white text-xs"
+                        />
+                      </Bar>
+                    </BarChart>
+                  </ChartContainer>
                 </div>
+              );
+            })}
+          </div>
+        </CardContent>
+        <div className="w-full flex justify-center">
+          <div className="flex justify-center items-center space-x-8 md:space-x-16">
+            <div className="flex flex-row space-x-2 items-center">
+              <div className="w-4 h-4 bg-primary"></div>
+              <p className="label-small-primary">
+                {chartConfig.registered.label}
+              </p>
+            </div>
+            <div className="flex flex-row space-x-2 items-center">
+              <div className="w-4 h-4 bg-chart-pink-200"></div>
+              <p className="label-small-primary">
+                {chartConfig.unregistered.label}
+              </p>
+            </div>
+          </div>
+        </div>
+      </Card>
+      {/* Selected item detail section */}
+      <div
+        className={cn(
+          "rounded-xl transition-all duration-300 ease-in-out",
+          selectedItem && isLocked
+            ? "opacity-100 h-[450px]"
+            : "opacity-0 h-0 py-0 mt-0"
+        )}
+      >
+        {selectedItem && isLocked && (
+          <div className="flex flex-col h-full p-10 px-32 space-y-6">
+            <div className="flex flex-row space-x-2 items-center">
+              <IonIcon
+                name="BusinessSharp"
+                size="16px"
+                className="text-primary"
+              />
+              <p className="body-medium-primary">{selectedItem.faculty}</p>
+            </div>
+            {/* Mock time data for debugging - will be replaced with real data later */}
+            {(() => {
+              const mockTimeData = [
+                { time: "16:00", total: 45 },
+                { time: "17:00", total: 78 },
+                { time: "18:00", total: 92 },
+              ];
+              return (
                 <ChartContainer
-                  config={chartConfig}
-                  className="w-full chart-hover-bar"
-                  style={{
-                    height: `${BAR_SIZE}px`,
-                    maxHeight: `${BAR_SIZE}px`,
+                  config={{
+                    total: {
+                      label: "จำนวนผู้เข้าร่วม",
+                      color: "var(--color-primary)",
+                    },
                   }}
+                  className="w-full flex-1 h-full"
                 >
                   <BarChart
-                    data={[item]}
-                    layout="vertical"
+                    data={mockTimeData}
                     accessibilityLayer
-                    margin={{ left: 0, right: 20, top: 0, bottom: 0 }}
+                    margin={{ left: 0, right: 0, top: 10, bottom: 0 }}
                   >
-                    <CartesianGrid horizontal={false} vertical={false} />
+                    <CartesianGrid
+                      horizontal={true}
+                      vertical={false}
+                      stroke="var(--color-neutral-300)"
+                      strokeWidth={0.4}
+                      strokeDasharray="3 3"
+                    />
                     <XAxis
-                      type="number"
+                      dataKey="time"
                       tickLine={false}
+                      tickMargin={8}
                       axisLine={false}
-                      hide
-                      domain={[0, xDomainMax]}
+                      fontSize={12}
                     />
                     <YAxis
-                      dataKey="faculty"
-                      type="category"
+                      type="number"
+                      dataKey="total"
                       tickLine={false}
+                      tickMargin={8}
                       axisLine={false}
-                      hide
+                      fontSize={12}
+                      width={30}
                     />
-                    
-                    {/* really hard to make responsive tooltip */}
-                    {/* <ChartTooltip
-                      content={<ChartTooltipContent />}
-                      allowEscapeViewBox={{ x: true, y: true }}
-                    /> */}
-
-                    {/* left stacked */}
                     <Bar
-                      dataKey="unregistered"
-                      stackId="a"
-                      fill="var(--color-unregistered)"
-                      radius={LEFT_BAR_BORDER_RADIUS}
-                      barSize={BAR_SIZE}
+                      dataKey="total"
+                      fill="var(--color-primary)"
+                      radius={[8, 8, 0, 0]}
                     >
                       <LabelList
-                        dataKey="unregistered"
-                        position="insideRight"
-                        className="fill-neutral-white text-xs"
-                      />
-                    </Bar>
-                    {/* right stacked */}
-                    <Bar
-                      dataKey="registered"
-                      stackId="a"
-                      fill="var(--color-registered)"
-                      radius={RIGHT_BAR_BORDER_RADIUS}
-                      barSize={BAR_SIZE}
-                    >
-                      <LabelList
-                        dataKey="registered"
-                        position="insideRight"
-                        className="fill-neutral-white text-xs"
+                        position="top"
+                        offset={4}
+                        className="fill-neutral-black"
+                        fontSize={10}
                       />
                     </Bar>
                   </BarChart>
                 </ChartContainer>
-              </div>
-            );
-          })}
-        </div>
-      </CardContent>
-      <div className="w-full flex justify-center">
-        <div className="flex justify-center items-center space-x-8 md:space-x-16">
-          <div className="flex flex-row space-x-2 items-center">
-            <div className="w-4 h-4 bg-primary"></div>
-            <p className="label-small-primary">
-              {chartConfig.registered.label}
-            </p>
+              );
+            })()}
           </div>
-          <div className="flex flex-row space-x-2 items-center">
-            <div className="w-4 h-4 bg-chart-pink-200"></div>
-            <p className="label-small-primary">
-              {chartConfig.unregistered.label}
-            </p>
-          </div>
-        </div>
+        )}
       </div>
-    </Card>
+    </div>
   );
 }
