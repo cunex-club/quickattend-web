@@ -36,42 +36,42 @@
 }
 
 /* Display */
-.display-large-primary {
+@utility display-large-primary {
   font-family: var(--font-chula-regular);
   font-size: 3.5625rem; /* 57px */
   line-height: 4rem; /* 64px */
   letter-spacing: -0.015625rem; /* -0.25px */
 }
 
-.display-medium-primary {
+@utility display-medium-primary {
   font-family: var(--font-chula-regular);
   font-size: 2.8125rem; /* 45px */
   line-height: 3.25rem; /* 52px */
   letter-spacing: 0;
 }
 
-.display-small-primary {
+@utility display-small-primary {
   font-family: var(--font-chula-regular);
   font-size: 2.25rem; /* 36px */
   line-height: 2.75rem; /* 44px */
   letter-spacing: 0;
 }
 
-.display-large-emphasized {
+@utility display-large-emphasized {
   font-family: var(--font-chula-bold);
   font-size: 3.5625rem; /* 57px */
   line-height: 4rem; /* 64px */
   letter-spacing: -0.015625rem; /* -0.25px */
 }
 
-.display-medium-emphasized {
+@utility display-medium-emphasized {
   font-family: var(--font-chula-bold);
   font-size: 2.8125rem; /* 45px */
   line-height: 3.25rem; /* 52px */
   letter-spacing: 0;
 }
 
-.display-small-emphasized {
+@utility display-small-emphasized {
   font-family: var(--font-chula-bold);
   font-size: 2.25rem; /* 36px */
   line-height: 2.75rem; /* 44px */
@@ -79,42 +79,42 @@
 }
 
 /* Headline */
-.headline-large-primary {
+@utility headline-large-primary {
   font-family: var(--font-chula-regular);
   font-size: 2rem; /* 32px */
   line-height: 2.5rem; /* 40px */
   letter-spacing: 0;
 }
 
-.headline-medium-primary {
+@utility headline-medium-primary {
   font-family: var(--font-chula-regular);
   font-size: 1.75rem; /* 28px */
   line-height: 2.25rem; /* 36px */
   letter-spacing: 0;
 }
 
-.headline-small-primary {
+@utility headline-small-primary {
   font-family: var(--font-chula-regular);
   font-size: 1.5rem; /* 24px */
   line-height: 2rem; /* 32px */
   letter-spacing: 0;
 }
 
-.headline-large-emphasized {
+@utility headline-large-emphasized {
   font-family: var(--font-chula-bold);
   font-size: 2rem; /* 32px */
   line-height: 2.5rem; /* 40px */
   letter-spacing: 0;
 }
 
-.headline-medium-emphasized {
+@utility headline-medium-emphasized {
   font-family: var(--font-chula-bold);
   font-size: 1.75rem; /* 28px */
   line-height: 2.25rem; /* 36px */
   letter-spacing: 0;
 }
 
-.headline-small-emphasized {
+@utility headline-small-emphasized {
   font-family: var(--font-chula-bold);
   font-size: 1.5rem; /* 24px */
   line-height: 2rem; /* 32px */
@@ -122,42 +122,42 @@
 }
 
 /* Title */
-.title-large-primary {
+@utility title-large-primary {
   font-family: var(--font-chula-regular);
   font-size: 1.375rem; /* 22px */
   line-height: 1.75rem; /* 28px */
   letter-spacing: 0;
 }
 
-.title-medium-primary {
+@utility title-medium-primary {
   font-family: var(--font-chula-regular);
   font-size: 1rem; /* 16px */
   line-height: 1.5rem; /* 24px */
   letter-spacing: 0.009375rem; /* 0.15px */
 }
 
-.title-small-primary {
+@utility title-small-primary {
   font-family: var(--font-chula-regular);
   font-size: 0.875rem; /* 14px */
   line-height: 1.25rem; /* 20px */
   letter-spacing: 0.00625rem; /* 0.1px */
 }
 
-.title-large-emphasized {
+@utility title-large-emphasized {
   font-family: var(--font-chula-bold);
   font-size: 1.375rem; /* 22px */
   line-height: 1.75rem; /* 28px */
   letter-spacing: 0;
 }
 
-.title-medium-emphasized {
+@utility title-medium-emphasized {
   font-family: var(--font-chula-bold);
   font-size: 1rem; /* 16px */
   line-height: 1.5rem; /* 24px */
   letter-spacing: 0.009375rem; /* 0.15px */
 }
 
-.title-small-emphasized {
+@utility title-small-emphasized {
   font-family: var(--font-chula-bold);
   font-size: 0.875rem; /* 14px */
   line-height: 1.25rem; /* 20px */
@@ -165,42 +165,42 @@
 }
 
 /* Label */
-.label-large-primary {
+@utility label-large-primary {
   font-family: var(--font-chula-regular);
   font-size: 0.875rem; /* 14px */
   line-height: 1.25rem; /* 20px */
   letter-spacing: 0.00625rem; /* 0.1px */
 }
 
-.label-medium-primary {
+@utility label-medium-primary {
   font-family: var(--font-chula-regular);
   font-size: 0.75rem; /* 12px */
   line-height: 1rem; /* 16px */
   letter-spacing: 0.03125rem; /* 0.5px */
 }
 
-.label-small-primary {
+@utility label-small-primary {
   font-family: var(--font-chula-regular);
   font-size: 0.6875rem; /* 11px */
   line-height: 1rem; /* 16px */
   letter-spacing: 0.03125rem; /* 0.5px */
 }
 
-.label-large-emphasized {
+@utility label-large-emphasized {
   font-family: var(--font-chula-bold);
   font-size: 0.875rem; /* 14px */
   line-height: 1.25rem; /* 20px */
   letter-spacing: 0.00625rem; /* 0.1px */
 }
 
-.label-medium-emphasized {
+@utility label-medium-emphasized {
   font-family: var(--font-chula-bold);
   font-size: 0.75rem; /* 12px */
   line-height: 1rem; /* 16px */
   letter-spacing: 0.03125rem; /* 0.5px */
 }
 
-.label-small-emphasized {
+@utility label-small-emphasized {
   font-family: var(--font-chula-bold);
   font-size: 0.6875rem; /* 11px */
   line-height: 1rem; /* 16px */
@@ -208,7 +208,7 @@
 }
 
 /* Body */
-.body-large-primary {
+@utility body-large-primary {
   font-family: var(--font-sarabun);
   font-weight: 400;
   font-size: 1rem; /* 16px */
@@ -216,7 +216,7 @@
   letter-spacing: 0.03125rem; /* 0.5px */
 }
 
-.body-medium-primary {
+@utility body-medium-primary {
   font-family: var(--font-sarabun);
   font-weight: 400;
   font-size: 0.875rem; /* 14px */
@@ -224,7 +224,7 @@
   letter-spacing: 0.015625rem; /* 0.25px */
 }
 
-.body-small-primary {
+@utility body-small-primary {
   font-family: var(--font-sarabun);
   font-weight: 400;
   font-size: 0.75rem; /* 12px */
@@ -232,7 +232,7 @@
   letter-spacing: 0.025rem; /* 0.4px */
 }
 
-.body-large-emphasized {
+@utility body-large-emphasized {
   font-family: var(--font-sarabun);
   font-weight: 700;
   font-size: 1rem; /* 16px */
@@ -240,7 +240,7 @@
   letter-spacing: 0.03125rem; /* 0.5px */
 }
 
-.body-medium-emphasized {
+@utility body-medium-emphasized {
   font-family: var(--font-sarabun);
   font-weight: 700;
   font-size: 0.875rem; /* 14px */
@@ -248,7 +248,7 @@
   letter-spacing: 0.015625rem; /* 0.25px */
 }
 
-.body-small-emphasized {
+@utility body-small-emphasized {
   font-family: var(--font-sarabun);
   font-weight: 700;
   font-size: 0.75rem; /* 12px */
@@ -256,10 +256,10 @@
   letter-spacing: 0.025rem; /* 0.4px */
 }
 
-.font-ion {
+@utility font-ion {
   font-family: var(--font-ion);
 }
 
-.font-material-symbols {
+@utility font-material-symbols {
   font-family: var(--font-material-symbols);
 }

@@ -25,3 +25,10 @@ export const REVEALED_FIELDS_OPTIONS = [
   { id: "additional", label: "คณะ/หน่วยงาน", field: "organization" },
 ];
 
+export const ACCESS_ROLE_OPTIONS = [
+  { value: "owner", label: "เจ้าของกิจกรรม" },
+  { value: "manager", label: "ผู้จัดการกิจกรรม" },
+  { value: "staff", label: "ผู้ดูแลกิจกรรม" },
+  { value: "worker", label: "ผู้ดูแลงาน" },
+  { value: "remove", label: "ลบรายชื่อ", className: "text-red-500" },
+];

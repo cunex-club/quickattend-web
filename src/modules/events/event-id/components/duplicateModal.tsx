@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
+import { cn } from "@assets/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -40,13 +41,13 @@ const DuplicateModal = ({
   };
 
   const handleRemoveSchedule = (index: number) => {
-    setSchedules(schedules.filter((_, i) => i !== index));
+    setSchedules(schedules.filter((_, i: number) => i !== index));
   };
 
   const handleUpdateSchedule = (
     index: number,
     field: "startTime" | "endTime" | "description",
-    value: string,
+    value: string
   ) => {
     const newSchedules = [...schedules];
     newSchedules[index] = { ...newSchedules[index], [field]: value };
@@ -79,8 +80,12 @@ const DuplicateModal = ({
 
               {/* Event Description */}
               <div className="space-y-2">
-                <div className="headline-small-emphasized">รายละเอียดกิจกรรม</div>
-                <div className="body-large-primary">{eventData.description}</div>
+                <div className="headline-small-emphasized">
+                  รายละเอียดกิจกรรม
+                </div>
+                <div className="body-large-primary">
+                  {eventData.description}
+                </div>
               </div>
 
               {/* Date and Time Section */}

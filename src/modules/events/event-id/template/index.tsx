@@ -6,6 +6,8 @@ import Icon from "@shared/Icon";
 import Button from "@shared/Button";
 import ShareModal from "@modules/events/event-id/components/shareModal";
 import DuplicateModal from "@modules/events/event-id/components/duplicateModal";
+import MobileManageModal from "@modules/events/event-id/components/mobileManageModal";
+import MobileDuplicateSheet from "@modules/events/event-id/components/mobileDuplicateSheet";
 import {
   MOCK_EVENT_INFO,
   MOCK_SHARE_MODAL_DATA,
@@ -14,6 +16,9 @@ import {
 const EventIdPageTemplate = () => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false);
+  const [isMobileManageModalOpen, setIsMobileManageModalOpen] = useState(false);
+  const [isMobileDuplicateSheetOpen, setIsMobileDuplicateSheetOpen] =
+    useState(false);
 
   const eventData = MOCK_EVENT_INFO;
 
@@ -107,49 +112,57 @@ const EventIdPageTemplate = () => {
         </div>
         <div className="lg:flex-1 flex flex-col sm:flex-row lg:flex-col justify-between gap-6 lg:gap-10">
           <div className="flex-1 flex flex-col justify-center items-start lg:items-center bg-primary h-full px-8 py-6 lg:p-10 text-white rounded-3xl shadow-xs">
-            <div className="headline-small-emphasized">จำนวนผู้ลงทะเบียน</div>
+            <div className="title-medium-emphasized lg:headline-small-emphasized">
+              จำนวนผู้ลงทะเบียน
+            </div>
             <div className="flex items-baseline gap-2">
               <div
-                className="text-center"
+                className="text-center headline-large-emphasized lg:text-[72px] lg:leading-[140%] lg:tracking-[-0.792px] lg:font-bold"
                 style={{
-                  color: "var(--Color-Neutral-White, #FFF)",
                   fontFamily:
                     "CHULALONGKORNBold, var(--font-chula-bold), sans-serif",
-                  fontSize: "72px",
-                  fontStyle: "normal",
-                  fontWeight: 700,
-                  lineHeight: "140%",
-                  letterSpacing: "-0.792px",
                 }}
               >
                 {eventData.total_registered}
               </div>
-              <div className="title-large-primary">คน</div>
+              <div className="title-small-primary lg:title-large-primary">
+                คน
+              </div>
             </div>
-            <div className="flex space-x-2.5 title-small-primary">
+            <div className="flex space-x-2.5 label-medium-primary lg:title-small-primary">
               <div>นิสิต : 1090 คน</div>
               <div>|</div>
               <div>บุคลากร : 6 คน</div>
             </div>
           </div>
-          <div className="flex-1 lg:flex-none flex flex-col justify-center items-start lg:items-center gap-2.5 bg-neutral-100 p-5 rounded-3xl shadow-xs">
+          <div className="flex-1 lg:flex-none flex flex-col justify-center items-center gap-2.5 bg-neutral-100 p-5 rounded-3xl shadow-xs text-center">
             <div className="headline-small-emphasized">กิจกรรมโดย</div>
             <div className="body-large-primary">{eventData.organizer}</div>
           </div>
         </div>
       </div>
-      <div className="flex flex-col md:flex-row w-full gap-4 lg:gap-6">
-        <Button mode="filled" bordered="round" expanded={true}>
+      <div className="flex flex-row w-full gap-4 lg:gap-6">
+        <Button
+          mode="filled"
+          bordered="round"
+          expanded={true}
+          className="flex-1"
+        >
           <div className="flex justify-center items-center gap-2 text-neutral-white">
-            <IonIcon name="Scan" size="36px" />
-            <div className="title-large-primary whitespace-nowrap">
+            <IonIcon name="Scan" className="w-6 h-6 md:w-9 md:h-9" />
+            <div className="label-large-primary md:title-large-primary whitespace-nowrap">
               สแกนผู้เข้าร่วมกิจกรรม
             </div>
           </div>
         </Button>
-        <Button mode="outline" bordered="round" expanded={true}>
+        <Button
+          mode="outline"
+          bordered="round"
+          expanded={true}
+          className="hidden md:block flex-1"
+        >
           <div className="flex justify-center text-primary items-center gap-2">
-            <IonIcon name="TrendingUp" size="36px" />
+            <IonIcon name="TrendingUp" className="w-6 h-6 md:w-9 md:h-9" />
             <div className="title-large-primary whitespace-nowrap">
               สถิติกิจกรรม
             </div>
@@ -160,24 +173,47 @@ const EventIdPageTemplate = () => {
             mode="outline"
             bordered="round"
             expanded={false}
-            onClick={() => setIsDuplicateModalOpen(true)}
+            className="md:hidden"
           >
             <IonIcon
-              name="DuplicateOutline"
-              size="36px"
-              className="text-primary"
+              name="TrendingUp"
+              className="w-6 h-6 md:w-9 md:h-9 text-primary"
             />
           </Button>
           <Button
             mode="outline"
             bordered="round"
             expanded={false}
+            className="hidden md:block"
+            onClick={() => setIsDuplicateModalOpen(true)}
+          >
+            <IonIcon
+              name="DuplicateOutline"
+              className="w-6 h-6 md:w-9 md:h-9 text-primary"
+            />
+          </Button>
+          <Button
+            mode="outline"
+            bordered="round"
+            expanded={false}
+            className="md:hidden"
+            onClick={() => setIsMobileManageModalOpen(true)}
+          >
+            <IonIcon
+              name="ArrowRedoOutline"
+              className="w-6 h-6 md:w-9 md:h-9 text-primary"
+            />
+          </Button>
+          <Button
+            mode="outline"
+            bordered="round"
+            expanded={false}
+            className="hidden md:block"
             onClick={() => setIsShareModalOpen(true)}
           >
             <IonIcon
               name="ArrowRedoOutline"
-              size="36px"
-              className="text-primary"
+              className="w-6 h-6 md:w-9 md:h-9 text-primary"
             />
           </Button>
         </div>
@@ -192,6 +228,22 @@ const EventIdPageTemplate = () => {
       <DuplicateModal
         open={isDuplicateModalOpen}
         onOpenChange={setIsDuplicateModalOpen}
+        eventData={eventData}
+      />
+
+      <MobileManageModal
+        open={isMobileManageModalOpen}
+        onOpenChange={setIsMobileManageModalOpen}
+        eventData={MOCK_SHARE_MODAL_DATA}
+        onDuplicate={() => {
+          setIsMobileManageModalOpen(false);
+          setIsMobileDuplicateSheetOpen(true);
+        }}
+      />
+
+      <MobileDuplicateSheet
+        open={isMobileDuplicateSheetOpen}
+        onOpenChange={setIsMobileDuplicateSheetOpen}
         eventData={eventData}
       />
     </div>

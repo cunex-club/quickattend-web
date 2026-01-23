@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Button from "@shared/Button";
 import TextField from "@shared/TextField";
 import Icon from "@shared/Icon";

@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState, ChangeEvent, Dispatch, SetStateAction } from "react";
 import TextField from "@shared/TextField";
 import IonIcon from "@shared/IonIcon";
+import { cn } from "@assets/lib/utils";
 
 interface EventTimePickerProps {
   startTime?: string;
@@ -12,6 +13,7 @@ interface EventTimePickerProps {
   startPlaceholder?: string;
   endPlaceholder?: string;
   className?: string;
+  layout?: "row" | "col";
 }
 
 const EventTimePicker = ({
@@ -22,6 +24,7 @@ const EventTimePicker = ({
   startPlaceholder = "16.00 น.",
   endPlaceholder = "20.00 น.",
   className = "",
+  layout = "row",
 }: EventTimePickerProps) => {
   const [startTimeInput, setStartTimeInput] = useState(startTime || "");
   const [endTimeInput, setEndTimeInput] = useState(endTime || "");
@@ -33,9 +36,9 @@ const EventTimePicker = ({
   };
 
   const handleTimeChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    setInput: React.Dispatch<React.SetStateAction<string>>,
-    onChange?: (value: string) => void,
+    e: ChangeEvent<HTMLInputElement>,
+    setInput: Dispatch<SetStateAction<string>>,
+    onChange?: (value: string) => void
   ) => {
     // Remove non-numeric characters
     const numbers = e.target.value.replace(/\D/g, "");
@@ -54,7 +57,13 @@ const EventTimePicker = ({
   };
 
   return (
-    <div className={`grid grid-cols-2 gap-2 ${className}`}>
+    <div
+      className={cn(
+        "grid gap-2",
+        layout === "row" ? "grid-cols-2" : "grid-cols-1",
+        className
+      )}
+    >
       <TextField
         type="text"
         maxLength={5}
