@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { useState } from "react";
 import Button from "@shared/Button";
 import TextField from "@shared/TextField";
@@ -17,7 +19,7 @@ interface DuplicateEventScheduleProps {
   onUpdateSchedule: (
     index: number,
     field: "startTime" | "endTime" | "description",
-    value: string
+    value: string,
   ) => void;
   evaluationLink: string;
   onEvaluationLinkChange: (value: string) => void;
@@ -37,6 +39,7 @@ const DuplicateEventSchedule = ({
   onBack,
   onConfirm,
 }: DuplicateEventScheduleProps) => {
+  const t = useTranslations("EventDetail");
   const [newSchedule, setNewSchedule] = useState({
     startTime: "",
     endTime: "",
@@ -54,7 +57,7 @@ const DuplicateEventSchedule = ({
     <div className="flex flex-col max-h-[80vh]">
       <div className="flex justify-between items-center shrink-0 pb-2">
         <div className="headline-large-emphasized text-primary">
-          ตารางการจัดกิจกรรม <span className="text-red-500">*</span>
+          {t("eventSchedule")} <span className="text-red-500">*</span>
         </div>
         <button
           onClick={onClose}
@@ -67,7 +70,7 @@ const DuplicateEventSchedule = ({
       <div className="flex-1 overflow-y-auto space-y-6 px-1 py-2">
         {/* Add Section */}
         <div className="bg-neutral-100 p-6 rounded-xl space-y-4">
-          <div className="title-medium-emphasized">เพิ่มช่วงเวลาจัดกิจกรรม</div>
+          <div className="title-medium-emphasized">{t("addScheduleSlot")}</div>
           <EventTimePicker
             startTime={newSchedule.startTime}
             endTime={newSchedule.endTime}
@@ -80,7 +83,7 @@ const DuplicateEventSchedule = ({
             className="gap-4"
           />
           <TextField
-            placeholder="พิธีเปิด"
+            placeholder={t("openingCeremonyPlaceholder")}
             value={newSchedule.description}
             onChange={(e) =>
               setNewSchedule({ ...newSchedule, description: e.target.value })
@@ -95,7 +98,7 @@ const DuplicateEventSchedule = ({
             onClick={handleAddClick}
           >
             <p className="label-large-emphasized text-white">
-              เพิ่มตารางกิจกรรม
+              {t("addSchedule")}
             </p>
           </Button>
         </div>
@@ -137,13 +140,13 @@ const DuplicateEventSchedule = ({
           ))}
         </div>
 
-        {/* Bottom Form */}
+        {/* Evaluation Link */}
         <div className="space-y-2">
           <div className="headline-small-emphasized">
-            ลิงก์แบบฟอร์มประเมินกิจกรรม
+            {t("evaluationFormLink")}
           </div>
           <TextField
-            placeholder="วางลิงก์แบบฟอร์มประเมินกิจกรรม"
+            placeholder={t("evaluationFormLinkPlaceholder")}
             value={evaluationLink}
             onChange={(e) => onEvaluationLinkChange(e.target.value)}
           />
@@ -158,7 +161,7 @@ const DuplicateEventSchedule = ({
           className="title-large-emphasized !px-12 py-6 border-pink-500 text-pink-500 hover:bg-pink-50"
           onClick={onBack}
         >
-          ย้อนกลับ
+          {t("back")}
         </Button>
         <Button
           mode="filled"
@@ -167,7 +170,7 @@ const DuplicateEventSchedule = ({
           className="title-large-emphasized !px-12 py-6"
           onClick={onConfirm}
         >
-          ยืนยันสร้างกิจกรรม
+          {t("submitDuplicate")}
         </Button>
       </div>
     </div>

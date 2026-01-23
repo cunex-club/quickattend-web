@@ -15,6 +15,8 @@ import { EventInfo } from "@customTypes/events";
 import TextField from "@shared/TextField";
 import DuplicateEventSchedule from "./duplicateEventSchedule";
 
+import { useTranslations } from "next-intl";
+
 interface DuplicateModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -26,6 +28,7 @@ const DuplicateModal = ({
   onOpenChange,
   eventData,
 }: DuplicateModalProps) => {
+  const t = useTranslations("EventDetail");
   const [step, setStep] = useState(1);
   const [schedules, setSchedules] = useState<
     { startTime: string; endTime: string; description: string }[]
@@ -73,7 +76,7 @@ const DuplicateModal = ({
           <>
             <DialogHeader>
               <DialogTitle className="headline-large-emphasized text-primary">
-                ทำซ้ำกิจกรรม
+                {t("duplicateEvent")}
               </DialogTitle>
             </DialogHeader>
 
@@ -84,7 +87,7 @@ const DuplicateModal = ({
               {/* Event Description */}
               <div className="space-y-2">
                 <div className="headline-small-emphasized">
-                  รายละเอียดกิจกรรม
+                  {t("eventDetails")}
                 </div>
                 <div className="body-large-primary">
                   {eventData.description}
@@ -95,7 +98,7 @@ const DuplicateModal = ({
                 {/* Date */}
                 <div className="space-y-2">
                   <label className="body-large-primary">
-                    วันที่ <span className="text-red-500">*</span>
+                    {t("date")} <span className="text-red-500">*</span>
                   </label>
                   <DatePicker
                     value={date}
@@ -107,7 +110,7 @@ const DuplicateModal = ({
                 {/* Time */}
                 <div className="space-y-2">
                   <label className="body-large-primary">
-                    เวลา <span className="text-red-500">*</span>
+                    {t("time")} <span className="text-red-500">*</span>
                   </label>
                   <EventTimePicker
                     startTime={startTime}
@@ -121,11 +124,11 @@ const DuplicateModal = ({
               {/* Location */}
               <div className="space-y-2">
                 <label className="body-large-primary">
-                  สถานที่ <span className="text-red-500">*</span>
+                  {t("location")} <span className="text-red-500">*</span>
                 </label>
                 <TextField
                   type="text"
-                  placeholder="กรอกสถานที่จัดกิจกรรม"
+                  placeholder={t("locationPlaceholder")}
                   defaultValue={eventData.location}
                   inputClassName="body-large-primary"
                 />
@@ -133,9 +136,11 @@ const DuplicateModal = ({
 
               {/* Organizer */}
               <div className="space-y-2">
-                <div className="headline-small-emphasized">ผู้จัดกิจกรรม</div>
+                <div className="headline-small-emphasized">
+                  {t("organizer")}
+                </div>
                 <div className="body-large-primary">
-                  องค์กรบริหารสโมสรนิสิตจุฬาฯ (อบจ.)
+                  {t("defaultOrganizerName")}
                 </div>
               </div>
 
@@ -148,7 +153,7 @@ const DuplicateModal = ({
                   className="title-large-emphasized px-12 py-6"
                   onClick={() => setStep(2)}
                 >
-                  ต่อไป
+                  {t("next")}
                 </Button>
               </div>
             </div>

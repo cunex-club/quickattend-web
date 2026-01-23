@@ -1,34 +1,46 @@
 export const ROLE_OPTIONS = [
-  { value: "owner", label: "Owner" },
-  { value: "manager", label: "Manager" },
-  { value: "viewer", label: "Viewer" },
+  { value: "owner", label: "EventDetail.Roles.owner" },
+  { value: "manager", label: "EventDetail.Roles.manager" },
+  { value: "viewer", label: "EventDetail.Roles.viewer" },
 ];
 
 export const MANAGER_ROLE_OPTIONS = [
-  { value: "manager", label: "Manager" },
-  { value: "viewer", label: "ผู้ดูแลงาน" },
-  { value: "remove", label: "ผู้จัดการกิจกรรม", className: "text-red-500" },
+  { value: "manager", label: "EventDetail.Roles.manager" },
+  { value: "viewer", label: "EventDetail.Roles.worker" },
+  {
+    value: "remove",
+    label: "EventDetail.Roles.manager_remove",
+    className: "text-red-500",
+  },
 ];
 
 export const SCAN_PERMISSION_OPTIONS = [
-  { value: "all", label: "ทุกคน" },
-  { value: "manager", label: "Manager" },
-  { value: "owner", label: "Owner" },
-  { value: "viewer", label: "Viewer" },
+  { value: "all", label: "EventDetail.ScanPermissions.all" },
+  { value: "manager", label: "EventDetail.ScanPermissions.manager" },
+  { value: "owner", label: "EventDetail.ScanPermissions.owner" },
+  { value: "viewer", label: "EventDetail.ScanPermissions.viewer" },
 ];
 
 export const REVEALED_FIELDS_OPTIONS = [
-  { id: "general", label: "แสดงทั้งหมด", field: "all" },
-  { id: "datetime", label: "รูปภาพ", field: "image" },
-  { id: "upload", label: "ชื่อ-นามสกุล", field: "name" },
-  { id: "location", label: "รหัสประจำตัว", field: "refid" },
-  { id: "additional", label: "คณะ/หน่วยงาน", field: "organization" },
+  { id: "general", label: "EventDetail.RevealedFields.all", field: "all" },
+  { id: "datetime", label: "EventDetail.RevealedFields.image", field: "image" },
+  { id: "upload", label: "EventDetail.RevealedFields.name", field: "name" },
+  { id: "location", label: "EventDetail.RevealedFields.refid", field: "refid" },
+  {
+    id: "additional",
+    label: "EventDetail.RevealedFields.organization",
+    field: "organization",
+  },
 ];
 
 export const ACCESS_ROLE_OPTIONS = [
-  { value: "owner", label: "เจ้าของกิจกรรม" },
-  { value: "manager", label: "ผู้จัดการกิจกรรม" },
-  { value: "staff", label: "ผู้ดูแลกิจกรรม" },
-  { value: "worker", label: "ผู้ดูแลงาน" },
-  { value: "remove", label: "ลบรายชื่อ", className: "text-red-500" },
+  { value: "owner", label: "EventDetail.Roles.owner" },
+  { value: "manager", label: "EventDetail.Roles.manager" },
+  { value: "staff", label: "EventDetail.Roles.staff" },
+  { value: "worker", label: "EventDetail.Roles.worker" },
+  {
+    value: "remove",
+    label: "EventDetail.Roles.remove",
+    className: "text-red-500",
+  },
 ];

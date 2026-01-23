@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 import Button from "@shared/Button";
 import { cn } from "@assets/lib/utils";
@@ -43,6 +44,7 @@ const MobileManageModal = ({
   eventData,
   onDuplicate,
 }: MobileManageModalProps) => {
+  const t = useTranslations("EventDetail");
   const [view, setView] = useState<"main" | "add-access">("main");
   const [username, setUsername] = useState("");
   const [role, setRole] = useState("manager");
@@ -79,10 +81,10 @@ const MobileManageModal = ({
             <SheetTitle
               className={cn(
                 "headline-medium-emphasized text-center",
-                view === "main" ? "text-primary" : "text-pink-500"
+                view === "main" ? "text-primary" : "text-pink-500",
               )}
             >
-              {view === "main" ? "จัดการกิจกรรม" : "เพิ่มผู้เข้าถึงกิจกรรม"}
+              {view === "main" ? t("manageEvent") : t("addAccess")}
             </SheetTitle>
           </div>
         </SheetHeader>
@@ -96,16 +98,14 @@ const MobileManageModal = ({
                   <IonIcon name="TrendingUp" className="w-6 h-6" />
                 </div>
                 <span className="body-large-primary">
-                  คัดลอกลิงก์แชร์ Dashboard
+                  {t("shareDashboardLink")}
                 </span>
               </button>
               <button className="flex items-center gap-3 w-full">
                 <div className="text-primary">
                   <IonIcon name="Scan" className="w-6 h-6" />
                 </div>
-                <span className="body-large-primary">
-                  คัดลอกลิงก์แชร์ QR scanner
-                </span>
+                <span className="body-large-primary">{t("shareQrLink")}</span>
               </button>
               <button
                 className="flex items-center gap-3 w-full"
@@ -114,7 +114,9 @@ const MobileManageModal = ({
                 <div className="text-primary">
                   <IonIcon name="DuplicateOutline" className="w-6 h-6" />
                 </div>
-                <span className="body-large-primary">ทำซ้ำกิจกรรม</span>
+                <span className="body-large-primary">
+                  {t("duplicateEvent")}
+                </span>
               </button>
             </div>
 
@@ -130,7 +132,7 @@ const MobileManageModal = ({
                   <IonIcon name="PersonAddOutline" className="w-6 h-6" />
                 </div>
                 <span className="body-large-primary">
-                  เพิ่มผู้สามารถเข้าถึงกิจกรรม
+                  {t("addEventAccess")}
                 </span>
               </div>
               <IonIcon
@@ -141,7 +143,7 @@ const MobileManageModal = ({
 
             {/* Users List Section */}
             <div className="space-y-4">
-              <h3 className="headline-small-emphasized">ผู้เข้าถึงกิจกรรม</h3>
+              <h3 className="headline-small-emphasized">{t("accessList")}</h3>
 
               <div className="flex flex-col gap-4">
                 {eventData.managers_and_staff.map((user) => {
@@ -173,11 +175,11 @@ const MobileManageModal = ({
                       </div>
                       {isOwner ? (
                         <div className="label-medium-primary text-gray-500">
-                          เจ้าของกิจกรรม
+                          {t("Roles.owner")}
                         </div>
                       ) : (
                         <div className="label-medium-primary text-gray-500">
-                          ผู้จัดการกิจกรรม
+                          {t("Roles.manager")}
                         </div>
                       )}
                       <IonIcon
@@ -194,7 +196,7 @@ const MobileManageModal = ({
           <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-8 duration-300 h-full">
             <div className="space-y-6 flex-1">
               <input
-                placeholder="ระบุรหัสประจำตัว"
+                placeholder={t("specifyIdPlaceholder")}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full bg-gray-100 border-none rounded-xl py-4 px-6 body-large-primary placeholder:text-neutral-400 outline-none"
@@ -202,7 +204,7 @@ const MobileManageModal = ({
 
               <div className="flex items-center justify-between">
                 <div className="headline-small-emphasized text-black">
-                  สิทธิ์การเข้าถึง
+                  {t("accessRights")}
                 </div>
                 <Select value={role} onValueChange={setRole}>
                   <SelectTrigger className="w-50 h-12 rounded-2xl border-none shadow-sm bg-white">
@@ -215,7 +217,7 @@ const MobileManageModal = ({
                         value={option.value}
                         className={option.className}
                       >
-                        {option.label}
+                        {t(option.label)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -232,7 +234,7 @@ const MobileManageModal = ({
                   "title-large-emphasized px-8 py-3 transition-colors min-w-[200px]",
                   !username
                     ? "bg-neutral-200 text-neutral-400 cursor-not-allowed hover:bg-neutral-200"
-                    : "bg-pink-500 text-white hover:bg-pink-600 border-pink-500"
+                    : "bg-pink-500 text-white hover:bg-pink-600 border-pink-500",
                 )}
                 disabled={!username}
                 onClick={() => {
@@ -241,7 +243,7 @@ const MobileManageModal = ({
                   onOpenChange(false);
                 }}
               >
-                ยืนยันเพิ่มผู้เข้าถึงกิจกรรม
+                {t("confirmAddAccess")}
               </Button>
             </div>
           </div>

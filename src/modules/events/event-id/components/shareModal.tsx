@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import {
   Dialog,
   DialogContent,
@@ -37,6 +39,7 @@ interface ShareModalProps {
 }
 
 const ShareModal = ({ open, onOpenChange, eventData }: ShareModalProps) => {
+  const t = useTranslations("EventDetail");
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -46,7 +49,7 @@ const ShareModal = ({ open, onOpenChange, eventData }: ShareModalProps) => {
         <div className="bg-neutral-white p-6 rounded-xl shadow-sm border border-neutral-200">
           <DialogHeader>
             <DialogTitle className="headline-large-emphasized text-primary">
-              จัดการสิทธิ์เข้าถึง
+              {t("manageAccess")}
             </DialogTitle>
           </DialogHeader>
 
@@ -56,7 +59,7 @@ const ShareModal = ({ open, onOpenChange, eventData }: ShareModalProps) => {
               <div className="flex bg-neutral-100 rounded-xl flex-1 gap-2 p-2">
                 <div className="flex-1 relative title-medium-primary">
                   <Input
-                    placeholder="ระบุชื่อประจำตัวเพื่อเพิ่มผู้เข้าร่วมกิจกรรมที่ต้องการ"
+                    placeholder={t("searchUserPlaceholder")}
                     className="w-full bg-transparent border-none shadow-none focus-visible:ring-0"
                   />
                 </div>
@@ -67,7 +70,7 @@ const ShareModal = ({ open, onOpenChange, eventData }: ShareModalProps) => {
                   <SelectContent>
                     {ROLE_OPTIONS.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
-                        {option.label}
+                        {t(option.label)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -79,13 +82,13 @@ const ShareModal = ({ open, onOpenChange, eventData }: ShareModalProps) => {
                 expanded={false}
                 className="title-medium-primary bg-neutral-100 border-0 w-20"
               >
-                เพิ่ม
+                {t("add")}
               </Button>
             </div>
 
             {/* Event Access Users Section */}
             <div className="space-y-3">
-              <h3 className="font-semibold text-lg">ผู้เข้าถึงกิจกรรม</h3>
+              <h3 className="font-semibold text-lg">{t("accessList")}</h3>
 
               {eventData.managers_and_staff.map((user) => {
                 const isOwner = user.role === "owner";
@@ -141,7 +144,7 @@ const ShareModal = ({ open, onOpenChange, eventData }: ShareModalProps) => {
                                 value={option.value}
                                 className={option.className}
                               >
-                                {option.label}
+                                {t(option.label)}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -156,19 +159,21 @@ const ShareModal = ({ open, onOpenChange, eventData }: ShareModalProps) => {
             {/* Permissions Section */}
             <div className="flex items-center justify-between gap-3">
               <div className="headline-small-emphasized text-primary">
-                สิทธิ์ผู้สามารถสแกน
+                {t("scanPermissions")}
               </div>
               <div>
                 <Select
                   defaultValue={eventData.allow_all_to_scan ? "all" : "manager"}
                 >
                   <SelectTrigger className="w-40 bg-neutral-white rounded-xl border-0 shadow-none">
-                    <SelectValue placeholder="เลือกผู้สามารถแชทแทน" />
+                    <SelectValue
+                      placeholder={t("selectChatProxyPlaceholder")}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {SCAN_PERMISSION_OPTIONS.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
-                        {option.label}
+                        {t(option.label)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -179,7 +184,7 @@ const ShareModal = ({ open, onOpenChange, eventData }: ShareModalProps) => {
             {/* Settings Section */}
             <div className="space-y-3">
               <h3 className="headline-small-emphasized text-primary">
-                ตั้งค่าผลลัพธ์การสแกน
+                {t("scanResultSettings")}
               </h3>
               <div className="flex flex-wrap justify-between gap-x-8 gap-y-4">
                 {REVEALED_FIELDS_OPTIONS.map((field) => (
@@ -187,10 +192,10 @@ const ShareModal = ({ open, onOpenChange, eventData }: ShareModalProps) => {
                     <Checkbox
                       id={field.id}
                       defaultChecked={eventData.revealed_fields.includes(
-                        field.field
+                        field.field,
                       )}
                     />
-                    <p className="title-medium-primary">{field.label}</p>
+                    <p className="title-medium-primary">{t(field.label)}</p>
                   </div>
                 ))}
               </div>
@@ -204,7 +209,7 @@ const ShareModal = ({ open, onOpenChange, eventData }: ShareModalProps) => {
                 <IonIcon name="ScanOutline" size="32px" />
               </div>
               <span className="body-large-primary font-bold">
-                คัดลอก QR scanner
+                {t("copyQr")}
               </span>
             </button>
             <button className="flex items-center gap-4 w-full py-2.5 px-4 hover:bg-neutral-50 rounded-lg transition-colors text-left">
@@ -212,7 +217,7 @@ const ShareModal = ({ open, onOpenChange, eventData }: ShareModalProps) => {
                 <IonIcon name="TrendingUp" size="32px" />
               </div>
               <span className="body-large-primary font-bold">
-                คัดลอก Dashboard
+                {t("copyDashboard")}
               </span>
             </button>
           </div>

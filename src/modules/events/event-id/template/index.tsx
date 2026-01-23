@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import IonIcon from "@shared/IonIcon";
 import Icon from "@shared/Icon";
 import Button from "@shared/Button";
@@ -14,6 +15,7 @@ import {
 } from "@modules/events/event-id/constants/mock-up";
 
 const EventIdPageTemplate = () => {
+  const t = useTranslations("EventDetail");
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false);
   const [isMobileManageModalOpen, setIsMobileManageModalOpen] = useState(false);
@@ -88,15 +90,15 @@ const EventIdPageTemplate = () => {
             </div>
             <div className="flex gap-2 items-center">
               <IonIcon name="Person" size="16px" className="text-secondary" />
-              <div className="body-large-primary">Owner</div>
+              <div className="body-large-primary">{t("owner")}</div>
             </div>
           </div>
           <div className="flex flex-col gap-y-2">
-            <div className="headline-small-emphasized">รายละเอียดกิจกรรม</div>
+            <div className="headline-small-emphasized">{t("eventDetails")}</div>
             <div className="body-large-primary">{eventData.description}</div>
           </div>
           <div>
-            <div className="headline-small-emphasized">กำหนดการกิจกรรม</div>
+            <div className="headline-small-emphasized">{t("agenda")}</div>
             <div className="body-large-primary">
               {eventData.agenda.map((item) => (
                 <div
@@ -113,7 +115,7 @@ const EventIdPageTemplate = () => {
         <div className="lg:flex-1 flex flex-col sm:flex-row lg:flex-col justify-between gap-6 lg:gap-10">
           <div className="flex-1 flex flex-col justify-center items-start lg:items-center bg-primary h-full px-8 py-6 lg:p-10 text-white rounded-3xl shadow-xs">
             <div className="title-medium-emphasized lg:headline-small-emphasized">
-              จำนวนผู้ลงทะเบียน
+              {t("registeredCount")}
             </div>
             <div className="flex items-baseline gap-2">
               <div
@@ -126,17 +128,21 @@ const EventIdPageTemplate = () => {
                 {eventData.total_registered}
               </div>
               <div className="title-small-primary lg:title-large-primary">
-                คน
+                {t("people")}
               </div>
             </div>
             <div className="flex space-x-2.5 label-medium-primary lg:title-small-primary">
-              <div>นิสิต : 1090 คน</div>
+              <div>
+                {t("student")} : 1090 {t("people")}
+              </div>
               <div>|</div>
-              <div>บุคลากร : 6 คน</div>
+              <div>
+                {t("staff")} : 6 {t("people")}
+              </div>
             </div>
           </div>
           <div className="flex-1 lg:flex-none flex flex-col justify-center items-center gap-2.5 bg-neutral-100 p-5 rounded-3xl shadow-xs text-center">
-            <div className="headline-small-emphasized">กิจกรรมโดย</div>
+            <div className="headline-small-emphasized">{t("organizedBy")}</div>
             <div className="body-large-primary">{eventData.organizer}</div>
           </div>
         </div>
@@ -151,7 +157,7 @@ const EventIdPageTemplate = () => {
           <div className="flex justify-center items-center gap-2 text-neutral-white">
             <IonIcon name="Scan" className="w-6 h-6 md:w-9 md:h-9" />
             <div className="label-large-primary md:title-large-primary whitespace-nowrap">
-              สแกนผู้เข้าร่วมกิจกรรม
+              {t("scanParticipant")}
             </div>
           </div>
         </Button>
@@ -164,7 +170,7 @@ const EventIdPageTemplate = () => {
           <div className="flex justify-center text-primary items-center gap-2">
             <IonIcon name="TrendingUp" className="w-6 h-6 md:w-9 md:h-9" />
             <div className="title-large-primary whitespace-nowrap">
-              สถิติกิจกรรม
+              {t("activityStats")}
             </div>
           </div>
         </Button>

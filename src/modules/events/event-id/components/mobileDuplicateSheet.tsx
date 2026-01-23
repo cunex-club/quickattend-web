@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Sheet,
   SheetContent,
@@ -26,6 +27,7 @@ const MobileDuplicateSheet = ({
   onOpenChange,
   eventData,
 }: MobileDuplicateSheetProps) => {
+  const t = useTranslations("EventDetail");
   const [step, setStep] = useState(1);
   const [schedules, setSchedules] = useState<
     { startTime: string; endTime: string; description: string }[]
@@ -51,7 +53,7 @@ const MobileDuplicateSheet = ({
   const handleUpdateSchedule = (
     index: number,
     field: "startTime" | "endTime" | "description",
-    value: string
+    value: string,
   ) => {
     const newSchedules = [...schedules];
     newSchedules[index] = { ...newSchedules[index], [field]: value };
@@ -73,7 +75,7 @@ const MobileDuplicateSheet = ({
         <SheetHeader className="mb-4 shrink-0">
           <div className="mx-auto h-1.5 w-10 rounded-full bg-neutral-200 mb-2" />
           <SheetTitle className="headline-medium-emphasized text-primary text-center">
-            ทำซ้ำกิจกรรม
+            {t("duplicateEvent")}
           </SheetTitle>
         </SheetHeader>
 
@@ -84,14 +86,14 @@ const MobileDuplicateSheet = ({
 
           {/* Description */}
           <div className="space-y-2">
-            <div className="headline-small-emphasized">รายละเอียดกิจกรรม</div>
+            <div className="headline-small-emphasized">{t("eventDetails")}</div>
             <div className="body-large-primary">{eventData.description}</div>
           </div>
 
           {/* Date */}
           <div className="space-y-2">
             <label className="headline-small-emphasized">
-              วันที่ <span className="text-red-500">*</span>
+              {t("date")} <span className="text-red-500">*</span>
             </label>
             <DatePicker placeholder="วัน / เดือน / ปี" />
           </div>
@@ -99,7 +101,7 @@ const MobileDuplicateSheet = ({
           {/* Time */}
           <div className="space-y-2">
             <label className="headline-small-emphasized">
-              เวลา <span className="text-red-500">*</span>
+              {t("time")} <span className="text-red-500">*</span>
             </label>
             <EventTimePicker layout="col" className="gap-4" />
           </div>
@@ -107,11 +109,11 @@ const MobileDuplicateSheet = ({
           {/* Location */}
           <div className="space-y-2">
             <label className="headline-small-emphasized">
-              สถานที่ <span className="text-red-500">*</span>
+              {t("location")} <span className="text-red-500">*</span>
             </label>
             <TextField
               type="text"
-              placeholder="กรอกสถานที่จัดกิจกรรม"
+              placeholder={t("locationPlaceholder")}
               defaultValue={eventData.location}
               inputClassName="body-large-primary"
             />
@@ -119,9 +121,9 @@ const MobileDuplicateSheet = ({
 
           {/* Organizer */}
           <div className="space-y-2">
-            <div className="headline-small-emphasized">ผู้จัดกิจกรรม</div>
+            <div className="headline-small-emphasized">{t("organizer")}</div>
             <div className="body-large-primary">
-              องค์กรบริหารสโมสรนิสิตจุฬาฯ (อบจ.)
+              {t("defaultOrganizerName")}
             </div>
           </div>
 
@@ -131,13 +133,13 @@ const MobileDuplicateSheet = ({
               {/* Schedule Section */}
               <div className="space-y-4">
                 <div className="headline-small-emphasized text-primary">
-                  ตารางการจัดกิจกรรม <span className="text-red-500">*</span>
+                  {t("eventSchedule")} <span className="text-red-500">*</span>
                 </div>
 
                 {/* Add Schedule Block */}
                 <div className="bg-neutral-100 p-4 rounded-xl space-y-4">
                   <div className="title-medium-emphasized">
-                    เพิ่มช่วงเวลาจัดกิจกรรม
+                    {t("addScheduleSlot")}
                   </div>
                   <EventTimePicker
                     startTime={newSchedule.startTime}
@@ -152,7 +154,7 @@ const MobileDuplicateSheet = ({
                   />
 
                   <TextField
-                    placeholder="พิธีเปิด"
+                    placeholder={t("openingCeremonyPlaceholder")}
                     value={newSchedule.description}
                     onChange={(e) =>
                       setNewSchedule({
@@ -170,7 +172,7 @@ const MobileDuplicateSheet = ({
                     onClick={handleAddSchedule}
                   >
                     <p className="label-large-emphasized text-white">
-                      เพิ่มตารางกิจกรรม
+                      {t("addSchedule")}
                     </p>
                   </Button>
                 </div>
@@ -209,7 +211,7 @@ const MobileDuplicateSheet = ({
                           handleUpdateSchedule(
                             index,
                             "description",
-                            e.target.value
+                            e.target.value,
                           )
                         }
                         className="w-full"
@@ -221,10 +223,10 @@ const MobileDuplicateSheet = ({
                 {/* Evaluation Link */}
                 <div className="space-y-2 pt-4">
                   <div className="headline-small-emphasized">
-                    ลิงก์แบบฟอร์มประเมินกิจกรรม
+                    {t("evaluationFormLink")}
                   </div>
                   <TextField
-                    placeholder="วางลิงก์แบบฟอร์มประเมินกิจกรรม"
+                    placeholder={t("evaluationFormLinkPlaceholder")}
                     value={evaluationLink}
                     onChange={(e) => setEvaluationLink(e.target.value)}
                   />
@@ -248,7 +250,7 @@ const MobileDuplicateSheet = ({
                 // but usually the expansion is enough visibility or user scrolls.
               }}
             >
-              ต่อไป
+              {t("next")}
             </Button>
           ) : (
             <div className="flex gap-3">
@@ -259,7 +261,7 @@ const MobileDuplicateSheet = ({
                 className="title-large-emphasized py-3 border-pink-500 text-pink-500 hover:bg-pink-50"
                 onClick={() => setStep(1)}
               >
-                ย้อนกลับ
+                {t("back")}
               </Button>
               <Button
                 mode="filled"
@@ -274,7 +276,7 @@ const MobileDuplicateSheet = ({
                   onOpenChange(false);
                 }}
               >
-                ยืนยันสร้างกิจกรรม
+                {t("submitDuplicate")}
               </Button>
             </div>
           )}
