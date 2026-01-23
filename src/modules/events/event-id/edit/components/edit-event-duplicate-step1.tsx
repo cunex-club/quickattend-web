@@ -134,7 +134,7 @@ const EditEventDuplicateStep1 = ({
                     : duplicatedEventForm.date
                       ? formatDate(
                           duplicatedEventForm.date.toISOString(),
-                          locale
+                          locale,
                         )
                       : tEditEvent("datePlaceholder")}
                 </span>
@@ -182,7 +182,7 @@ const EditEventDuplicateStep1 = ({
                 <div
                   className={cn(
                     "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none"
+                    !isDateSelected && "opacity-50 pointer-events-none",
                   )}
                 >
                   <span>
@@ -213,7 +213,7 @@ const EditEventDuplicateStep1 = ({
                 <div
                   className={cn(
                     "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none"
+                    !isDateSelected && "opacity-50 pointer-events-none",
                   )}
                 >
                   <span>

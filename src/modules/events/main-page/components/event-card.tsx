@@ -44,7 +44,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
       <div
         className={cn(
           "px-8 py-6 rounded-xl shadow-lg bg-neutral-100 space-y-4",
-          className
+          className,
         )}
         {...props}
       >

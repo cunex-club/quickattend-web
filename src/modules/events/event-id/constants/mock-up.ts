@@ -110,4 +110,3 @@ export const MOCK_SHARE_MODAL_DATA: ShareModalData = {
   allow_all_to_scan: false,
   evaluation_form: "https://forms.example.com/evaluation",
 };
-

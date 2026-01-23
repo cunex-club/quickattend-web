@@ -55,7 +55,7 @@ export default async function Home() {
       // Variant 3: With separator and icon
       <TextField
         placeholder="Label"
-        endIcon={<Icon name="arrow_circle_up" fill/>}
+        endIcon={<Icon name="arrow_circle_up" fill />}
         showSeparator={true}
         endIconWrapperClassName="bg-pink-500 text-white rounded-r-lg py-3"
         supportingText="Supporting text"
@@ -63,7 +63,7 @@ export default async function Home() {
       // Variant 4: Just icon
       <TextField
         placeholder="Label"
-        endIcon={<Icon name="arrow_circle_up" fill/>}
+        endIcon={<Icon name="arrow_circle_up" fill />}
         endIconWrapperClassName="text-pink-500"
         supportingText="Supporting text"
       />
