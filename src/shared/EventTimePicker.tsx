@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, ChangeEvent, Dispatch, SetStateAction } from "react";
-import TextField from "@shared/TextField";
+import { useState, useEffect, useRef } from "react";
 import IonIcon from "@shared/IonIcon";
 import { cn } from "@assets/lib/utils";
+import TextField from "@shared/TextField";
 
 interface EventTimePickerProps {
   startTime?: string;
@@ -14,6 +14,7 @@ interface EventTimePickerProps {
   endPlaceholder?: string;
   className?: string;
   layout?: "row" | "col";
+  disabled?: boolean;
 }
 
 const EventTimePicker = ({
@@ -21,71 +22,141 @@ const EventTimePicker = ({
   endTime,
   onStartTimeChange,
   onEndTimeChange,
-  startPlaceholder = "16.00 น.",
-  endPlaceholder = "20.00 น.",
+  startPlaceholder = "00:00",
+  endPlaceholder = "00:00",
   className = "",
   layout = "row",
+  disabled = false,
 }: EventTimePickerProps) => {
   const [startTimeInput, setStartTimeInput] = useState(startTime || "");
   const [endTimeInput, setEndTimeInput] = useState(endTime || "");
+  const startInputRef = useRef<HTMLInputElement>(null);
+  const endInputRef = useRef<HTMLInputElement>(null);
 
-  // Format time from HH:mm to HH.mm น.
-  const formatTimeDisplay = (time: string) => {
-    if (!time) return "";
-    return time.replace(":", ".") + " น.";
+  // Sync with external props
+  useEffect(() => {
+    if (startTime !== undefined) setStartTimeInput(startTime);
+  }, [startTime]);
+
+  useEffect(() => {
+    if (endTime !== undefined) setEndTimeInput(endTime);
+  }, [endTime]);
+
+  const handleStartTimeChange = (value: string) => {
+    setStartTimeInput(value);
+    onStartTimeChange?.(value);
+
+    // If end time is before start time, adjust it
+    if (endTimeInput && value > endTimeInput) {
+      setEndTimeInput(value);
+      onEndTimeChange?.(value);
+    }
   };
 
-  const handleTimeChange = (
-    e: ChangeEvent<HTMLInputElement>,
-    setInput: Dispatch<SetStateAction<string>>,
-    onChange?: (value: string) => void
-  ) => {
-    // Remove non-numeric characters
-    const numbers = e.target.value.replace(/\D/g, "");
-
-    // Limit to 4 digits
-    const truncated = numbers.slice(0, 4);
-
-    // Format as HH:mm
-    let formatted = truncated;
-    if (truncated.length >= 3) {
-      formatted = `${truncated.slice(0, 2)}:${truncated.slice(2)}`;
+  const handleEndTimeChange = (value: string) => {
+    // Don't allow end time before start time
+    if (startTimeInput && value < startTimeInput) {
+      return;
     }
+    setEndTimeInput(value);
+    onEndTimeChange?.(value);
+  };
 
-    setInput(formatted);
-    onChange?.(formatted);
+  const triggerPicker = (ref: React.RefObject<HTMLInputElement | null>) => {
+    if (!ref.current) return;
+    if (typeof (ref.current as any).showPicker === "function") {
+      (ref.current as any).showPicker();
+    } else {
+      ref.current.click();
+    }
   };
 
   return (
     <div
       className={cn(
         "grid gap-2",
-        layout === "row" ? "grid-cols-2" : "grid-cols-1",
-        className
+        layout === "row" ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1",
+        className,
       )}
     >
-      <TextField
-        type="text"
-        maxLength={5}
-        value={startTimeInput}
-        onChange={(e) =>
-          handleTimeChange(e, setStartTimeInput, onStartTimeChange)
-        }
-        placeholder={startPlaceholder}
-        inputClassName="body-large-primary"
-        endIcon={<IonIcon name="Time" size="20px" className="text-primary" />}
-        supportingText="เวลาเริ่มกิจกรรม"
-      />
-      <TextField
-        type="text"
-        maxLength={5}
-        value={endTimeInput}
-        onChange={(e) => handleTimeChange(e, setEndTimeInput, onEndTimeChange)}
-        placeholder={endPlaceholder}
-        inputClassName="body-large-primary"
-        endIcon={<IonIcon name="Time" size="20px" className="text-primary" />}
-        supportingText="เวลาสิ้นสุดกิจกรรม"
-      />
+      {/* Start Time */}
+      <div className="flex flex-col gap-1">
+        <label
+          className="relative cursor-pointer"
+          onClick={() => triggerPicker(startInputRef)}
+        >
+          <input
+            ref={startInputRef}
+            type="time"
+            step="60"
+            disabled={disabled}
+            className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
+            value={startTimeInput}
+            onChange={(e) => handleStartTimeChange(e.target.value)}
+          />
+
+          <div className="pointer-events-none">
+            <TextField
+              type="text"
+              value={startTimeInput}
+              placeholder={startPlaceholder}
+              inputClassName={cn(
+                "body-large-primary",
+                !startTimeInput && "text-neutral-400",
+              )}
+              endIcon={<IonIcon name="TimeOutline" size="20px" />}
+              endIconWrapperClassName="text-primary px-2"
+              showSeparator
+              readOnly
+              className={disabled ? "opacity-50" : ""}
+            />
+          </div>
+        </label>
+
+        <p className="body-small-primary mx-4 my-1 text-neutral-500">
+          เวลาเริ่มกิจกรรม
+        </p>
+      </div>
+
+      {/* End Time */}
+      <div className="flex flex-col gap-1">
+        <label
+          className="relative cursor-pointer"
+          onClick={() => triggerPicker(endInputRef)}
+        >
+          <input
+            ref={endInputRef}
+            type="time"
+            step="60"
+            disabled={disabled}
+            min={startTimeInput || undefined}
+            className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
+            value={endTimeInput}
+            onChange={(e) => handleEndTimeChange(e.target.value)}
+          />
+
+          <div className="pointer-events-none">
+            <TextField
+              type="text"
+              value={endTimeInput}
+              placeholder={endPlaceholder}
+              inputClassName={cn(
+                "body-large-primary",
+                !endTimeInput && "text-neutral-400",
+              )}
+              endIcon={<IonIcon name="TimeOutline" size="20px" />}
+              endIconWrapperClassName="text-primary px-2"
+              showSeparator
+              readOnly
+              className={disabled ? "opacity-50" : ""}
+            />
+          </div>
+        </label>
+
+        <p className="body-small-primary mx-4 my-1 text-neutral-500">
+          เวลาสิ้นสุดกิจกรรม
+        </p>
+      </div>
     </div>
   );
 };

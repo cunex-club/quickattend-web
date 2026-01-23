@@ -91,8 +91,8 @@ const DatePicker = ({
           placeholder={placeholder}
           className="bg-neutral-100"
           inputClassName="body-large-primary cursor-pointer"
-          endIcon={<IonIcon name="Calendar" size="24px" />}
-          endIconWrapperClassName="bg-primary text-white"
+          endIcon={<IonIcon name="Calendar" size="16px" />}
+          endIconWrapperClassName="bg-primary text-white px-2"
           showSeparator={true}
           readOnly
         />
@@ -101,6 +101,4 @@ const DatePicker = ({
   );
 };
 
-
 export default DatePicker;
-

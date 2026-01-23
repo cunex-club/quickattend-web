@@ -31,6 +31,9 @@ const DuplicateModal = ({
     { startTime: string; endTime: string; description: string }[]
   >([]);
   const [evaluationLink, setEvaluationLink] = useState("");
+  const [date, setDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
 
   const handleAddSchedule = (newSchedule: {
     startTime: string;
@@ -47,7 +50,7 @@ const DuplicateModal = ({
   const handleUpdateSchedule = (
     index: number,
     field: "startTime" | "endTime" | "description",
-    value: string
+    value: string,
   ) => {
     const newSchedules = [...schedules];
     newSchedules[index] = { ...newSchedules[index], [field]: value };
@@ -88,14 +91,17 @@ const DuplicateModal = ({
                 </div>
               </div>
 
-              {/* Date and Time Section */}
               <div className="grid grid-cols-2 gap-4">
                 {/* Date */}
                 <div className="space-y-2">
                   <label className="body-large-primary">
                     วันที่ <span className="text-red-500">*</span>
                   </label>
-                  <DatePicker placeholder="วัน / เดือน / ปี" />
+                  <DatePicker
+                    value={date}
+                    onChange={setDate}
+                    placeholder="วัน / เดือน / ปี"
+                  />
                 </div>
 
                 {/* Time */}
@@ -103,7 +109,12 @@ const DuplicateModal = ({
                   <label className="body-large-primary">
                     เวลา <span className="text-red-500">*</span>
                   </label>
-                  <EventTimePicker />
+                  <EventTimePicker
+                    startTime={startTime}
+                    endTime={endTime}
+                    onStartTimeChange={setStartTime}
+                    onEndTimeChange={setEndTime}
+                  />
                 </div>
               </div>
 

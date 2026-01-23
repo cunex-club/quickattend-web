@@ -46,7 +46,7 @@ const TextField: StyleableFC<TextFieldProps> = React.forwardRef<
             type={type}
             ref={ref}
             className={cn(
-              "flex-1 py-3 px-4",
+              "w-full py-3 pl-4",
               "bg-transparent border-none outline-none",
               "placeholder:text-neutral-400",
               // focus styles
@@ -58,15 +58,13 @@ const TextField: StyleableFC<TextFieldProps> = React.forwardRef<
           />
 
           {/* separator line if needed */}
-          {endIcon && showSeparator && (
-            <div className="w-px bg-neutral-200" />
-          )}
+          {endIcon && showSeparator && <div className="w-px" />}
 
           {/* if there is an end icon */}
           {endIcon && (
             <div
               className={cn(
-                "flex items-center justify-center",
+                "flex items-center justify-center shrink-0",
                 endIconWrapperClassName,
               )}
             >
@@ -77,11 +75,7 @@ const TextField: StyleableFC<TextFieldProps> = React.forwardRef<
 
         {/* if there is supporting text */}
         {supportingText && (
-          <p
-            className={cn(
-              "body-small-primary mx-4 my-1 text-neutral-500",
-            )}
-          >
+          <p className={cn("body-small-primary mx-4 my-1 text-neutral-500")}>
             {supportingText}
           </p>
         )}
