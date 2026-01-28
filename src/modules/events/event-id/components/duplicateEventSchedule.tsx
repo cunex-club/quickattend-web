@@ -56,15 +56,9 @@ const DuplicateEventSchedule = ({
   return (
     <div className="flex flex-col max-h-[80vh]">
       <div className="flex justify-between items-center shrink-0 pb-2">
-        <div className="headline-large-emphasized text-primary">
+        <div className="headline-large-emphasized text-neutral-600">
           {t("eventSchedule")} <span className="text-red-500">*</span>
         </div>
-        <button
-          onClick={onClose}
-          className="text-primary hover:text-red-500 transition-colors"
-        >
-          <Icon name="close" size={28} />
-        </button>
       </div>
 
       <div className="flex-1 overflow-y-auto space-y-6 px-1 py-2">

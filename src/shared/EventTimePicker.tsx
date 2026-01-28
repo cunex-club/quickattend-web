@@ -101,10 +101,10 @@ const EventTimePicker = ({
               value={startTimeInput}
               placeholder={startPlaceholder}
               inputClassName={cn(
-                "body-large-primary",
+                "body-medium-primary",
                 !startTimeInput && "text-neutral-400",
               )}
-              endIcon={<IonIcon name="TimeOutline" size="20px" />}
+              endIcon={<IonIcon name="Time" size="18px" />}
               endIconWrapperClassName="text-primary px-2"
               showSeparator
               readOnly
@@ -141,10 +141,10 @@ const EventTimePicker = ({
               value={endTimeInput}
               placeholder={endPlaceholder}
               inputClassName={cn(
-                "body-large-primary",
+                "body-medium-primary",
                 !endTimeInput && "text-neutral-400",
               )}
-              endIcon={<IonIcon name="TimeOutline" size="20px" />}
+              endIcon={<IonIcon name="Time" size="18px" />}
               endIconWrapperClassName="text-primary px-2"
               showSeparator
               readOnly

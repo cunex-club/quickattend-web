@@ -1,46 +1,46 @@
 export const ROLE_OPTIONS = [
-  { value: "owner", label: "EventDetail.Roles.owner" },
-  { value: "manager", label: "EventDetail.Roles.manager" },
-  { value: "viewer", label: "EventDetail.Roles.viewer" },
+  { value: "owner", label: "Roles.owner" },
+  { value: "manager", label: "Roles.manager" },
+  { value: "viewer", label: "Roles.viewer" },
 ];
 
 export const MANAGER_ROLE_OPTIONS = [
-  { value: "manager", label: "EventDetail.Roles.manager" },
-  { value: "viewer", label: "EventDetail.Roles.worker" },
+  { value: "manager", label: "Roles.manager" },
+  { value: "viewer", label: "Roles.worker" },
   {
     value: "remove",
-    label: "EventDetail.Roles.manager_remove",
+    label: "Roles.manager_remove",
     className: "text-red-500",
   },
 ];
 
 export const SCAN_PERMISSION_OPTIONS = [
-  { value: "all", label: "EventDetail.ScanPermissions.all" },
-  { value: "manager", label: "EventDetail.ScanPermissions.manager" },
-  { value: "owner", label: "EventDetail.ScanPermissions.owner" },
-  { value: "viewer", label: "EventDetail.ScanPermissions.viewer" },
+  { value: "all", label: "ScanPermissions.all" },
+  { value: "manager", label: "ScanPermissions.manager" },
+  { value: "owner", label: "ScanPermissions.owner" },
+  { value: "viewer", label: "ScanPermissions.viewer" },
 ];
 
 export const REVEALED_FIELDS_OPTIONS = [
-  { id: "general", label: "EventDetail.RevealedFields.all", field: "all" },
-  { id: "datetime", label: "EventDetail.RevealedFields.image", field: "image" },
-  { id: "upload", label: "EventDetail.RevealedFields.name", field: "name" },
-  { id: "location", label: "EventDetail.RevealedFields.refid", field: "refid" },
+  { id: "general", label: "RevealedFields.all", field: "all" },
+  { id: "datetime", label: "RevealedFields.image", field: "image" },
+  { id: "upload", label: "RevealedFields.name", field: "name" },
+  { id: "location", label: "RevealedFields.refid", field: "refid" },
   {
     id: "additional",
-    label: "EventDetail.RevealedFields.organization",
+    label: "RevealedFields.organization",
     field: "organization",
   },
 ];
 
 export const ACCESS_ROLE_OPTIONS = [
-  { value: "owner", label: "EventDetail.Roles.owner" },
-  { value: "manager", label: "EventDetail.Roles.manager" },
-  { value: "staff", label: "EventDetail.Roles.staff" },
-  { value: "worker", label: "EventDetail.Roles.worker" },
+  { value: "owner", label: "Roles.owner" },
+  { value: "manager", label: "Roles.manager" },
+  { value: "staff", label: "Roles.staff" },
+  { value: "worker", label: "Roles.worker" },
   {
     value: "remove",
-    label: "EventDetail.Roles.remove",
+    label: "Roles.remove",
     className: "text-red-500",
   },
 ];

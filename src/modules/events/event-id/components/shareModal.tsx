@@ -127,7 +127,7 @@ const ShareModal = ({ open, onOpenChange, eventData }: ShareModalProps) => {
                                 key={option.value}
                                 value={option.value}
                               >
-                                {option.label}
+                                {t(option.label)}
                               </SelectItem>
                             ))}
                           </SelectContent>
