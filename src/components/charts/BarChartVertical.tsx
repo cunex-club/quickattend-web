@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import {
   Bar,
   BarChart,
@@ -16,17 +19,17 @@ import {
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
 import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
-import { BarChartVerticalProps } from "@customTypes/chart";
+import { BarChartVerticalProps, TimeDetailData } from "@customTypes/chart";
+import { cn } from "@assets/lib/utils";
+import IonIcon from "@shared/IonIcon";
 
 // CONSTANTS
 
 const chartConfig = {
   total: {
     label: "Total",
-
     color: "var(--color-primary)",
   },
-
   label: {
     color: "var(--color-neutral-black)",
   },
@@ -65,81 +68,216 @@ const addPercentageMetadata = (data: BarChartVerticalProps[]) => {
 
 // Component
 
-export function BarChartVertical({ data }: { data: BarChartVerticalProps[] }) {
+export function BarChartVertical({
+  data,
+  timeDetailData,
+}: {
+  data: BarChartVerticalProps[];
+  timeDetailData?: Record<string, TimeDetailData[]>;
+}) {
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isLocked, setIsLocked] = useState(false);
 
   const barSize = getBarSize(isMobile, isTablet);
   const xDomainMax = calculateXDomain(data);
   const chartDataWithMeta = addPercentageMetadata(data);
 
+  const handleBackgroundClick = () => {
+    setHoveredIndex(null);
+    setIsLocked(false);
+  };
+
+  const handleBarClick = (idx: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (hoveredIndex === idx && isLocked) {
+      setIsLocked(false);
+      setHoveredIndex(null);
+    } else {
+      setHoveredIndex(idx);
+      setIsLocked(true);
+    }
+  };
+
+  // Get fill color based on hover/selection state
+  const getBarColor = (idx: number) => {
+    if (hoveredIndex === null) {
+      return "var(--color-primary)";
+    }
+    if (hoveredIndex === idx) {
+      return "var(--color-primary)";
+    }
+    // Non-selected bars get neutral color
+    return "var(--color-neutral-400)";
+  };
+
+  const selectedItem =
+    hoveredIndex !== null ? chartDataWithMeta[hoveredIndex] : null;
+
   return (
-    <Card className="bg-neutral-white lg:bg-neutral-100 border-none shadow-none lg:py-8 pl-0 lg:pl-8 lg:pr-6 rounded-[28px] w-full">
-      <CardContent className="mr-2 max-h-[470px] overflow-auto">
-        <div className="chart-list-group flex flex-col space-y-4 mb-10">
-          {chartDataWithMeta.map((item, idx) => (
-            <div
-              key={`faculty-chart-${idx}`}
-              className="flex flex-col space-y-3 md:space-y-5 lg:space-y-4 chart-item"
-            >
-              <div className="flex items-center justify-between">
-                <p className="title-medium-primary md:title-large-primary">
-                  {item.faculty}
-                </p>
-                <p className="body-medium-primary md:body-large-primary text-[var(--color-label)]">
-                  {item.total} คน ({item.percentage}%)
-                </p>
-              </div>
-              <ChartContainer
-                config={chartConfig}
-                style={{ height: `${barSize}px` }}
-                className="w-full chart-hover-bar "
-              >
-                <BarChart
-                  accessibilityLayer
-                  data={[item]}
-                  layout="vertical"
-                  margin={{ left: 0, right: 16, top: 0, bottom: 0 }}
+    <div>
+      <Card className="bg-neutral-white lg:bg-neutral-100 border-none shadow-none lg:py-8 pl-0 lg:pl-8 lg:pr-6 rounded-[28px] w-full">
+        <CardContent
+          className="mr-2 max-h-[470px] overflow-auto"
+          onClick={handleBackgroundClick}
+        >
+          <div className="flex flex-col space-y-4">
+            {chartDataWithMeta.map((item, idx) => {
+              const barColor = getBarColor(idx);
+              return (
+                <div
+                  key={`faculty-chart-${idx}`}
+                  className="chart-item flex flex-col space-y-3 md:space-y-5 lg:space-y-4 cursor-pointer"
+                  onMouseEnter={() => !isLocked && setHoveredIndex(idx)}
+                  onMouseLeave={() => !isLocked && setHoveredIndex(null)}
+                  onClick={(e) => handleBarClick(idx, e)}
                 >
-                  <CartesianGrid horizontal={false} vertical={false} />
-                  <YAxis
-                    dataKey="faculty"
-                    type="category"
-                    tickLine={false}
-                    axisLine={false}
-                    hide
-                  />
-                  <XAxis
-                    dataKey="total"
-                    type="number"
-                    hide
-                    domain={[0, xDomainMax]}
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent />}
-                  />
-                  <Bar
-                    dataKey="total"
-                    layout="vertical"
-                    fill="var(--color-total)"
-                    radius={BAR_CONSTANTS.RADIUS}
-                    barSize={barSize}
+                  <div className="flex items-center justify-between">
+                    <p className="title-medium-primary md:title-large-primary">
+                      {item.faculty}
+                    </p>
+                    <p className="body-medium-primary md:body-large-primary text-neutral-black">
+                      {item.total} คน ({item.percentage}%)
+                    </p>
+                  </div>
+                  <ChartContainer
+                    config={chartConfig}
+                    style={{ height: `${barSize}px` }}
+                    className="w-full cursor-pointer"
                   >
-                    <LabelList
-                      dataKey="total"
-                      position="right"
-                      offset={BAR_CONSTANTS.LABEL_OFFSET}
-                      className="fill-foreground"
-                      fontSize={BAR_CONSTANTS.LABEL_FONT_SIZE}
+                    <BarChart
+                      accessibilityLayer
+                      data={[item]}
+                      layout="vertical"
+                      margin={{ left: 0, right: 16, top: 0, bottom: 0 }}
+                    >
+                      <CartesianGrid horizontal={false} vertical={false} />
+                      <YAxis
+                        dataKey="faculty"
+                        type="category"
+                        tickLine={false}
+                        axisLine={false}
+                        hide
+                      />
+                      <XAxis
+                        dataKey="total"
+                        type="number"
+                        hide
+                        domain={[0, xDomainMax]}
+                      />
+                      <ChartTooltip
+                        cursor={false}
+                        content={<ChartTooltipContent />}
+                      />
+                      <Bar
+                        dataKey="total"
+                        layout="vertical"
+                        fill={barColor}
+                        radius={BAR_CONSTANTS.RADIUS}
+                        barSize={barSize}
+                        style={{ transition: "fill 0.3s ease-in-out" }}
+                        isAnimationActive={false}
+                        className="transition-all duration-300 ease-in-out cursor-pointer"
+                      >
+                        <LabelList
+                          dataKey="total"
+                          position="right"
+                          offset={BAR_CONSTANTS.LABEL_OFFSET}
+                          className="fill-foreground"
+                          fontSize={BAR_CONSTANTS.LABEL_FONT_SIZE}
+                        />
+                      </Bar>
+                    </BarChart>
+                  </ChartContainer>
+                </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Selected item detail section */}
+      <div
+        className={cn(
+          "rounded-xl transition-all duration-300 ease-in-out",
+          selectedItem && isLocked
+            ? "opacity-100 h-[450px]"
+            : "opacity-0 h-0 py-0 mt-0",
+        )}
+      >
+        {selectedItem &&
+          isLocked &&
+          (() => {
+            // Get time detail data for selected faculty
+            const currentTimeData =
+              timeDetailData?.[selectedItem.faculty] || [];
+
+            return (
+              <div className="flex flex-col h-full p-10 px-32 space-y-6">
+                <div className="flex flex-row space-x-2 items-center">
+                  <IonIcon
+                    name="BusinessSharp"
+                    size="16px"
+                    className="text-primary"
+                  />
+                  <p className="body-medium-primary">{selectedItem.faculty}</p>
+                </div>
+                <ChartContainer
+                  config={{
+                    total: {
+                      label: "จำนวนผู้เข้าร่วม",
+                      color: "var(--color-primary)",
+                    },
+                  }}
+                  className="w-full flex-1 h-full"
+                >
+                  <BarChart
+                    data={currentTimeData}
+                    accessibilityLayer
+                    margin={{ left: 0, right: 0, top: 10, bottom: 0 }}
+                  >
+                    <CartesianGrid
+                      horizontal={true}
+                      vertical={false}
+                      stroke="var(--color-neutral-300)"
+                      strokeWidth={0.4}
+                      strokeDasharray="3 3"
                     />
-                  </Bar>
-                </BarChart>
-              </ChartContainer>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+                    <XAxis
+                      dataKey="time"
+                      tickLine={false}
+                      tickMargin={8}
+                      axisLine={false}
+                      fontSize={12}
+                    />
+                    <YAxis
+                      type="number"
+                      dataKey="total"
+                      tickLine={false}
+                      tickMargin={8}
+                      axisLine={false}
+                      fontSize={12}
+                      width={30}
+                    />
+                    <Bar
+                      dataKey="total"
+                      fill="var(--color-primary)"
+                      radius={[8, 8, 0, 0]}
+                    >
+                      <LabelList
+                        position="top"
+                        offset={4}
+                        className="fill-neutral-black"
+                        fontSize={10}
+                      />
+                    </Bar>
+                  </BarChart>
+                </ChartContainer>
+              </div>
+            );
+          })()}
+      </div>
+    </div>
   );
 }

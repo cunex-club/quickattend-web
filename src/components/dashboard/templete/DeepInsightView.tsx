@@ -325,6 +325,100 @@ export function DeepInsightView() {
     };
   }, [filteredFacultyData]);
 
+  // Prepare faculty detail data for each time period (for BarChartHorizontal detail section)
+  const facultyDetailData = useMemo(() => {
+    const detailMap: Record<
+      string,
+      {
+        faculty: string;
+        registered: number;
+        unregistered: number;
+        total: number;
+      }[]
+    > = {};
+    const selectedFacultyIds = Object.keys(appliedFaculties).filter(
+      (key) => appliedFaculties[key] && key !== "f-0",
+    );
+
+    // For each time period in deepInsightTimeData, get faculty breakdown
+    deepInsightTimeData.forEach((timeItem) => {
+      let faculties = timeItem.data;
+
+      // Filter by selected faculties if any
+      if (selectedFacultyIds.length > 0) {
+        faculties = faculties.filter((f) =>
+          selectedFacultyIds.includes(f.facultyId),
+        );
+      }
+
+      // Map to FacultyDetailData format with user filter applied
+      const facultiesForTime = faculties.map((f) => {
+        let total = f.students + f.staff;
+        let registered = f.registered;
+        let unregistered = f.unregistered;
+
+        if (userFilter === "student") {
+          total = f.students;
+          // Proportionally adjust registered/unregistered for students
+          const studentRatio = f.students / (f.students + f.staff || 1);
+          registered = Math.round(f.registered * studentRatio);
+          unregistered = Math.round(f.unregistered * studentRatio);
+        } else if (userFilter === "staff") {
+          total = f.staff;
+          // Proportionally adjust registered/unregistered for staff
+          const staffRatio = f.staff / (f.students + f.staff || 1);
+          registered = Math.round(f.registered * staffRatio);
+          unregistered = Math.round(f.unregistered * staffRatio);
+        }
+
+        return {
+          faculty: f.faculty,
+          registered,
+          unregistered,
+          total,
+        };
+      });
+
+      detailMap[timeItem.time] = facultiesForTime;
+    });
+
+    return detailMap;
+  }, [appliedFaculties, userFilter]);
+
+  // Prepare time detail data for each faculty (for BarChartVertical detail section)
+  const timeDetailData = useMemo(() => {
+    const detailMap: Record<string, { time: string; total: number }[]> = {};
+    const selectedTimeIds = Object.keys(appliedTimes).filter(
+      (key) => appliedTimes[key] && key !== "t-0",
+    );
+
+    // For each faculty in deepInsightFacultyData, get time breakdown
+    deepInsightFacultyData.forEach((facultyItem) => {
+      let times = facultyItem.data;
+
+      // Filter by selected times if any
+      if (selectedTimeIds.length > 0) {
+        times = times.filter((t) => selectedTimeIds.includes(t.timeId));
+      }
+
+      // Map to TimeDetailData format with user filter applied
+      const timesForFaculty = times.map((t) => {
+        let total = t.students + t.staff;
+        if (userFilter === "student") total = t.students;
+        if (userFilter === "staff") total = t.staff;
+
+        return {
+          time: t.time,
+          total,
+        };
+      });
+
+      detailMap[facultyItem.faculty] = timesForFaculty;
+    });
+
+    return detailMap;
+  }, [appliedTimes, userFilter]);
+
   // Prepare chart data
   const verticalChartData = useMemo(
     () =>
@@ -511,7 +605,10 @@ export function DeepInsightView() {
           />
         </div>
         <div className="h-auto">
-          <BarChartVertical data={verticalChartData} />
+          <BarChartVertical
+            data={verticalChartData}
+            timeDetailData={timeDetailData}
+          />
         </div>
       </section>
 
@@ -520,7 +617,10 @@ export function DeepInsightView() {
           {t("timeStatsTitle")}
         </p>
         <div className="w-full h-full overflow-auto">
-          <BarChartHorizontal data={horizontalChartData} />
+          <BarChartHorizontal
+            data={horizontalChartData}
+            facultyDetailData={facultyDetailData}
+          />
         </div>
         <Link href="/dashboard-compare">
           <Button mode="filled" bordered="square" expanded={false}>
