@@ -8,13 +8,15 @@ import {
   LabelList,
   XAxis,
   YAxis,
-  Cell,
 } from "recharts";
 
 import { Card, CardContent } from "@assets/components/ui/card";
 import { ChartConfig, ChartContainer } from "@assets/components/ui/chart";
 import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
-import { BarChartVerticalStackedProps } from "@customTypes/chart";
+import {
+  BarChartVerticalStackedProps,
+  TimeDetailData,
+} from "@customTypes/chart";
 import { cn } from "@assets/lib/utils";
 import IonIcon from "@shared/IonIcon";
 
@@ -31,8 +33,10 @@ const chartConfig = {
 
 export function BarChartVerticalStacked({
   data,
+  timeDetailData,
 }: {
   data: BarChartVerticalStackedProps[];
+  timeDetailData?: Record<string, TimeDetailData[]>;
 }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isLocked, setIsLocked] = useState(false);
@@ -52,13 +56,13 @@ export function BarChartVerticalStacked({
   }
 
   const maxDataValue = Math.max(
-    ...data.map((d) => d.registered + d.unregistered)
+    ...data.map((d) => d.registered + d.unregistered),
   );
   const xDomainMax = (maxDataValue || 0) * 1.15;
 
   const totalSum = data.reduce(
     (sum, item) => sum + item.registered + item.unregistered,
-    0
+    0,
   );
   const chartDataWithMeta = data.map((item) => {
     const total = item.registered + item.unregistered;
@@ -229,27 +233,26 @@ export function BarChartVerticalStacked({
           "rounded-xl transition-all duration-300 ease-in-out",
           selectedItem && isLocked
             ? "opacity-100 h-[450px]"
-            : "opacity-0 h-0 py-0 mt-0"
+            : "opacity-0 h-0 py-0 mt-0",
         )}
       >
-        {selectedItem && isLocked && (
-          <div className="flex flex-col h-full p-10 px-32 space-y-6">
-            <div className="flex flex-row space-x-2 items-center">
-              <IonIcon
-                name="BusinessSharp"
-                size="16px"
-                className="text-primary"
-              />
-              <p className="body-medium-primary">{selectedItem.faculty}</p>
-            </div>
-            {/* Mock time data for debugging - will be replaced with real data later */}
-            {(() => {
-              const mockTimeData = [
-                { time: "16:00", total: 45 },
-                { time: "17:00", total: 78 },
-                { time: "18:00", total: 92 },
-              ];
-              return (
+        {selectedItem &&
+          isLocked &&
+          (() => {
+            // Get time detail data for selected faculty
+            const currentTimeData =
+              timeDetailData?.[selectedItem.faculty] || [];
+
+            return (
+              <div className="flex flex-col h-full p-10 px-32 space-y-6">
+                <div className="flex flex-row space-x-2 items-center">
+                  <IonIcon
+                    name="BusinessSharp"
+                    size="16px"
+                    className="text-primary"
+                  />
+                  <p className="body-medium-primary">{selectedItem.faculty}</p>
+                </div>
                 <ChartContainer
                   config={{
                     total: {
@@ -260,7 +263,7 @@ export function BarChartVerticalStacked({
                   className="w-full flex-1 h-full"
                 >
                   <BarChart
-                    data={mockTimeData}
+                    data={currentTimeData}
                     accessibilityLayer
                     margin={{ left: 0, right: 0, top: 10, bottom: 0 }}
                   >
@@ -301,10 +304,9 @@ export function BarChartVerticalStacked({
                     </Bar>
                   </BarChart>
                 </ChartContainer>
-              );
-            })()}
-          </div>
-        )}
+              </div>
+            );
+          })()}
       </div>
     </div>
   );

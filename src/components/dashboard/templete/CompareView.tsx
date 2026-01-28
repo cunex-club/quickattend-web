@@ -8,8 +8,8 @@ import { StatCard } from "@components/StatCard";
 import Button from "@components/Button";
 import { FilterableList } from "@components/dashboard/FilterableList";
 import {
-  DeepInSightFacultyData,
-  DeepInSightTimeData,
+  FilterFacultyOptions,
+  FilterTimeOptions,
   chartDataForComparePage,
 } from "@utils/data";
 import { useRole } from "@context/RoleContext";
@@ -27,7 +27,7 @@ const BarChartHorizontalMulti = dynamic(
   {
     ssr: false,
     loading: () => <Skeleton className="h-[450px] w-full rounded-lg" />,
-  }
+  },
 );
 
 const BarChartVerticalMulti = dynamic(
@@ -38,7 +38,7 @@ const BarChartVerticalMulti = dynamic(
   {
     ssr: false,
     loading: () => <Skeleton className="h-[500px] w-full rounded-lg" />,
-  }
+  },
 );
 
 const PieChartWithLabel = dynamic(
@@ -49,7 +49,7 @@ const PieChartWithLabel = dynamic(
   {
     ssr: false,
     loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />,
-  }
+  },
 );
 
 const canViewPage = (role: string) => {
@@ -63,7 +63,7 @@ export function CompareView() {
     Record<string, boolean>
   >({});
   const [selectedTimes, setSelectedTimes] = useState<Record<string, boolean>>(
-    {}
+    {},
   );
   //   if (isLoading) {
   //     return <div>Loading...</div>;
@@ -77,7 +77,7 @@ export function CompareView() {
   const createSelectionHandler =
     (
       setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-      allItemId: string // ID of the "all" item (e.g., "f-0" or "t-0")
+      allItemId: string, // ID of the "all" item (e.g., "f-0" or "t-0")
     ) =>
     (itemId: string, checked: boolean) => {
       setter((prevSelected) => {
@@ -103,7 +103,7 @@ export function CompareView() {
                   color: "var(--neutral-white)",
                 },
                 duration: 2500,
-              }
+              },
             );
             return prevSelected;
           }
@@ -117,7 +117,7 @@ export function CompareView() {
 
   const handleFacultyChange = createSelectionHandler(
     setSelectedFaculties,
-    "f-0"
+    "f-0",
   );
   const handleTimeChange = createSelectionHandler(setSelectedTimes, "t-0");
   const handleClearSelection = () => {
@@ -140,7 +140,7 @@ export function CompareView() {
             width: "max-content",
           },
           duration: 2500,
-        }
+        },
       );
       return;
     }
@@ -158,7 +158,7 @@ export function CompareView() {
             width: "max-content",
           },
           duration: 2500,
-        }
+        },
       );
       return;
     }
@@ -173,7 +173,7 @@ export function CompareView() {
           color: "var(--neutral-white)",
         },
         duration: 2500,
-      }
+      },
     );
   };
 
@@ -206,14 +206,14 @@ export function CompareView() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <FilterableList
                 title={t("faculty")}
-                items={DeepInSightFacultyData}
+                items={FilterFacultyOptions}
                 selectedItems={selectedFaculties}
                 onCheckedChange={handleFacultyChange}
                 hasDescription
               />
               <FilterableList
                 title={t("timePeriod")}
-                items={DeepInSightTimeData}
+                items={FilterTimeOptions}
                 selectedItems={selectedTimes}
                 onCheckedChange={handleTimeChange}
                 hasDescription

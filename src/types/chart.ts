@@ -15,6 +15,18 @@ export type BarChartHorizontalProps = {
   total: number;
 };
 
+export type FacultyDetailData = {
+  faculty: string;
+  registered: number;
+  unregistered: number;
+  total: number;
+};
+
+export type TimeDetailData = {
+  time: string;
+  total: number;
+};
+
 export type BarChartHorizontalOverviewProps = {
   data: BarChartHorizontalProps[];
   maxValue?: number;

@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { Skeleton } from "@assets/components/ui/skeleton";
 import { useTranslations } from "next-intl";
 import { useRole } from "@context/RoleContext";
+import { eventData } from "@utils/data";
 
 // Lazy load charts for better initial page load performance
 const BarChartHorizontalOverview = dynamic(
@@ -46,18 +47,7 @@ const FullscreenContent = dynamic(
   { ssr: false }
 );
 
-const mockEvent = {
-  id: "freshmen-night",
-  title: "Freshmen night",
-  date: "3 สิงหาคม 2568",
-  time: "16:00 - 20:00 น.",
-  location: "สนามกีฬาจุฬาลงกรณ์มหาวิทยาลัย",
-  description:
-    "กิจกรรมต้อนรับนิสิตใหม่ CU รุ่น 109 สู่รั้วมหาวิทยาลัย และกระชับสัมพันธ์ อันดีระหว่างน้องใหม่คณะต่าง ๆ ภายในงานมีการจัดแสดงดนตรีโดยวงดนตรี เช่น Landokmai, Dept, Polycat, Tilly Birds การแสดงพิเศษจาก CUDC และละครนิเทศ จุฬาฯ",
-  totalAttendees: 1096,
-  studentCount: 1090,
-  staffCount: 6,
-};
+const mockEvent = eventData;
 
 const mockTop3 = [
   { faculty: "วิศวกรรมศาสตร์", student: 320, staff: 70 },

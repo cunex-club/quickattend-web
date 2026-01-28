@@ -15,23 +15,23 @@ import { useRole } from "@context/RoleContext";
 const BarChartHorizontal = dynamic(
   () =>
     import("@components/charts/BarChartHorizontal").then(
-      (mod) => mod.BarChartHorizontal
+      (mod) => mod.BarChartHorizontal,
     ),
   {
     loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />,
     ssr: false,
-  }
+  },
 );
 
 const BarChartVertical = dynamic(
   () =>
     import("@components/charts/BarChartVertical").then(
-      (mod) => mod.BarChartVertical
+      (mod) => mod.BarChartVertical,
     ),
   {
     loading: () => <Skeleton className="h-[400px] w-full rounded-lg" />,
     ssr: false,
-  }
+  },
 );
 import {
   Popover,
@@ -41,31 +41,28 @@ import {
 import { PopoverClose } from "@radix-ui/react-popover";
 import { FilterableList } from "../FilterableList";
 import {
-  detailedFacultyData,
-  detailedTimeData,
-  DeepInSightFacultyData,
-  DeepInSightTimeData,
+  deepInsightFacultyData,
+  deepInsightTimeData,
+  FilterFacultyOptions,
+  FilterTimeOptions,
 } from "@utils/data";
-import {
-  applyFacultyFilters,
-  applyTimeFilters,
-  calculateSummaryStats,
-} from "@utils/filterHelpers";
 import SortMenu from "@components/sort-menu";
 import IonIcon from "@shared/IonIcon";
+import { cn } from "@assets/lib/utils";
+import { PieChartFilter } from "@components/charts/PieChartFilter";
 
 export function DeepInsightView() {
   const router = useRouter();
   const { role } = useRole();
   const t = useTranslations("Dashboard.insights");
   const [userFilter, setUserFilter] = useState<"student" | "staff" | null>(
-    null
+    null,
   );
   const [selectedFaculties, setSelectedFaculties] = useState<
     Record<string, boolean>
   >({});
   const [selectedTimes, setSelectedTimes] = useState<Record<string, boolean>>(
-    {}
+    {},
   );
 
   // Applied filters - only updated when user clicks "Apply Filter"
@@ -75,12 +72,12 @@ export function DeepInsightView() {
   const [appliedTimes, setAppliedTimes] = useState<Record<string, boolean>>({});
 
   const facultyFilterOptions = useMemo(
-    () => DeepInSightFacultyData.filter((item) => item.id !== "f-0"),
-    []
+    () => FilterFacultyOptions.filter((item) => item.id !== "f-0"),
+    [],
   );
   const timeFilterOptions = useMemo(
-    () => DeepInSightTimeData.filter((item) => item.id !== "t-0"),
-    []
+    () => FilterTimeOptions.filter((item) => item.id !== "t-0"),
+    [],
   );
 
   const canViewInsights = role === "manager" || role === "owner";
@@ -122,32 +119,211 @@ export function DeepInsightView() {
 
   const handleSortChange = () => {};
 
+  // Check if any filters are active
+  const hasActiveFilters = useMemo(() => {
+    const hasFacultyFilter =
+      Object.keys(appliedFaculties).filter((key) => appliedFaculties[key])
+        .length > 0;
+    const hasTimeFilter =
+      Object.keys(appliedTimes).filter((key) => appliedTimes[key]).length > 0;
+    return hasFacultyFilter || hasTimeFilter;
+  }, [appliedFaculties, appliedTimes]);
+
   // Apply filters to data using useMemo for performance
   // Note: User type filter (student/staff) applies immediately
   // Faculty and time filters only apply when "Apply Filter" is clicked
-  const filteredFacultyData = useMemo(
-    () =>
-      applyFacultyFilters(detailedFacultyData, {
-        selectedFaculties: appliedFaculties,
-        userType: userFilter,
-      }),
-    [appliedFaculties, userFilter]
-  );
 
-  const filteredTimeData = useMemo(
-    () =>
-      applyTimeFilters(detailedTimeData, {
-        selectedTimes: appliedTimes,
-        userType: userFilter,
-      }),
-    [appliedTimes, userFilter]
-  );
+  // Filter faculty data: filter by selected faculties and optionally by time periods
+  const filteredFacultyData = useMemo(() => {
+    const selectedFacultyIds = Object.keys(appliedFaculties).filter(
+      (key) => appliedFaculties[key] && key !== "f-0",
+    );
+    const selectedTimeIds = Object.keys(appliedTimes).filter(
+      (key) => appliedTimes[key] && key !== "t-0",
+    );
+
+    // Filter faculties
+    let faculties = deepInsightFacultyData;
+    if (selectedFacultyIds.length > 0) {
+      faculties = faculties.filter((f) =>
+        selectedFacultyIds.includes(f.facultyId),
+      );
+    }
+
+    // For each faculty, filter time periods and aggregate
+    return faculties.map((faculty) => {
+      let timeData = faculty.data;
+
+      // Filter by selected times if any
+      if (selectedTimeIds.length > 0) {
+        timeData = timeData.filter((t) => selectedTimeIds.includes(t.timeId));
+      }
+
+      // Aggregate time data for this faculty
+      const students = timeData.reduce((sum, t) => sum + t.students, 0);
+      const staff = timeData.reduce((sum, t) => sum + t.staff, 0);
+      const totalRegistered = timeData.reduce(
+        (sum, t) => sum + t.registered,
+        0,
+      );
+      const totalUnregistered = timeData.reduce(
+        (sum, t) => sum + t.unregistered,
+        0,
+      );
+
+      let total = students + staff;
+      let registered = totalRegistered;
+      let unregistered = totalUnregistered;
+
+      if (userFilter === "student") {
+        total = students;
+        // Apply proportional adjustment for students
+        const studentRatio = students / (students + staff || 1);
+        registered = Math.round(totalRegistered * studentRatio);
+        unregistered = Math.round(totalUnregistered * studentRatio);
+      } else if (userFilter === "staff") {
+        total = staff;
+        // Apply proportional adjustment for staff
+        const staffRatio = staff / (students + staff || 1);
+        registered = Math.round(totalRegistered * staffRatio);
+        unregistered = Math.round(totalUnregistered * staffRatio);
+      }
+
+      return {
+        facultyId: faculty.facultyId,
+        faculty: faculty.faculty,
+        students,
+        staff,
+        total,
+        registered,
+        unregistered,
+      };
+    });
+  }, [appliedFaculties, appliedTimes, userFilter]);
+
+  // Filter time data: filter by selected times and optionally by faculties
+  const filteredTimeData = useMemo(() => {
+    const selectedFacultyIds = Object.keys(appliedFaculties).filter(
+      (key) => appliedFaculties[key] && key !== "f-0",
+    );
+    const selectedTimeIds = Object.keys(appliedTimes).filter(
+      (key) => appliedTimes[key] && key !== "t-0",
+    );
+
+    // Filter time periods
+    let times = deepInsightTimeData;
+    if (selectedTimeIds.length > 0) {
+      times = times.filter((t) => selectedTimeIds.includes(t.timeId));
+    }
+
+    // For each time period, filter faculties and aggregate
+    return times.map((timeItem) => {
+      let facultyData = timeItem.data;
+
+      // Filter by selected faculties if any
+      if (selectedFacultyIds.length > 0) {
+        facultyData = facultyData.filter((f) =>
+          selectedFacultyIds.includes(f.facultyId),
+        );
+      }
+
+      // Aggregate faculty data for this time period
+      const students = facultyData.reduce((sum, f) => sum + f.students, 0);
+      const staff = facultyData.reduce((sum, f) => sum + f.staff, 0);
+      const totalRegistered = facultyData.reduce(
+        (sum, f) => sum + f.registered,
+        0,
+      );
+      const totalUnregistered = facultyData.reduce(
+        (sum, f) => sum + f.unregistered,
+        0,
+      );
+
+      let total = students + staff;
+      let registered = totalRegistered;
+      let unregistered = totalUnregistered;
+
+      if (userFilter === "student") {
+        total = students;
+        // Apply proportional adjustment for students
+        const studentRatio = students / (students + staff || 1);
+        registered = Math.round(totalRegistered * studentRatio);
+        unregistered = Math.round(totalUnregistered * studentRatio);
+      } else if (userFilter === "staff") {
+        total = staff;
+        // Apply proportional adjustment for staff
+        const staffRatio = staff / (students + staff || 1);
+        registered = Math.round(totalRegistered * staffRatio);
+        unregistered = Math.round(totalUnregistered * staffRatio);
+      }
+
+      return {
+        timeId: timeItem.timeId,
+        time: timeItem.time,
+        students,
+        staff,
+        total,
+        registered,
+        unregistered,
+      };
+    });
+  }, [appliedFaculties, appliedTimes, userFilter]);
 
   // Calculate summary statistics
-  const summaryStats = useMemo(
-    () => calculateSummaryStats(filteredFacultyData, userFilter),
-    [filteredFacultyData, userFilter]
-  );
+  const summaryStats = useMemo(() => {
+    // Calculate from filteredFacultyData
+    const totalStudents = filteredFacultyData.reduce(
+      (sum, f) => sum + f.students,
+      0,
+    );
+    const totalStaff = filteredFacultyData.reduce((sum, f) => sum + f.staff, 0);
+    const totalRegistered = filteredFacultyData.reduce(
+      (sum, f) => sum + f.registered,
+      0,
+    );
+
+    // totalAttendees should be the registered count (actual participants)
+    const totalAttendees = totalRegistered;
+    let studentCount = totalStudents;
+    let staffCount = totalStaff;
+
+    if (userFilter === "student") {
+      studentCount = totalStudents;
+      staffCount = 0;
+    } else if (userFilter === "staff") {
+      studentCount = 0;
+      staffCount = totalStaff;
+    }
+
+    return {
+      totalAttendees,
+      studentCount,
+      staffCount,
+    };
+  }, [filteredFacultyData, userFilter]);
+
+  const registrationStats = useMemo(() => {
+    const totalRegistered = filteredFacultyData.reduce(
+      (sum, f) => sum + f.registered,
+      0,
+    );
+    const totalUnregistered = filteredFacultyData.reduce(
+      (sum, f) => sum + f.unregistered,
+      0,
+    );
+    const totalStudents = filteredFacultyData.reduce(
+      (sum, f) => sum + f.students,
+      0,
+    );
+    const totalStaff = filteredFacultyData.reduce((sum, f) => sum + f.staff, 0);
+
+    return {
+      registered: totalRegistered,
+      unregistered: totalUnregistered,
+      students: totalStudents,
+      staff: totalStaff,
+    };
+  }, [filteredFacultyData]);
 
   // Prepare chart data
   const verticalChartData = useMemo(
@@ -156,13 +332,31 @@ export function DeepInsightView() {
         faculty: item.faculty,
         total: item.total,
       })),
-    [filteredFacultyData]
+    [filteredFacultyData],
   );
 
   const horizontalChartData = useMemo(
     () =>
       filteredTimeData.map((item) => ({ time: item.time, total: item.total })),
-    [filteredTimeData]
+    [filteredTimeData],
+  );
+
+  const donutChartData = useMemo(
+    () => [
+      {
+        category: "ลงทะเบียนแล้ว",
+        total: registrationStats.registered,
+        students: userFilter === "staff" ? 0 : registrationStats.registered,
+        staff: userFilter === "student" ? 0 : registrationStats.registered,
+      },
+      {
+        category: "ยังไม่ลงทะเบียน",
+        total: registrationStats.unregistered,
+        students: userFilter === "staff" ? 0 : registrationStats.unregistered,
+        staff: userFilter === "student" ? 0 : registrationStats.unregistered,
+      },
+    ],
+    [registrationStats, userFilter],
   );
 
   if (!canViewInsights) return null;
@@ -262,7 +456,12 @@ export function DeepInsightView() {
         </div>
       </section>
 
-      <div className="h-auto lg:h-[450px] w-full">
+      <div
+        className={cn(
+          "h-auto lg:h-[450px] w-full",
+          hasActiveFilters ? "grid grid-cols-1 md:grid-cols-2 gap-4" : "",
+        )}
+      >
         <StatCard
           title={t("totalAttendees")}
           value={summaryStats.totalAttendees}
@@ -281,6 +480,14 @@ export function DeepInsightView() {
             </span>
           </div>
         </StatCard>
+        <div
+          className={cn(
+            "h-auto lg:h-[450px] w-full",
+            hasActiveFilters ? "" : "hidden",
+          )}
+        >
+          <PieChartFilter data={donutChartData} />
+        </div>
       </div>
 
       {/* Chart Section */}
