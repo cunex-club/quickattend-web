@@ -17,6 +17,7 @@ import {
   ChartTooltipContent,
 } from "@assets/components/ui/chart";
 import { BarChartHorizontalMultiProps } from "@customTypes/chart";
+import { cn } from "@assets/lib/utils";
 
 // CONSTANTS
 
@@ -112,7 +113,9 @@ export function BarChartHorizontalMulti({
         className="px-0 overflow-auto"
         onClick={handleBackgroundClick}
       >
-        <div className="min-w-[1000px] sm:min-w-[2000px] md:min-w-[1500px] lg:min-w-[1300px] w-full">
+        <div className={cn("min-w-[1000px] sm:min-w-[2000px] md:min-w-[1500px] lg:min-w-[1300px] w-full",
+          data.length > 5 ? "min-w-[2000px] sm:min-w-[2500px] md:min-w-[2500px] lg:min-w-[2500px]" : ""
+        )}>
           <ChartContainer
             config={chartConfig}
             className="w-full pr-3 h-[250px] md:h-[450px]"
@@ -121,6 +124,7 @@ export function BarChartHorizontalMulti({
               accessibilityLayer
               data={chartData}
               barGap={CHART_CONSTANTS.BAR_SPACING}
+              barCategoryGap={60}
             >
               <CartesianGrid
                 horizontal={true}
@@ -144,6 +148,7 @@ export function BarChartHorizontalMulti({
               <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent indicator="line" />}
+                
               />
               {faculties.map((faculty, index) => (
                 <Bar

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { redirect } from "next/navigation";
 import dynamic from "next/dynamic";
 import { StatCard } from "@components/StatCard";
@@ -10,7 +10,8 @@ import { FilterableList } from "@components/dashboard/FilterableList";
 import {
   FilterFacultyOptions,
   FilterTimeOptions,
-  chartDataForComparePage,
+  deepInsightFacultyData,
+  deepInsightTimeData,
 } from "@utils/data";
 import { useRole } from "@context/RoleContext";
 import { toast } from "sonner";
@@ -65,9 +66,12 @@ export function CompareView() {
   const [selectedTimes, setSelectedTimes] = useState<Record<string, boolean>>(
     {},
   );
-  //   if (isLoading) {
-  //     return <div>Loading...</div>;
-  //   }
+  
+  // Applied filters - only updated when user clicks "Compare Data"
+  const [appliedFaculties, setAppliedFaculties] = useState<
+    Record<string, boolean>
+  >({});
+  const [appliedTimes, setAppliedTimes] = useState<Record<string, boolean>>({});
 
   if (!canViewPage(role)) {
     redirect("/dashboard");
@@ -123,15 +127,54 @@ export function CompareView() {
   const handleClearSelection = () => {
     setSelectedFaculties({});
     setSelectedTimes({});
+    setAppliedFaculties({});
+    setAppliedTimes({});
   };
   const handleSubmitComparison = () => {
-    if (
-      Object.keys(selectedFaculties).length === 0 &&
-      Object.keys(selectedTimes).length === 0
-    ) {
+    const hasFacultySelection = Object.keys(selectedFaculties).length > 0;
+    const hasTimeSelection = Object.keys(selectedTimes).length > 0;
+
+    // Case 1: No time and no faculty filter
+    if (!hasFacultySelection && !hasTimeSelection) {
       toast.error(
         <p className="title-medium-primary text-neutral-white">
-          {t("minSelectionError")}
+          {t("noFacultyAndTimeError")}
+        </p>,
+        {
+          style: {
+            background: "var(--error)",
+            color: "var(--neutral-white)",
+            width: "max-content",
+          },
+          duration: 2500,
+        },
+      );
+      return;
+    }
+
+    // Case 2: No time filter
+    if (!hasTimeSelection) {
+      toast.error(
+        <p className="title-medium-primary text-neutral-white">
+          {t("noTimeError")}
+        </p>,
+        {
+          style: {
+            background: "var(--warning)",
+            color: "var(--neutral-white)",
+            width: "max-content",
+          },
+          duration: 2500,
+        },
+      );
+      return;
+    }
+
+    // Case 3: No faculty filter
+    if (!hasFacultySelection) {
+      toast.error(
+        <p className="title-medium-primary text-neutral-white">
+          {t("noFacultyError")}
         </p>,
         {
           style: {
@@ -163,6 +206,10 @@ export function CompareView() {
       return;
     }
 
+    // Apply the filters
+    setAppliedFaculties(selectedFaculties);
+    setAppliedTimes(selectedTimes);
+
     toast.success(
       <p className="title-medium-primary text-neutral-white">
         {t("comparingData")}
@@ -176,6 +223,156 @@ export function CompareView() {
       },
     );
   };
+
+  // Filter and transform faculty data for comparison
+  const comparedFacultyData = useMemo(() => {
+    const selectedFacultyIds = Object.keys(appliedFaculties).filter(
+      (key) => appliedFaculties[key] && key !== "f-0",
+    );
+    const selectedTimeIds = Object.keys(appliedTimes).filter(
+      (key) => appliedTimes[key] && key !== "t-0",
+    );
+
+    // If "All" is selected for faculties, or no selection, return empty for comparison
+    if (appliedFaculties["f-0"] || selectedFacultyIds.length === 0) {
+      return [];
+    }
+
+    // Filter faculties
+    let faculties = deepInsightFacultyData.filter((f) =>
+      selectedFacultyIds.includes(f.facultyId),
+    );
+
+    // Transform to comparison format
+    return faculties.map((faculty) => {
+      let timeData = faculty.data;
+
+      // Filter by selected times if any (and not "All")
+      if (!appliedTimes["t-0"] && selectedTimeIds.length > 0) {
+        timeData = timeData.filter((t) => selectedTimeIds.includes(t.timeId));
+      }
+
+      return {
+        faculty: faculty.faculty,
+        data: timeData.map((t) => ({
+          time: t.time,
+          total: t.total,
+        })),
+      };
+    });
+  }, [appliedFaculties, appliedTimes]);
+
+  // Filter and transform time data for comparison
+  const comparedTimeData = useMemo(() => {
+    const selectedFacultyIds = Object.keys(appliedFaculties).filter(
+      (key) => appliedFaculties[key] && key !== "f-0",
+    );
+    const selectedTimeIds = Object.keys(appliedTimes).filter(
+      (key) => appliedTimes[key] && key !== "t-0",
+    );
+
+    // If "All" is selected for times, or no selection, return empty for comparison
+    if (appliedTimes["t-0"] || selectedTimeIds.length === 0) {
+      return [];
+    }
+
+    // Filter time periods
+    let times = deepInsightTimeData.filter((t) =>
+      selectedTimeIds.includes(t.timeId),
+    );
+
+    // For time comparison, we need to show each selected faculty as a series
+    // Get unique faculties to show
+    const facultiesToShow = selectedFacultyIds.length > 0 
+      ? deepInsightFacultyData.filter(f => selectedFacultyIds.includes(f.facultyId))
+      : deepInsightFacultyData;
+
+    // Transform to comparison format - each faculty becomes a data series
+    return facultiesToShow.map((faculty) => {
+      // Get this faculty's data for each selected time period
+      const facultyTimeData = times.map((timeItem) => {
+        // Find this faculty's data in this time period
+        const facultyEntry = timeItem.data.find(
+          (f) => f.facultyId === faculty.facultyId
+        );
+        
+        return {
+          time: timeItem.time,
+          total: facultyEntry ? facultyEntry.total : 0,
+        };
+      });
+
+      return {
+        faculty: faculty.faculty,
+        data: facultyTimeData,
+      };
+    });
+  }, [appliedFaculties, appliedTimes]);
+
+  // Calculate summary statistics
+  const summaryStats = useMemo(() => {
+    const selectedFacultyIds = Object.keys(appliedFaculties).filter(
+      (key) => appliedFaculties[key] && key !== "f-0",
+    );
+    const selectedTimeIds = Object.keys(appliedTimes).filter(
+      (key) => appliedTimes[key] && key !== "t-0",
+    );
+
+    let faculties = deepInsightFacultyData;
+    if (!appliedFaculties["f-0"] && selectedFacultyIds.length > 0) {
+      faculties = faculties.filter((f) =>
+        selectedFacultyIds.includes(f.facultyId),
+      );
+    }
+
+    // Calculate totals
+    let totalAttendees = 0;
+    let totalRegistered = 0;
+    let totalUnregistered = 0;
+
+    faculties.forEach((faculty) => {
+      let timeData = faculty.data;
+
+      // Filter by selected times if any
+      if (!appliedTimes["t-0"] && selectedTimeIds.length > 0) {
+        timeData = timeData.filter((t) => selectedTimeIds.includes(t.timeId));
+      }
+
+      // Aggregate (avoid double counting by using Set logic)
+      timeData.forEach((t) => {
+        totalRegistered += t.registered;
+        totalUnregistered += t.unregistered;
+      });
+    });
+
+    // For comparison page, we sum across all selected items
+    // But need to prevent double counting when both faculties and times are selected
+    if (selectedFacultyIds.length > 0 && selectedTimeIds.length > 0) {
+      // When both are selected, count only once
+      totalAttendees = totalRegistered;
+    } else {
+      totalAttendees = totalRegistered;
+    }
+
+    const studentCount = Math.round(totalAttendees * 0.8); // 80% students
+    const staffCount = totalAttendees - studentCount; // 20% staff
+
+    return {
+      totalAttendees,
+      studentCount,
+      staffCount,
+      totalRegistered,
+      totalUnregistered,
+    };
+  }, [appliedFaculties, appliedTimes]);
+
+  // Prepare data for pie chart (student vs staff distribution)
+  const pieChartData = useMemo(() => {
+    return [
+      { name: "นิสิต", value: summaryStats.studentCount, fill: "var(--color-primary)" },
+      { name: "บุคลากร", value: summaryStats.staffCount, fill: "var(--chart-pink-200)" },
+    ];
+  }, [summaryStats]);
 
   // layout
   return (
@@ -250,7 +447,7 @@ export function CompareView() {
             <div className="w-full">
               <StatCard
                 title={t("totalAttendees")}
-                value={860}
+                value={summaryStats.totalAttendees}
                 unit={t("unit")}
                 variant="outline"
               >
@@ -262,25 +459,29 @@ export function CompareView() {
               </StatCard>
             </div>
             <div className="w-full h-full">
-              <PieChartWithLabel />
+              <PieChartWithLabel data={pieChartData} />
             </div>
           </section>
 
           {/* Chart Section */}
-          <section className="flex flex-col space-y-8">
-            <p className="headline-large-emphasized">
-              {t("facultyStatsTitle")}
-            </p>
-            <div className="h-auto">
-              <BarChartVerticalMulti data={chartDataForComparePage} />
-            </div>
-          </section>
-          <section className="flex flex-col space-y-8">
-            <p className="headline-large-emphasized">{t("timeStatsTitle")}</p>
-            <div className="h-auto w-full">
-              <BarChartHorizontalMulti data={chartDataForComparePage} />
-            </div>
-          </section>
+          {comparedFacultyData.length > 0 && (
+            <section className="flex flex-col space-y-8">
+              <p className="headline-large-emphasized">
+                {t("facultyStatsTitle")}
+              </p>
+              <div className="h-auto">
+                <BarChartVerticalMulti data={comparedFacultyData} />
+              </div>
+            </section>
+          )}
+          {comparedTimeData.length > 0 && (
+            <section className="flex flex-col space-y-8">
+              <p className="headline-large-emphasized">{t("timeStatsTitle")}</p>
+              <div className="h-auto w-full">
+                <BarChartHorizontalMulti data={comparedTimeData} />
+              </div>
+            </section>
+          )}
         </div>
       </div>
     </div>

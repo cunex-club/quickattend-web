@@ -32,14 +32,32 @@ const CHART_COLORS = [
 
 const chartConfig = {} satisfies ChartConfig;
 
-export function PieChartWithLabel() {
+type PieChartData = {
+  name: string;
+  value: number;
+  fill?: string;
+};
+
+export function PieChartWithLabel({ data }: { data?: PieChartData[] }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isLocked, setIsLocked] = useState(false);
 
+  // Use provided data or fallback to default chartData
+  const displayData = useMemo(() => {
+    if (data && data.length > 0) {
+      return data.map((item) => ({
+        faculty: item.name,
+        total: item.value,
+        fill: item.fill,
+      }));
+    }
+    return chartData;
+  }, [data]);
+
   // Memoize chart total
   const chartTotal = useMemo(
-    () => chartData.reduce((sum, it) => sum + Number(it?.total ?? 0), 0),
-    []
+    () => displayData.reduce((sum, it) => sum + Number(it?.total ?? 0), 0),
+    [displayData]
   );
 
   type PieLabelProps = {
@@ -112,7 +130,7 @@ export function PieChartWithLabel() {
 
             {/* Main Pie Chart */}
             <Pie
-              data={chartData}
+              data={displayData}
               dataKey="total"
               label={customLabel}
               nameKey="faculty"
@@ -120,12 +138,13 @@ export function PieChartWithLabel() {
               endAngle={-270}
               isAnimationActive={false}
             >
-              {chartData.map((entry, index) => {
+              {displayData.map((entry, index) => {
                 const opacity = hoveredIndex !== null && hoveredIndex !== index ? 0.3 : 1;
+                const fillColor = CHART_COLORS[index % CHART_COLORS.length];
                 return (
                   <Cell
                     key={`cell-${index}`}
-                    fill={CHART_COLORS[index % CHART_COLORS.length]}
+                    fill={fillColor}
                     onMouseEnter={() => !isLocked && setHoveredIndex(index)}
                     onMouseLeave={() => !isLocked && setHoveredIndex(null)}
                     onClick={(e) => {
@@ -151,7 +170,7 @@ export function PieChartWithLabel() {
 
             {/* Outer Ring (Highlight) */}
             <Pie
-              data={chartData}
+              data={displayData}
               dataKey="total"
               nameKey="faculty"
               startAngle={90}
@@ -160,17 +179,20 @@ export function PieChartWithLabel() {
               outerRadius={125}
               isAnimationActive={false}
             >
-              {chartData.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={CHART_COLORS[index % CHART_COLORS.length]}
-                  fillOpacity={hoveredIndex === index ? 0.5 : 0}
-                  style={{
-                    transition: "fill-opacity 0.3s ease-in-out",
-                    pointerEvents: "none",
-                  }}
-                />
-              ))}
+              {displayData.map((entry, index) => {
+                const fillColor = CHART_COLORS[index % CHART_COLORS.length];
+                return (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={fillColor}
+                    fillOpacity={hoveredIndex === index ? 0.5 : 0}
+                    style={{
+                      transition: "fill-opacity 0.3s ease-in-out",
+                      pointerEvents: "none",
+                    }}
+                  />
+                );
+              })}
             </Pie>
           </PieChart>
         </ChartContainer>
