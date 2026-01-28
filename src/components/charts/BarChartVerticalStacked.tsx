@@ -31,6 +31,23 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+const DETAIL_CHART_CONSTANTS = {
+  BAR_RADIUS: [8, 8, 0, 0] as [number, number, number, number],
+  WIDTH_PER_BAR_DESKTOP: 180,
+  WIDTH_PER_BAR_TABLET: 110,
+  WIDTH_PER_BAR_MOBILE: 120,
+} as const;
+
+const getDetailChartWidth = (
+  dataLength: number,
+  isMobile: boolean,
+  isTablet: boolean,
+): number => {
+  if (isMobile) return dataLength * DETAIL_CHART_CONSTANTS.WIDTH_PER_BAR_MOBILE;
+  if (isTablet) return dataLength * DETAIL_CHART_CONSTANTS.WIDTH_PER_BAR_TABLET;
+  return dataLength * DETAIL_CHART_CONSTANTS.WIDTH_PER_BAR_DESKTOP;
+};
+
 export function BarChartVerticalStacked({
   data,
   timeDetailData,
@@ -112,6 +129,18 @@ export function BarChartVerticalStacked({
 
   const selectedItem =
     hoveredIndex !== null ? chartDataWithMeta[hoveredIndex] : null;
+
+  // Get time detail data for selected faculty
+  const currentTimeData =
+    selectedItem && timeDetailData
+      ? timeDetailData[selectedItem.faculty] || []
+      : [];
+
+  const detailChartWidth = getDetailChartWidth(
+    currentTimeData.length,
+    isMobile,
+    isTablet,
+  );
 
   return (
     <div>
@@ -232,81 +261,76 @@ export function BarChartVerticalStacked({
         className={cn(
           "rounded-xl transition-all duration-300 ease-in-out",
           selectedItem && isLocked
-            ? "opacity-100 h-[450px]"
+            ? "opacity-100 h-[510px] max-h-full"
             : "opacity-0 h-0 py-0 mt-0",
         )}
       >
-        {selectedItem &&
-          isLocked &&
-          (() => {
-            // Get time detail data for selected faculty
-            const currentTimeData =
-              timeDetailData?.[selectedItem.faculty] || [];
-
-            return (
-              <div className="flex flex-col h-full p-10 px-32 space-y-6">
-                <div className="flex flex-row space-x-2 items-center">
-                  <IonIcon
-                    name="BusinessSharp"
-                    size="16px"
-                    className="text-primary"
-                  />
-                  <p className="body-medium-primary">{selectedItem.faculty}</p>
-                </div>
-                <ChartContainer
-                  config={{
-                    total: {
-                      label: "จำนวนผู้เข้าร่วม",
-                      color: "var(--color-primary)",
-                    },
-                  }}
-                  className="w-full flex-1 h-full"
+        {selectedItem && isLocked && (
+          <div className="flex flex-col h-full p-10 px-0 md:px-10 lg:px-16 xl:px-32 space-y-6">
+            <div className="flex flex-row space-x-2 items-center">
+              <IonIcon
+                name="BusinessSharp"
+                size="16px"
+                className="text-primary"
+              />
+              <p className="body-medium-primary">{selectedItem.faculty}</p>
+            </div>
+            <div className="w-full overflow-x-auto">
+              <ChartContainer
+                config={{
+                  total: {
+                    label: "จำนวนผู้เข้าร่วม",
+                    color: "var(--color-primary)",
+                  },
+                }}
+                className="h-[300px] md:h-[350px] w-full pr-3"
+                style={{ minWidth: `${detailChartWidth}px` }}
+              >
+                <BarChart
+                  data={currentTimeData}
+                  accessibilityLayer
+                  margin={{ left: 0, right: 0, top: 16, bottom: 0 }}
                 >
-                  <BarChart
-                    data={currentTimeData}
-                    accessibilityLayer
-                    margin={{ left: 0, right: 0, top: 10, bottom: 0 }}
+                  <CartesianGrid
+                    horizontal={true}
+                    vertical={false}
+                    stroke="var(--color-neutral-300)"
+                    strokeWidth={0.4}
+                    strokeDasharray="3 3"
+                  />
+                  <XAxis
+                    dataKey="time"
+                    tickLine={false}
+                    tickMargin={8}
+                    axisLine={false}
+                    fontSize={12}
+                  />
+                  <YAxis
+                    type="number"
+                    dataKey="total"
+                    tickLine={false}
+                    tickMargin={8}
+                    axisLine={false}
+                    fontSize={12}
+                    width={30}
+                  />
+                  <Bar
+                    dataKey="total"
+                    fill="var(--color-primary)"
+                    radius={DETAIL_CHART_CONSTANTS.BAR_RADIUS}
                   >
-                    <CartesianGrid
-                      horizontal={true}
-                      vertical={false}
-                      stroke="var(--color-neutral-300)"
-                      strokeWidth={0.4}
-                      strokeDasharray="3 3"
+                    <LabelList
+                      position="top"
+                      offset={4}
+                      className="fill-neutral-black"
+                      fontSize={10}
                     />
-                    <XAxis
-                      dataKey="time"
-                      tickLine={false}
-                      tickMargin={8}
-                      axisLine={false}
-                      fontSize={12}
-                    />
-                    <YAxis
-                      type="number"
-                      dataKey="total"
-                      tickLine={false}
-                      tickMargin={8}
-                      axisLine={false}
-                      fontSize={12}
-                      width={30}
-                    />
-                    <Bar
-                      dataKey="total"
-                      fill="var(--color-primary)"
-                      radius={[8, 8, 0, 0]}
-                    >
-                      <LabelList
-                        position="top"
-                        offset={4}
-                        className="fill-neutral-black"
-                        fontSize={10}
-                      />
-                    </Bar>
-                  </BarChart>
-                </ChartContainer>
-              </div>
-            );
-          })()}
+                  </Bar>
+                </BarChart>
+              </ChartContainer>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

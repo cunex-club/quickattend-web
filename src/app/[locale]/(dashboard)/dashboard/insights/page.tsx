@@ -6,6 +6,7 @@ import { WhitelistInsightView } from "@components/dashboard/templete/WhitelistIn
 type EventType = "public" | "specific" | "whitelist";
 
 async function getEventData(): Promise<{ type: EventType }> {
+  // const eventType: EventType = "specific";
   const eventType: EventType = "whitelist";
   return { type: eventType };
 }

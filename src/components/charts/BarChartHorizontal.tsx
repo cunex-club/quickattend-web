@@ -204,19 +204,18 @@ export function BarChartHorizontal({
         className={cn(
           "rounded-xl transition-all duration-300 ease-in-out overflow-hidden",
           selectedItem && isLocked
-            ? "opacity-100 max-h-[550px]"
-            : "opacity-0 max-h-0",
+            ? "opacity-100 h-[550px] max-h-full"
+            : "opacity-0 h-0",
         )}
       >
         {selectedItem && isLocked && (
-          <div className="flex flex-col h-full p-10 px-8 md:px-32 space-y-6 ">
+          <div className="flex flex-col h-full p-10 px-0 md:px-10 lg:px-16 xl:px-32 space-y-6 ">
             <div className="flex flex-row space-x-2 items-center">
               <IonIcon name="Time" size="16px" className="text-primary" />
               <p className="body-medium-primary">{selectedItem.time}</p>
             </div>
-            {/* Mock faculty data for debugging - will be replaced with real data later */}
-            <div className="flex flex-col space-y-4 flex-1 bg-neutral-100 p-8 rounded-[28px]">
-              <div className="overflow-y-auto min-h-auto max-h-[350px] px-5">
+            <div className="flex flex-col space-y-4 flex-1 bg-neutral-white md:bg-neutral-100 p-0 md:p-8 rounded-[28px]">
+              <div className="overflow-y-auto min-h-auto max-h-[350px] px-2 md:px-5">
                 {currentFacultyData.map((item, idx) => {
                   const percentage = (
                     (item.total /
