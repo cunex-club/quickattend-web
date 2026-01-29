@@ -60,7 +60,7 @@ interface TransformedDataEntry extends Record<string, string | number> {
 // HELPER FUNCTIONS
 
 const transformDataForChart = (
-  data: BarChartHorizontalMultiProps["data"]
+  data: BarChartHorizontalMultiProps["data"],
 ): TransformedDataEntry[] => {
   if (!data || data.length === 0) return [];
 
@@ -81,7 +81,7 @@ const transformDataForChart = (
 };
 
 const extractFacultyNames = (
-  data: BarChartHorizontalMultiProps["data"]
+  data: BarChartHorizontalMultiProps["data"],
 ): string[] => {
   return data.map((item) => item.faculty);
 };
@@ -93,7 +93,7 @@ export function BarChartHorizontalMulti({
 }: BarChartHorizontalMultiProps) {
   // State
   const [hoveredSeriesIndex, setHoveredSeriesIndex] = useState<number | null>(
-    null
+    null,
   );
   const [isLocked, setIsLocked] = useState<boolean>(false);
 
@@ -113,9 +113,14 @@ export function BarChartHorizontalMulti({
         className="px-0 overflow-auto"
         onClick={handleBackgroundClick}
       >
-        <div className={cn("min-w-[1000px] sm:min-w-[2000px] md:min-w-[1500px] lg:min-w-[1300px] w-full",
-          data.length > 5 ? "min-w-[2000px] sm:min-w-[2500px] md:min-w-[2500px] lg:min-w-[2500px]" : ""
-        )}>
+        <div
+          className={cn(
+            "min-w-[1000px] sm:min-w-[2000px] md:min-w-[1500px] lg:min-w-[1300px] w-full",
+            data.length > 5
+              ? "min-w-[2000px] sm:min-w-[2500px] md:min-w-[2500px] lg:min-w-[2500px]"
+              : "",
+          )}
+        >
           <ChartContainer
             config={chartConfig}
             className="w-full pr-3 h-[250px] md:h-[450px]"
@@ -148,7 +153,6 @@ export function BarChartHorizontalMulti({
               <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent indicator="line" />}
-                
               />
               {faculties.map((faculty, index) => (
                 <Bar

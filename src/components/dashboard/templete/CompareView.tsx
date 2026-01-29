@@ -7,18 +7,20 @@ import dynamic from "next/dynamic";
 import { StatCard } from "@components/StatCard";
 import Button from "@components/Button";
 import { FilterableList } from "@components/dashboard/FilterableList";
-import {
-  FilterFacultyOptions,
-  FilterTimeOptions,
-  deepInsightFacultyData,
-  deepInsightTimeData,
-} from "@utils/data";
+import { FilterFacultyOptions, FilterTimeOptions } from "@utils/data";
 import { useRole } from "@context/RoleContext";
 import { toast } from "sonner";
 import { Skeleton } from "@assets/components/ui/skeleton";
 import { useTranslations } from "next-intl";
 import IonIcon from "@shared/IonIcon";
 import Link from "next/link";
+import { useFilterLogic } from "../../../hooks/useFilterLogic";
+import {
+  transformFacultyDataForComparison,
+  transformTimeDataForComparison,
+  calculateSummaryStats,
+  preparePieChartData,
+} from "@utils/compareHelpers";
 
 const BarChartHorizontalMulti = dynamic(
   () =>
@@ -60,76 +62,37 @@ const canViewPage = (role: string) => {
 export function CompareView() {
   const t = useTranslations("Dashboard.compare");
   const { role } = useRole();
-  const [selectedFaculties, setSelectedFaculties] = useState<
-    Record<string, boolean>
-  >({});
-  const [selectedTimes, setSelectedTimes] = useState<Record<string, boolean>>(
-    {},
-  );
-  
-  // Applied filters - only updated when user clicks "Compare Data"
+
+  // Use the filter logic hook ONLY for selection state (not applied state)
+  // CompareView needs custom validation before applying filters
+  const {
+    selectedFaculties,
+    selectedTimes,
+    handleFacultyChange,
+    handleTimeChange,
+    handleClearSelection: hookClearSelection,
+  } = useFilterLogic({
+    maxSelectionLimit: 5,
+  });
+
+  // Manage applied filters separately for custom validation logic
   const [appliedFaculties, setAppliedFaculties] = useState<
     Record<string, boolean>
   >({});
   const [appliedTimes, setAppliedTimes] = useState<Record<string, boolean>>({});
 
+  // Custom clear that also clears applied state
+  const handleClearSelection = () => {
+    hookClearSelection();
+    setAppliedFaculties({});
+    setAppliedTimes({});
+  };
+
   if (!canViewPage(role)) {
     redirect("/dashboard");
     return null;
   }
-
-  const createSelectionHandler =
-    (
-      setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-      allItemId: string, // ID of the "all" item (e.g., "f-0" or "t-0")
-    ) =>
-    (itemId: string, checked: boolean) => {
-      setter((prevSelected) => {
-        const newSelected = { ...prevSelected };
-
-        if (checked) {
-          if (itemId === allItemId) {
-            return { [allItemId]: true };
-          }
-
-          delete newSelected[allItemId];
-
-          const selectedCount =
-            Object.values(newSelected).filter(Boolean).length;
-          if (selectedCount >= 5) {
-            toast.error(
-              <p className="title-medium-primary text-neutral-white">
-                {t("maxSelectionError")}
-              </p>,
-              {
-                style: {
-                  background: "var(--error)",
-                  color: "var(--neutral-white)",
-                },
-                duration: 2500,
-              },
-            );
-            return prevSelected;
-          }
-          newSelected[itemId] = true;
-        } else {
-          delete newSelected[itemId];
-        }
-        return newSelected;
-      });
-    };
-
-  const handleFacultyChange = createSelectionHandler(
-    setSelectedFaculties,
-    "f-0",
-  );
-  const handleTimeChange = createSelectionHandler(setSelectedTimes, "t-0");
-  const handleClearSelection = () => {
-    setSelectedFaculties({});
-    setSelectedTimes({});
-    setAppliedFaculties({});
-    setAppliedTimes({});
-  };
+  // Custom validation and submission logic for CompareView
   const handleSubmitComparison = () => {
     const hasFacultySelection = Object.keys(selectedFaculties).length > 0;
     const hasTimeSelection = Object.keys(selectedTimes).length > 0;
@@ -206,7 +169,7 @@ export function CompareView() {
       return;
     }
 
-    // Apply the filters
+    // Apply the filters after validation passes
     setAppliedFaculties(selectedFaculties);
     setAppliedTimes(selectedTimes);
 
@@ -225,154 +188,28 @@ export function CompareView() {
   };
 
   // Filter and transform faculty data for comparison
-  const comparedFacultyData = useMemo(() => {
-    const selectedFacultyIds = Object.keys(appliedFaculties).filter(
-      (key) => appliedFaculties[key] && key !== "f-0",
-    );
-    const selectedTimeIds = Object.keys(appliedTimes).filter(
-      (key) => appliedTimes[key] && key !== "t-0",
-    );
-
-    // If "All" is selected for faculties, or no selection, return empty for comparison
-    if (appliedFaculties["f-0"] || selectedFacultyIds.length === 0) {
-      return [];
-    }
-
-    // Filter faculties
-    let faculties = deepInsightFacultyData.filter((f) =>
-      selectedFacultyIds.includes(f.facultyId),
-    );
-
-    // Transform to comparison format
-    return faculties.map((faculty) => {
-      let timeData = faculty.data;
-
-      // Filter by selected times if any (and not "All")
-      if (!appliedTimes["t-0"] && selectedTimeIds.length > 0) {
-        timeData = timeData.filter((t) => selectedTimeIds.includes(t.timeId));
-      }
-
-      return {
-        faculty: faculty.faculty,
-        data: timeData.map((t) => ({
-          time: t.time,
-          total: t.total,
-        })),
-      };
-    });
-  }, [appliedFaculties, appliedTimes]);
+  const comparedFacultyData = useMemo(
+    () => transformFacultyDataForComparison(appliedFaculties, appliedTimes),
+    [appliedFaculties, appliedTimes],
+  );
 
   // Filter and transform time data for comparison
-  const comparedTimeData = useMemo(() => {
-    const selectedFacultyIds = Object.keys(appliedFaculties).filter(
-      (key) => appliedFaculties[key] && key !== "f-0",
-    );
-    const selectedTimeIds = Object.keys(appliedTimes).filter(
-      (key) => appliedTimes[key] && key !== "t-0",
-    );
-
-    // If "All" is selected for times, or no selection, return empty for comparison
-    if (appliedTimes["t-0"] || selectedTimeIds.length === 0) {
-      return [];
-    }
-
-    // Filter time periods
-    let times = deepInsightTimeData.filter((t) =>
-      selectedTimeIds.includes(t.timeId),
-    );
-
-    // For time comparison, we need to show each selected faculty as a series
-    // Get unique faculties to show
-    const facultiesToShow = selectedFacultyIds.length > 0 
-      ? deepInsightFacultyData.filter(f => selectedFacultyIds.includes(f.facultyId))
-      : deepInsightFacultyData;
-
-    // Transform to comparison format - each faculty becomes a data series
-    return facultiesToShow.map((faculty) => {
-      // Get this faculty's data for each selected time period
-      const facultyTimeData = times.map((timeItem) => {
-        // Find this faculty's data in this time period
-        const facultyEntry = timeItem.data.find(
-          (f) => f.facultyId === faculty.facultyId
-        );
-        
-        return {
-          time: timeItem.time,
-          total: facultyEntry ? facultyEntry.total : 0,
-        };
-      });
-
-      return {
-        faculty: faculty.faculty,
-        data: facultyTimeData,
-      };
-    });
-  }, [appliedFaculties, appliedTimes]);
+  const comparedTimeData = useMemo(
+    () => transformTimeDataForComparison(appliedFaculties, appliedTimes),
+    [appliedFaculties, appliedTimes],
+  );
 
   // Calculate summary statistics
-  const summaryStats = useMemo(() => {
-    const selectedFacultyIds = Object.keys(appliedFaculties).filter(
-      (key) => appliedFaculties[key] && key !== "f-0",
-    );
-    const selectedTimeIds = Object.keys(appliedTimes).filter(
-      (key) => appliedTimes[key] && key !== "t-0",
-    );
+  const summaryStats = useMemo(
+    () => calculateSummaryStats(appliedFaculties, appliedTimes),
+    [appliedFaculties, appliedTimes],
+  );
 
-    let faculties = deepInsightFacultyData;
-    if (!appliedFaculties["f-0"] && selectedFacultyIds.length > 0) {
-      faculties = faculties.filter((f) =>
-        selectedFacultyIds.includes(f.facultyId),
-      );
-    }
-
-    // Calculate totals
-    let totalAttendees = 0;
-    let totalRegistered = 0;
-    let totalUnregistered = 0;
-
-    faculties.forEach((faculty) => {
-      let timeData = faculty.data;
-
-      // Filter by selected times if any
-      if (!appliedTimes["t-0"] && selectedTimeIds.length > 0) {
-        timeData = timeData.filter((t) => selectedTimeIds.includes(t.timeId));
-      }
-
-      // Aggregate (avoid double counting by using Set logic)
-      timeData.forEach((t) => {
-        totalRegistered += t.registered;
-        totalUnregistered += t.unregistered;
-      });
-    });
-
-    // For comparison page, we sum across all selected items
-    // But need to prevent double counting when both faculties and times are selected
-    if (selectedFacultyIds.length > 0 && selectedTimeIds.length > 0) {
-      // When both are selected, count only once
-      totalAttendees = totalRegistered;
-    } else {
-      totalAttendees = totalRegistered;
-    }
-
-    const studentCount = Math.round(totalAttendees * 0.8); // 80% students
-    const staffCount = totalAttendees - studentCount; // 20% staff
-
-    return {
-      totalAttendees,
-      studentCount,
-      staffCount,
-      totalRegistered,
-      totalUnregistered,
-    };
-  }, [appliedFaculties, appliedTimes]);
-
-  // Prepare data for pie chart (student vs staff distribution)
-  const pieChartData = useMemo(() => {
-    return [
-      { name: "นิสิต", value: summaryStats.studentCount, fill: "var(--color-primary)" },
-      { name: "บุคลากร", value: summaryStats.staffCount, fill: "var(--chart-pink-200)" },
-    ];
-  }, [summaryStats]);
+  // Prepare data for pie chart - always show faculty distribution
+  const pieChartData = useMemo(
+    () => preparePieChartData(appliedFaculties, appliedTimes),
+    [appliedFaculties, appliedTimes],
+  );
 
   // layout
   return (

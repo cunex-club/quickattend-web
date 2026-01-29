@@ -15,11 +15,7 @@ import {
 export const description = "A pie chart with a label";
 
 const chartData = [
-  { faculty: "คณะวิศวกรรมศาสตร์", total: 232 },
-  { faculty: "คณะวิทยาศาสตร์", total: 131 },
-  { faculty: "คณะมนุษยศาสตร์", total: 223 },
-  { faculty: "คณะบริหารธุรกิจ", total: 121 },
-  { faculty: "อื่นๆ", total: 153 },
+  { faculty: "No Data", total: 1, fill: "var(--neutral-300)" },
 ];
 
 const CHART_COLORS = [
@@ -45,11 +41,21 @@ export function PieChartWithLabel({ data }: { data?: PieChartData[] }) {
   // Use provided data or fallback to default chartData
   const displayData = useMemo(() => {
     if (data && data.length > 0) {
-      return data.map((item) => ({
-        faculty: item.name,
-        total: item.value,
-        fill: item.fill,
-      }));
+      // Filter out items with value = 0
+      const filteredData = data
+        .filter((item) => item.value > 0)
+        .map((item, index) => ({
+          faculty: item.name,
+          total: item.value,
+          fill: item.fill || CHART_COLORS[index % CHART_COLORS.length],
+        }));
+
+      // If all items have value = 0, return default chartData
+      if (filteredData.length === 0) {
+        return chartData;
+      }
+
+      return filteredData;
     }
     return chartData;
   }, [data]);
@@ -57,7 +63,7 @@ export function PieChartWithLabel({ data }: { data?: PieChartData[] }) {
   // Memoize chart total
   const chartTotal = useMemo(
     () => displayData.reduce((sum, it) => sum + Number(it?.total ?? 0), 0),
-    [displayData]
+    [displayData],
   );
 
   type PieLabelProps = {
@@ -91,6 +97,9 @@ export function PieChartWithLabel({ data }: { data?: PieChartData[] }) {
       const percent = ((total / (chartTotal || 1)) * 100).toFixed(0);
       const anchor = x > Number(cx ?? 0) ? "start" : "end";
 
+      // Check if this is "No Data" to hide percentage
+      const isNoData = name === "No Data";
+
       return (
         <text
           x={x}
@@ -100,13 +109,15 @@ export function PieChartWithLabel({ data }: { data?: PieChartData[] }) {
           className="body-small-primary md:body-large-primary"
         >
           <tspan x={x}>{name}</tspan>
-          <tspan x={x} dy="1.1em">
-            {total} ({percent}%)
-          </tspan>
+          {!isNoData && (
+            <tspan x={x} dy="1.1em">
+              {total} ({percent}%)
+            </tspan>
+          )}
         </text>
       );
     },
-    [chartTotal]
+    [chartTotal],
   );
 
   const handleBackgroundClick = () => {
@@ -122,7 +133,7 @@ export function PieChartWithLabel({ data }: { data?: PieChartData[] }) {
           className={cn(
             "mx-auto aspect-square max-h-[300px] pb-0 flex flex-col justify-center h-full w-full",
             "[&_.recharts-pie-label-text]:fill-foreground",
-            "[&_.recharts-surface]:overflow-visible"
+            "[&_.recharts-surface]:overflow-visible",
           )}
         >
           <PieChart>
@@ -139,8 +150,10 @@ export function PieChartWithLabel({ data }: { data?: PieChartData[] }) {
               isAnimationActive={false}
             >
               {displayData.map((entry, index) => {
-                const opacity = hoveredIndex !== null && hoveredIndex !== index ? 0.3 : 1;
-                const fillColor = CHART_COLORS[index % CHART_COLORS.length];
+                const opacity =
+                  hoveredIndex !== null && hoveredIndex !== index ? 0.3 : 1;
+                const fillColor =
+                  entry.fill || CHART_COLORS[index % CHART_COLORS.length];
                 return (
                   <Cell
                     key={`cell-${index}`}
@@ -180,7 +193,8 @@ export function PieChartWithLabel({ data }: { data?: PieChartData[] }) {
               isAnimationActive={false}
             >
               {displayData.map((entry, index) => {
-                const fillColor = CHART_COLORS[index % CHART_COLORS.length];
+                const fillColor =
+                  entry.fill || CHART_COLORS[index % CHART_COLORS.length];
                 return (
                   <Cell
                     key={`cell-${index}`}

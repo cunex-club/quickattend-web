@@ -340,7 +340,7 @@ export function WhitelistInsightView() {
       studentCount,
       staffCount,
     };
-  }, [filteredFacultyData, appliedFaculties, appliedTimes, userFilter]);
+  }, [filteredFacultyData, userFilter]);
 
   const registrationStats = useMemo(() => {
     // filteredFacultyData already has registered/unregistered adjusted for user filter
