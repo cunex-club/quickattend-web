@@ -1,8 +1,9 @@
 import { useState, useMemo, useCallback } from "react";
-import { toast } from "sonner";
 
 export interface UseFilterLogicConfig {
   maxSelectionLimit?: number;
+  warnOnEmptyApply?: boolean;
+  t?: (key: string) => string;
 }
 
 export interface FilterHandlers {
@@ -12,14 +13,15 @@ export interface FilterHandlers {
   appliedTimes: Record<string, boolean>;
   handleFacultyChange: (itemId: string, checked: boolean) => void;
   handleTimeChange: (itemId: string, checked: boolean) => void;
-  handleClearSelection: () => void;
+  handleClearFilters: () => void;
+  handleApplyFilters: () => void;
   hasActiveFilters: boolean;
   selectedFacultyIds: string[];
   selectedTimeIds: string[];
 }
 
 export function useFilterLogic(config: UseFilterLogicConfig = {}): FilterHandlers {
-  const { maxSelectionLimit } = config;
+  const { maxSelectionLimit, warnOnEmptyApply = false, t } = config;
 
   // Selected filters - updated when user clicks on filter items
   const [selectedFaculties, setSelectedFaculties] = useState<Record<string, boolean>>({});
@@ -39,18 +41,12 @@ export function useFilterLogic(config: UseFilterLogicConfig = {}): FilterHandler
           const newSelected = { ...prevSelected };
 
           if (checked) {
-            // If "all" item is selected, clear everything else
             if (allItemId && itemId === allItemId) {
               return { [allItemId]: true };
             }
-
-            // Remove "all" item if it was selected
             if (allItemId) {
               delete newSelected[allItemId];
             }
-
-            // Check max selection limit (if configured)
-            // Only check when selecting a NEW item (not already selected)
             if (maxSelectionLimit && !prevSelected[itemId]) {
               const selectedCount = Object.values(newSelected).filter(Boolean).length;
               if (selectedCount >= maxSelectionLimit) {
@@ -81,15 +77,27 @@ export function useFilterLogic(config: UseFilterLogicConfig = {}): FilterHandler
     [createSelectionHandler, maxSelectionLimit]
   );
 
-  /**
-   * Clears all selected and applied filters
-   */
-  const handleClearSelection = useCallback(() => {
+  const handleClearFilters = useCallback(() => {
     setSelectedFaculties({});
     setSelectedTimes({});
     setAppliedFaculties({});
     setAppliedTimes({});
   }, []);
+
+  const handleApplyFilters = useCallback(() => {
+    if (warnOnEmptyApply) {
+      if (
+        Object.keys(selectedFaculties).length === 0 &&
+        Object.keys(selectedTimes).length === 0
+      ) {
+        if (t) {
+        }
+        return;
+      }
+    }
+    setAppliedFaculties(selectedFaculties);
+    setAppliedTimes(selectedTimes);
+  }, [selectedFaculties, selectedTimes, warnOnEmptyApply, t]);
 
 
 
@@ -122,7 +130,8 @@ export function useFilterLogic(config: UseFilterLogicConfig = {}): FilterHandler
     appliedTimes,
     handleFacultyChange,
     handleTimeChange,
-    handleClearSelection,
+    handleClearFilters,
+    handleApplyFilters,
     hasActiveFilters,
     selectedFacultyIds,
     selectedTimeIds,

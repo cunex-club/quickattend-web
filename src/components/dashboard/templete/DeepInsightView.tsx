@@ -50,6 +50,14 @@ import SortMenu from "@components/sort-menu";
 import IonIcon from "@shared/IonIcon";
 import { cn } from "@assets/lib/utils";
 import { PieChartFilter } from "@components/charts/PieChartFilter";
+import {
+  filterFacultyData,
+  filterTimeData,
+  calculateInsightSummaryStats,
+  calculateRegistrationStats,
+  hasActiveFilters as checkActiveFilters,
+} from "@utils/insightHelpers";
+import { useFilterLogic } from "../../../hooks/useFilterLogic";
 
 export function DeepInsightView() {
   const router = useRouter();
@@ -58,18 +66,6 @@ export function DeepInsightView() {
   const [userFilter, setUserFilter] = useState<"student" | "staff" | null>(
     null,
   );
-  const [selectedFaculties, setSelectedFaculties] = useState<
-    Record<string, boolean>
-  >({});
-  const [selectedTimes, setSelectedTimes] = useState<Record<string, boolean>>(
-    {},
-  );
-
-  // Applied filters - only updated when user clicks "Apply Filter"
-  const [appliedFaculties, setAppliedFaculties] = useState<
-    Record<string, boolean>
-  >({});
-  const [appliedTimes, setAppliedTimes] = useState<Record<string, boolean>>({});
 
   const facultyFilterOptions = useMemo(
     () => FilterFacultyOptions.filter((item) => item.id !== "f-0"),
@@ -87,243 +83,44 @@ export function DeepInsightView() {
       router.push("/dashboard");
     }
   }, [canViewInsights, router]);
-  const createSelectionHandler =
-    (setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>) =>
-    (itemId: string, checked: boolean) => {
-      setter((prevSelected) => {
-        const newSelected = { ...prevSelected };
-        if (checked) {
-          newSelected[itemId] = true;
-        } else {
-          delete newSelected[itemId];
-        }
-        return newSelected;
-      });
-    };
 
-  const handleFacultyChange = createSelectionHandler(setSelectedFaculties);
-  const handleTimeChange = createSelectionHandler(setSelectedTimes);
-
-  const handleClearFilters = () => {
-    setSelectedFaculties({});
-    setSelectedTimes({});
-    // Also clear applied filters immediately
-    setAppliedFaculties({});
-    setAppliedTimes({});
-  };
-
-  const handleApplyFilters = () => {
-    setAppliedFaculties(selectedFaculties);
-    setAppliedTimes(selectedTimes);
-  };
+  const {
+    selectedFaculties,
+    selectedTimes,
+    appliedFaculties,
+    appliedTimes,
+    handleFacultyChange,
+    handleTimeChange,
+    handleClearFilters,
+    handleApplyFilters,
+  } = useFilterLogic();
 
   const handleSortChange = () => {};
 
-  // Check if any filters are active
-  const hasActiveFilters = useMemo(() => {
-    const hasFacultyFilter =
-      Object.keys(appliedFaculties).filter((key) => appliedFaculties[key])
-        .length > 0;
-    const hasTimeFilter =
-      Object.keys(appliedTimes).filter((key) => appliedTimes[key]).length > 0;
-    return hasFacultyFilter || hasTimeFilter;
-  }, [appliedFaculties, appliedTimes]);
+  const hasActiveFilters = useMemo(
+    () => checkActiveFilters(appliedFaculties, appliedTimes),
+    [appliedFaculties, appliedTimes],
+  );
 
-  // Apply filters to data using useMemo for performance
-  // Note: User type filter (student/staff) applies immediately
-  // Faculty and time filters only apply when "Apply Filter" is clicked
+  const filteredFacultyData = useMemo(
+    () => filterFacultyData(appliedFaculties, appliedTimes, userFilter),
+    [appliedFaculties, appliedTimes, userFilter],
+  );
 
-  // Filter faculty data: filter by selected faculties and optionally by time periods
-  const filteredFacultyData = useMemo(() => {
-    const selectedFacultyIds = Object.keys(appliedFaculties).filter(
-      (key) => appliedFaculties[key] && key !== "f-0",
-    );
-    const selectedTimeIds = Object.keys(appliedTimes).filter(
-      (key) => appliedTimes[key] && key !== "t-0",
-    );
+  const filteredTimeData = useMemo(
+    () => filterTimeData(appliedFaculties, appliedTimes, userFilter),
+    [appliedFaculties, appliedTimes, userFilter],
+  );
 
-    // Filter faculties
-    let faculties = deepInsightFacultyData;
-    if (selectedFacultyIds.length > 0) {
-      faculties = faculties.filter((f) =>
-        selectedFacultyIds.includes(f.facultyId),
-      );
-    }
+  const summaryStats = useMemo(
+    () => calculateInsightSummaryStats(filteredFacultyData, userFilter),
+    [filteredFacultyData, userFilter],
+  );
 
-    // For each faculty, filter time periods and aggregate
-    return faculties.map((faculty) => {
-      let timeData = faculty.data;
-
-      // Filter by selected times if any
-      if (selectedTimeIds.length > 0) {
-        timeData = timeData.filter((t) => selectedTimeIds.includes(t.timeId));
-      }
-
-      // Aggregate time data for this faculty
-      const students = timeData.reduce((sum, t) => sum + t.students, 0);
-      const staff = timeData.reduce((sum, t) => sum + t.staff, 0);
-      const totalRegistered = timeData.reduce(
-        (sum, t) => sum + t.registered,
-        0,
-      );
-      const totalUnregistered = timeData.reduce(
-        (sum, t) => sum + t.unregistered,
-        0,
-      );
-
-      let total = students + staff;
-      let registered = totalRegistered;
-      let unregistered = totalUnregistered;
-
-      if (userFilter === "student") {
-        total = students;
-        // Apply proportional adjustment for students
-        const studentRatio = students / (students + staff || 1);
-        registered = Math.round(totalRegistered * studentRatio);
-        unregistered = Math.round(totalUnregistered * studentRatio);
-      } else if (userFilter === "staff") {
-        total = staff;
-        // Apply proportional adjustment for staff
-        const staffRatio = staff / (students + staff || 1);
-        registered = Math.round(totalRegistered * staffRatio);
-        unregistered = Math.round(totalUnregistered * staffRatio);
-      }
-
-      return {
-        facultyId: faculty.facultyId,
-        faculty: faculty.faculty,
-        students,
-        staff,
-        total,
-        registered,
-        unregistered,
-      };
-    });
-  }, [appliedFaculties, appliedTimes, userFilter]);
-
-  // Filter time data: filter by selected times and optionally by faculties
-  const filteredTimeData = useMemo(() => {
-    const selectedFacultyIds = Object.keys(appliedFaculties).filter(
-      (key) => appliedFaculties[key] && key !== "f-0",
-    );
-    const selectedTimeIds = Object.keys(appliedTimes).filter(
-      (key) => appliedTimes[key] && key !== "t-0",
-    );
-
-    // Filter time periods
-    let times = deepInsightTimeData;
-    if (selectedTimeIds.length > 0) {
-      times = times.filter((t) => selectedTimeIds.includes(t.timeId));
-    }
-
-    // For each time period, filter faculties and aggregate
-    return times.map((timeItem) => {
-      let facultyData = timeItem.data;
-
-      // Filter by selected faculties if any
-      if (selectedFacultyIds.length > 0) {
-        facultyData = facultyData.filter((f) =>
-          selectedFacultyIds.includes(f.facultyId),
-        );
-      }
-
-      // Aggregate faculty data for this time period
-      const students = facultyData.reduce((sum, f) => sum + f.students, 0);
-      const staff = facultyData.reduce((sum, f) => sum + f.staff, 0);
-      const totalRegistered = facultyData.reduce(
-        (sum, f) => sum + f.registered,
-        0,
-      );
-      const totalUnregistered = facultyData.reduce(
-        (sum, f) => sum + f.unregistered,
-        0,
-      );
-
-      let total = students + staff;
-      let registered = totalRegistered;
-      let unregistered = totalUnregistered;
-
-      if (userFilter === "student") {
-        total = students;
-        // Apply proportional adjustment for students
-        const studentRatio = students / (students + staff || 1);
-        registered = Math.round(totalRegistered * studentRatio);
-        unregistered = Math.round(totalUnregistered * studentRatio);
-      } else if (userFilter === "staff") {
-        total = staff;
-        // Apply proportional adjustment for staff
-        const staffRatio = staff / (students + staff || 1);
-        registered = Math.round(totalRegistered * staffRatio);
-        unregistered = Math.round(totalUnregistered * staffRatio);
-      }
-
-      return {
-        timeId: timeItem.timeId,
-        time: timeItem.time,
-        students,
-        staff,
-        total,
-        registered,
-        unregistered,
-      };
-    });
-  }, [appliedFaculties, appliedTimes, userFilter]);
-
-  // Calculate summary statistics
-  const summaryStats = useMemo(() => {
-    // Calculate from filteredFacultyData
-    const totalStudents = filteredFacultyData.reduce(
-      (sum, f) => sum + f.students,
-      0,
-    );
-    const totalStaff = filteredFacultyData.reduce((sum, f) => sum + f.staff, 0);
-    const totalRegistered = filteredFacultyData.reduce(
-      (sum, f) => sum + f.registered,
-      0,
-    );
-
-    // totalAttendees should be the registered count (actual participants)
-    const totalAttendees = totalRegistered;
-    let studentCount = totalStudents;
-    let staffCount = totalStaff;
-
-    if (userFilter === "student") {
-      studentCount = totalStudents;
-      staffCount = 0;
-    } else if (userFilter === "staff") {
-      studentCount = 0;
-      staffCount = totalStaff;
-    }
-
-    return {
-      totalAttendees,
-      studentCount,
-      staffCount,
-    };
-  }, [filteredFacultyData, userFilter]);
-
-  const registrationStats = useMemo(() => {
-    const totalRegistered = filteredFacultyData.reduce(
-      (sum, f) => sum + f.registered,
-      0,
-    );
-    const totalUnregistered = filteredFacultyData.reduce(
-      (sum, f) => sum + f.unregistered,
-      0,
-    );
-    const totalStudents = filteredFacultyData.reduce(
-      (sum, f) => sum + f.students,
-      0,
-    );
-    const totalStaff = filteredFacultyData.reduce((sum, f) => sum + f.staff, 0);
-
-    return {
-      registered: totalRegistered,
-      unregistered: totalUnregistered,
-      students: totalStudents,
-      staff: totalStaff,
-    };
-  }, [filteredFacultyData]);
+  const registrationStats = useMemo(
+    () => calculateRegistrationStats(filteredFacultyData),
+    [filteredFacultyData],
+  );
 
   // Prepare faculty detail data for each time period (for BarChartHorizontal detail section)
   const facultyDetailData = useMemo(() => {

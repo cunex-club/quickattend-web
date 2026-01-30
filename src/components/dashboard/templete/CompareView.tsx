@@ -63,36 +63,28 @@ export function CompareView() {
   const t = useTranslations("Dashboard.compare");
   const { role } = useRole();
 
-  // Use the filter logic hook ONLY for selection state (not applied state)
-  // CompareView needs custom validation before applying filters
   const {
     selectedFaculties,
     selectedTimes,
     handleFacultyChange,
     handleTimeChange,
-    handleClearSelection: hookClearSelection,
+    handleClearFilters,
   } = useFilterLogic({
     maxSelectionLimit: 5,
   });
 
-  // Manage applied filters separately for custom validation logic
   const [appliedFaculties, setAppliedFaculties] = useState<
     Record<string, boolean>
   >({});
   const [appliedTimes, setAppliedTimes] = useState<Record<string, boolean>>({});
 
-  // Custom clear that also clears applied state
-  const handleClearSelection = () => {
-    hookClearSelection();
-    setAppliedFaculties({});
+  // Custom clear handler that also clears the separate applied state
+  const handleClearAll = () => {
+    handleClearFilters(); // Clear hook's internal state
+    setAppliedFaculties({}); // Clear CompareView's applied state
     setAppliedTimes({});
   };
 
-  if (!canViewPage(role)) {
-    redirect("/dashboard");
-    return null;
-  }
-  // Custom validation and submission logic for CompareView
   const handleSubmitComparison = () => {
     const hasFacultySelection = Object.keys(selectedFaculties).length > 0;
     const hasTimeSelection = Object.keys(selectedTimes).length > 0;
@@ -169,7 +161,6 @@ export function CompareView() {
       return;
     }
 
-    // Apply the filters after validation passes
     setAppliedFaculties(selectedFaculties);
     setAppliedTimes(selectedTimes);
 
@@ -199,17 +190,20 @@ export function CompareView() {
     [appliedFaculties, appliedTimes],
   );
 
-  // Calculate summary statistics
   const summaryStats = useMemo(
     () => calculateSummaryStats(appliedFaculties, appliedTimes),
     [appliedFaculties, appliedTimes],
   );
 
-  // Prepare data for pie chart - always show faculty distribution
   const pieChartData = useMemo(
     () => preparePieChartData(appliedFaculties, appliedTimes),
     [appliedFaculties, appliedTimes],
   );
+
+  if (!canViewPage(role)) {
+    redirect("/dashboard");
+    return null;
+  }
 
   // layout
   return (
@@ -261,7 +255,7 @@ export function CompareView() {
                     bordered="round"
                     expanded={true}
                     className="bg-transparent"
-                    onClick={handleClearSelection}
+                    onClick={handleClearAll}
                   >
                     <p className="title-large-emphasized">{t("clearData")}</p>
                   </Button>
@@ -284,13 +278,16 @@ export function CompareView() {
             <div className="w-full">
               <StatCard
                 title={t("totalAttendees")}
-                value={summaryStats.totalAttendees}
+                value={summaryStats.totalRegistered}
                 unit={t("unit")}
                 variant="outline"
               >
                 <div className="flex flex-col justify-center items-center gap-4">
                   <p className="title-medium-emphasized lg:title-large-emphasized">
-                    {t("outOfTotal")} 1096 {t("unit")}
+                    {t("outOfTotal")}{" "}
+                    {summaryStats.totalRegistered +
+                      summaryStats.totalUnregistered}{" "}
+                    {t("unit")}
                   </p>
                 </div>
               </StatCard>

@@ -2,10 +2,8 @@ import {
   deepInsightFacultyData,
   deepInsightTimeData,
 } from "./data";
+import { getSelectedIds } from "./filterUtils";
 
-/**
- * Type definitions for compare page helpers
- */
 export interface ComparisonFacultyData {
   faculty: string;
   data: {
@@ -36,17 +34,7 @@ export interface PieChartDataItem {
   fill: string;
 }
 
-/**
- * Extract selected IDs from filter state, excluding the "all" item
- */
-export function getSelectedIds(
-  appliedFilters: Record<string, boolean>,
-  excludeId: string = "f-0"
-): string[] {
-  return Object.keys(appliedFilters).filter(
-    (key) => appliedFilters[key] && key !== excludeId
-  );
-}
+
 
 /**
  * Transform faculty data for comparison charts
@@ -156,44 +144,42 @@ export function calculateSummaryStats(
     );
   }
 
-  // Calculate totals
-  let totalAttendees = 0;
+  // Calculate totals by summing data from selected faculties/times
+  let totalStudents = 0;
+  let totalStaff = 0;
   let totalRegistered = 0;
   let totalUnregistered = 0;
 
   faculties.forEach((faculty) => {
     let timeData = faculty.data;
 
-    // Filter by selected times if any
+    // Filter by selected times if specified
     if (!appliedTimes["t-0"] && selectedTimeIds.length > 0) {
       timeData = timeData.filter((t) => selectedTimeIds.includes(t.timeId));
     }
 
-    // Aggregate (avoid double counting by using Set logic)
+    // Sum up the values
     timeData.forEach((t) => {
+      totalStudents += t.students;
+      totalStaff += t.staff;
       totalRegistered += t.registered;
       totalUnregistered += t.unregistered;
     });
   });
 
-  // For comparison page, we sum across all selected items
-  // But need to prevent double counting when both faculties and times are selected
-  if (selectedFacultyIds.length > 0 && selectedTimeIds.length > 0) {
-    // When both are selected, count only once
-    totalAttendees = totalRegistered;
-  } else {
-    totalAttendees = totalRegistered;
-  }
-
-  const studentCount = Math.round(totalAttendees * 0.8); // 80% students
-  const staffCount = totalAttendees - studentCount; // 20% staff
+  // Total Attendees = Registered (actual participants)
+  const totalAttendees = totalRegistered;
+  
+  // Student/Staff counts (eligible totals)
+  const studentCount = totalStudents;
+  const staffCount = totalStaff;
 
   return {
-    totalAttendees,
-    studentCount,
-    staffCount,
-    totalRegistered,
-    totalUnregistered,
+    totalAttendees,      // Registered participants
+    studentCount,        // Total students (eligible)
+    staffCount,          // Total staff (eligible)
+    totalRegistered,     // Registered participants (same  as totalAttendees)
+    totalUnregistered,   // Unregistered (eligible but didn't attend)
   };
 }
 
@@ -361,15 +347,4 @@ export function validateComparisonFilters(
   };
 }
 
-/**
- * Check if filters have been applied
- */
-export function hasAppliedFilters(
-  appliedFaculties: Record<string, boolean>,
-  appliedTimes: Record<string, boolean>
-): boolean {
-  return (
-    Object.keys(appliedFaculties).length > 0 &&
-    Object.keys(appliedTimes).length > 0
-  );
-}
+
