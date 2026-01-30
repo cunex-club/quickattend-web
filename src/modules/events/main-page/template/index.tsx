@@ -9,6 +9,9 @@ import FilterMenu, {
 import Pagination from "@shared/Pagination";
 import { useTranslations } from "next-intl";
 
+import { Link } from "@i18n/navigation";
+import IonIcon from "@shared/IonIcon";
+
 const EventPageTemplate = () => {
   const t = useTranslations("Events");
   const [sortOrder, setSortOrder] = useState("newest");
@@ -39,26 +42,15 @@ const EventPageTemplate = () => {
   };
 
   return (
-    <div className="w-full h-full px-24 py-24 pb-30 space-y-16">
-      <div className="space-y-8">
-        <div className="flex justify-between items-center">
-          <div className="display-medium-emphasized">{t("myEvents")}</div>
-          <div className="flex justify-center items-center gap-2.25">
-            <FilterMenu onFilterChange={handleMyEventsFilterChange} />
-            <SortMenu
-              options={[
-                {
-                  label: "วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด",
-                  value: "newest",
-                },
-                {
-                  label: "วันที่จัดกิจกรรม : เก่าสุด - ใหม่สุด",
-                  value: "oldest",
-                },
-              ]}
-              onSelect={handleMyEventsSortChange}
-            />
+    <div className="w-full h-full px-6 py-8 lg:px-24 lg:py-24 pb-30 space-y-8 lg:space-y-16">
+      <div className="space-y-4">
+        <div className="flex justify-between items-center gap-4">
+          <div className="headline-small-emphasized lg:display-medium-emphasized">
+            {t("myEvents")}
           </div>
+          <Link href="/search" className="lg:hidden text-primary p-1">
+            <IonIcon name="SearchOutline" className="w-6 h-6" />
+          </Link>
         </div>
         <EventCard
           title="Freshmen night"
@@ -74,9 +66,11 @@ const EventPageTemplate = () => {
         />
       </div>
       <div className="space-y-8">
-        <div className="flex justify-between items-center">
-          <div className="display-medium-emphasized">{t("pastEvents")}</div>
-          <div className="flex justify-center items-center gap-2.25">
+        <div className="flex justify-between items-center gap-4">
+          <div className="headline-small-emphasized lg:display-medium-emphasized">
+            {t("pastEvents")}
+          </div>
+          <div className="flex flex-wrap items-center gap-1 lg:gap-2.25">
             <FilterMenu onFilterChange={handlePastEventsFilterChange} />
             <SortMenu
               options={[

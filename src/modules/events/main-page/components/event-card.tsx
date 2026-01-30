@@ -43,13 +43,15 @@ const EventCard: StyleableFC<EventCardProps> = ({
     return (
       <div
         className={cn(
-          "px-8 py-6 rounded-xl shadow-lg bg-neutral-100 space-y-4",
+          "p-4 sm:px-8 sm:py-6 rounded-xl shadow-lg bg-neutral-100 space-y-4",
           className,
         )}
         {...props}
       >
         <div className="flex justify-between items-center ">
-          <div className="display-small-emphasized">{title}</div>
+          <div className="title-large-emphasized lg:display-small-emphasized">
+            {title}
+          </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
@@ -57,7 +59,16 @@ const EventCard: StyleableFC<EventCardProps> = ({
                 aria-label="Sort"
                 className="m-2.5 text-primary cursor-pointer rounded focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
-                <Icon name="more_vert" size={32} className="text-primary" />
+                <Icon
+                  name="more_vert"
+                  size={20}
+                  className="text-primary lg:hidden"
+                />
+                <Icon
+                  name="more_vert"
+                  size={32}
+                  className="text-primary hidden lg:block"
+                />
               </button>
             </DropdownMenuTrigger>{" "}
             {/* will replace with custom drop down later */}
@@ -75,14 +86,20 @@ const EventCard: StyleableFC<EventCardProps> = ({
           </DropdownMenu>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-start gap-y-4 sm:gap-x-6 md:gap-x-12.5">
-          <div className="sm:flex-2 px-4">
-            <div className="headline-small-emphasized mb-2">
+          <div className="order-2 sm:order-1 sm:flex-2 lg:px-4">
+            <div className="headline-small-emphasized mb-2 hidden sm:block">
               {t("activityDetails")}
             </div>
-            <div className="body-large-primary">{description}</div>
+            <div className="body-large-primary line-clamp-3 sm:line-clamp-none mb-4 sm:mb-0">
+              {description}
+            </div>
+            <div className="flex items-center gap-2 sm:hidden">
+              <IonIcon name="Person" size="16px" className="text-primary" />
+              <span className="body-large-primary">{role}</span>
+            </div>
           </div>
 
-          <div className="sm:flex-1 space-y-2 px-4">
+          <div className="order-1 sm:order-2 sm:flex-1 space-y-2 lg:px-4">
             <div className="flex items-center gap-2">
               <IonIcon name="Calendar" size="16px" className="text-primary" />
               <span className="body-large-primary">{date}</span>
@@ -96,13 +113,14 @@ const EventCard: StyleableFC<EventCardProps> = ({
               <IonIcon name="Location" size="16px" className="text-primary" />
               <span className="body-large-primary">{location}</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2">
               <IonIcon name="Person" size="16px" className="text-primary" />
               <span className="body-large-primary">{role}</span>
             </div>
           </div>
         </div>
-        <div className="flex gap-6">
+        {/* Desktop View */}
+        <div className="hidden lg:flex flex-row gap-4 sm:gap-6">
           <Button mode="filled" bordered="round" expanded>
             <div className="flex justify-center items-center gap-2">
               <IonIcon name="ScanOutline" size="36px" className="text-white" />
@@ -118,7 +136,53 @@ const EventCard: StyleableFC<EventCardProps> = ({
                 size="36px"
                 className="text-primary"
               />
-              <div className="title-large-primary text-primary">
+              <div className="title-large-primary text-primary hidden sm:block">
+                {t("activityStatistics")}
+              </div>
+            </div>
+          </Button>
+        </div>
+
+        {/* Mobile View */}
+        <div className="flex lg:hidden flex-row gap-4 sm:gap-6">
+          <Button mode="filled" bordered="round" expanded>
+            <div className="flex justify-center items-center gap-2">
+              <IonIcon name="ScanOutline" size="36px" className="text-white" />
+              <div className="title-large-primary text-white ">
+                {t("scanParticipant")}
+              </div>
+            </div>
+          </Button>
+          <Button mode="outline" bordered="round" expanded={false}>
+            <div className="flex justify-center items-center gap-2">
+              <IonIcon
+                name="TrendingUpOutline"
+                size="36px"
+                className="text-primary"
+              />
+              <div className="title-large-primary text-primary hidden sm:block">
+                {t("activityStatistics")}
+              </div>
+            </div>
+          </Button>
+        </div>
+        <div className="hidden lg:">
+          <Button mode="filled" bordered="round" expanded>
+            <div className="flex justify-center items-center gap-2">
+              <IonIcon name="ScanOutline" size="36px" className="text-white" />
+              <div className="title-large-primary text-white ">
+                {t("scanParticipant")}
+              </div>
+            </div>
+          </Button>
+          <Button mode="outline" bordered="round" expanded={false}>
+            <div className="flex justify-center items-center gap-2">
+              <IonIcon
+                name="TrendingUpOutline"
+                size="36px"
+                className="text-primary"
+              />
+              <div className="title-large-primary text-primary hidden sm:block">
                 {t("activityStatistics")}
               </div>
             </div>
@@ -136,7 +200,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
     >
       <AccordionItem
         value="event-details"
-        className="px-8 py-6 rounded-xl shadow-lg bg-neutral-100 border-none"
+        className="p-4 sm:px-8 sm:py-6 rounded-xl shadow-lg bg-neutral-100 border-none"
       >
         <AccordionTrigger className="hover:no-underline items-center">
           <div className="flex justify-between items-center w-full">
@@ -179,7 +243,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
               </div>
             </div>
           </div>
-          <div className="flex gap-6 mt-4">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-4">
             <Button mode="filled" bordered="round" expanded>
               <div className="flex justify-center items-center gap-2">
                 <IonIcon
@@ -192,20 +256,17 @@ const EventCard: StyleableFC<EventCardProps> = ({
                 </div>
               </div>
             </Button>
-            <Button mode="outline" bordered="round" expanded>
-              <div className="flex justify-center items-center gap-2">
+            <Button mode="outline" bordered="round" expanded={false}>
+              <div className="flex justify-center items-center">
                 <IonIcon
                   name="DownloadOutline"
                   size="36px"
                   className="text-primary"
                 />
-                <div className="title-large-primary text-primary">
-                  {t("downloadStatistics")}
-                </div>
               </div>
             </Button>
             <Button mode="outline" bordered="round" expanded={false}>
-              <div className="flex justify-center items-center gap-2">
+              <div className="flex justify-center items-center">
                 <IonIcon
                   name="DuplicateOutline"
                   size="36px"
