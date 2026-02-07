@@ -4,6 +4,7 @@ import React from "react";
 import DashboardNav from "@components/dashboard/DashboardNav";
 import { useRole } from "@context/RoleContext";
 import { useTranslations } from "next-intl";
+import { DashboardApolloProvider } from "@graphql/provider";
 interface DashboardGroupLayoutProps {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -29,11 +30,13 @@ export default function DashboardGroupLayout({
   ];
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen py-6 px-5 bg-neutral-white">
-      <div className="container space-y-6 h-full flex flex-col">
-        <DashboardNav locale={locale} role={role} tabs={tabs} />
-        <main className="w-full flex-1">{children}</main>
+    <DashboardApolloProvider>
+      <div className="flex flex-col items-center w-full min-h-screen py-6 px-5 bg-neutral-white">
+        <div className="container space-y-6 h-full flex flex-col">
+          <DashboardNav locale={locale} role={role} tabs={tabs} />
+          <main className="w-full flex-1">{children}</main>
+        </div>
       </div>
-    </div>
+    </DashboardApolloProvider>
   );
 }

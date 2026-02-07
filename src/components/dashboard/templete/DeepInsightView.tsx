@@ -40,12 +40,7 @@ import {
 } from "@assets/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { FilterableList } from "../FilterableList";
-import {
-  deepInsightFacultyData,
-  deepInsightTimeData,
-  FilterFacultyOptions,
-  FilterTimeOptions,
-} from "@utils/data";
+import { useDashboardInsightData } from "@graphql/hooks/useDashboardQueries";
 import SortMenu from "@components/sort-menu";
 import IonIcon from "@shared/IonIcon";
 import { cn } from "@assets/lib/utils";
@@ -67,13 +62,27 @@ export function DeepInsightView() {
     null,
   );
 
+  // Fetch all insight data via mock GraphQL
+  const {
+    deepInsightFacultyData,
+    deepInsightTimeData,
+    filterFacultyOptions: FilterFacultyOptions,
+    filterTimeOptions: FilterTimeOptions,
+    loading: dataLoading,
+  } = useDashboardInsightData();
+
+  const dataSources = useMemo(
+    () => ({ deepInsightFacultyData, deepInsightTimeData }),
+    [deepInsightFacultyData, deepInsightTimeData],
+  );
+
   const facultyFilterOptions = useMemo(
     () => FilterFacultyOptions.filter((item) => item.id !== "f-0"),
-    [],
+    [FilterFacultyOptions],
   );
   const timeFilterOptions = useMemo(
     () => FilterTimeOptions.filter((item) => item.id !== "t-0"),
-    [],
+    [FilterTimeOptions],
   );
 
   const canViewInsights = role === "manager" || role === "owner";
@@ -103,13 +112,13 @@ export function DeepInsightView() {
   );
 
   const filteredFacultyData = useMemo(
-    () => filterFacultyData(appliedFaculties, appliedTimes, userFilter),
-    [appliedFaculties, appliedTimes, userFilter],
+    () => filterFacultyData(appliedFaculties, appliedTimes, userFilter, dataSources),
+    [appliedFaculties, appliedTimes, userFilter, dataSources],
   );
 
   const filteredTimeData = useMemo(
-    () => filterTimeData(appliedFaculties, appliedTimes, userFilter),
-    [appliedFaculties, appliedTimes, userFilter],
+    () => filterTimeData(appliedFaculties, appliedTimes, userFilter, dataSources),
+    [appliedFaculties, appliedTimes, userFilter, dataSources],
   );
 
   const summaryStats = useMemo(
@@ -180,7 +189,7 @@ export function DeepInsightView() {
     });
 
     return detailMap;
-  }, [appliedFaculties, userFilter]);
+  }, [appliedFaculties, userFilter, deepInsightTimeData]);
 
   // Prepare time detail data for each faculty (for BarChartVertical detail section)
   const timeDetailData = useMemo(() => {
@@ -214,7 +223,7 @@ export function DeepInsightView() {
     });
 
     return detailMap;
-  }, [appliedTimes, userFilter]);
+  }, [appliedTimes, userFilter, deepInsightFacultyData]);
 
   // Prepare chart data
   const verticalChartData = useMemo(
@@ -251,6 +260,7 @@ export function DeepInsightView() {
   );
 
   if (!canViewInsights) return null;
+  if (dataLoading) return <Skeleton className="h-[600px] w-full rounded-lg" />;
 
   return (
     <div className="w-full rounded-xl bg-neutral-white space-y-16">

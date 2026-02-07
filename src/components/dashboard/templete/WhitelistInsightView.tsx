@@ -26,7 +26,7 @@ const BarChartHorizontal = dynamic(
 );
 
 const DonutChart = dynamic(
-  () => import("../../charts/DonutChart").then((mod) => mod.DonutChart),
+  () => import("@components/charts/DonutChart").then((mod) => mod.DonutChart),
   {
     loading: () => (
       <Skeleton className="h-full w-full rounded-lg bg-neutral-white" />
@@ -36,7 +36,7 @@ const DonutChart = dynamic(
 );
 
 const PieChartFilter = dynamic(
-  () => import("../../charts/PieChartFilter").then((mod) => mod.PieChartFilter),
+  () => import("@components/charts/PieChartFilter").then((mod) => mod.PieChartFilter),
   {
     loading: () => (
       <Skeleton className="h-full w-full rounded-lg bg-neutral-white" />
@@ -47,7 +47,7 @@ const PieChartFilter = dynamic(
 
 const BarChartVerticalStacked = dynamic(
   () =>
-    import("../../charts/BarChartVerticalStacked").then(
+    import("@components/charts/BarChartVerticalStacked").then(
       (mod) => mod.BarChartVerticalStacked,
     ),
   {
@@ -63,12 +63,7 @@ import {
 } from "@assets/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { FilterableList } from "../FilterableList";
-import {
-  FilterFacultyOptions,
-  FilterTimeOptions,
-  deepInsightFacultyData,
-  deepInsightTimeData,
-} from "@utils/data";
+import { useDashboardInsightData } from "@graphql/hooks/useDashboardQueries";
 import SortMenu from "@components/sort-menu";
 import IonIcon from "@shared/IonIcon";
 import { FacultyDetailData, TimeDetailData } from "@customTypes/chart";
@@ -89,14 +84,28 @@ export function WhitelistInsightView() {
     null,
   );
 
+  // Fetch all insight data via mock GraphQL
+  const {
+    deepInsightFacultyData,
+    deepInsightTimeData,
+    filterFacultyOptions: FilterFacultyOptions,
+    filterTimeOptions: FilterTimeOptions,
+    loading: dataLoading,
+  } = useDashboardInsightData();
+
+  const dataSources = useMemo(
+    () => ({ deepInsightFacultyData, deepInsightTimeData }),
+    [deepInsightFacultyData, deepInsightTimeData],
+  );
+
   // items that user can select to filter
   const facultyFilterOptions = useMemo(
     () => FilterFacultyOptions.filter((item) => item.id !== "f-0"),
-    [],
+    [FilterFacultyOptions],
   );
   const timeFilterOptions = useMemo(
     () => FilterTimeOptions.filter((item) => item.id !== "t-0"),
-    [],
+    [FilterTimeOptions],
   );
 
   const canViewInsights = role === "manager" || role === "owner";
@@ -129,13 +138,13 @@ export function WhitelistInsightView() {
   );
 
   const filteredFacultyData = useMemo(
-    () => filterFacultyData(appliedFaculties, appliedTimes, userFilter),
-    [appliedFaculties, appliedTimes, userFilter],
+    () => filterFacultyData(appliedFaculties, appliedTimes, userFilter, dataSources),
+    [appliedFaculties, appliedTimes, userFilter, dataSources],
   );
 
   const filteredTimeData = useMemo(
-    () => filterTimeData(appliedFaculties, appliedTimes, userFilter),
-    [appliedFaculties, appliedTimes, userFilter],
+    () => filterTimeData(appliedFaculties, appliedTimes, userFilter, dataSources),
+    [appliedFaculties, appliedTimes, userFilter, dataSources],
   );
 
   const summaryStats = useMemo(
@@ -201,7 +210,7 @@ export function WhitelistInsightView() {
     });
 
     return detailMap;
-  }, [appliedFaculties, userFilter]);
+  }, [appliedFaculties, userFilter, deepInsightTimeData]);
 
   // Generate time detail data for each faculty (for BarChartVerticalStacked detail section)
   // This shows time breakdown for each faculty, filtered by time filter
@@ -236,7 +245,7 @@ export function WhitelistInsightView() {
     });
 
     return detailMap;
-  }, [appliedTimes, userFilter]);
+  }, [appliedTimes, userFilter, deepInsightFacultyData]);
 
   const donutChartData = useMemo(
     () => [
@@ -264,6 +273,7 @@ export function WhitelistInsightView() {
   const totalUnregistered = registrationStats.unregistered;
 
   if (!canViewInsights) return null;
+  if (dataLoading) return <Skeleton className="h-[600px] w-full rounded-lg" />;
 
   return (
     <div className="w-full rounded-xl bg-neutral-white space-y-16">

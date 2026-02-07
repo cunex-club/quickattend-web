@@ -1,11 +1,18 @@
 import {
-  deepInsightFacultyData,
-  deepInsightTimeData,
+  deepInsightFacultyData as defaultFacultyData,
+  deepInsightTimeData as defaultTimeData,
 } from "./data";
 import { getSelectedIds } from "./filterUtils";
 
 // Re-export for backward compatibility
 export { hasActiveFilters } from "./filterUtils";
+
+// Optional data sources that can be injected (e.g. from GraphQL).
+// When omitted the helpers fall back to the static imports from data.tsx.
+export interface InsightDataSources {
+  deepInsightFacultyData?: typeof defaultFacultyData;
+  deepInsightTimeData?: typeof defaultTimeData;
+}
 
 export interface FilteredFacultyItem {
   facultyId: string;
@@ -45,12 +52,13 @@ export type UserFilter = "student" | "staff" | null;
 export function filterFacultyData(
   appliedFaculties: Record<string, boolean>,
   appliedTimes: Record<string, boolean>,
-  userFilter: UserFilter
+  userFilter: UserFilter,
+  dataSources?: InsightDataSources,
 ): FilteredFacultyItem[] {
   const selectedFacultyIds = getSelectedIds(appliedFaculties, "f-0");
   const selectedTimeIds = getSelectedIds(appliedTimes, "t-0");
 
-  let faculties = deepInsightFacultyData;
+  let faculties = dataSources?.deepInsightFacultyData ?? defaultFacultyData;
   if (selectedFacultyIds.length > 0) {
     faculties = faculties.filter((f) =>
       selectedFacultyIds.includes(f.facultyId)
@@ -84,12 +92,15 @@ export function filterFacultyData(
     // Show only students or staff
     if (userFilter === "student") {
       total = students;
+      const ratio = students / (students + staff || 1);
+      registered = Math.round(totalRegistered * ratio);
+      unregistered = Math.round(totalUnregistered * ratio);
     } else if (userFilter === "staff") {
       total = staff;
+      const ratio = staff / (students + staff || 1);
+      registered = Math.round(totalRegistered * ratio);
+      unregistered = Math.round(totalUnregistered * ratio);
     }
-    const ratio = students / (students + staff || 1);
-    registered = Math.round(totalRegistered * ratio);
-    unregistered = Math.round(totalUnregistered * ratio);
 
     return {
       facultyId: faculty.facultyId,
@@ -108,12 +119,13 @@ export function filterFacultyData(
 export function filterTimeData(
   appliedFaculties: Record<string, boolean>,
   appliedTimes: Record<string, boolean>,
-  userFilter: UserFilter
+  userFilter: UserFilter,
+  dataSources?: InsightDataSources,
 ): FilteredTimeItem[] {
   const selectedFacultyIds = getSelectedIds(appliedFaculties, "f-0");
   const selectedTimeIds = getSelectedIds(appliedTimes, "t-0");
 
-  let times = deepInsightTimeData;
+  let times = dataSources?.deepInsightTimeData ?? defaultTimeData;
   if (selectedTimeIds.length > 0) {
     times = times.filter((t) => selectedTimeIds.includes(t.timeId));
   }
@@ -147,13 +159,15 @@ export function filterTimeData(
     // Show only students or staff
     if (userFilter === "student") {
       total = students;
+      const ratio = students / (students + staff || 1);
+      registered = Math.round(totalRegistered * ratio);
+      unregistered = Math.round(totalUnregistered * ratio);
     } else if (userFilter === "staff") {
       total = staff;
+      const ratio = staff / (students + staff || 1);
+      registered = Math.round(totalRegistered * ratio);
+      unregistered = Math.round(totalUnregistered * ratio);
     }
-
-    const ratio = students / (students + staff || 1);
-    registered = Math.round(totalRegistered * ratio);
-    unregistered = Math.round(totalUnregistered * ratio);
 
     return {
       timeId: timeItem.timeId,
@@ -167,11 +181,9 @@ export function filterTimeData(
   });
 }
 
-/**
- * Calculate summary statistics from filtered faculty data
- * totalAttendees = Registered participants (actual attendance)
- * studentCount/staffCount = Eligible participants (based on userFilter)
- */
+// Calculate summary statistics from filtered faculty data
+// totalAttendees = Registered participants (actual attendance)
+// studentCount/staffCount based on userFilter
 export function calculateInsightSummaryStats(
   filteredFacultyData: FilteredFacultyItem[],
   userFilter: UserFilter
@@ -208,9 +220,8 @@ export function calculateInsightSummaryStats(
   };
 }
 
-/**
- * Calculate registration statistics from filtered faculty data
- */
+
+// Calculate registration statistics from filtered faculty data
 export function calculateRegistrationStats(
   filteredFacultyData: FilteredFacultyItem[]
 ): RegistrationStatsResult {

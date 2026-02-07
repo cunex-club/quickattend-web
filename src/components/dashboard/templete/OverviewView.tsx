@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { Skeleton } from "@assets/components/ui/skeleton";
 import { useTranslations } from "next-intl";
 import { useRole } from "@context/RoleContext";
-import { eventData } from "@utils/data";
+import { useEventData } from "@graphql/hooks/useDashboardQueries";
 
 // Lazy load charts for better initial page load performance
 const BarChartHorizontalOverview = dynamic(
@@ -46,8 +46,6 @@ const FullscreenContent = dynamic(
   () => import("@components/dashboard/FullScreenContent"),
   { ssr: false }
 );
-
-const mockEvent = eventData;
 
 const mockTop3 = [
   { faculty: "วิศวกรรมศาสตร์", student: 320, staff: 70 },
@@ -84,6 +82,9 @@ export function OverviewView() {
   const { role } = useRole();
   const canViewInsights = role === "manager" || role === "owner";
 
+  // Fetch event data via mock GraphQL instead of direct import
+  const { eventData: mockEvent, loading: eventLoading } = useEventData();
+
   const filteredTime = useMemo(
     () =>
       mockTime.map((item) => ({
@@ -98,7 +99,7 @@ export function OverviewView() {
     [selectedFilter]
   );
 
-  const eventTotal = mockEvent.totalAttendees;
+  const eventTotal = mockEvent?.totalAttendees ?? 0;
 
   const handleToggleFullscreen = useCallback(() => {
     if (!fullscreenContainerRef.current) return;
@@ -116,7 +117,7 @@ export function OverviewView() {
   };
 
   const handleCopyEventLink = async () => {
-    const eventLink = `${window.location.origin}/events/${mockEvent.id}`;
+    const eventLink = `${window.location.origin}/events/${mockEvent?.id}`;
     try {
       await navigator.clipboard.writeText(eventLink);
       toast.success(
@@ -168,7 +169,7 @@ export function OverviewView() {
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="flex flex-col space-y-6 order-2 lg:order-1">
               <div className="flex justify-between items-center">
-                <p className="headline-large-emphasized">{mockEvent.title}</p>
+                <p className="headline-large-emphasized">{mockEvent?.title}</p>
                 <button
                   className="border border-primary rounded-full w-auto h-auto p-0.5 hover:bg-neutral-100 transition-colors duration-200 cursor-pointer"
                   onClick={handleCopyEventLink}
@@ -184,7 +185,7 @@ export function OverviewView() {
                       size="20px"
                       className="text-primary"
                     />
-                    <p>{mockEvent.date}</p>
+                    <p>{mockEvent?.date}</p>
                   </span>
                   <span className="flex flex-row space-x-2 items-center">
                     <IonIcon
@@ -192,7 +193,7 @@ export function OverviewView() {
                       size="20px"
                       className="text-secondary"
                     />
-                    <p>{mockEvent.time}</p>
+                    <p>{mockEvent?.time}</p>
                   </span>
                   <span className="flex flex-row space-x-2 items-center">
                     <IonIcon
@@ -200,14 +201,14 @@ export function OverviewView() {
                       size="20px"
                       className="text-primary"
                     />
-                    <p>{mockEvent.location}</p>
+                    <p>{mockEvent?.location}</p>
                   </span>
                 </div>
                 <div className="flex flex-col space-y-2 px-4 ">
                   <p className="headline-small-emphasized">
                     {t("eventDetails")}
                   </p>
-                  <p className="body-large-primary">{mockEvent.description}</p>
+                  <p className="body-large-primary">{mockEvent?.description}</p>
                 </div>
               </div>
 
@@ -305,7 +306,7 @@ export function OverviewView() {
         ref={fullscreenContainerRef}
         className={isFullscreen ? "w-full h-full bg-white" : "hidden"}
       >
-        {isFullscreen && (
+        {isFullscreen && mockEvent && (
           <FullscreenContent
             onExit={handleToggleFullscreen}
             data={mockEvent}

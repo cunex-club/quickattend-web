@@ -31,7 +31,8 @@
       "@context/*": ["./src/context/*"],
       "@i18n/*": ["./src/i18n/*"],
       "@shared/*": ["./src/shared/*"],
-      "@styles/*": ["./src/styles/*"]
+      "@styles/*": ["./src/styles/*"],
+      "@graphql/*": ["./src/graphql/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
