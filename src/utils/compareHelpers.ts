@@ -127,13 +127,28 @@ export function transformTimeDataForComparison(
   });
 }
 
-/**
- * Calculate summary statistics based on selected filters
- */
+
+// Calculate summary statistics based on selected filters
 export function calculateSummaryStats(
   appliedFaculties: Record<string, boolean>,
   appliedTimes: Record<string, boolean>
 ): SummaryStats {
+  // Before any comparison is submitted both maps are empty → return zeros
+  // (keeps stat cards consistent with the pie chart "No Data" placeholder)
+  const hasAppliedFilters =
+    Object.keys(appliedFaculties).length > 0 &&
+    Object.keys(appliedTimes).length > 0;
+
+  if (!hasAppliedFilters) {
+    return {
+      totalAttendees: 0,
+      studentCount: 0,
+      staffCount: 0,
+      totalRegistered: 0,
+      totalUnregistered: 0,
+    };
+  }
+
   const selectedFacultyIds = getSelectedIds(appliedFaculties, "f-0");
   const selectedTimeIds = getSelectedIds(appliedTimes, "t-0");
 
