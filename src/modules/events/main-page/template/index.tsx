@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import EventCard from "@modules/events/main-page/components/event-card";
+import EventCardSkeleton from "@modules/events/main-page/components/event-card-skeleton";
 import SortMenu from "@modules/events/main-page/components/sort-menu";
 import FilterMenu, {
   FilterValues,
@@ -94,7 +95,10 @@ const EventPageTemplate = () => {
           </Link>
         </div>
         {loading ? (
-          <div className="body-large-primary">Loading...</div>
+          <div className="space-y-4">
+            <EventCardSkeleton />
+            <EventCardSkeleton />
+          </div>
         ) : managedEvents.length === 0 ? (
           <div className="body-large-primary">No managed events found.</div>
         ) : (
@@ -148,7 +152,11 @@ const EventPageTemplate = () => {
           </div>
         </div>
         {loading ? (
-          <div className="body-large-primary">Loading...</div>
+          <div className="space-y-4">
+            <EventCardSkeleton isEnd />
+            <EventCardSkeleton isEnd />
+            <EventCardSkeleton isEnd />
+          </div>
         ) : attendedEvents.length === 0 ? (
           <div className="body-large-primary">No attended events found.</div>
         ) : (

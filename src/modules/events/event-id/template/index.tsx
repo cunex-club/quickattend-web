@@ -11,6 +11,7 @@ import MobileManageModal from "@modules/events/event-id/components/mobileManageM
 import MobileDuplicateSheet from "@modules/events/event-id/components/mobileDuplicateSheet";
 import { MOCK_SHARE_MODAL_DATA } from "@modules/events/event-id/constants/mock-up";
 import { fetchEventById } from "@services/events";
+import EventDetailSkeleton from "@modules/events/event-id/components/event-detail-skeleton";
 import type { GetOneEventRes, EventInfo } from "@customTypes/events";
 
 interface EventIdPageTemplateProps {
@@ -46,11 +47,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   }, [eventId]);
 
   if (loading) {
-    return (
-      <div className="w-full flex justify-center items-center py-20">
-        <div className="body-large-primary">Loading...</div>
-      </div>
-    );
+    return <EventDetailSkeleton />;
   }
 
   if (!eventData) {
