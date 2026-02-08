@@ -1,6 +1,11 @@
 import EventIdPageTemplate from "@modules/events/event-id/template";
 
-const EventIDPage = () => {
-  return <EventIdPageTemplate />;
+const EventIDPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id } = await params;
+  return <EventIdPageTemplate eventId={id} />;
 };
 export default EventIDPage;

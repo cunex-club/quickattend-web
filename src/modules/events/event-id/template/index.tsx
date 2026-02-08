@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import IonIcon from "@shared/IonIcon";
 import Icon from "@shared/Icon";
@@ -9,12 +9,15 @@ import ShareModal from "@modules/events/event-id/components/shareModal";
 import DuplicateModal from "@modules/events/event-id/components/duplicateModal";
 import MobileManageModal from "@modules/events/event-id/components/mobileManageModal";
 import MobileDuplicateSheet from "@modules/events/event-id/components/mobileDuplicateSheet";
-import {
-  MOCK_EVENT_INFO,
-  MOCK_SHARE_MODAL_DATA,
-} from "@modules/events/event-id/constants/mock-up";
+import { MOCK_SHARE_MODAL_DATA } from "@modules/events/event-id/constants/mock-up";
+import { fetchEventById } from "@services/events";
+import type { GetOneEventRes, EventInfo } from "@customTypes/events";
 
-const EventIdPageTemplate = () => {
+interface EventIdPageTemplateProps {
+  eventId: string;
+}
+
+const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   const t = useTranslations("EventDetail");
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false);
@@ -22,9 +25,43 @@ const EventIdPageTemplate = () => {
   const [isMobileDuplicateSheetOpen, setIsMobileDuplicateSheetOpen] =
     useState(false);
 
-  const eventData = MOCK_EVENT_INFO;
+  const [eventData, setEventData] = useState<GetOneEventRes | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Format date from "2025-08-03" to "3 สิงหาคม 2568"
+  useEffect(() => {
+    const loadEvent = async () => {
+      setLoading(true);
+      try {
+        const res = await fetchEventById(eventId);
+        console.log("Event by ID:", res.data);
+        setEventData(res.data);
+      } catch (err) {
+        console.error("Failed to fetch event:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadEvent();
+  }, [eventId]);
+
+  if (loading) {
+    return (
+      <div className="w-full flex justify-center items-center py-20">
+        <div className="body-large-primary">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!eventData) {
+    return (
+      <div className="w-full flex justify-center items-center py-20">
+        <div className="body-large-primary">Event not found.</div>
+      </div>
+    );
+  }
+
+  // Format date from ISO string to "3 สิงหาคม 2568"
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     const thaiMonths = [
@@ -74,7 +111,7 @@ const EventIdPageTemplate = () => {
             <div className="flex gap-2 items-center">
               <IonIcon name="Calendar" size="16px" className="text-secondary" />
               <div className="body-large-primary">
-                {formatDate(eventData.date)}
+                {formatDate(eventData.start_time)}
               </div>
             </div>
             <div className="flex gap-2 items-center">
@@ -95,7 +132,7 @@ const EventIdPageTemplate = () => {
           </div>
           <div className="flex flex-col gap-y-2">
             <div className="headline-small-emphasized">{t("eventDetails")}</div>
-            <div className="body-large-primary">{eventData.description}</div>
+            <div className="body-large-primary">{eventData.description ?? ""}</div>
           </div>
           <div>
             <div className="headline-small-emphasized">{t("agenda")}</div>
@@ -234,7 +271,14 @@ const EventIdPageTemplate = () => {
       <DuplicateModal
         open={isDuplicateModalOpen}
         onOpenChange={setIsDuplicateModalOpen}
-        eventData={eventData}
+        eventData={
+          {
+            ...eventData,
+            description: eventData.description ?? "",
+            evaluation_form: eventData.evaluation_form ?? "",
+            date: eventData.start_time,
+          } as EventInfo
+        }
       />
 
       <MobileManageModal
@@ -250,7 +294,14 @@ const EventIdPageTemplate = () => {
       <MobileDuplicateSheet
         open={isMobileDuplicateSheetOpen}
         onOpenChange={setIsMobileDuplicateSheetOpen}
-        eventData={eventData}
+        eventData={
+          {
+            ...eventData,
+            description: eventData.description ?? "",
+            evaluation_form: eventData.evaluation_form ?? "",
+            date: eventData.start_time,
+          } as EventInfo
+        }
       />
     </div>
   );
