@@ -16,8 +16,10 @@ import {
   DropdownMenuTrigger,
 } from "@assets/components/ui/dropdown-menu";
 import { useTranslations } from "next-intl";
+import { Link } from "@i18n/navigation";
 
 type EventCardProps = {
+  eventId: string;
   title: string;
   description: string;
   date: string;
@@ -28,6 +30,7 @@ type EventCardProps = {
 };
 
 const EventCard: StyleableFC<EventCardProps> = ({
+  eventId,
   title,
   description,
   date,
@@ -41,9 +44,10 @@ const EventCard: StyleableFC<EventCardProps> = ({
   const t = useTranslations("Events.EventCard");
   if (!isEnd) {
     return (
-      <div
+      <Link
+        href={`/events/${eventId}`}
         className={cn(
-          "p-4 sm:px-8 sm:py-6 rounded-xl shadow-lg bg-neutral-100 space-y-4",
+          "block p-4 sm:px-8 sm:py-6 rounded-xl shadow-lg bg-neutral-100 space-y-4 cursor-pointer hover:shadow-xl transition-shadow",
           className,
         )}
         {...props}
@@ -188,10 +192,14 @@ const EventCard: StyleableFC<EventCardProps> = ({
             </div>
           </Button>
         </div>
-      </div>
+      </Link>
     );
   }
   return (
+    <Link
+      href={`/events/${eventId}`}
+      className="block cursor-pointer hover:shadow-xl transition-shadow rounded-xl"
+    >
     <Accordion
       type="single"
       collapsible
@@ -278,6 +286,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
         </AccordionContent>
       </AccordionItem>
     </Accordion>
+    </Link>
   );
 };
 
