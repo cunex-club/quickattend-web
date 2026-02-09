@@ -90,29 +90,29 @@ const EventCard: StyleableFC<EventCardProps> = ({
           </DropdownMenu>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-start gap-y-4 sm:gap-x-6 md:gap-x-12.5">
-          <div className="order-1 sm:order-2 sm:flex-1 space-y-2 lg:px-4">
-            <div className="flex justify-start space-x-4">
-              <div className="flex items-center gap-2">
-                <IonIcon name="Calendar" size="16px" className="text-primary" />
+          <div className="order-1 sm:order-2 sm:flex-1 space-y-2">
+            <div className="flex justify-start space-x-4 pl-0">
+              <div className="flex items-center gap-1">
+                <IonIcon name="Calendar" size="16px" className="text-primary" noPadding />
                 <span className="body-large-primary">{date}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <IonIcon name="Time" size="16px" className="text-primary" />
+              <div className="flex items-center gap-1">
+                <IonIcon name="Time" size="16px" className="text-primary" noPadding />
                 <span className="body-large-primary">{time}</span>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <IonIcon name="Location" size="16px" className="text-primary" />
+              <IonIcon name="Location" size="16px" className="text-primary" noPadding/>
               <span className="body-large-primary">{location}</span>
             </div>
-            <div className="order-2 sm:order-1 sm:flex-2 lg:px-2">
+            <div className="order-2 sm:order-1 sm:flex-2 lg:px-1">
               <div className="body-large-primary line-clamp-3 sm:line-clamp-none mb-4 sm:mb-0">
                 {description}
               </div>
 
             </div>
             <div className="hidden sm:flex items-center gap-2">
-              <IonIcon name="Person" size="16px" className="text-primary" />
+              <IonIcon name="Person" size="16px" className="text-primary" noPadding/>
               <span className="body-large-primary">{role}</span>
             </div>
           </div>
@@ -121,7 +121,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
         <div className="hidden lg:flex flex-row gap-4 sm:gap-6">
           <Button mode="filled" bordered="round" expanded>
             <div className="flex justify-center items-center gap-2">
-              <IonIcon name="ScanOutline" size="36px" className="text-white" />
+              <IonIcon name="ScanOutline" size="36px" className="text-white" noPadding/>
               <div className="title-medium-emphasized text-white ">
                 {t("scanParticipant")}
               </div>
@@ -133,6 +133,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
                 name="TrendingUpOutline"
                 size="36px"
                 className="text-primary"
+                noPadding
               />
               <div className="title-medium-emphasized text-primary hidden sm:block">
                 {t("activityStatistics")}
