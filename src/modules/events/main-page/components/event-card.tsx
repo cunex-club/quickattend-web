@@ -74,7 +74,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
                   className="text-primary hidden lg:block"
                 />
               </button>
-            </DropdownMenuTrigger>{" "}
+            </DropdownMenuTrigger>
             {/* will replace with custom drop down later */}
             <DropdownMenuContent align="end" className="py-2">
               <DropdownMenuItem>
@@ -90,32 +90,26 @@ const EventCard: StyleableFC<EventCardProps> = ({
           </DropdownMenu>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-start gap-y-4 sm:gap-x-6 md:gap-x-12.5">
-          <div className="order-2 sm:order-1 sm:flex-2 lg:px-4">
-            <div className="headline-small-emphasized mb-2 hidden sm:block">
-              {t("activityDetails")}
-            </div>
-            <div className="body-large-primary line-clamp-3 sm:line-clamp-none mb-4 sm:mb-0">
-              {description}
-            </div>
-            <div className="flex items-center gap-2 sm:hidden">
-              <IonIcon name="Person" size="16px" className="text-primary" />
-              <span className="body-large-primary">{role}</span>
-            </div>
-          </div>
-
           <div className="order-1 sm:order-2 sm:flex-1 space-y-2 lg:px-4">
-            <div className="flex items-center gap-2">
-              <IonIcon name="Calendar" size="16px" className="text-primary" />
-              <span className="body-large-primary">{date}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <IonIcon name="Time" size="16px" className="text-primary" />
-              {/* replace with time later*/}
-              <span className="body-large-primary">{time}</span>
+            <div className="flex justify-start space-x-4">
+              <div className="flex items-center gap-2">
+                <IonIcon name="Calendar" size="16px" className="text-primary" />
+                <span className="body-large-primary">{date}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <IonIcon name="Time" size="16px" className="text-primary" />
+                <span className="body-large-primary">{time}</span>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <IonIcon name="Location" size="16px" className="text-primary" />
               <span className="body-large-primary">{location}</span>
+            </div>
+            <div className="order-2 sm:order-1 sm:flex-2 lg:px-2">
+              <div className="body-large-primary line-clamp-3 sm:line-clamp-none mb-4 sm:mb-0">
+                {description}
+              </div>
+
             </div>
             <div className="hidden sm:flex items-center gap-2">
               <IonIcon name="Person" size="16px" className="text-primary" />
@@ -128,7 +122,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
           <Button mode="filled" bordered="round" expanded>
             <div className="flex justify-center items-center gap-2">
               <IonIcon name="ScanOutline" size="36px" className="text-white" />
-              <div className="title-large-primary text-white ">
+              <div className="title-medium-emphasized text-white ">
                 {t("scanParticipant")}
               </div>
             </div>
@@ -140,7 +134,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
                 size="36px"
                 className="text-primary"
               />
-              <div className="title-large-primary text-primary hidden sm:block">
+              <div className="title-medium-emphasized text-primary hidden sm:block">
                 {t("activityStatistics")}
               </div>
             </div>
@@ -200,92 +194,92 @@ const EventCard: StyleableFC<EventCardProps> = ({
       href={`/events/${eventId}`}
       className="block cursor-pointer hover:shadow-xl transition-shadow rounded-xl"
     >
-    <Accordion
-      type="single"
-      collapsible
-      className={cn("", className)}
-      {...props}
-    >
-      <AccordionItem
-        value="event-details"
-        className="p-4 sm:px-8 sm:py-6 rounded-xl shadow-lg bg-neutral-100 border-none"
+      <Accordion
+        type="single"
+        collapsible
+        className={cn("", className)}
+        {...props}
       >
-        <AccordionTrigger className="hover:no-underline items-center">
-          <div className="flex justify-between items-center w-full">
-            <div className="display-small-emphasized">{title}</div>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent>
-          <div className="flex flex-col sm:flex-row sm:items-start gap-y-4 sm:gap-x-6 md:gap-x-12.5 pt-4">
-            <div className="sm:flex-2 px-4">
-              <div className="headline-small-emphasized mb-2">
-                {t("eventDetails")}
-              </div>
-              <div className="body-large-primary">{description}</div>
+        <AccordionItem
+          value="event-details"
+          className="p-4 sm:px-8 sm:py-6 rounded-xl shadow-lg bg-neutral-100 border-none"
+        >
+          <AccordionTrigger className="hover:no-underline items-center">
+            <div className="flex justify-between items-center w-full">
+              <div className="display-small-emphasized">{title}</div>
             </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="flex flex-col sm:flex-row sm:items-start gap-y-4 sm:gap-x-6 md:gap-x-12.5 pt-4">
+              <div className="sm:flex-2 px-4">
+                <div className="headline-small-emphasized mb-2">
+                  {t("eventDetails")}
+                </div>
+                <div className="body-large-primary">{description}</div>
+              </div>
 
-            <div className="sm:flex-1 space-y-2 px-4">
-              <div className="flex items-center gap-2">
-                <Icon
-                  name="calendar_month"
-                  size={16}
-                  className="text-primary"
-                />
-                <span className="body-large-primary">{date}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Icon name="timer" size={16} className="text-primary" />
-                <span className="body-large-primary">{time}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Icon
-                  name="location_on"
-                  size={16}
-                  className="text-primary body-large"
-                />
-                <span className="body-large-primary">{location}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Icon name="person" size={16} className="text-primary" fill />
-                <span className="body-large-primary">{role}</span>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-4">
-            <Button mode="filled" bordered="round" expanded>
-              <div className="flex justify-center items-center gap-2">
-                <IonIcon
-                  name="TrendingUpOutline"
-                  size="36px"
-                  className="text-white"
-                />
-                <div className="title-large-primary">
-                  {t("activityStatistics")}
+              <div className="sm:flex-1 space-y-2 px-4">
+                <div className="flex items-center gap-2">
+                  <Icon
+                    name="calendar_month"
+                    size={16}
+                    className="text-primary"
+                  />
+                  <span className="body-large-primary">{date}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Icon name="timer" size={16} className="text-primary" />
+                  <span className="body-large-primary">{time}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Icon
+                    name="location_on"
+                    size={16}
+                    className="text-primary body-large"
+                  />
+                  <span className="body-large-primary">{location}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Icon name="person" size={16} className="text-primary" fill />
+                  <span className="body-large-primary">{role}</span>
                 </div>
               </div>
-            </Button>
-            <Button mode="outline" bordered="round" expanded={false}>
-              <div className="flex justify-center items-center">
-                <IonIcon
-                  name="DownloadOutline"
-                  size="36px"
-                  className="text-primary"
-                />
-              </div>
-            </Button>
-            <Button mode="outline" bordered="round" expanded={false}>
-              <div className="flex justify-center items-center">
-                <IonIcon
-                  name="DuplicateOutline"
-                  size="36px"
-                  className="text-primary"
-                />
-              </div>
-            </Button>
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-4">
+              <Button mode="filled" bordered="round" expanded>
+                <div className="flex justify-center items-center gap-2">
+                  <IonIcon
+                    name="TrendingUpOutline"
+                    size="36px"
+                    className="text-white"
+                  />
+                  <div className="title-large-primary">
+                    {t("activityStatistics")}
+                  </div>
+                </div>
+              </Button>
+              <Button mode="outline" bordered="round" expanded={false}>
+                <div className="flex justify-center items-center">
+                  <IonIcon
+                    name="DownloadOutline"
+                    size="36px"
+                    className="text-primary"
+                  />
+                </div>
+              </Button>
+              <Button mode="outline" bordered="round" expanded={false}>
+                <div className="flex justify-center items-center">
+                  <IonIcon
+                    name="DuplicateOutline"
+                    size="36px"
+                    className="text-primary"
+                  />
+                </div>
+              </Button>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </Link>
   );
 };

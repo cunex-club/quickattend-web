@@ -95,38 +95,40 @@ const EventPageTemplate = () => {
           </Link>
         </div>
         {loading ? (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <EventCardSkeleton />
             <EventCardSkeleton />
           </div>
         ) : managedEvents.length === 0 ? (
           <div className="body-large-primary">No managed events found.</div>
         ) : (
-          managedEvents.map((event) => {
-            const start = new Date(event.start_time);
-            const end = new Date(event.end_time);
-            const isEnd = end < new Date();
-            const dateStr = start.toLocaleDateString("th-TH", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            });
-            const timeStr = `${start.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} - ${end.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} น.`;
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {managedEvents.map((event) => {
+              const start = new Date(event.start_time);
+              const end = new Date(event.end_time);
+              const isEnd = end < new Date();
+              const dateStr = start.toLocaleDateString("th-TH", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              });
+              const timeStr = `${start.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} - ${end.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} น.`;
 
-            return (
-              <EventCard
-                key={event.id}
-                eventId={event.id}
-                title={event.name}
-                description={event.description ?? ""}
-                date={dateStr}
-                time={timeStr}
-                location={event.location}
-                role={event.role ?? ""}
-                isEnd={isEnd}
-              />
-            );
-          })
+              return (
+                <EventCard
+                  key={event.id}
+                  eventId={event.id}
+                  title={event.name}
+                  description={event.description ?? ""}
+                  date={dateStr}
+                  time={timeStr}
+                  location={event.location}
+                  role={event.role ?? ""}
+                  isEnd={isEnd}
+                />
+              );
+            })}
+          </div>
         )}
       </div>
       <div className="space-y-8">
@@ -152,39 +154,40 @@ const EventPageTemplate = () => {
           </div>
         </div>
         {loading ? (
-          <div className="space-y-4">
-            <EventCardSkeleton isEnd />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <EventCardSkeleton isEnd />
             <EventCardSkeleton isEnd />
           </div>
         ) : attendedEvents.length === 0 ? (
           <div className="body-large-primary">No attended events found.</div>
         ) : (
-          attendedEvents.map((event) => {
-            const start = new Date(event.start_time);
-            const end = new Date(event.end_time);
-            const isEnd = end < new Date();
-            const dateStr = start.toLocaleDateString("th-TH", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            });
-            const timeStr = `${start.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} - ${end.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} น.`;
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {attendedEvents.map((event) => {
+              const start = new Date(event.start_time);
+              const end = new Date(event.end_time);
+              const isEnd = end < new Date();
+              const dateStr = start.toLocaleDateString("th-TH", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              });
+              const timeStr = `${start.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} - ${end.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} น.`;
 
-            return (
-              <EventCard
-                key={event.id}
-                eventId={event.id}
-                title={event.name}
-                description={event.description ?? ""}
-                date={dateStr}
-                time={timeStr}
-                location={event.location}
-                role={event.role ?? ""}
-                isEnd={isEnd}
-              />
-            );
-          })
+              return (
+                <EventCard
+                  key={event.id}
+                  eventId={event.id}
+                  title={event.name}
+                  description={event.description ?? ""}
+                  date={dateStr}
+                  time={timeStr}
+                  location={event.location}
+                  role={event.role ?? ""}
+                  isEnd={isEnd}
+                />
+              );
+            })}
+          </div>
         )}
       </div>
       <div className="flex justify-center pt-8">
