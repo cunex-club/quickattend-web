@@ -12,10 +12,7 @@ import { useTranslations } from "next-intl";
 
 import { Link } from "@i18n/navigation";
 import IonIcon from "@shared/IonIcon";
-import {
-  fetchManagedEvents,
-  fetchAttendedEvents,
-} from "@services/events";
+import { fetchManagedEvents, fetchAttendedEvents } from "@services/events";
 import type { GetEventsRes, APIPagination } from "@customTypes/events";
 
 const EventPageTemplate = () => {
@@ -28,6 +25,14 @@ const EventPageTemplate = () => {
   const [attendedPagination, setAttendedPagination] =
     useState<APIPagination | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Separate current and past managed events
+  const currentManagedEvents = managedEvents.filter(
+    (event) => new Date(event.end_time) >= new Date(),
+  );
+  const pastManagedEvents = managedEvents.filter(
+    (event) => new Date(event.end_time) < new Date(),
+  );
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -93,17 +98,33 @@ const EventPageTemplate = () => {
           <Link href="/search" className="lg:hidden text-primary p-1">
             <IonIcon name="SearchOutline" className="w-6 h-6" />
           </Link>
+          <div className="hidden lg:flex lg:flex-wrap lg:items-center lg:gap-1 lg:gap-2.25">
+            <FilterMenu onFilterChange={handleMyEventsFilterChange} />
+            <SortMenu
+              options={[
+                {
+                  label: "วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด",
+                  value: "newest",
+                },
+                {
+                  label: "วันที่จัดกิจกรรม : เก่าสุด - ใหม่สุด",
+                  value: "oldest",
+                },
+              ]}
+              onSelect={handleMyEventsSortChange}
+            />
+          </div>
         </div>
         {loading ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <EventCardSkeleton />
             <EventCardSkeleton />
           </div>
-        ) : managedEvents.length === 0 ? (
-          <div className="body-large-primary">No managed events found.</div>
+        ) : currentManagedEvents.length === 0 ? (
+          <div className="body-large-primary">No current events found.</div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {managedEvents.map((event) => {
+            {currentManagedEvents.map((event) => {
               const start = new Date(event.start_time);
               const end = new Date(event.end_time);
               const isEnd = end < new Date();
@@ -158,11 +179,11 @@ const EventPageTemplate = () => {
             <EventCardSkeleton isEnd />
             <EventCardSkeleton isEnd />
           </div>
-        ) : attendedEvents.length === 0 ? (
-          <div className="body-large-primary">No attended events found.</div>
+        ) : pastManagedEvents.length === 0 && attendedEvents.length === 0 ? (
+          <div className="body-large-primary">No past events found.</div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {attendedEvents.map((event) => {
+            {[...pastManagedEvents, ...attendedEvents].map((event) => {
               const start = new Date(event.start_time);
               const end = new Date(event.end_time);
               const isEnd = end < new Date();
