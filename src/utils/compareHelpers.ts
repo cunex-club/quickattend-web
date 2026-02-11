@@ -36,10 +36,8 @@ export interface PieChartDataItem {
 
 
 
-/**
- * Transform faculty data for comparison charts
- * Shows faculty breakdown with time periods
- */
+// Transform faculty data for comparison charts
+// Shows faculty breakdown with time periods
 export function transformFacultyDataForComparison(
   appliedFaculties: Record<string, boolean>,
   appliedTimes: Record<string, boolean>
@@ -76,10 +74,9 @@ export function transformFacultyDataForComparison(
   });
 }
 
-/**
- * Transform time data for comparison charts
- * Shows time period breakdown with faculty series
- */
+
+// Transform time data for comparison charts
+// Shows time period breakdown with faculty series
 export function transformTimeDataForComparison(
   appliedFaculties: Record<string, boolean>,
   appliedTimes: Record<string, boolean>
@@ -198,10 +195,9 @@ export function calculateSummaryStats(
   };
 }
 
-/**
- * Prepare pie chart data showing faculty distribution
- * Limits to top 5 items, grouping the rest as "อื่นๆ" (Other)
- */
+// Prepare pie chart data showing faculty distribution
+// Limits to top 5 items, grouping the rest as "อื่นๆ" (Other)
+
 export function preparePieChartData(
   appliedFaculties: Record<string, boolean>,
   appliedTimes: Record<string, boolean>
@@ -291,9 +287,8 @@ export function preparePieChartData(
   }));
 }
 
-/**
- * Validation result types for comparison submission
- */
+
+// Validation result types for comparison submission
 export type ValidationErrorType =
   | "NO_FACULTY_AND_TIME"
   | "NO_TIME"
@@ -307,10 +302,10 @@ export interface ValidationResult {
   severity: "error" | "warning" | null;
 }
 
-/**
- * Validate comparison filter selections
- * Returns validation result indicating if selections are valid and what error exists
- */
+
+// Validate comparison filter selections
+// Returns validation result indicating if selections are valid and what error exists
+
 export function validateComparisonFilters(
   selectedFaculties: Record<string, boolean>,
   selectedTimes: Record<string, boolean>
