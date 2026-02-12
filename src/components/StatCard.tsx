@@ -35,7 +35,7 @@ export const StatCard = ({
         "flex flex-col items-center lg:items-center justify-center h-full w-full rounded-[28px] py-6 px-8 lg:py-8 lg:px-8 space-y-4 lg:space-y-2 border",
         variantClasses[variant],
         mobileLeftAlign && "items-start",
-        className
+        className,
       )}
     >
       <div className="flex flex-col gap-y-4">
@@ -43,7 +43,7 @@ export const StatCard = ({
           className={cn(
             "flex justify-center items-baseline space-x-2 md:space-x-4 lg:space-x-6 xl:space-x-8",
             switchNumberPosition &&
-              "order-2 lg:order-1 justify-start lg:justify-center"
+              "order-2 lg:order-1 justify-start lg:justify-center",
           )}
         >
           <p
@@ -58,9 +58,10 @@ export const StatCard = ({
               "lg:text-[128px] lg:leading-[100%] lg:tracking-[-1.408px]",
 
               // 4. Color Logic (Variants)
-              variant === "filled" ? "text-neutral-white" : "text-primary"
+              variant === "filled" ? "text-neutral-white" : "text-primary",
             )}
           >
+            {/*คน/people*/}
             {value}
           </p>
           <p
@@ -75,7 +76,7 @@ export const StatCard = ({
               "lg:text-[64px] lg:leading-[140%] lg:tracking-[-0.704px]",
 
               // 4. Color Logic
-              variant === "filled" ? "text-neutral-white" : "text-primary"
+              variant === "filled" ? "text-neutral-white" : "text-primary",
             )}
           >
             {unit}
@@ -85,7 +86,7 @@ export const StatCard = ({
           className={cn(
             "flex justify-center",
             switchNumberPosition && "order-1 lg:order-2",
-            mobileLeftAlign && "justify-start lg:justify-center"
+            mobileLeftAlign && "justify-start lg:justify-center",
           )}
         >
           <p
@@ -94,7 +95,7 @@ export const StatCard = ({
               variant === "filled"
                 ? "text-neutral-white"
                 : "text-neutral-black",
-              switchNumberPosition && "order-1 lg:order-2"
+              switchNumberPosition && "order-1 lg:order-2",
             )}
           >
             {title}

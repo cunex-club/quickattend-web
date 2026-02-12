@@ -27,7 +27,7 @@ const BarChartHorizontalOverview = dynamic(
   {
     ssr: false,
     loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />,
-  }
+  },
 );
 
 const BarChartVerticalOverview = dynamic(
@@ -38,13 +38,13 @@ const BarChartVerticalOverview = dynamic(
   {
     ssr: false,
     loading: () => <Skeleton className="h-[400px] w-full rounded-lg" />,
-  }
+  },
 );
 
 // Only load FullscreenContent when needed (after user clicks button)
 const FullscreenContent = dynamic(
   () => import("@components/dashboard/FullScreenContent"),
-  { ssr: false }
+  { ssr: false },
 );
 
 const mockTop3 = [
@@ -96,7 +96,7 @@ export function OverviewView() {
               ? item.staff
               : item.total,
       })),
-    [selectedFilter]
+    [selectedFilter],
   );
 
   const eventTotal = mockEvent?.totalAttendees ?? 0;
@@ -130,7 +130,7 @@ export function OverviewView() {
             color: "var(--neutral-white)",
           },
           duration: 1500,
-        }
+        },
       );
     } catch (err) {
       console.error("Failed to copy link:", err);
@@ -144,7 +144,7 @@ export function OverviewView() {
             color: "var(--neutral-white)",
           },
           duration: 1500,
-        }
+        },
       );
     }
   };
@@ -275,7 +275,7 @@ export function OverviewView() {
                       expanded={false}
                       onClick={() =>
                         setSelectedFilter(
-                          selectedFilter === "student" ? null : "student"
+                          selectedFilter === "student" ? null : "student",
                         )
                       }
                     >
@@ -287,7 +287,7 @@ export function OverviewView() {
                       expanded={false}
                       onClick={() =>
                         setSelectedFilter(
-                          selectedFilter === "staff" ? null : "staff"
+                          selectedFilter === "staff" ? null : "staff",
                         )
                       }
                     >
@@ -308,7 +308,6 @@ export function OverviewView() {
       >
         {isFullscreen && mockEvent && (
           <FullscreenContent
-            onExit={handleToggleFullscreen}
             data={mockEvent}
             translations={{
               eventDetails: t("eventDetails"),
