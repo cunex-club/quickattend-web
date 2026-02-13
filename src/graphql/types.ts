@@ -55,7 +55,6 @@ export interface GQLFilterOption {
   label: string;
 }
 
-
 // Query Response Shapes
 export interface GetEventDataResponse {
   eventData: GQLEventData;

@@ -1,4 +1,3 @@
-import React from "react";
 import { DeepInsightView } from "@components/dashboard/templete/DeepInsightView";
 import { WhitelistInsightView } from "@components/dashboard/templete/WhitelistInsightView";
 

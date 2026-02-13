@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { useState, useEffect } from "react";
 import DashboardNav from "@components/dashboard/DashboardNav";
 import { useRole } from "@context/RoleContext";
 import { useTranslations } from "next-intl";
@@ -16,9 +16,9 @@ export default function DashboardGroupLayout({
 }: DashboardGroupLayoutProps) {
   const { role } = useRole();
   const t = useTranslations("Dashboard.navbar");
-  const [locale, setLocale] = React.useState<string>("");
+  const [locale, setLocale] = useState<string>("");
 
-  React.useEffect(() => {
+  useEffect(() => {
     params.then(({ locale }) => setLocale(locale));
   }, [params]);
 

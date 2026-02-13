@@ -1,6 +1,5 @@
 import { RoleProvider } from "@context/RoleContext";
 import { getUserRole } from "@lib/auth";
-import React from "react";
 import { DashboardSidebar } from "@components/dashboard/DashboardSidebar";
 
 export default async function DashboardLayout({
