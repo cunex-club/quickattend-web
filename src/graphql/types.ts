@@ -1,6 +1,4 @@
-// ============================
 // GraphQL Response Types
-// ============================
 
 // Event overview data
 export interface GQLEventData {
@@ -57,10 +55,8 @@ export interface GQLFilterOption {
   label: string;
 }
 
-// ============================
-// Query Response Shapes
-// ============================
 
+// Query Response Shapes
 export interface GetEventDataResponse {
   eventData: GQLEventData;
 }
@@ -72,10 +68,7 @@ export interface GetDashboardInsightDataResponse {
   filterTimeOptions: GQLFilterOption[];
 }
 
-// ============================
 // Generic GraphQL Result
-// ============================
-
 export interface GraphQLResponse<T = unknown> {
   data: T | null;
   errors?: { message: string }[];

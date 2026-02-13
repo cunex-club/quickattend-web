@@ -1,7 +1,5 @@
-// ============================
 // Mock GraphQL Resolvers
-// ============================
-// Each resolver mirrors what a real GraphQL server would return.
+// Each resolver show what a real GraphQL server would return.
 // Data is sourced from the existing mock dataset in @utils/data.
 
 import {
@@ -17,11 +15,10 @@ import type {
   GetDashboardInsightDataResponse,
 } from "./types";
 
-/**
- * Map of query-operation-name → resolver function.
- * The mock client extracts the operation name from the query string
- * and calls the matching resolver.
- */
+// Map of query-operation-name → resolver function.
+// The mock client extracts the operation name from the query string
+// and calls the matching resolver.
+
 export const resolvers: Record<string, () => unknown> = {
   GetEventData: (): GetEventDataResponse => ({
     eventData: { ...eventData },
@@ -39,5 +36,4 @@ export const resolvers: Record<string, () => unknown> = {
     filterFacultyOptions: FilterFacultyOptions.map((o) => ({ ...o })),
     filterTimeOptions: FilterTimeOptions.map((o) => ({ ...o })),
   }),
-
 };

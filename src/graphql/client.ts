@@ -1,10 +1,7 @@
-// ============================
 // Apollo Client with Mock Link
-// ============================
 // Uses a custom ApolloLink that resolves operations against
 // the local mock resolvers, simulating a real GraphQL server.
-// When a real backend is ready, replace `mockLink` with
-// `HttpLink` pointing at your GraphQL endpoint.
+// When a real backend is ready, replace `mockLink` with`HttpLink' GraphQL endpoint.
 
 import {
   ApolloClient,
@@ -14,14 +11,12 @@ import {
 } from "@apollo/client";
 import { resolvers } from "./resolvers";
 
-/** Simulated network latency in ms (set to 0 for instant responses) */
+// Simulated network latency in ms (set to 0 for instant responses)
 const MOCK_LATENCY_MS = 300;
 
-/**
- * Custom ApolloLink that intercepts every operation,
- * looks up the matching mock resolver by operation name,
- * and returns the resolved data as an Observable.
- */
+// Custom ApolloLink that intercepts every operation,
+// looks up the matching mock resolver by operation name,
+// and returns the resolved data as an Observable.
 const mockLink = new ApolloLink((operation) => {
   return new Observable((observer) => {
     const operationName = operation.operationName;
@@ -53,12 +48,8 @@ const mockLink = new ApolloLink((operation) => {
   });
 });
 
-/**
- * Apollo Client instance for the dashboard.
- *
- * - Uses `mockLink` for local development (no server needed).
- * - Swap `mockLink` with `new HttpLink({ uri: "/graphql" })` for production.
- */
+// Uses `mockLink` for local development (no server needed).
+// Swap `mockLink` with `new HttpLink({ uri: "/graphql" })` for production.
 export const apolloClient = new ApolloClient({
   link: mockLink,
   cache: new InMemoryCache(),
