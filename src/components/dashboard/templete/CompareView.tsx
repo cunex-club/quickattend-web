@@ -278,9 +278,11 @@ export function CompareView() {
             <div className="w-full">
               <StatCard
                 title={t("totalAttendees")}
-                value={summaryStats.totalRegistered}
+                value={summaryStats.totalRegistered.toLocaleString("en-US")}
                 unit={t("unit")}
                 variant="outline"
+                switchNumberPosition={true}
+                mobileLeftAlign={true}
               >
                 <div className="flex flex-col justify-center items-center gap-4">
                   <p className="title-medium-emphasized lg:title-large-emphasized">

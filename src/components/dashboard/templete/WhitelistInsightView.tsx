@@ -36,7 +36,10 @@ const DonutChart = dynamic(
 );
 
 const PieChartFilter = dynamic(
-  () => import("@components/charts/PieChartFilter").then((mod) => mod.PieChartFilter),
+  () =>
+    import("@components/charts/PieChartFilter").then(
+      (mod) => mod.PieChartFilter,
+    ),
   {
     loading: () => (
       <Skeleton className="h-full w-full rounded-lg bg-neutral-white" />
@@ -138,12 +141,19 @@ export function WhitelistInsightView() {
   );
 
   const filteredFacultyData = useMemo(
-    () => filterFacultyData(appliedFaculties, appliedTimes, userFilter, dataSources),
+    () =>
+      filterFacultyData(
+        appliedFaculties,
+        appliedTimes,
+        userFilter,
+        dataSources,
+      ),
     [appliedFaculties, appliedTimes, userFilter, dataSources],
   );
 
   const filteredTimeData = useMemo(
-    () => filterTimeData(appliedFaculties, appliedTimes, userFilter, dataSources),
+    () =>
+      filterTimeData(appliedFaculties, appliedTimes, userFilter, dataSources),
     [appliedFaculties, appliedTimes, userFilter, dataSources],
   );
 
@@ -394,11 +404,14 @@ export function WhitelistInsightView() {
             >
               <div className="md:mt-2 lg:mt-4 flex justify-start lg:justify-center px-0 lg:px-8">
                 <span className="title-medium-emphasized lg:headline-small-emphasized pr-4 lg:pr-16 text-center">
-                  {t("students")}: {summaryStats.studentCount} {t("unit")}
+                  {t("students")}:{" "}
+                  {summaryStats.studentCount.toLocaleString("en-US")}{" "}
+                  {t("unit")}
                 </span>
                 <div className="inline-block w-0.5 self-stretch bg-neutral-400"></div>
                 <span className="title-medium-emphasized lg:headline-small-emphasized pl-4 lg:pl-16 text-center">
-                  {t("staffs")}: {summaryStats.staffCount} {t("unit")}
+                  {t("staffs")}:{" "}
+                  {summaryStats.staffCount.toLocaleString("en-US")} {t("unit")}
                 </span>
               </div>
             </StatCard>

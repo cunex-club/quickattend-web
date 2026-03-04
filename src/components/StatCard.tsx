@@ -38,44 +38,58 @@ export const StatCard = ({
         className,
       )}
     >
-      <div className="flex flex-col gap-y-4">
+      <div className="flex flex-col gap-y-4 lg:gap-y-8 xl:gap-y-4">
         <div
           className={cn(
-            "flex justify-center items-baseline space-x-2 md:space-x-4 lg:space-x-6 xl:space-x-8",
+            "flex justify-center items-baseline space-x-2 md:space-x-4 lg:space-x-4 xl:space-x-8",
             switchNumberPosition &&
               "order-2 lg:order-1 justify-start lg:justify-center",
           )}
         >
           <p
             className={cn(
-              // 1. Base Styles (Font Family, Weight, Align)
+              // Base Styles (Font Family, Weight, Align)
               "font-bold text-center",
 
-              // 2. Mobile & Tablet (md)
+              // Mobile (md)
               "text-[72px] leading-[64px] tracking-[-0.25px]",
 
-              // 3. Desktop (lg & xl)
-              "lg:text-[128px] lg:leading-[100%] lg:tracking-[-1.408px]",
+              // Tablet (md)
+              "md:text-[96px] md:leading-[64px] md:tracking-[-0.25px]",
 
-              // 4. Color Logic (Variants)
+              // Tablet (lg)
+              "lg:text-[115px] lg:leading-[64px] lg:tracking-[-0.25px]",
+
+              // Desktop (xl)
+              "xl:text-[128px] xl:leading-[100%] xl:tracking-[-1.408px]",
+
+              // Color Logic (Variants)
               variant === "filled" ? "text-neutral-white" : "text-primary",
             )}
           >
             {/*คน/people*/}
-            {value}
+            {value.toLocaleString("en-US")}
           </p>
           <p
             className={cn(
-              // 1. Base Styles (Font Family, Weight, Align)
+              // Base Styles (Font Family, Weight, Align)
               "font-bold text-center",
 
-              // 2. Mobile & Tablet (md ลงมา) -> Specs: 24px / 32px / 0
+              // Mobile (base)
               "text-[24px] leading-[32px]",
 
-              // 3. Desktop (lg ขึ้นไป) -> Specs: 64px / 140% / -0.704px
-              "lg:text-[64px] lg:leading-[140%] lg:tracking-[-0.704px]",
+              // Tablet (md)
+              "md:text-[28px] md:leading-[36px]",
 
-              // 4. Color Logic
+              // Tablet (lg)
+              "lg:text-[48px] lg:leading-[40px]",
+
+              // Desktop (xl)
+              "xl:text-[64px] xl:leading-[140%] xl:tracking-[-0.704px]",
+
+
+
+              // Color Logic
               variant === "filled" ? "text-neutral-white" : "text-primary",
             )}
           >
