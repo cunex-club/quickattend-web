@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import EventCard from "@modules/events/main-page/components/event-card";
 import EventCardSkeleton from "@modules/events/main-page/components/event-card-skeleton";
+import EventEmptyState from "@modules/events/main-page/components/event-empty-state";
 import SortMenu from "@modules/events/main-page/components/sort-menu";
 import FilterMenu, {
   FilterValues,
@@ -121,7 +122,11 @@ const EventPageTemplate = () => {
             <EventCardSkeleton />
           </div>
         ) : currentManagedEvents.length === 0 ? (
-          <div className="body-large-primary">No current events found.</div>
+          <EventEmptyState
+            iconName="AlbumsOutline"
+            title="ยังไม่มีกิจกรรมที่เข้าร่วม"
+            description="เริ่มเข้าร่วมกิจกรรม เพื่อสร้างประวัติและประสบการณ์ของคุณ"
+          />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {currentManagedEvents.map((event) => {
@@ -180,7 +185,16 @@ const EventPageTemplate = () => {
             <EventCardSkeleton isEnd />
           </div>
         ) : pastManagedEvents.length === 0 && attendedEvents.length === 0 ? (
-          <div className="body-large-primary">No past events found.</div>
+          <EventEmptyState
+            iconName="TimerOutline"
+            title="ยังไม่มีกิจกรรมที่ผ่านมา"
+            description={
+              <>
+                เมื่อคุณเข้าร่วมและทำกิจกรรมสำเร็จ
+                ประวัติและประสบการณ์ทั้งหมดของคุณจะแสดงที่นี่
+              </>
+            }
+          />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {[...pastManagedEvents, ...attendedEvents].map((event) => {
