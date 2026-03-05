@@ -62,12 +62,11 @@ const FilterMenu = ({ onFilterChange }: FilterMenuProps) => {
       <DropdownMenuTrigger asChild>
         <button
           aria-label="Open filter menu"
-          className="rounded-full p-1 hover:bg-muted/40 transition-colors duration-200"
+          className="rounded-full p-1 hover:bg-muted/40 transition-colors duration-200 [&>div]:!p-0"
         >
           <IonIcon
             name="FunnelOutline"
-            size="32px"
-            className="text-primary cursor-pointer"
+            className="text-primary cursor-pointer w-6 h-6 lg:w-8 lg:h-8"
           />
         </button>
       </DropdownMenuTrigger>

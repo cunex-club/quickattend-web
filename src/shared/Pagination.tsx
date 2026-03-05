@@ -96,7 +96,7 @@ const Pagination: StyleableFC<PaginationProps> = ({
         disabled={currentPage === 1}
         aria-label="Previous page"
         className={cn(
-          "flex h-10 w-10 mb-2 items-center justify-center rounded-full border-2 transition-all duration-200",
+          "flex h-10 w-10 mb-4 items-center justify-center rounded-full border-2 transition-all duration-200",
           "border-neutral-300 bg-neutral-white",
           currentPage === 1 ? "text-neutral-400" : "text-primary",
           "hover:border-primary hover:text-primary",
@@ -136,7 +136,7 @@ const Pagination: StyleableFC<PaginationProps> = ({
                   : "border-2 border-neutral-300 bg-neutral-white text-neutral-600 hover:border-primary hover:text-primary",
               )}
             >
-              <span className="mt-2">{page}</span>
+              <span>{page}</span>
             </button>
           );
         })}
@@ -148,7 +148,7 @@ const Pagination: StyleableFC<PaginationProps> = ({
         disabled={currentPage === totalPages}
         aria-label="Next page"
         className={cn(
-          "flex h-10 w-10 mb-2 items-center justify-center rounded-full border-2 transition-all duration-200",
+          "flex h-10 w-10 mb-4 items-center justify-center rounded-full border-2 transition-all duration-200",
           "border-neutral-300 bg-neutral-white",
           currentPage === totalPages ? "text-neutral-400" : "text-primary",
           "hover:border-primary hover:text-primary",

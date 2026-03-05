@@ -381,14 +381,14 @@ const CreateEventStep2 = ({
                   eventForm.attendance_type != AttendanceType.WHITELIST ||
                   studentIdPermissionQuery?.length != 10 ||
                   selectedStudentIdsPermission?.includes(
-                    studentIdPermissionQuery
+                    studentIdPermissionQuery,
                   )
                 }
                 className={`w-fit h-9 shrink-0 ${
                   eventForm.attendance_type == AttendanceType.WHITELIST &&
                   studentIdPermissionQuery?.length == 10 &&
                   !selectedStudentIdsPermission?.includes(
-                    studentIdPermissionQuery
+                    studentIdPermissionQuery,
                   )
                     ? "cursor-pointer"
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
@@ -400,7 +400,7 @@ const CreateEventStep2 = ({
                   if (studentIdPermissionQuery.length != 10) return;
                   if (
                     selectedStudentIdsPermission?.includes(
-                      studentIdPermissionQuery
+                      studentIdPermissionQuery,
                     )
                   )
                     return;
@@ -500,7 +500,7 @@ const CreateEventStep2 = ({
                 setEventForm({
                   ...eventForm,
                   revealed_fields: eventForm.revealed_fields.filter(
-                    (field) => field != ParticipantFieldType.PHOTO
+                    (field) => field != ParticipantFieldType.PHOTO,
                   ),
                 });
               } else {
@@ -534,7 +534,7 @@ const CreateEventStep2 = ({
                 setEventForm({
                   ...eventForm,
                   revealed_fields: eventForm.revealed_fields.filter(
-                    (field) => field != ParticipantFieldType.NAME
+                    (field) => field != ParticipantFieldType.NAME,
                   ),
                 });
               } else {
@@ -568,7 +568,7 @@ const CreateEventStep2 = ({
                 setEventForm({
                   ...eventForm,
                   revealed_fields: eventForm.revealed_fields.filter(
-                    (field) => field != ParticipantFieldType.REFID
+                    (field) => field != ParticipantFieldType.REFID,
                   ),
                 });
               } else {
@@ -598,13 +598,13 @@ const CreateEventStep2 = ({
             onCheckedChange={() => {
               if (
                 eventForm.revealed_fields.includes(
-                  ParticipantFieldType.ORGANIZATION
+                  ParticipantFieldType.ORGANIZATION,
                 )
               ) {
                 setEventForm({
                   ...eventForm,
                   revealed_fields: eventForm.revealed_fields.filter(
-                    (field) => field != ParticipantFieldType.ORGANIZATION
+                    (field) => field != ParticipantFieldType.ORGANIZATION,
                   ),
                 });
               } else {
@@ -689,7 +689,7 @@ const CreateEventStep2 = ({
                 disabled={
                   studentIdAccessibilityQuery?.length != 10 ||
                   selectedStudentIdsAccessibility?.includes(
-                    studentIdAccessibilityQuery
+                    studentIdAccessibilityQuery,
                   ) ||
                   roleAccessibilityQuery == ""
                 }
@@ -697,7 +697,7 @@ const CreateEventStep2 = ({
                 className={`w-fit h-9 shrink-0 ${
                   studentIdAccessibilityQuery?.length == 10 &&
                   !selectedStudentIdsAccessibility?.includes(
-                    studentIdAccessibilityQuery
+                    studentIdAccessibilityQuery,
                   ) &&
                   roleAccessibilityQuery != ""
                     ? "cursor-pointer"
@@ -707,7 +707,7 @@ const CreateEventStep2 = ({
                   if (studentIdAccessibilityQuery.length != 10) return;
                   if (
                     selectedStudentIdsAccessibility?.includes(
-                      studentIdAccessibilityQuery
+                      studentIdAccessibilityQuery,
                     )
                   )
                     return;
@@ -790,7 +790,7 @@ const CreateEventStep2 = ({
                   value={student.role}
                   onValueChange={(newRole) => {
                     const updated = eventForm.managers_and_staff.map((m) =>
-                      m.id === student.id ? { ...m, role: newRole } : m
+                      m.id === student.id ? { ...m, role: newRole } : m,
                     );
 
                     setEventForm({

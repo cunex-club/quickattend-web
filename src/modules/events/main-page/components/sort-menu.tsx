@@ -25,12 +25,11 @@ const SortMenu = ({ options, onSelect }: SortMenuProps) => {
         <button
           type="button"
           aria-label="Sort"
-          className="m-2.5 text-primary cursor-pointer rounded focus:outline-none focus:ring-2 focus:ring-primary/50"
+          className="p-1 text-primary cursor-pointer rounded focus:outline-none focus:ring-2 focus:ring-primary/50 [&>div]:!p-0"
         >
           <IonIcon
             name="SwapVerticalOutline"
-            size="32px"
-            className="text-primary"
+            className="text-primary w-6 h-6 lg:w-8 lg:h-8"
           />
         </button>
       </DropdownMenuTrigger>
