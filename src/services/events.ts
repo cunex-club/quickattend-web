@@ -31,7 +31,7 @@ export async function fetchEventById(
 export async function fetchManagedEvents(
   search?: string,
 ): Promise<EventsAPIResponse> {
-  const params = new URLSearchParams({ managed: "true" });
+  const params = new URLSearchParams({ myevents: "true" });
   if (search) params.set("search", search);
 
   const res = await fetch(`${API_HOST}/events?${params.toString()}`, {
@@ -53,7 +53,7 @@ export async function fetchAttendedEvents(
   search?: string,
 ): Promise<EventsAPIResponse> {
   const params = new URLSearchParams({
-    managed: "false",
+    myevents: "false",
     page: page.toString(),
     pageSize: pageSize.toString(),
   });
