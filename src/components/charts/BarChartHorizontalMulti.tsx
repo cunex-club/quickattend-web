@@ -150,10 +150,10 @@ export function BarChartHorizontalMulti({
                 axisLine={true}
                 tickFormatter={(value) => value.toString()}
               />
-              <ChartTooltip
+              {/*<ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent indicator="line" />}
-              />
+              />*/}
               {faculties.map((faculty, index) => (
                 <Bar
                   key={faculty}

@@ -284,8 +284,8 @@ export function CompareView() {
                 switchNumberPosition={true}
                 mobileLeftAlign={true}
               >
-                <div className="flex flex-col justify-center items-center gap-4">
-                  <p className="title-medium-emphasized lg:title-large-emphasized">
+                <div className="flex flex-col justify-center items-center gap-4 mt-2">
+                  <p className="title-medium-emphasized lg:title-large-emphasized text-center">
                     {t("outOfTotal")}{" "}
                     {summaryStats.totalRegistered +
                       summaryStats.totalUnregistered}{" "}

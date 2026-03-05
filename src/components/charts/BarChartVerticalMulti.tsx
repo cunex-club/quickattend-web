@@ -54,7 +54,7 @@ interface TransformedDataEntry extends Record<string, string | number> {
 // HELPER FUNCTIONS
 
 const transformDataForChart = (
-  data: BarChartVerticalMultiProps["data"]
+  data: BarChartVerticalMultiProps["data"],
 ): TransformedDataEntry[] => {
   if (!data || data.length === 0) return [];
 
@@ -68,7 +68,7 @@ const transformDataForChart = (
 };
 
 const extractTimeLabels = (
-  data: BarChartVerticalMultiProps["data"]
+  data: BarChartVerticalMultiProps["data"],
 ): string[] => {
   const times = new Set<string>();
   data.forEach(({ data: timeData }) => {
@@ -94,7 +94,7 @@ export function BarChartVerticalMulti({ data }: BarChartVerticalMultiProps) {
 
   // State
   const [hoveredSeriesIndex, setHoveredSeriesIndex] = useState<number | null>(
-    null
+    null,
   );
   const [isLocked, setIsLocked] = useState<boolean>(false);
 
@@ -150,10 +150,10 @@ export function BarChartVerticalMulti({ data }: BarChartVerticalMultiProps) {
                     hide
                   />
                   <XAxis type="number" hide />
-                  <ChartTooltip
+                  {/*<ChartTooltip
                     cursor={false}
                     content={<ChartTooltipContent indicator="line" />}
-                  />
+                  />*/}
 
                   {timeArray.map((time, seriesIndex) => (
                     <Bar

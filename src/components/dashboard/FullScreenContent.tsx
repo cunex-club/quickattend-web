@@ -2,6 +2,7 @@
 import IonIcon from "@shared/IonIcon";
 import { cn } from "@assets/lib/utils";
 import { useTranslations } from "next-intl";
+import MarqueeText from "@components/MarqueeText";
 
 interface FullscreenContentProps {
   data: {
@@ -18,6 +19,8 @@ interface FullscreenContentProps {
     unit: string;
   };
 }
+
+const longEventTitle = "Freshmen night 2024: Welcome to the Chulalongkorn University Family and get ready for an unforgettable night of fun, food, and festivities!";
 
 const FullscreenContent: React.FC<FullscreenContentProps> = ({
   data,
@@ -41,9 +44,12 @@ const FullscreenContent: React.FC<FullscreenContentProps> = ({
     <div className="w-full h-full flex flex-col justify-between">
       {/* Header */}
       <nav className="w-full px-16 py-8 bg-primary flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 z-20 relative">
-        <p className="text-white display-small-emphasized md:display-medium-emphasized mr-4">
-          {data.title}
-        </p>
+        <div className="mr-4 w-full max-w-[80%]">
+          <MarqueeText
+            text={data.title}
+            className="text-white display-small-emphasized md:display-medium-emphasized delay-1000"
+          />
+        </div>
         <div className="flex items-center">
           <span className="text-white body-medium-primary md:body-large-primary">
             {data.date}
@@ -88,7 +94,7 @@ const FullscreenContent: React.FC<FullscreenContentProps> = ({
                   "lg:text-[256px] lg:leading-[100%] lg:tracking-[-1.408px]",
                 )}
               >
-                {data.totalAttendees}
+                {data.totalAttendees.toLocaleString("en-US")}
               </p>
               <p
                 className={cn(
@@ -121,9 +127,12 @@ const FullscreenContent: React.FC<FullscreenContentProps> = ({
         <span className="flex flex-row space-x-4 items-center">
           <IonIcon name="Location" size="36px" className="text-primary" />
           <div className="w-full items-center">
-            <span className="text-neutral-600 body-large-primary">
-              {data?.location}
-            </span>
+            <div className="w-full">
+              <MarqueeText
+                text={data?.location}
+                className="text-neutral-600 body-large-primary"
+              />
+            </div>
           </div>
         </span>
         <div className="flex-grow"></div>

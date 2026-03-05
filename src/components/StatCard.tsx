@@ -38,7 +38,7 @@ export const StatCard = ({
         className,
       )}
     >
-      <div className="flex flex-col gap-y-4 lg:gap-y-8 xl:gap-y-4">
+      <div className="flex flex-col gap-y-4 lg:gap-y-8 xl:gap-y-6 ">
         <div
           className={cn(
             "flex justify-center items-baseline space-x-2 md:space-x-4 lg:space-x-4 xl:space-x-8",
@@ -86,8 +86,6 @@ export const StatCard = ({
 
               // Desktop (xl)
               "xl:text-[64px] xl:leading-[140%] xl:tracking-[-0.704px]",
-
-
 
               // Color Logic
               variant === "filled" ? "text-neutral-white" : "text-primary",

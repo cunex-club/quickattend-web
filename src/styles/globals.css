@@ -27,3 +27,28 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  /* delay ก่อนเริ่ม */
+  10% {
+    transform: translateX(0);
+  }
+
+  /* scroll จริง */
+  80% {
+    transform: translateX(var(--marquee-distance));
+  }
+
+  /* delay ตอนจบ */
+  100% {
+    transform: translateX(var(--marquee-distance));
+  }
+}
+
+.group:hover div {
+  animation-play-state: paused;
+}

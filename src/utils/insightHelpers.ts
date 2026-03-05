@@ -61,7 +61,7 @@ export function filterFacultyData(
   let faculties = dataSources?.deepInsightFacultyData ?? defaultFacultyData;
   if (selectedFacultyIds.length > 0) {
     faculties = faculties.filter((f) =>
-      selectedFacultyIds.includes(f.facultyId)
+      selectedFacultyIds.includes(f.facultyId),
     );
   }
 
@@ -75,19 +75,16 @@ export function filterFacultyData(
     // Sum up raw data first
     const students = timeData.reduce((sum, t) => sum + t.students, 0);
     const staff = timeData.reduce((sum, t) => sum + t.staff, 0);
-    const totalRegistered = timeData.reduce(
-      (sum, t) => sum + t.registered,
-      0
-    );
+    const totalRegistered = timeData.reduce((sum, t) => sum + t.registered, 0);
     const totalUnregistered = timeData.reduce(
       (sum, t) => sum + t.unregistered,
-      0
+      0,
     );
 
     // Apply userFilter to calculate final values
-    let total = students + staff;           // Total eligible
-    let registered = totalRegistered;        // Total registered
-    let unregistered = totalUnregistered;    // Total unregistered
+    let total = students + staff; // Total eligible
+    let registered = totalRegistered; // Total registered
+    let unregistered = totalUnregistered; // Total unregistered
 
     // Show only students or staff
     if (userFilter === "student") {
@@ -105,15 +102,14 @@ export function filterFacultyData(
     return {
       facultyId: faculty.facultyId,
       faculty: faculty.faculty,
-      students,        // Always actual student count
-      staff,           // Always actual staff count
-      total,           // Eligible (filtered by userFilter)
-      registered,      // Registered (filtered by userFilter estimate)
-      unregistered,    // Unregistered (filtered by userFilter estimate)
+      students, // Always actual student count
+      staff, // Always actual staff count
+      total, // Eligible (filtered by userFilter)
+      registered, // Registered (filtered by userFilter estimate)
+      unregistered, // Unregistered (filtered by userFilter estimate)
     };
   });
 }
-
 
 // Filter and transform time data based on applied filters and user filter
 export function filterTimeData(
@@ -135,7 +131,7 @@ export function filterTimeData(
 
     if (selectedFacultyIds.length > 0) {
       facultyData = facultyData.filter((f) =>
-        selectedFacultyIds.includes(f.facultyId)
+        selectedFacultyIds.includes(f.facultyId),
       );
     }
 
@@ -144,17 +140,17 @@ export function filterTimeData(
     const staff = facultyData.reduce((sum, f) => sum + f.staff, 0);
     const totalRegistered = facultyData.reduce(
       (sum, f) => sum + f.registered,
-      0
+      0,
     );
     const totalUnregistered = facultyData.reduce(
       (sum, f) => sum + f.unregistered,
-      0
+      0,
     );
 
     // Apply userFilter to calculate final values
-    let total = students + staff;           // Total eligible
-    let registered = totalRegistered;        // Total registered
-    let unregistered = totalUnregistered;    // Total unregistered
+    let total = students + staff; // Total eligible
+    let registered = totalRegistered; // Total registered
+    let unregistered = totalUnregistered; // Total unregistered
 
     // Show only students or staff
     if (userFilter === "student") {
@@ -172,11 +168,11 @@ export function filterTimeData(
     return {
       timeId: timeItem.timeId,
       time: timeItem.time,
-      students,        // Always actual student count
-      staff,           // Always actual staff count
-      total,           // Eligible (filtered by userFilter)
-      registered,      // Registered (filtered by userFilter estimate)
-      unregistered,    // Unregistered (filtered by userFilter estimate)
+      students, // Always actual student count
+      staff, // Always actual staff count
+      total, // Eligible (filtered by userFilter)
+      registered, // Registered (filtered by userFilter estimate)
+      unregistered, // Unregistered (filtered by userFilter estimate)
     };
   });
 }
@@ -186,21 +182,21 @@ export function filterTimeData(
 // studentCount/staffCount based on userFilter
 export function calculateInsightSummaryStats(
   filteredFacultyData: FilteredFacultyItem[],
-  userFilter: UserFilter
+  userFilter: UserFilter,
 ): SummaryStatsResult {
   const totalStudents = filteredFacultyData.reduce(
     (sum, f) => sum + f.students,
-    0
+    0,
   );
   const totalStaff = filteredFacultyData.reduce((sum, f) => sum + f.staff, 0);
   const totalRegistered = filteredFacultyData.reduce(
     (sum, f) => sum + f.registered,
-    0
+    0,
   );
 
   // Total Attendees = Registered (actual participants)
   const totalAttendees = totalRegistered;
-  
+
   // Student/Staff  counts (eligible totals, filtered by userFilter)
   let studentCount = totalStudents;
   let staffCount = totalStaff;
@@ -214,28 +210,27 @@ export function calculateInsightSummaryStats(
   }
 
   return {
-    totalAttendees,  // Registered participants
-    studentCount,    // Eligible students (filtered by userFilter)
-    staffCount,      // Eligible staff (filtered by userFilter)
+    totalAttendees, // Registered participants
+    studentCount, // Eligible students (filtered by userFilter)
+    staffCount, // Eligible staff (filtered by userFilter)
   };
 }
 
-
 // Calculate registration statistics from filtered faculty data
 export function calculateRegistrationStats(
-  filteredFacultyData: FilteredFacultyItem[]
+  filteredFacultyData: FilteredFacultyItem[],
 ): RegistrationStatsResult {
   const totalRegistered = filteredFacultyData.reduce(
     (sum, f) => sum + f.registered,
-    0
+    0,
   );
   const totalUnregistered = filteredFacultyData.reduce(
     (sum, f) => sum + f.unregistered,
-    0
+    0,
   );
   const totalStudents = filteredFacultyData.reduce(
     (sum, f) => sum + f.students,
-    0
+    0,
   );
   const totalStaff = filteredFacultyData.reduce((sum, f) => sum + f.staff, 0);
 
@@ -246,5 +241,3 @@ export function calculateRegistrationStats(
     staff: totalStaff,
   };
 }
-
-
