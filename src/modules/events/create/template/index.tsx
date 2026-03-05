@@ -146,7 +146,7 @@ const EventCreateTemplate = () => {
   const [validStep3, setValidStep3] = useState(false);
 
   const [cardMode, setCardMode] = useState<CardPreviewType>(
-    CardPreviewType.CARD_PREVIEW
+    CardPreviewType.CARD_PREVIEW,
   );
 
   useEffect(() => {

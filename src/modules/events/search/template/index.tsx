@@ -16,7 +16,7 @@ const EventSearchTemplate = () => {
   };
 
   const filteredEvents = mockEvents.filter((event) =>
-    event.title.toLowerCase().includes(searchQuery.toLowerCase())
+    event.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const hasResults = filteredEvents.length > 0;

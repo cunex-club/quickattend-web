@@ -296,14 +296,14 @@ const EditEventSection2 = ({
                   eventForm.attendance_type != AttendanceType.WHITELIST ||
                   studentIdPermissionQuery?.length != 10 ||
                   selectedStudentIdsPermission?.includes(
-                    studentIdPermissionQuery
+                    studentIdPermissionQuery,
                   )
                 }
                 className={`w-fit h-9 shrink-0 ${
                   eventForm.attendance_type == AttendanceType.WHITELIST &&
                   studentIdPermissionQuery?.length == 10 &&
                   !selectedStudentIdsPermission?.includes(
-                    studentIdPermissionQuery
+                    studentIdPermissionQuery,
                   )
                     ? "cursor-pointer"
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
@@ -315,7 +315,7 @@ const EditEventSection2 = ({
                   if (studentIdPermissionQuery.length != 10) return;
                   if (
                     selectedStudentIdsPermission?.includes(
-                      studentIdPermissionQuery
+                      studentIdPermissionQuery,
                     )
                   )
                     return;
@@ -415,7 +415,7 @@ const EditEventSection2 = ({
                 setEventForm({
                   ...eventForm,
                   revealed_fields: eventForm.revealed_fields.filter(
-                    (field) => field != ParticipantFieldType.PHOTO
+                    (field) => field != ParticipantFieldType.PHOTO,
                   ),
                 });
               } else {
@@ -449,7 +449,7 @@ const EditEventSection2 = ({
                 setEventForm({
                   ...eventForm,
                   revealed_fields: eventForm.revealed_fields.filter(
-                    (field) => field != ParticipantFieldType.NAME
+                    (field) => field != ParticipantFieldType.NAME,
                   ),
                 });
               } else {
@@ -483,7 +483,7 @@ const EditEventSection2 = ({
                 setEventForm({
                   ...eventForm,
                   revealed_fields: eventForm.revealed_fields.filter(
-                    (field) => field != ParticipantFieldType.REFID
+                    (field) => field != ParticipantFieldType.REFID,
                   ),
                 });
               } else {
@@ -513,13 +513,13 @@ const EditEventSection2 = ({
             onCheckedChange={() => {
               if (
                 eventForm.revealed_fields.includes(
-                  ParticipantFieldType.ORGANIZATION
+                  ParticipantFieldType.ORGANIZATION,
                 )
               ) {
                 setEventForm({
                   ...eventForm,
                   revealed_fields: eventForm.revealed_fields.filter(
-                    (field) => field != ParticipantFieldType.ORGANIZATION
+                    (field) => field != ParticipantFieldType.ORGANIZATION,
                   ),
                 });
               } else {
@@ -605,14 +605,14 @@ const EditEventSection2 = ({
                 disabled={
                   studentIdAccessibilityQuery?.length != 10 ||
                   selectedStudentIdsAccessibility?.includes(
-                    studentIdAccessibilityQuery
+                    studentIdAccessibilityQuery,
                   ) ||
                   roleAccessibilityQuery == ""
                 }
                 className={`w-fit h-9 shrink-0 ${
                   studentIdAccessibilityQuery?.length == 10 &&
                   !selectedStudentIdsAccessibility?.includes(
-                    studentIdAccessibilityQuery
+                    studentIdAccessibilityQuery,
                   ) &&
                   roleAccessibilityQuery != ""
                     ? "cursor-pointer"
@@ -622,7 +622,7 @@ const EditEventSection2 = ({
                   if (studentIdAccessibilityQuery.length != 10) return;
                   if (
                     selectedStudentIdsAccessibility?.includes(
-                      studentIdAccessibilityQuery
+                      studentIdAccessibilityQuery,
                     )
                   )
                     return;
@@ -705,7 +705,7 @@ const EditEventSection2 = ({
                   value={student.role}
                   onValueChange={(newRole) => {
                     const updated = eventForm.managers_and_staff.map((m) =>
-                      m.id === student.id ? { ...m, role: newRole } : m
+                      m.id === student.id ? { ...m, role: newRole } : m,
                     );
 
                     setEventForm({

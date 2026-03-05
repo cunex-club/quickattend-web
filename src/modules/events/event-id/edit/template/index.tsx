@@ -61,7 +61,7 @@ const EventEditTemplate = () => {
   const [openDuplicate, setOpenDuplicate] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [cardMode, setCardMode] = useState<CardPreviewType>(
-    CardPreviewType.CARD_PREVIEW
+    CardPreviewType.CARD_PREVIEW,
   );
 
   const [valid, setValid] = useState(false);

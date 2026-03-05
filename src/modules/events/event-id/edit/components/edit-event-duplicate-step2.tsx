@@ -86,7 +86,7 @@ const EditEventDuplicateStep2 = ({
     const sortedAgenda = [...duplicatedEventForm.agenda, newAgenda].sort(
       (a, b) =>
         a.startTime.getTime() - b.startTime.getTime() ||
-        a.endTime.getTime() - b.endTime.getTime()
+        a.endTime.getTime() - b.endTime.getTime(),
     );
 
     setDuplicatedEventForm({
@@ -111,7 +111,7 @@ const EditEventDuplicateStep2 = ({
   const updateAgendaTime = (
     index: number,
     field: "startTime" | "endTime",
-    time: string
+    time: string,
   ) => {
     const updated = [...duplicatedEventForm.agenda];
     const base = updated[index][field];
@@ -134,7 +134,7 @@ const EditEventDuplicateStep2 = ({
     const sortedAgenda = updated.sort(
       (a, b) =>
         a.startTime.getTime() - b.startTime.getTime() ||
-        a.endTime.getTime() - b.endTime.getTime()
+        a.endTime.getTime() - b.endTime.getTime(),
     );
 
     setDuplicatedEventForm({ ...duplicatedEventForm, agenda: sortedAgenda });
@@ -175,7 +175,7 @@ const EditEventDuplicateStep2 = ({
                     const value = clampTime(
                       e.target.value,
                       duplicatedEventForm.startTime,
-                      duplicatedEventForm.endTime
+                      duplicatedEventForm.endTime,
                     );
 
                     setAgendaStart(value);
@@ -190,7 +190,7 @@ const EditEventDuplicateStep2 = ({
                 <div
                   className={cn(
                     "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none"
+                    !isDateSelected && "opacity-50 pointer-events-none",
                   )}
                 >
                   <span>{agendaStart || tEditEvent("timePlaceholder")}</span>
@@ -224,7 +224,7 @@ const EditEventDuplicateStep2 = ({
                     const value = clampTime(
                       e.target.value,
                       duplicatedEventForm.startTime,
-                      duplicatedEventForm.endTime
+                      duplicatedEventForm.endTime,
                     );
 
                     if (agendaStart && value <= agendaStart) {
@@ -239,7 +239,7 @@ const EditEventDuplicateStep2 = ({
                 <div
                   className={cn(
                     "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none"
+                    !isDateSelected && "opacity-50 pointer-events-none",
                   )}
                 >
                   <span>{agendaEnd || tEditEvent("timePlaceholder")}</span>

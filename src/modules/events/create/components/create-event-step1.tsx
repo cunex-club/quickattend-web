@@ -180,7 +180,7 @@ const CreateEventStep1 = ({
     const sortedAgenda = [...eventForm.agenda, newAgenda].sort(
       (a, b) =>
         a.startTime.getTime() - b.startTime.getTime() ||
-        a.endTime.getTime() - b.endTime.getTime()
+        a.endTime.getTime() - b.endTime.getTime(),
     );
 
     setEventForm({
@@ -205,7 +205,7 @@ const CreateEventStep1 = ({
   const updateAgendaTime = (
     index: number,
     field: "startTime" | "endTime",
-    time: string
+    time: string,
   ) => {
     const updated = [...eventForm.agenda];
     const base = updated[index][field];
@@ -227,7 +227,7 @@ const CreateEventStep1 = ({
     const sortedAgenda = updated.sort(
       (a, b) =>
         a.startTime.getTime() - b.startTime.getTime() ||
-        a.endTime.getTime() - b.endTime.getTime()
+        a.endTime.getTime() - b.endTime.getTime(),
     );
 
     setEventForm({ ...eventForm, agenda: sortedAgenda });
@@ -335,7 +335,7 @@ const CreateEventStep1 = ({
                 <div
                   className={cn(
                     "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none"
+                    !isDateSelected && "opacity-50 pointer-events-none",
                   )}
                 >
                   <span>
@@ -366,7 +366,7 @@ const CreateEventStep1 = ({
                 <div
                   className={cn(
                     "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none"
+                    !isDateSelected && "opacity-50 pointer-events-none",
                   )}
                 >
                   <span>
@@ -424,7 +424,7 @@ const CreateEventStep1 = ({
                     const value = clampTime(
                       e.target.value,
                       eventForm.startTime,
-                      eventForm.endTime
+                      eventForm.endTime,
                     );
 
                     setAgendaStart(value);
@@ -439,7 +439,7 @@ const CreateEventStep1 = ({
                 <div
                   className={cn(
                     "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none"
+                    !isDateSelected && "opacity-50 pointer-events-none",
                   )}
                 >
                   <span>{agendaStart || tCreateEvent("timePlaceholder")}</span>
@@ -469,7 +469,7 @@ const CreateEventStep1 = ({
                     const value = clampTime(
                       e.target.value,
                       eventForm.startTime,
-                      eventForm.endTime
+                      eventForm.endTime,
                     );
 
                     if (agendaStart && value <= agendaStart) {
@@ -484,7 +484,7 @@ const CreateEventStep1 = ({
                 <div
                   className={cn(
                     "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none"
+                    !isDateSelected && "opacity-50 pointer-events-none",
                   )}
                 >
                   <span>{agendaEnd || tCreateEvent("timePlaceholder")}</span>

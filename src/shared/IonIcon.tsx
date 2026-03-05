@@ -9,6 +9,7 @@ interface IconProps {
   name: IconName;
   size?: string;
   onClick?: () => void;
+  noPadding?: boolean;
 }
 
 const IonIcon: StyleableFC<IconProps> = ({
@@ -16,13 +17,14 @@ const IonIcon: StyleableFC<IconProps> = ({
   size = "24px",
   className,
   onClick,
+  noPadding = false,
 }) => {
   const IconComponent = Ionicons[name] as React.ElementType;
 
   if (!IconComponent) return null;
 
   return (
-    <div className="p-2">
+    <div className={noPadding ? "" : "p-2"}>
       <IconComponent
         height={size}
         width={size}
