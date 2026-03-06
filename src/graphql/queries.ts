@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 
-
 // Fetches overview data for the /dashboard page
 // (event metadata + attendee counts)
 export const GET_EVENT_DATA = gql`
@@ -19,8 +18,9 @@ export const GET_EVENT_DATA = gql`
   }
 `;
 
-// Fetches all deep-insight data for /dashboard/insights
-// (faculty data, time data, and filter options)
+// Fetches all deep-insight data for /dashboard/insights and /dashboard/compare pages
+// (faculty data, time data)
+// (filter options) to be used in the filter dropdowns
 export const GET_DASHBOARD_INSIGHT_DATA = gql`
   query GetDashboardInsightData {
     deepInsightFacultyData {
@@ -59,5 +59,3 @@ export const GET_DASHBOARD_INSIGHT_DATA = gql`
     }
   }
 `;
-
-

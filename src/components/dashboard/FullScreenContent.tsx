@@ -20,7 +20,8 @@ interface FullscreenContentProps {
   };
 }
 
-const longEventTitle = "Freshmen night 2024: Welcome to the Chulalongkorn University Family and get ready for an unforgettable night of fun, food, and festivities!";
+const longEventTitle =
+  "Freshmen night 2024: Welcome to the Chulalongkorn University Family and get ready for an unforgettable night of fun, food, and festivities!";
 
 const FullscreenContent: React.FC<FullscreenContentProps> = ({
   data,
@@ -46,7 +47,8 @@ const FullscreenContent: React.FC<FullscreenContentProps> = ({
       <nav className="w-full px-16 py-8 bg-primary flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 z-20 relative">
         <div className="mr-4 w-full max-w-[80%]">
           <MarqueeText
-            text={data.title}
+            // text={data.title}
+            text={longEventTitle}
             className="text-white display-small-emphasized md:display-medium-emphasized delay-1000"
           />
         </div>
