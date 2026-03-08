@@ -24,9 +24,9 @@ const ScanTemplate = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-white">
-      {/* ── Desktop (lg+): Info panel + Participants stats, no camera ── */}
-      <div className="hidden lg:grid lg:grid-cols-2 lg:gap-6 lg:p-8 lg:min-h-screen">
+    <div className="min-h-screen w-full bg-neutral-200">
+      {/* ── Desktop / laptop (2xl+, ≥1536px): Info panel + Participants stats, no camera ── */}
+      <div className="hidden 2xl:grid 2xl:grid-cols-2 2xl:gap-6 2xl:p-8 2xl:min-h-screen">
         <ScanInfoPanel
           events={MOCK_EVENTS}
           selectedEvent={selectedEvent}
@@ -35,11 +35,21 @@ const ScanTemplate = () => {
         <ScanParticipantsPanel
           participants={MOCK_RECENT_PARTICIPANTS}
           totalCount={TOTAL_PARTICIPANTS}
-          className="min-h-[720px] lg:min-h-0"
+          className="2xl:min-h-0"
         />
       </div>
 
-      {/* ── Mobile / tablet (< lg): Camera + compact event info, no stats ── */}
+      {/* ── Tablet / iPad landscape (lg–2xl, 1024–1535px): Info panel + Camera, side by side ── */}
+      <div className="hidden lg:grid lg:grid-cols-2 lg:gap-6 lg:p-8 lg:min-h-screen 2xl:hidden">
+        <ScanInfoPanel
+          events={MOCK_EVENTS}
+          selectedEvent={selectedEvent}
+          onEventChange={setSelectedEventId}
+        />
+        <ScanCameraPanel onScan={handleScan} className="min-h-0" />
+      </div>
+
+      {/* ── Mobile / portrait (< lg): Camera + compact event info, no stats ── */}
       <div className="flex flex-col lg:hidden min-h-screen p-4 gap-4">
         <ScanCameraPanel onScan={handleScan} className="flex-1 min-h-[60vh]" />
         <ScanInfoPanel
