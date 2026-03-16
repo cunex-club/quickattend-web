@@ -31,7 +31,11 @@ export async function fetchEventById(
 export async function fetchManagedEvents(
   search?: string,
 ): Promise<EventsAPIResponse> {
-  const params = new URLSearchParams({ myevents: "true" });
+  const params = new URLSearchParams({
+    myevents: "true",
+    page: "1",
+    pageSize: "8",
+  });
   if (search) params.set("search", search);
 
   const res = await fetch(`${API_HOST}/events?${params.toString()}`, {
@@ -43,7 +47,6 @@ export async function fetchManagedEvents(
   if (!res.ok) {
     throw new Error(`Failed to fetch managed events: ${res.status}`);
   }
-
   return res.json();
 }
 

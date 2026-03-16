@@ -1,3 +1,5 @@
+"use client";
+
 import { StyleableFC } from "@utils/misc";
 import { cn } from "@assets/lib/utils";
 import Icon from "@shared/Icon";
@@ -16,7 +18,8 @@ import {
   DropdownMenuTrigger,
 } from "@assets/components/ui/dropdown-menu";
 import { useTranslations } from "next-intl";
-import { Link } from "@i18n/navigation";
+import { useRouter } from "@i18n/navigation";
+import type { KeyboardEvent, MouseEvent } from "react";
 
 type EventCardProps = {
   eventId: string;
@@ -42,9 +45,31 @@ const EventCard: StyleableFC<EventCardProps> = ({
   ...props
 }) => {
   const t = useTranslations("Events.EventCard");
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    router.push(`/events/${eventId}`);
+  };
+
+  const handleCardKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      handleCardClick();
+    }
+  };
+
+  const handleScanClick = (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    router.push("/scan");
+  };
+
   return (
-    <Link
-      href={`/events/${eventId}`}
+    <div
+      role="link"
+      tabIndex={0}
+      onClick={handleCardClick}
+      onKeyDown={handleCardKeyDown}
       className={cn(
         "block p-4 sm:px-8 sm:py-6 rounded-xl shadow-lg bg-neutral-100 space-y-4 cursor-pointer hover:shadow-xl transition-shadow",
         className,
@@ -60,6 +85,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
             <button
               type="button"
               aria-label="Sort"
+              onClick={(event) => event.stopPropagation()}
               className="m-2.5 text-primary cursor-pointer rounded focus:outline-none focus:ring-2 focus:ring-primary/50"
             >
               <Icon
@@ -137,7 +163,12 @@ const EventCard: StyleableFC<EventCardProps> = ({
       </div>
       {/* Desktop View */}
       <div className="hidden lg:flex flex-row gap-4 sm:gap-6">
-        <Button mode="filled" bordered="round" expanded>
+        <Button
+          mode="filled"
+          bordered="round"
+          expanded
+          onClick={handleScanClick}
+        >
           <div className="flex justify-center items-center gap-2">
             <IonIcon
               name="ScanOutline"
@@ -167,7 +198,12 @@ const EventCard: StyleableFC<EventCardProps> = ({
 
       {/* Mobile View */}
       <div className="flex lg:hidden flex-row gap-4 sm:gap-6">
-        <Button mode="filled" bordered="round" expanded>
+        <Button
+          mode="filled"
+          bordered="round"
+          expanded
+          onClick={handleScanClick}
+        >
           <div className="flex justify-center items-center gap-2">
             <IonIcon name="ScanOutline" size="36px" className="text-white" />
             <div className="title-large-primary text-white ">
@@ -189,7 +225,12 @@ const EventCard: StyleableFC<EventCardProps> = ({
         </Button>
       </div>
       <div className="hidden lg:">
-        <Button mode="filled" bordered="round" expanded>
+        <Button
+          mode="filled"
+          bordered="round"
+          expanded
+          onClick={handleScanClick}
+        >
           <div className="flex justify-center items-center gap-2">
             <IonIcon name="ScanOutline" size="36px" className="text-white" />
             <div className="title-large-primary text-white ">
@@ -210,7 +251,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
           </div>
         </Button>
       </div>
-    </Link>
+    </div>
   );
 };
 

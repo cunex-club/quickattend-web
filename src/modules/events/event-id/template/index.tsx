@@ -13,6 +13,7 @@ import { MOCK_SHARE_MODAL_DATA } from "@modules/events/event-id/constants/mock-u
 import { fetchEventById } from "@services/events";
 import EventDetailSkeleton from "@modules/events/event-id/components/event-detail-skeleton";
 import type { GetOneEventRes, EventInfo } from "@customTypes/events";
+import { useRouter } from "@i18n/navigation";
 
 interface EventIdPageTemplateProps {
   eventId: string;
@@ -20,6 +21,7 @@ interface EventIdPageTemplateProps {
 
 const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   const t = useTranslations("EventDetail");
+  const router = useRouter();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false);
   const [isMobileManageModalOpen, setIsMobileManageModalOpen] = useState(false);
@@ -129,7 +131,9 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           </div>
           <div className="flex flex-col gap-y-2">
             <div className="headline-small-emphasized">{t("eventDetails")}</div>
-            <div className="body-large-primary">{eventData.description ?? ""}</div>
+            <div className="body-large-primary">
+              {eventData.description ?? ""}
+            </div>
           </div>
           <div>
             <div className="headline-small-emphasized">{t("agenda")}</div>
@@ -187,6 +191,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           bordered="round"
           expanded={true}
           className="flex-1"
+          onClick={() => router.push("/scan")}
         >
           <div className="flex justify-center items-center gap-2 text-neutral-white">
             <IonIcon name="Scan" className="w-6 h-6 md:w-9 md:h-9" />

@@ -100,8 +100,12 @@ const EventPageTemplate = () => {
             <IonIcon name="SearchOutline" className="w-6 h-6" />
           </Link>
           <div className="hidden lg:flex lg:flex-wrap lg:items-center lg:gap-1 lg:gap-2.25">
-            <FilterMenu onFilterChange={handleMyEventsFilterChange} />
+            <FilterMenu
+              menuId="my-events-filter"
+              onFilterChange={handleMyEventsFilterChange}
+            />
             <SortMenu
+              menuId="my-events-sort"
               options={[
                 {
                   label: "วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด",
@@ -163,8 +167,12 @@ const EventPageTemplate = () => {
             {t("pastEvents")}
           </div>
           <div className="flex flex-wrap items-center gap-1 lg:gap-2.25">
-            <FilterMenu onFilterChange={handlePastEventsFilterChange} />
+            <FilterMenu
+              menuId="past-events-filter"
+              onFilterChange={handlePastEventsFilterChange}
+            />
             <SortMenu
+              menuId="past-events-sort"
               options={[
                 {
                   label: "วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด",
