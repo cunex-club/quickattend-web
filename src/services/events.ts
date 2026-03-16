@@ -13,6 +13,24 @@ export type EventsAPIResponse = APIResponse<GetEventsRes[]>;
 export type EventByIdAPIResponse = APIResponse<GetOneEventRes>;
 export type ScanParticipantAPIResponse = APIResponse<ScanParticipantRes>;
 
+export type APIErrorData = {
+  code: string;
+  message: string;
+  status: number;
+};
+
+export class APIRequestError extends Error {
+  code: string;
+  status: number;
+
+  constructor(message: string, code: string, status: number) {
+    super(message);
+    this.name = "APIRequestError";
+    this.code = code;
+    this.status = status;
+  }
+}
+
 export interface ScanParticipantRes {
   firstname_th: string | null;
   surname_th: string | null;
@@ -139,7 +157,28 @@ export async function postParticipantScan(
   );
 
   if (!res.ok) {
-    throw new Error(`Failed to submit participant scan: ${res.status}`);
+    let parsedError: APIErrorData | null = null;
+
+    try {
+      const body = (await res.json()) as APIResponse<null>;
+      parsedError = body.error;
+    } catch {
+      parsedError = null;
+    }
+
+    if (parsedError) {
+      throw new APIRequestError(
+        parsedError.message,
+        parsedError.code,
+        parsedError.status,
+      );
+    }
+
+    throw new APIRequestError(
+      `Failed to submit participant scan: ${res.status}`,
+      "SCAN_REQUEST_FAILED",
+      res.status,
+    );
   }
 
   return res.json();

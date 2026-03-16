@@ -6,6 +6,7 @@ import ScanCameraPanel from "@modules/events/scan/components/ScanCameraPanel";
 import ScanParticipantsPanel from "@modules/events/scan/components/ScanParticipantsPanel";
 import type { Participant, ScanEvent } from "@modules/events/scan/constants";
 import {
+  APIRequestError,
   fetchEventById,
   fetchManagedEvents,
   postParticipantScan,
@@ -34,6 +35,7 @@ const ScanTemplate = () => {
   const [totalParticipants, setTotalParticipants] = useState(0);
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [loadingDetail, setLoadingDetail] = useState(false);
+  const [isSubmittingScan, setIsSubmittingScan] = useState(false);
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -92,10 +94,18 @@ const ScanTemplate = () => {
   );
 
   const handleScan = async (text: string) => {
-    if (!selectedEventId) return;
+    if (!selectedEventId || isSubmittingScan) return;
+
+    setIsSubmittingScan(true);
 
     try {
       const res = await postParticipantScan(text, selectedEventId);
+
+      if (!res.data) {
+        alert("Scan failed: missing participant data");
+        return;
+      }
+
       const participantName =
         [res.data.title_th, res.data.firstname_th, res.data.surname_th]
           .filter(Boolean)
@@ -122,8 +132,21 @@ const ScanTemplate = () => {
 
       const selectedEventRes = await fetchEventById(selectedEventId);
       setTotalParticipants(selectedEventRes.data.total_registered);
+
+      if (res.data.status === "duplicate") {
+        alert(`Duplicate scan: ${participantName}`);
+      } else {
+        alert(`Scan success: ${participantName}`);
+      }
     } catch (error) {
+      if (error instanceof APIRequestError) {
+        alert(`Scan failed [${error.code}]: ${error.message}`);
+      } else {
+        alert("Scan failed: unexpected error");
+      }
       console.error("Failed to submit participant scan:", error);
+    } finally {
+      setIsSubmittingScan(false);
     }
   };
 
@@ -164,10 +187,10 @@ const ScanTemplate = () => {
         />
       </div>
 
-      {(loadingEvents || loadingDetail) && (
+      {(loadingEvents || loadingDetail || isSubmittingScan) && (
         <div className="fixed bottom-4 right-4 rounded-full bg-white/95 px-4 py-2 shadow-elevation-2">
           <span className="label-medium-primary text-neutral-600">
-            Loading...
+            {isSubmittingScan ? "Scanning..." : "Loading..."}
           </span>
         </div>
       )}
