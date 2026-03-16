@@ -11,6 +11,23 @@ const TOKEN = process.env.NEXT_PUBLIC_LOG_IN_TOKEN;
 export type { GetEventsRes, GetOneEventRes, APIPagination };
 export type EventsAPIResponse = APIResponse<GetEventsRes[]>;
 export type EventByIdAPIResponse = APIResponse<GetOneEventRes>;
+export type ScanParticipantAPIResponse = APIResponse<ScanParticipantRes>;
+
+export interface ScanParticipantRes {
+  firstname_th: string | null;
+  surname_th: string | null;
+  title_th: string | null;
+  firstname_en: string | null;
+  surname_en: string | null;
+  title_en: string | null;
+  ref_id: string | null;
+  organization_th: string | null;
+  organization_en: string | null;
+  check_in_time: string;
+  status: string;
+  code: string;
+  profile_image_url: string | null;
+}
 
 export async function fetchEventById(
   eventId: string,
@@ -94,6 +111,35 @@ export async function fetchDiscoveryEvents(
 
   if (!res.ok) {
     throw new Error(`Failed to fetch discovery events: ${res.status}`);
+  }
+
+  return res.json();
+}
+
+export async function postParticipantScan(
+  qrCode: string,
+  eventId: string,
+  scannedLocationLong: number = 0,
+  scannedLocationLat: number = 0,
+): Promise<ScanParticipantAPIResponse> {
+  const res = await fetch(
+    `${API_HOST}/participant/${encodeURIComponent(qrCode)}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        event_id: eventId,
+        scanned_location_long: scannedLocationLong,
+        scanned_location_lat: scannedLocationLat,
+      }),
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error(`Failed to submit participant scan: ${res.status}`);
   }
 
   return res.json();
