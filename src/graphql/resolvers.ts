@@ -1,5 +1,5 @@
 // Mock GraphQL Resolvers
-// Each resolver show what a real GraphQL server would return.
+// Each resolver shows what a real GraphQL server would return.
 // Data is sourced from the existing mock dataset in @utils/data.
 
 import {

@@ -1,7 +1,7 @@
 // Apollo Client with Mock Link
 // Uses a custom ApolloLink that resolves operations against
 // the local mock resolvers, simulating a real GraphQL server.
-// When a real backend is ready, replace `mockLink` with`HttpLink' GraphQL endpoint.
+// When a real backend is ready, replace `mockLink` with `HttpLink` GraphQL endpoint.
 
 import {
   ApolloClient,

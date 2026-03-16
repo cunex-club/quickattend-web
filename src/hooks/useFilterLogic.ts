@@ -3,7 +3,6 @@ import { useState, useMemo, useCallback } from "react";
 export interface UseFilterLogicConfig {
   maxSelectionLimit?: number;
   warnOnEmptyApply?: boolean;
-  t?: (key: string) => string;
 }
 
 export interface FilterHandlers {
@@ -21,7 +20,7 @@ export interface FilterHandlers {
 }
 
 export function useFilterLogic(config: UseFilterLogicConfig = {}): FilterHandlers {
-  const { maxSelectionLimit, warnOnEmptyApply = false, t } = config;
+  const { maxSelectionLimit, warnOnEmptyApply = false} = config;
 
   // Selected filters - updated when user clicks on filter items
   const [selectedFaculties, setSelectedFaculties] = useState<Record<string, boolean>>({});
@@ -90,14 +89,12 @@ export function useFilterLogic(config: UseFilterLogicConfig = {}): FilterHandler
         Object.keys(selectedFaculties).length === 0 &&
         Object.keys(selectedTimes).length === 0
       ) {
-        if (t) {
-        }
         return;
       }
     }
     setAppliedFaculties(selectedFaculties);
     setAppliedTimes(selectedTimes);
-  }, [selectedFaculties, selectedTimes, warnOnEmptyApply, t]);
+  }, [selectedFaculties, selectedTimes, warnOnEmptyApply]);
 
 
 

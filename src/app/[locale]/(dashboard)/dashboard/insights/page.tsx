@@ -1,12 +1,12 @@
-import { DeepInsightView } from "@components/dashboard/templete/DeepInsightView";
-import { WhitelistInsightView } from "@components/dashboard/templete/WhitelistInsightView";
+import { DeepInsightView } from "@components/dashboard/template/DeepInsightView";
+import { WhitelistInsightView } from "@components/dashboard/template/WhitelistInsightView";
 
 // --- mock data ---
 type EventType = "public" | "specific" | "whitelist";
 
 async function getEventData(): Promise<{ type: EventType }> {
-  // const eventType: EventType = "specific";
-  const eventType: EventType = "whitelist";
+  const eventType: EventType = "specific";
+  // const eventType: EventType = "whitelist";
   return { type: eventType };
 }
 // -------------------------------

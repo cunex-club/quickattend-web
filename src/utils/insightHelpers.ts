@@ -89,12 +89,12 @@ export function filterFacultyData(
     // Show only students or staff
     if (userFilter === "student") {
       total = students;
-      const ratio = students / (students + staff || 1);
+      const ratio = students / ((students + staff) || 1);
       registered = Math.round(totalRegistered * ratio);
       unregistered = Math.round(totalUnregistered * ratio);
     } else if (userFilter === "staff") {
       total = staff;
-      const ratio = staff / (students + staff || 1);
+      const ratio = staff / ((students + staff) || 1);
       registered = Math.round(totalRegistered * ratio);
       unregistered = Math.round(totalUnregistered * ratio);
     }

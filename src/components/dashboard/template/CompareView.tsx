@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { redirect } from "next/navigation";
 import dynamic from "next/dynamic";
 import { StatCard } from "@components/StatCard";
@@ -14,7 +14,7 @@ import { Skeleton } from "@assets/components/ui/skeleton";
 import { useTranslations } from "next-intl";
 import IonIcon from "@shared/IonIcon";
 import Link from "next/link";
-import { useFilterLogic } from "../../../hooks/useFilterLogic";
+import { useFilterLogic } from "@hooks/useFilterLogic";
 import {
   transformFacultyDataForComparison,
   transformTimeDataForComparison,
@@ -66,24 +66,15 @@ export function CompareView() {
   const {
     selectedFaculties,
     selectedTimes,
+    appliedFaculties,
+    appliedTimes,
     handleFacultyChange,
     handleTimeChange,
     handleClearFilters,
+    handleApplyFilters,
   } = useFilterLogic({
     maxSelectionLimit: 5,
   });
-
-  const [appliedFaculties, setAppliedFaculties] = useState<
-    Record<string, boolean>
-  >({});
-  const [appliedTimes, setAppliedTimes] = useState<Record<string, boolean>>({});
-
-  // Custom clear handler that also clears the separate applied state
-  const handleClearAll = () => {
-    handleClearFilters(); // Clear hook's internal state
-    setAppliedFaculties({}); // Clear CompareView's applied state
-    setAppliedTimes({});
-  };
 
   const handleSubmitComparison = () => {
     const hasFacultySelection = Object.keys(selectedFaculties).length > 0;
@@ -161,8 +152,7 @@ export function CompareView() {
       return;
     }
 
-    setAppliedFaculties(selectedFaculties);
-    setAppliedTimes(selectedTimes);
+    handleApplyFilters();
 
     toast.success(
       <p className="title-medium-primary text-neutral-white">
@@ -255,7 +245,7 @@ export function CompareView() {
                     bordered="round"
                     expanded={true}
                     className="bg-transparent"
-                    onClick={handleClearAll}
+                    onClick={handleClearFilters}
                   >
                     <p className="title-large-emphasized">{t("clearData")}</p>
                   </Button>

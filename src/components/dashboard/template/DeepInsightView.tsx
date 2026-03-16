@@ -52,7 +52,7 @@ import {
   calculateRegistrationStats,
   hasActiveFilters as checkActiveFilters,
 } from "@utils/insightHelpers";
-import { useFilterLogic } from "../../../hooks/useFilterLogic";
+import { useFilterLogic } from "@hooks/useFilterLogic";
 
 export function DeepInsightView() {
   const router = useRouter();
@@ -166,13 +166,13 @@ export function DeepInsightView() {
         if (userFilter === "student") {
           total = f.students;
           // Proportionally adjust registered/unregistered for students
-          const studentRatio = f.students / (f.students + f.staff || 1);
+          const studentRatio = f.students / ((f.students + f.staff) || 1);
           registered = Math.round(f.registered * studentRatio);
           unregistered = Math.round(f.unregistered * studentRatio);
         } else if (userFilter === "staff") {
           total = f.staff;
           // Proportionally adjust registered/unregistered for staff
-          const staffRatio = f.staff / (f.students + f.staff || 1);
+          const staffRatio = f.staff / ((f.students + f.staff) || 1);
           registered = Math.round(f.registered * staffRatio);
           unregistered = Math.round(f.unregistered * staffRatio);
         }
