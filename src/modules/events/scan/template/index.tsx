@@ -5,11 +5,13 @@ import ScanInfoPanel from "@modules/events/scan/components/ScanInfoPanel";
 import ScanCameraPanel from "@modules/events/scan/components/ScanCameraPanel";
 import ScanParticipantsPanel from "@modules/events/scan/components/ScanParticipantsPanel";
 import ScanResultPanel from "../components/ScanResultPanel";
+import NoActiveEventsModal from "../components/NoActiveEventsModal";
 import ScanResultModal, {
   type ScanResultModalData,
 } from "../components/ScanResultModal";
 import type { Participant, ScanEvent } from "@modules/events/scan/constants";
 import { useIsMobile } from "@assets/hooks/use-mobile";
+import { useRouter } from "@i18n/navigation";
 import {
   APIRequestError,
   fetchEventById,
@@ -33,6 +35,7 @@ const formatTime = (isoTime: string) => {
 
 const ScanTemplate = () => {
   const isMobile = useIsMobile();
+  const router = useRouter();
   const [events, setEvents] = useState<ScanEvent[]>([]);
   const [selectedEventId, setSelectedEventId] = useState("");
   const [recentParticipants, setRecentParticipants] = useState<Participant[]>(
@@ -43,6 +46,7 @@ const ScanTemplate = () => {
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [isSubmittingScan, setIsSubmittingScan] = useState(false);
   const [isResultModalOpen, setIsResultModalOpen] = useState(false);
+  const [isNoEventsModalOpen, setIsNoEventsModalOpen] = useState(false);
   const [scanResult, setScanResult] = useState<ScanResultModalData | null>(
     null,
   );
@@ -61,11 +65,13 @@ const ScanTemplate = () => {
         }));
 
         setEvents(mappedEvents);
+        setIsNoEventsModalOpen(mappedEvents.length === 0);
         setSelectedEventId((prev) => prev || mappedEvents[0]?.id || "");
       } catch (error) {
         console.error("Failed to fetch events for scan page:", error);
         setEvents([]);
         setSelectedEventId("");
+        setIsNoEventsModalOpen(false);
       } finally {
         setLoadingEvents(false);
       }
@@ -244,6 +250,15 @@ const ScanTemplate = () => {
           }
         }}
         result={scanResult}
+      />
+
+      <NoActiveEventsModal
+        open={isNoEventsModalOpen}
+        onCancel={() => setIsNoEventsModalOpen(false)}
+        onConfirm={() => {
+          setIsNoEventsModalOpen(false);
+          router.push("/events");
+        }}
       />
     </div>
   );
