@@ -196,11 +196,20 @@ const ScanTemplate = () => {
           selectedEvent={selectedEvent}
           onEventChange={setSelectedEventId}
         />
-        <ScanParticipantsPanel
-          participants={recentParticipants}
-          totalCount={totalParticipants}
-          className="2xl:min-h-0"
-        />
+        {scanResult ? (
+          <ScanResultPanel
+            result={scanResult}
+            totalCount={totalParticipants}
+            onBackToScan={() => setScanResult(null)}
+            className="2xl:min-h-0"
+          />
+        ) : (
+          <ScanParticipantsPanel
+            participants={recentParticipants}
+            totalCount={totalParticipants}
+            className="2xl:min-h-0"
+          />
+        )}
       </div>
 
       {/* ── Tablet / iPad landscape (lg–2xl, 1024–1535px): Info panel + Camera/Result, side by side ── */}

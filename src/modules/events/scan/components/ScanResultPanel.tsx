@@ -32,13 +32,13 @@ const ScanResultPanel: StyleableFC<ScanResultPanelProps> = ({
   return (
     <section
       className={cn(
-        "flex h-full min-h-0 flex-col gap-4 rounded-[32px] bg-neutral-100 p-6",
+        "flex h-full min-h-0 flex-col gap-4 rounded-[32px] bg-neutral-100 p-4 md:p-6",
         className,
       )}
     >
-      <div className="flex items-center justify-between gap-4">
-        <div className="inline-flex items-center gap-2 rounded-full bg-green-700 px-6 py-3 text-neutral-white">
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-neutral-white text-green-700">
+      <div className="flex items-center justify-between gap-4 px-1">
+        <div className="inline-flex items-center gap-3 rounded-full bg-green-700 px-6 py-3 text-neutral-white">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-neutral-white text-green-700">
             <IonIcon name="Checkmark" size="16px" noPadding />
           </span>
           <span className="headline-small-emphasized whitespace-nowrap">
@@ -46,28 +46,30 @@ const ScanResultPanel: StyleableFC<ScanResultPanelProps> = ({
           </span>
         </div>
 
-        <div className="title-large-emphasized whitespace-nowrap text-primary">
+        <div className="display-small-emphasized whitespace-nowrap text-primary">
           {totalCount} คน
         </div>
       </div>
 
-      <div className="flex h-full flex-col rounded-[28px] bg-neutral-white p-6">
-        <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-2xl bg-neutral-200">
+      <div className="flex h-full flex-col rounded-[28px] bg-neutral-white px-6 py-6 md:px-8 md:py-8">
+        <div className="mx-auto flex h-[184px] w-[152px] items-center justify-center rounded-2xl bg-neutral-200">
           <IonIcon
             name="PersonOutline"
-            size="44px"
+            size="64px"
             className="text-neutral-400"
           />
         </div>
 
-        <div className="mt-4 text-center text-neutral-700">
-          <p className="headline-small-emphasized">
+        <div className="mt-6 text-center text-neutral-700">
+          <p className="headline-medium-emphasized">
             {result?.participantName || "-"}
           </p>
-          <p className="title-medium-emphasized mt-1">{result?.refId || "-"}</p>
+          <p className="display-small-emphasized mt-1">
+            {result?.refId || "-"}
+          </p>
         </div>
 
-        <div className="mt-6 space-y-2 text-neutral-700">
+        <div className="mt-8 space-y-2 text-neutral-700">
           <p className="body-large-primary">{result?.organization || "-"}</p>
           <div className="flex items-center gap-1">
             <IonIcon
@@ -82,26 +84,25 @@ const ScanResultPanel: StyleableFC<ScanResultPanelProps> = ({
           </div>
         </div>
 
-        <div className="mt-6 space-y-2">
+        <div className="mt-4 space-y-2">
           <p className="title-small-emphasized text-neutral-700">หมายเหตุ</p>
-          <TextField
-            value={note}
-            onChange={(event) => setNote(event.target.value)}
-            placeholder="กรอกหมายเหตุ (ถ้ามี)"
-            inputClassName="body-small-primary"
-          />
-        </div>
-
-        <div className="mt-auto pt-6">
-          <Button
-            mode="filled"
-            bordered="round"
-            expanded
-            className="title-medium-emphasized"
-            onClick={onBackToScan}
-          >
-            สแกนต่อ
-          </Button>
+          <div className="flex items-center gap-3">
+            <TextField
+              value={note}
+              onChange={(event) => setNote(event.target.value)}
+              placeholder="กรอกหมายเหตุ (ถ้ามี)"
+              inputClassName="body-small-primary"
+            />
+            <Button
+              mode="filled"
+              bordered="round"
+              expanded={false}
+              className="title-medium-emphasized whitespace-nowrap px-4"
+              onClick={onBackToScan}
+            >
+              เพิ่มหมายเหตุ
+            </Button>
+          </div>
         </div>
       </div>
     </section>
