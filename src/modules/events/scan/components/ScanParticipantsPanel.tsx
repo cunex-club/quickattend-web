@@ -36,8 +36,8 @@ const ScanParticipantsPanel: StyleableFC<ScanParticipantsPanelProps> = ({
             }}
           >
             {totalCount}
-          </span>{" "}
-          <span className="display-small-emphasized text-neutral-600">คน</span>
+          </span>
+          <span className="display-small-emphasized text-[#E36487]">คน</span>
         </p>
       </div>
 

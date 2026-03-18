@@ -4,7 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import ScanInfoPanel from "@modules/events/scan/components/ScanInfoPanel";
 import ScanCameraPanel from "@modules/events/scan/components/ScanCameraPanel";
 import ScanParticipantsPanel from "@modules/events/scan/components/ScanParticipantsPanel";
+import ScanResultPanel from "../components/ScanResultPanel";
+import ScanResultModal, {
+  type ScanResultModalData,
+} from "../components/ScanResultModal";
 import type { Participant, ScanEvent } from "@modules/events/scan/constants";
+import { useIsMobile } from "@assets/hooks/use-mobile";
 import {
   APIRequestError,
   fetchEventById,
@@ -27,6 +32,7 @@ const formatTime = (isoTime: string) => {
 };
 
 const ScanTemplate = () => {
+  const isMobile = useIsMobile();
   const [events, setEvents] = useState<ScanEvent[]>([]);
   const [selectedEventId, setSelectedEventId] = useState("");
   const [recentParticipants, setRecentParticipants] = useState<Participant[]>(
@@ -36,6 +42,10 @@ const ScanTemplate = () => {
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [isSubmittingScan, setIsSubmittingScan] = useState(false);
+  const [isResultModalOpen, setIsResultModalOpen] = useState(false);
+  const [scanResult, setScanResult] = useState<ScanResultModalData | null>(
+    null,
+  );
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -85,6 +95,11 @@ const ScanTemplate = () => {
     loadSelectedEventDetail();
   }, [selectedEventId]);
 
+  useEffect(() => {
+    setScanResult(null);
+    setIsResultModalOpen(false);
+  }, [selectedEventId]);
+
   const selectedEvent = useMemo(
     () =>
       events.find((event) => event.id === selectedEventId) ??
@@ -94,7 +109,13 @@ const ScanTemplate = () => {
   );
 
   const handleScan = async (text: string) => {
-    if (!selectedEventId || isSubmittingScan) return;
+    if (
+      !selectedEventId ||
+      isSubmittingScan ||
+      (isMobile && isResultModalOpen)
+    ) {
+      return;
+    }
 
     setIsSubmittingScan(true);
 
@@ -102,7 +123,7 @@ const ScanTemplate = () => {
       const res = await postParticipantScan(text, selectedEventId);
 
       if (!res.data) {
-        alert("Scan failed: missing participant data");
+        console.error("Scan failed: missing participant data");
         return;
       }
 
@@ -119,6 +140,17 @@ const ScanTemplate = () => {
         ? `${formatTime(res.data.check_in_time)} น.`
         : "-";
 
+      const organization =
+        res.data.organization_th || res.data.organization_en || "-";
+
+      const modalData: ScanResultModalData = {
+        participantName,
+        refId: res.data.ref_id || "-",
+        organization,
+        checkInTime: scannedAt,
+        status: res.data.status,
+      };
+
       setRecentParticipants((prev) =>
         [
           {
@@ -133,16 +165,15 @@ const ScanTemplate = () => {
       const selectedEventRes = await fetchEventById(selectedEventId);
       setTotalParticipants(selectedEventRes.data.total_registered);
 
-      if (res.data.status === "duplicate") {
-        alert(`Duplicate scan: ${participantName}`);
-      } else {
-        alert(`Scan success: ${participantName}`);
+      setScanResult(modalData);
+      if (isMobile) {
+        setIsResultModalOpen(true);
       }
     } catch (error) {
       if (error instanceof APIRequestError) {
-        alert(`Scan failed [${error.code}]: ${error.message}`);
+        console.error(`Scan failed [${error.code}]: ${error.message}`);
       } else {
-        alert("Scan failed: unexpected error");
+        console.error("Scan failed: unexpected error");
       }
       console.error("Failed to submit participant scan:", error);
     } finally {
@@ -166,14 +197,23 @@ const ScanTemplate = () => {
         />
       </div>
 
-      {/* ── Tablet / iPad landscape (lg–2xl, 1024–1535px): Info panel + Camera, side by side ── */}
+      {/* ── Tablet / iPad landscape (lg–2xl, 1024–1535px): Info panel + Camera/Result, side by side ── */}
       <div className="hidden lg:grid lg:grid-cols-2 lg:gap-6 lg:p-8 lg:min-h-screen 2xl:hidden">
         <ScanInfoPanel
           events={events}
           selectedEvent={selectedEvent}
           onEventChange={setSelectedEventId}
         />
-        <ScanCameraPanel onScan={handleScan} className="min-h-0" />
+        {scanResult ? (
+          <ScanResultPanel
+            result={scanResult}
+            totalCount={totalParticipants}
+            onBackToScan={() => setScanResult(null)}
+            className="min-h-0"
+          />
+        ) : (
+          <ScanCameraPanel onScan={handleScan} className="min-h-0" />
+        )}
       </div>
 
       {/* ── Mobile / portrait (< lg): Camera + compact event info, no stats ── */}
@@ -194,6 +234,17 @@ const ScanTemplate = () => {
           </span>
         </div>
       )}
+
+      <ScanResultModal
+        open={isMobile && isResultModalOpen}
+        onOpenChange={(open) => {
+          setIsResultModalOpen(open);
+          if (!open) {
+            setScanResult(null);
+          }
+        }}
+        result={scanResult}
+      />
     </div>
   );
 };
