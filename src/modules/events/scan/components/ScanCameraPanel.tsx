@@ -11,16 +11,19 @@ type ScanCameraPanelProps = {
   deviceId?: string;
   onScan?: (text: string) => void;
   onCopyLink?: () => void;
+  paused?: boolean;
 };
 
 const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
   deviceId,
   onScan,
   onCopyLink,
+  paused = false,
   className,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const onScanRef = useRef(onScan);
+  const lastScannedTextRef = useRef<string | null>(null);
   onScanRef.current = onScan;
 
   const router = useRouter();
@@ -28,17 +31,24 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || paused) return;
 
     const scanner = new ZXingScanner();
     scanner.start({
       videoElement: video,
       deviceId,
-      onDecode: ({ text }) => onScanRef.current?.(text),
+      onDecode: ({ text }) => {
+        if (lastScannedTextRef.current === text) {
+          return;
+        }
+
+        lastScannedTextRef.current = text;
+        onScanRef.current?.(text);
+      },
     });
 
     return () => scanner.stop();
-  }, [deviceId]);
+  }, [deviceId, paused]);
 
   const toggleFlash = useCallback(async () => {
     const video = videoRef.current;

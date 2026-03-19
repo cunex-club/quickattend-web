@@ -33,6 +33,23 @@ const formatTime = (isoTime: string) => {
   return `${hours}:${minutes}`;
 };
 
+const buildFailedScanResult = (message: string): ScanResultModalData => ({
+  status: "failed",
+  participantName: "",
+  refId: "",
+  organization: "",
+  checkInTime: "",
+  message,
+});
+
+const getFailedScanMessage = (error: APIRequestError) => {
+  if (error.code === "PARTICIPANT_NO_PERMISSION" || error.status === 403) {
+    return "ไม่อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม";
+  }
+
+  return error.message || "ไม่สามารถลงทะเบียนได้ในขณะนี้";
+};
+
 const ScanTemplate = () => {
   const isMobile = useIsMobile();
   const router = useRouter();
@@ -129,6 +146,10 @@ const ScanTemplate = () => {
       const res = await postParticipantScan(text, selectedEventId);
 
       if (!res.data) {
+        setScanResult(buildFailedScanResult("ไม่สามารถลงทะเบียนได้ในขณะนี้"));
+        if (isMobile) {
+          setIsResultModalOpen(true);
+        }
         console.error("Scan failed: missing participant data");
         return;
       }
@@ -154,19 +175,21 @@ const ScanTemplate = () => {
         refId: res.data.ref_id || "-",
         organization,
         checkInTime: scannedAt,
-        status: res.data.status,
+        status: res.data.status === "duplicate" ? "duplicate" : "success",
       };
 
-      setRecentParticipants((prev) =>
-        [
-          {
-            id: res.data.ref_id || "-",
-            name: participantName,
-            time: scannedAt,
-          },
-          ...prev,
-        ].slice(0, 8),
-      );
+      if (res.data.status !== "duplicate") {
+        setRecentParticipants((prev) =>
+          [
+            {
+              id: res.data.ref_id || "-",
+              name: participantName,
+              time: scannedAt,
+            },
+            ...prev,
+          ].slice(0, 8),
+        );
+      }
 
       const selectedEventRes = await fetchEventById(selectedEventId);
       setTotalParticipants(selectedEventRes.data.total_registered);
@@ -178,8 +201,16 @@ const ScanTemplate = () => {
     } catch (error) {
       if (error instanceof APIRequestError) {
         console.error(`Scan failed [${error.code}]: ${error.message}`);
+        setScanResult(buildFailedScanResult(getFailedScanMessage(error)));
+        if (isMobile) {
+          setIsResultModalOpen(true);
+        }
       } else {
         console.error("Scan failed: unexpected error");
+        setScanResult(buildFailedScanResult("ไม่สามารถลงทะเบียนได้ในขณะนี้"));
+        if (isMobile) {
+          setIsResultModalOpen(true);
+        }
       }
       console.error("Failed to submit participant scan:", error);
     } finally {
@@ -227,13 +258,23 @@ const ScanTemplate = () => {
             className="min-h-0"
           />
         ) : (
-          <ScanCameraPanel onScan={handleScan} className="min-h-0" />
+          <ScanCameraPanel
+            key={selectedEventId}
+            paused={isSubmittingScan || isResultModalOpen}
+            onScan={handleScan}
+            className="min-h-0"
+          />
         )}
       </div>
 
       {/* ── Mobile / portrait (< lg): Camera + compact event info, no stats ── */}
       <div className="flex flex-col lg:hidden min-h-screen p-4 gap-4">
-        <ScanCameraPanel onScan={handleScan} className="flex-1 min-h-[60vh]" />
+        <ScanCameraPanel
+          key={selectedEventId}
+          paused={isSubmittingScan || isResultModalOpen}
+          onScan={handleScan}
+          className="flex-1 min-h-[60vh]"
+        />
         <ScanInfoPanel
           events={events}
           selectedEvent={selectedEvent}

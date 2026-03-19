@@ -8,6 +8,8 @@ import type {
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 const TOKEN = process.env.NEXT_PUBLIC_LOG_IN_TOKEN;
 
+const toApiPage = (page: number) => Math.max(page - 1, 0);
+
 export type { GetEventsRes, GetOneEventRes, APIPagination };
 export type EventsAPIResponse = APIResponse<GetEventsRes[]>;
 export type EventByIdAPIResponse = APIResponse<GetOneEventRes>;
@@ -92,7 +94,7 @@ export async function fetchAttendedEvents(
 ): Promise<EventsAPIResponse> {
   const params = new URLSearchParams({
     myevents: "false",
-    page: page.toString(),
+    page: toApiPage(page).toString(),
     pageSize: pageSize.toString(),
   });
   if (search) params.set("search", search);
@@ -116,7 +118,7 @@ export async function fetchDiscoveryEvents(
   search?: string,
 ): Promise<EventsAPIResponse> {
   const params = new URLSearchParams({
-    page: page.toString(),
+    page: toApiPage(page).toString(),
     pageSize: pageSize.toString(),
   });
   if (search) params.set("search", search);
