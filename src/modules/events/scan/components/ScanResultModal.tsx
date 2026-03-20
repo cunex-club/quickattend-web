@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { cn } from "@assets/lib/utils";
 import {
   Dialog,
@@ -10,6 +11,7 @@ import {
 import IonIcon from "@shared/IonIcon";
 import Button from "@shared/Button";
 import TextField from "@shared/TextField";
+import scanResultMockupImage from "@assets/images/logo/scan-result-mockup-image.png";
 
 export type ScanResultStatus = "success" | "duplicate" | "failed";
 
@@ -26,19 +28,19 @@ const SCAN_RESULT_THEME = {
   success: {
     title: "ลงทะเบียนสำเร็จ",
     headerClass: "bg-success",
-    iconName: "CheckmarkCircleOutline",
+    iconName: "CheckmarkCircle",
     iconClass: "text-neutral-white",
   },
   duplicate: {
     title: "ลงทะเบียนไปแล้ว",
     headerClass: "bg-warning",
-    iconName: "RefreshCircleOutline",
+    iconName: "RefreshCircle",
     iconClass: "text-neutral-white",
   },
   failed: {
     title: "ลงทะเบียนไม่สำเร็จ",
     headerClass: "bg-error",
-    iconName: "CloseCircleOutline",
+    iconName: "CloseCircle",
     iconClass: "text-neutral-white",
   },
 } as const;
@@ -82,15 +84,15 @@ const ScanResultModal = ({
           )}
         >
           <div className="flex items-center justify-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-neutral-white">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full">
               <IonIcon
                 name={resultTheme.iconName}
-                size="16px"
+                size="32.5px"
                 className={resultTheme.iconClass}
                 noPadding
               />
             </span>
-            <span className="headline-small-emphasized">
+            <span className="headline-large-emphasized">
               {resultTheme.title}
             </span>
           </div>
@@ -104,35 +106,65 @@ const ScanResultModal = ({
               </p>
             </div>
           ) : (
-            <>
-              <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-2xl bg-neutral-200">
-                <IonIcon
-                  name="PersonOutline"
-                  size="40px"
-                  className="text-neutral-400"
+            <div className="space-y-8">
+              <div className="mx-auto h-[120px] w-[120px] overflow-hidden rounded-2xl bg-neutral-200 md:h-[128px] md:w-[128px]">
+                <Image
+                  src={scanResultMockupImage}
+                  alt="Scan result participant"
+                  className="h-full w-full object-cover"
+                  priority
                 />
               </div>
 
               <div className="space-y-2">
-                <p className="title-small-emphasized text-neutral-700">
-                  รายละเอียดผู้เข้าร่วมกิจกรรม
+                <p className="title-medium-emphasized text-neutral-600">
+                  รายละเอียดผู้ลงทะเบียนเข้างาน
                 </p>
-                <div className="space-y-1.5 text-neutral-700">
-                  <p className="body-small-primary">
-                    ชื่อ: {result?.participantName || "-"}
-                  </p>
-                  <p className="body-small-primary">
-                    รหัสนิสิต: {result?.refId || "-"}
-                  </p>
-                  <p className="body-small-primary">
-                    คณะ / หน่วยงาน: {result?.organization || "-"}
-                  </p>
-                  <p className="body-small-primary">
-                    เวลาที่ลงทะเบียน: {result?.checkInTime || "-"}
-                  </p>
+                <div className="space-y-3 text-neutral-700">
+                  <div className="flex items-center gap-2">
+                    <IonIcon
+                      name="Person"
+                      size="16px"
+                      className="shrink-0 text-primary"
+                      noPadding
+                    />
+                    <div>
+                      <p className="body-medium-primary">Name</p>
+                      <p className="body-medium-primary">
+                        รหัสประจำตัว {result?.refId || "-"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <IonIcon
+                      name="Business"
+                      size="16px"
+                      className="shrink-0 text-primary"
+                      noPadding
+                    />
+                    <div className="space-y-0.5">
+                      <p className="body-medium-primary">Faculty / org</p>
+                      <p className="body-medium-primary">
+                        {result?.organization || "-"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <IonIcon
+                      name="Time"
+                      size="16px"
+                      className="shrink-0 text-primary"
+                      noPadding
+                    />
+                    <p className="body-medium-primary">
+                      ลงทะเบียนสำเร็จ : {result?.checkInTime || "-"}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </>
+            </div>
           )}
 
           <div className="space-y-2">
@@ -152,7 +184,7 @@ const ScanResultModal = ({
             onClick={() => onOpenChange(false)}
             className="title-medium-emphasized"
           >
-            Done
+            เสร็จสิ้น
           </Button>
         </div>
       </DialogContent>
