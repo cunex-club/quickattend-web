@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import "@styles/globals.css";
 import { getMessages } from "next-intl/server";
 import { routing } from "@i18n/routing";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Quick Project",
@@ -30,6 +31,7 @@ export default async function LocaleLayout({
           <main className="w-full min-h-screen bg-neutral-white">
             {children}
           </main>
+          <Toaster />
         </NextIntlClientProvider>
       </body>
     </html>
