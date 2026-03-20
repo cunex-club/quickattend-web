@@ -152,12 +152,12 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
         </div>
         <div className="lg:flex-1 flex flex-col sm:flex-row lg:flex-col justify-between gap-6 lg:gap-10">
           <div className="flex-1 flex flex-col justify-center items-start lg:items-center bg-primary h-full px-8 py-6 lg:p-10 text-white rounded-3xl shadow-xs">
-            <div className="title-medium-emphasized lg:headline-small-emphasized">
+            <div className="headline-small-emphasized lg:headline-small-emphasized">
               {t("registeredCount")}
             </div>
             <div className="flex items-baseline gap-2">
               <div
-                className="text-center headline-large-emphasized lg:text-[72px] lg:leading-[140%] lg:tracking-[-0.792px] lg:font-bold"
+                className="text-center display-small-emphasized lg:text-[72px] lg:leading-[140%] lg:tracking-[-0.792px] lg:font-bold"
                 style={{
                   fontFamily:
                     "CHULALONGKORNBold, var(--font-chula-bold), sans-serif",
@@ -169,7 +169,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
                 {t("people")}
               </div>
             </div>
-            <div className="flex space-x-2.5 label-medium-primary lg:title-small-primary">
+            <div className="flex space-x-2.5 title-medium-primary lg:title-small-primary">
               <div>
                 {t("student")} : 1090 {t("people")}
               </div>

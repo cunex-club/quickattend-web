@@ -76,10 +76,8 @@ const EventCard: StyleableFC<EventCardProps> = ({
       )}
       {...props}
     >
-      <div className="flex justify-between items-center ">
-        <div className="title-large-emphasized lg:display-small-emphasized">
-          {title}
-        </div>
+      <div className="flex justify-between items-center">
+        <div className="headline-large-emphasized">{title}</div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
@@ -218,9 +216,6 @@ const EventCard: StyleableFC<EventCardProps> = ({
               size="36px"
               className="text-primary"
             />
-            <div className="title-large-primary text-primary hidden sm:block">
-              {t("activityStatistics")}
-            </div>
           </div>
         </Button>
       </div>
