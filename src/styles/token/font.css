@@ -3,7 +3,7 @@
 
 @font-face {
   font-family: "CHULALONGKORNBold";
-  src: url("../../../public/font/CHULALONGKORNBold.otf") format("opentype");
+  src: url("@assets/font/CHULALONGKORNBold.otf") format("opentype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -13,7 +13,7 @@
 
 @font-face {
   font-family: "CHULALONGKORNReg";
-  src: url("../../../public/font/CHULALONGKORNReg.otf") format("opentype");
+  src: url("@assets/font/CHULALONGKORNReg.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -28,192 +28,186 @@
   src: url("../../../public/font/material-symbols-outlined.woff2") format("woff2");
 }
 
-:root {
-  --font-chula-bold: "CHULALONGKORNBold", sans-serif;
-  --font-chula-regular: "CHULALONGKORNReg", sans-serif;
-  --font-sarabun: "Sarabun", sans-serif;
-  --font-material-symbols: "Material Symbols Outlined";
-}
-
 @theme inline {
   --font-chula-bold: "CHULALONGKORNBold", "sans-serif";
   --font-chula-regular: "CHULALONGKORNReg", "sans-serif";
   --font-sarabun: "Sarabun", "sans-serif";
+  --font-material-symbols: "Material Symbols Outlined";
 }
 
-/* Display styles */
+/* Display */
 @utility display-large-primary {
   font-family: var(--font-chula-regular);
-  font-size: 57px;
-  line-height: 64px;
-  letter-spacing: -0.25px;
+  font-size: 3.5625rem; /* 57px */
+  line-height: 4rem; /* 64px */
+  letter-spacing: -0.015625rem; /* -0.25px */
 }
 
 @utility display-medium-primary {
   font-family: var(--font-chula-regular);
-  font-size: 45px;
-  line-height: 52px;
-  letter-spacing: 0px;
+  font-size: 2.8125rem; /* 45px */
+  line-height: 3.25rem; /* 52px */
+  letter-spacing: 0;
 }
 
 @utility display-small-primary {
   font-family: var(--font-chula-regular);
-  font-size: 36px;
-  line-height: 44px;
-  letter-spacing: 0px;
+  font-size: 2.25rem; /* 36px */
+  line-height: 2.75rem; /* 44px */
+  letter-spacing: 0;
 }
 
 @utility display-large-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 57px;
-  line-height: 64px;
-  letter-spacing: -0.25px;
+  font-size: 3.5625rem; /* 57px */
+  line-height: 4rem; /* 64px */
+  letter-spacing: -0.015625rem; /* -0.25px */
 }
 
 @utility display-medium-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 45px;
-  line-height: 52px;
-  letter-spacing: 0px;
+  font-size: 2.8125rem; /* 45px */
+  line-height: 3.25rem; /* 52px */
+  letter-spacing: 0;
 }
 
 @utility display-small-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 36px;
-  line-height: 44px;
-  letter-spacing: 0px;
+  font-size: 2.25rem; /* 36px */
+  line-height: 2.75rem; /* 44px */
+  letter-spacing: 0;
 }
 
-/* Headline styles */
+/* Headline */
 @utility headline-large-primary {
   font-family: var(--font-chula-regular);
-  font-size: 32px;
-  line-height: 40px;
-  letter-spacing: 0px;
+  font-size: 2rem; /* 32px */
+  line-height: 2.5rem; /* 40px */
+  letter-spacing: 0;
 }
 
 @utility headline-medium-primary {
   font-family: var(--font-chula-regular);
-  font-size: 28px;
-  line-height: 36px;
-  letter-spacing: 0px;
+  font-size: 1.75rem; /* 28px */
+  line-height: 2.25rem; /* 36px */
+  letter-spacing: 0;
 }
 
 @utility headline-small-primary {
   font-family: var(--font-chula-regular);
-  font-size: 24px;
-  line-height: 32px;
-  letter-spacing: 0px;
+  font-size: 1.5rem; /* 24px */
+  line-height: 2rem; /* 32px */
+  letter-spacing: 0;
 }
 
 @utility headline-large-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 32px;
-  line-height: 40px;
-  letter-spacing: 0px;
+  font-size: 2rem; /* 32px */
+  line-height: 2.5rem; /* 40px */
+  letter-spacing: 0;
 }
 
 @utility headline-medium-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 28px;
-  line-height: 36px;
-  letter-spacing: 0px;
+  font-size: 1.75rem; /* 28px */
+  line-height: 2.25rem; /* 36px */
+  letter-spacing: 0;
 }
 
 @utility headline-small-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 24px;
-  line-height: 32px;
-  letter-spacing: 0px;
+  font-size: 1.5rem; /* 24px */
+  line-height: 2rem; /* 32px */
+  letter-spacing: 0;
 }
 
-/* Title styles */
+/* Title */
 @utility title-large-primary {
   font-family: var(--font-chula-regular);
-  font-size: 22px;
-  line-height: 28px;
-  letter-spacing: 0px;
+  font-size: 1.375rem; /* 22px */
+  line-height: 1.75rem; /* 28px */
+  letter-spacing: 0;
 }
 
 @utility title-medium-primary {
   font-family: var(--font-chula-regular);
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 0.15px;
+  font-size: 1rem; /* 16px */
+  line-height: 1.5rem; /* 24px */
+  letter-spacing: 0.009375rem; /* 0.15px */
 }
 
 @utility title-small-primary {
   font-family: var(--font-chula-regular);
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.1px;
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem; /* 20px */
+  letter-spacing: 0.00625rem; /* 0.1px */
 }
 
 @utility title-large-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 22px;
-  line-height: 28px;
-  letter-spacing: 0px;
+  font-size: 1.375rem; /* 22px */
+  line-height: 1.75rem; /* 28px */
+  letter-spacing: 0;
 }
 
 @utility title-medium-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 0.15px;
+  font-size: 1rem; /* 16px */
+  line-height: 1.5rem; /* 24px */
+  letter-spacing: 0.009375rem; /* 0.15px */
 }
 
 @utility title-small-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.1px;
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem; /* 20px */
+  letter-spacing: 0.00625rem; /* 0.1px */
 }
 
-/* Label styles */
+/* Label */
 @utility label-large-primary {
   font-family: var(--font-chula-regular);
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.1px;
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem; /* 20px */
+  letter-spacing: 0.00625rem; /* 0.1px */
 }
 
 @utility label-medium-primary {
   font-family: var(--font-chula-regular);
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.5px;
+  font-size: 0.75rem; /* 12px */
+  line-height: 1rem; /* 16px */
+  letter-spacing: 0.03125rem; /* 0.5px */
 }
 
 @utility label-small-primary {
   font-family: var(--font-chula-regular);
-  font-size: 11px;
-  line-height: 16px;
-  letter-spacing: 0.5px;
+  font-size: 0.6875rem; /* 11px */
+  line-height: 1rem; /* 16px */
+  letter-spacing: 0.03125rem; /* 0.5px */
 }
 
 @utility label-large-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.1px;
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem; /* 20px */
+  letter-spacing: 0.00625rem; /* 0.1px */
 }
 
 @utility label-medium-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.5px;
+  font-size: 0.75rem; /* 12px */
+  line-height: 1rem; /* 16px */
+  letter-spacing: 0.03125rem; /* 0.5px */
 }
 
 @utility label-small-emphasized {
   font-family: var(--font-chula-bold);
-  font-size: 11px;
-  line-height: 16px;
-  letter-spacing: 0.5px;
+  font-size: 0.6875rem; /* 11px */
+  line-height: 1rem; /* 16px */
+  letter-spacing: 0.03125rem; /* 0.5px */
 }
 
-/* Body styles */
+/* Body */
 @utility body-large-primary {
   font-family: var(--font-sarabun);
   font-weight: 400;
@@ -262,10 +256,10 @@
   letter-spacing: 0.4px;
 }
 
-.font-ion {
+@utility font-ion {
   font-family: var(--font-ion);
 }
 
-.font-material-symbols {
+@utility font-material-symbols {
   font-family: var(--font-material-symbols);
 }

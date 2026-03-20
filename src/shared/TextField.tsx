@@ -9,8 +9,10 @@ import * as React from "react";
 type TextFieldProps = React.ComponentProps<"input"> & {
   supportingText?: string | React.ReactNode;
   endIcon?: React.ReactNode;
+  endIconWrapperClassName?: string;
   error?: boolean;
   inputClassName?: string;
+  showSeparator?: boolean;
 };
 
 const TextField: StyleableFC<TextFieldProps> = React.forwardRef<
@@ -18,42 +20,62 @@ const TextField: StyleableFC<TextFieldProps> = React.forwardRef<
   TextFieldProps
 >(
   (
-    { className, inputClassName, supportingText, endIcon, error, ...props },
+    {
+      className,
+      inputClassName,
+      supportingText,
+      endIcon,
+      endIconWrapperClassName,
+      error,
+      showSeparator = false,
+      type = "text",
+      ...props
+    },
     ref,
   ) => {
     return (
       <div className={cn("flex w-full flex-col", className)}>
-        <div className="flex w-full items-center rounded-lg border border-neutral-400 gap-1 bg-white">
+        <div
+          className={cn(
+            "flex w-full items-stretch rounded-lg border overflow-hidden",
+            error ? "border-red-500" : "border-neutral-400",
+            "gap-0 bg-white",
+          )}
+        >
           <input
-            type="text"
+            type={type}
             ref={ref}
             className={cn(
-              "w-full my-[0.5rem] mx-4",
-
-              // error state styles
-              error
-                ? "border-error focus:border-error focus:ring-error/30"
-                : "border-neutral-400 focus:border-blue-500 focus:ring-blue-500/30",
-
+              "w-full py-3 pl-4",
+              "bg-transparent border-none outline-none",
+              "placeholder:text-neutral-400",
               // focus styles
-              "focus:ring-2 focus:outline-none",
+              "focus:ring-0",
+              error && "text-red-500",
               inputClassName,
             )}
             {...props}
           />
 
+          {/* separator line if needed */}
+          {endIcon && showSeparator && <div className="w-px" />}
+
           {/* if there is an end icon */}
-          {endIcon && <div className="items-center ">{endIcon}</div>}
+          {endIcon && (
+            <div
+              className={cn(
+                "flex items-center justify-center shrink-0",
+                endIconWrapperClassName,
+              )}
+            >
+              {endIcon}
+            </div>
+          )}
         </div>
 
         {/* if there is supporting text */}
         {supportingText && (
-          <p
-            className={cn(
-              "body-small-primary mx-1 ml-4 my-[0.25rem]",
-              error ? "text-error" : "text-[#49454F]",
-            )}
-          >
+          <p className={cn("body-small-primary mx-4 my-1 text-neutral-500")}>
             {supportingText}
           </p>
         )}
@@ -61,7 +83,5 @@ const TextField: StyleableFC<TextFieldProps> = React.forwardRef<
     );
   },
 );
-
-TextField.displayName = "TextField";
 
 export default TextField;

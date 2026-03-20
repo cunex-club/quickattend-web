@@ -218,12 +218,12 @@ const CreateEventStep2 = ({
             <div className="flex gap-4 flex-col md:flex-row w-full">
               <div className="flex flex-col gap-2 flex-1">
                 <Input
-                  value={facultyQuery}
+                  value={facultyQuery.trim()}
                   onChange={(e) => {
-                    const value = e.target.value;
+                    const value = e.target.value.trim();
 
                     if (/^[\u0E00-\u0E7F]*$/.test(value)) {
-                      setFacultyQuery(e.target.value);
+                      setFacultyQuery(value);
                       setOpenFacultyFilter(true);
                     }
                   }}
@@ -268,6 +268,11 @@ const CreateEventStep2 = ({
                 mode="filled"
                 bordered="square"
                 expanded={false}
+                disabled={
+                  eventForm.attendance_type != AttendanceType.FACULTIES ||
+                  !FacultyList.includes(facultyQuery) ||
+                  eventForm.selectedFaculties.includes(facultyQuery)
+                }
                 className={`h-9 shrink-0 ${
                   eventForm.attendance_type == AttendanceType.FACULTIES &&
                   FacultyList.includes(facultyQuery) &&
@@ -303,7 +308,7 @@ const CreateEventStep2 = ({
             {eventForm.selectedFaculties.map((faculty) => (
               <div
                 key={faculty}
-                className={`flex items-center gap-2 border rounded-md px-3 py-2 ${eventForm.attendance_type != AttendanceType.FACULTIES && "opacity-50"}`}
+                className={`flex items-center gap-2 border-b py-2 ${eventForm.attendance_type != AttendanceType.FACULTIES && "opacity-50"}`}
               >
                 {/* Remove */}
                 <button
@@ -356,9 +361,9 @@ const CreateEventStep2 = ({
               <Input
                 inputMode="numeric"
                 maxLength={10}
-                value={studentIdPermissionQuery}
+                value={studentIdPermissionQuery.trim()}
                 onChange={(e) => {
-                  const value = e.target.value;
+                  const value = e.target.value.trim();
                   if (/^\d{0,10}$/.test(value)) {
                     setStudentIdPermissionQuery(value);
                   }
@@ -372,11 +377,18 @@ const CreateEventStep2 = ({
                 mode="filled"
                 bordered="square"
                 expanded={false}
+                disabled={
+                  eventForm.attendance_type != AttendanceType.WHITELIST ||
+                  studentIdPermissionQuery?.length != 10 ||
+                  selectedStudentIdsPermission?.includes(
+                    studentIdPermissionQuery,
+                  )
+                }
                 className={`w-fit h-9 shrink-0 ${
                   eventForm.attendance_type == AttendanceType.WHITELIST &&
                   studentIdPermissionQuery?.length == 10 &&
                   !selectedStudentIdsPermission?.includes(
-                    studentIdPermissionQuery
+                    studentIdPermissionQuery,
                   )
                     ? "cursor-pointer"
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
@@ -388,7 +400,7 @@ const CreateEventStep2 = ({
                   if (studentIdPermissionQuery.length != 10) return;
                   if (
                     selectedStudentIdsPermission?.includes(
-                      studentIdPermissionQuery
+                      studentIdPermissionQuery,
                     )
                   )
                     return;
@@ -429,7 +441,7 @@ const CreateEventStep2 = ({
             {eventForm.selectedStudents.map((student) => (
               <div
                 key={student.id}
-                className={`flex items-center gap-2 border rounded-md px-3 py-2 ${eventForm.attendance_type != AttendanceType.WHITELIST && "opacity-50"}`}
+                className={`flex items-center gap-2 border-b py-2 ${eventForm.attendance_type != AttendanceType.WHITELIST && "opacity-50"}`}
               >
                 {/* Remove */}
                 <button
@@ -488,7 +500,7 @@ const CreateEventStep2 = ({
                 setEventForm({
                   ...eventForm,
                   revealed_fields: eventForm.revealed_fields.filter(
-                    (field) => field != ParticipantFieldType.PHOTO
+                    (field) => field != ParticipantFieldType.PHOTO,
                   ),
                 });
               } else {
@@ -522,7 +534,7 @@ const CreateEventStep2 = ({
                 setEventForm({
                   ...eventForm,
                   revealed_fields: eventForm.revealed_fields.filter(
-                    (field) => field != ParticipantFieldType.NAME
+                    (field) => field != ParticipantFieldType.NAME,
                   ),
                 });
               } else {
@@ -556,7 +568,7 @@ const CreateEventStep2 = ({
                 setEventForm({
                   ...eventForm,
                   revealed_fields: eventForm.revealed_fields.filter(
-                    (field) => field != ParticipantFieldType.REFID
+                    (field) => field != ParticipantFieldType.REFID,
                   ),
                 });
               } else {
@@ -586,13 +598,13 @@ const CreateEventStep2 = ({
             onCheckedChange={() => {
               if (
                 eventForm.revealed_fields.includes(
-                  ParticipantFieldType.ORGANIZATION
+                  ParticipantFieldType.ORGANIZATION,
                 )
               ) {
                 setEventForm({
                   ...eventForm,
                   revealed_fields: eventForm.revealed_fields.filter(
-                    (field) => field != ParticipantFieldType.ORGANIZATION
+                    (field) => field != ParticipantFieldType.ORGANIZATION,
                   ),
                 });
               } else {
@@ -633,9 +645,9 @@ const CreateEventStep2 = ({
               <Input
                 inputMode="numeric"
                 maxLength={10}
-                value={studentIdAccessibilityQuery}
+                value={studentIdAccessibilityQuery.trim()}
                 onChange={(e) => {
-                  const value = e.target.value;
+                  const value = e.target.value.trim();
                   if (/^\d{0,10}$/.test(value)) {
                     setStudentIdAccessibilityQuery(value);
                   }
@@ -674,11 +686,18 @@ const CreateEventStep2 = ({
               <Button
                 mode="filled"
                 bordered="square"
+                disabled={
+                  studentIdAccessibilityQuery?.length != 10 ||
+                  selectedStudentIdsAccessibility?.includes(
+                    studentIdAccessibilityQuery,
+                  ) ||
+                  roleAccessibilityQuery == ""
+                }
                 expanded={false}
                 className={`w-fit h-9 shrink-0 ${
                   studentIdAccessibilityQuery?.length == 10 &&
                   !selectedStudentIdsAccessibility?.includes(
-                    studentIdAccessibilityQuery
+                    studentIdAccessibilityQuery,
                   ) &&
                   roleAccessibilityQuery != ""
                     ? "cursor-pointer"
@@ -688,7 +707,7 @@ const CreateEventStep2 = ({
                   if (studentIdAccessibilityQuery.length != 10) return;
                   if (
                     selectedStudentIdsAccessibility?.includes(
-                      studentIdAccessibilityQuery
+                      studentIdAccessibilityQuery,
                     )
                   )
                     return;
@@ -733,7 +752,7 @@ const CreateEventStep2 = ({
             {eventForm.managers_and_staff.map((student) => (
               <div
                 key={student.id}
-                className={`w-full flex items-center border rounded-md px-3 py-2 space-x-4 md:space-x-8 space-y-2 flex-wrap md:flex-nowrap`}
+                className={`w-full flex items-center border-b py-2 space-x-4 md:space-x-8 space-y-2 flex-wrap md:flex-nowrap`}
               >
                 {/* Remove */}
                 <button
@@ -771,7 +790,7 @@ const CreateEventStep2 = ({
                   value={student.role}
                   onValueChange={(newRole) => {
                     const updated = eventForm.managers_and_staff.map((m) =>
-                      m.id === student.id ? { ...m, role: newRole } : m
+                      m.id === student.id ? { ...m, role: newRole } : m,
                     );
 
                     setEventForm({

@@ -42,18 +42,18 @@ const FullscreenContent: React.FC<FullscreenContentProps> = ({
     <div className="w-full h-full flex flex-col justify-between">
       {/* Header */}
       <nav className="w-full px-16 py-8 bg-primary flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 z-20 relative">
-        <div className="mr-4 w-full max-w-[80%]">
+        <div className="mr-4 w-full md:max-w-[40%] lg:max-w-[60%] xl:max-w-[75%]">
           <MarqueeText
             text={data.title}
             className="text-white display-small-emphasized md:display-medium-emphasized delay-1000"
           />
         </div>
         <div className="flex items-center">
-          <span className="text-white body-medium-primary md:body-large-primary">
+          <span className="text-white body-medium-primary md:headline-small-primary">
             {data.date}
           </span>
           <div className="mx-4 inline-block w-0.25 self-stretch bg-neutral-white"></div>
-          <span className="text-white body-medium-primary md:body-large-primary">
+          <span className="text-white body-medium-primary md:headline-small-primary">
             {data.time}
           </span>
         </div>
@@ -128,7 +128,7 @@ const FullscreenContent: React.FC<FullscreenContentProps> = ({
             <div className="w-full">
               <MarqueeText
                 text={data?.location}
-                className="text-neutral-600 body-large-primary"
+                className="text-neutral-600 body-medium-primary md:headline-small-primary"
               />
             </div>
           </div>

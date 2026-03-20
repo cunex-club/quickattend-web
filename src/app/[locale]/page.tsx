@@ -98,6 +98,25 @@ export default async function Home() {
       <Icon name="link" size={24} />
       <EventNameScan label="Event Name" link="https://example.com" />
       <WheelPicker />
+      // Variant 1: Basic input
+      <TextField placeholder="Place holder" />
+      // Variant 2: With supporting text
+      <TextField placeholder="Place holder" supportingText="Supporting text" />
+      // Variant 3: With separator and icon
+      <TextField
+        placeholder="Label"
+        endIcon={<Icon name="arrow_circle_up" fill />}
+        showSeparator={true}
+        endIconWrapperClassName="bg-pink-500 text-white rounded-r-lg py-3"
+        supportingText="Supporting text"
+      />
+      // Variant 4: Just icon
+      <TextField
+        placeholder="Label"
+        endIcon={<Icon name="arrow_circle_up" fill />}
+        endIconWrapperClassName="text-pink-500"
+        supportingText="Supporting text"
+      />
     </div>
   );
 }

@@ -1,7 +1,6 @@
 import { useLocale, useTranslations } from "next-intl";
 import { EventFormInterface } from "../template";
 import { Input } from "@assets/components/ui/input";
-import { Calendar } from "@assets/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
@@ -14,6 +13,8 @@ import { cn } from "@assets/lib/utils";
 import Button from "@shared/Button";
 import EditableTime from "./editable-time";
 import { Textarea } from "@assets/components/ui/textarea";
+import GoogleMapSelection from "./map-selection";
+import { Calendar } from "@assets/components/ui/calendar";
 
 interface CreateEventStep1Props {
   eventForm: EventFormInterface;
@@ -179,7 +180,7 @@ const CreateEventStep1 = ({
     const sortedAgenda = [...eventForm.agenda, newAgenda].sort(
       (a, b) =>
         a.startTime.getTime() - b.startTime.getTime() ||
-        a.endTime.getTime() - b.endTime.getTime()
+        a.endTime.getTime() - b.endTime.getTime(),
     );
 
     setEventForm({
@@ -204,7 +205,7 @@ const CreateEventStep1 = ({
   const updateAgendaTime = (
     index: number,
     field: "startTime" | "endTime",
-    time: string
+    time: string,
   ) => {
     const updated = [...eventForm.agenda];
     const base = updated[index][field];
@@ -226,7 +227,7 @@ const CreateEventStep1 = ({
     const sortedAgenda = updated.sort(
       (a, b) =>
         a.startTime.getTime() - b.startTime.getTime() ||
-        a.endTime.getTime() - b.endTime.getTime()
+        a.endTime.getTime() - b.endTime.getTime(),
     );
 
     setEventForm({ ...eventForm, agenda: sortedAgenda });
@@ -250,10 +251,12 @@ const CreateEventStep1 = ({
           {tCreateEvent("name")} <span className="text-primary">*</span>
         </p>
         <Input
-          value={eventForm.name}
+          value={eventForm.name.trim()}
           placeholder={tCreateEvent("namePlaceholder")}
           className="body-large-primary focus:border-primary focus-visible:ring-0"
-          onChange={(e) => setEventForm({ ...eventForm, name: e.target.value })}
+          onChange={(e) =>
+            setEventForm({ ...eventForm, name: e.target.value.trim() })
+          }
         />
       </div>
 
@@ -261,11 +264,11 @@ const CreateEventStep1 = ({
       <div className="flex flex-col gap-2">
         <p className="title-medium-emphasized">{tCreateEvent("description")}</p>
         <Textarea
-          value={eventForm.description}
+          value={eventForm.description.trim()}
           placeholder={tCreateEvent("descriptionPlaceholder")}
-          className="body-large-primary focus:border-primary focus-visible:ring-0"
+          className="h-16 max-h-16 resize-none overflow-y-auto body-large-primary focus:border-primary focus-visible:ring-0 break-all"
           onChange={(e) =>
-            setEventForm({ ...eventForm, description: e.target.value })
+            setEventForm({ ...eventForm, description: e.target.value.trim() })
           }
         />
       </div>
@@ -298,12 +301,13 @@ const CreateEventStep1 = ({
             <PopoverContent className="w-full p-0" align="start">
               <Calendar
                 mode="single"
+                required
                 selected={eventForm.date}
-                onSelect={(date) => {
+                onSelect={(date: Date) => {
                   handleSelectDate(date);
                 }}
                 defaultMonth={today}
-                disabled={(date) => date < today}
+                disabled={(date: Date) => date < today}
               />
             </PopoverContent>
           </Popover>
@@ -331,7 +335,7 @@ const CreateEventStep1 = ({
                 <div
                   className={cn(
                     "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none"
+                    !isDateSelected && "opacity-50 pointer-events-none",
                   )}
                 >
                   <span>
@@ -362,7 +366,7 @@ const CreateEventStep1 = ({
                 <div
                   className={cn(
                     "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none"
+                    !isDateSelected && "opacity-50 pointer-events-none",
                   )}
                 >
                   <span>
@@ -386,13 +390,11 @@ const CreateEventStep1 = ({
         <p className="title-medium-emphasized">
           {tCreateEvent("location")} <span className="text-primary">*</span>
         </p>
-        <Input
-          value={eventForm.location}
-          placeholder={tCreateEvent("locationPlaceholder")}
-          className="body-large-primary focus:border-primary focus-visible:ring-0"
-          onChange={(e) =>
-            setEventForm({ ...eventForm, location: e.target.value })
-          }
+
+        <GoogleMapSelection
+          eventForm={eventForm}
+          setEventForm={setEventForm}
+          isPreview={false}
         />
       </div>
 
@@ -422,7 +424,7 @@ const CreateEventStep1 = ({
                     const value = clampTime(
                       e.target.value,
                       eventForm.startTime,
-                      eventForm.endTime
+                      eventForm.endTime,
                     );
 
                     setAgendaStart(value);
@@ -431,13 +433,13 @@ const CreateEventStep1 = ({
                       setAgendaEnd(value);
                     }
                   }}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
                 />
 
                 <div
                   className={cn(
                     "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none"
+                    !isDateSelected && "opacity-50 pointer-events-none",
                   )}
                 >
                   <span>{agendaStart || tCreateEvent("timePlaceholder")}</span>
@@ -467,7 +469,7 @@ const CreateEventStep1 = ({
                     const value = clampTime(
                       e.target.value,
                       eventForm.startTime,
-                      eventForm.endTime
+                      eventForm.endTime,
                     );
 
                     if (agendaStart && value <= agendaStart) {
@@ -476,13 +478,13 @@ const CreateEventStep1 = ({
                       setAgendaEnd(value);
                     }
                   }}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
                 />
 
                 <div
                   className={cn(
                     "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none"
+                    !isDateSelected && "opacity-50 pointer-events-none",
                   )}
                 >
                   <span>{agendaEnd || tCreateEvent("timePlaceholder")}</span>
@@ -498,10 +500,11 @@ const CreateEventStep1 = ({
 
           {/* Description */}
           <Input
-            value={agendaName}
+            value={agendaName.trim()}
             placeholder={tCreateEvent("descriptionPlaceholder")}
-            onChange={(e) => setAgendaName(e.target.value)}
-            className="w-full md:flex-1 body-large-primary"
+            disabled={!eventForm.startTime || !eventForm.endTime}
+            onChange={(e) => setAgendaName(e.target.value.trim())}
+            className="w-full h-10 body-large-primary disabled:cursor-not-allowed"
           />
 
           {/* Button */}
@@ -510,6 +513,13 @@ const CreateEventStep1 = ({
             bordered="square"
             expanded={false}
             onClick={handleAddAgenda}
+            disabled={
+              !eventForm.startTime ||
+              !eventForm.endTime ||
+              !agendaStart ||
+              !agendaEnd ||
+              !agendaName
+            }
             className={`h-9 w-fit -translate-y-0.5 ${
               agendaStart && agendaEnd && agendaName
                 ? "cursor-pointer"
@@ -523,10 +533,7 @@ const CreateEventStep1 = ({
 
       {/* Agenda List */}
       {eventForm.agenda.map((item, index) => (
-        <div
-          key={item.id}
-          className="flex items-center gap-2 border rounded-md px-3 py-2"
-        >
+        <div key={item.id} className="flex items-center gap-2 py-2">
           {/* Remove */}
           <button
             type="button"
@@ -559,8 +566,8 @@ const CreateEventStep1 = ({
 
             {/* Name */}
             <Input
-              value={item.activity_name}
-              onChange={(e) => updateAgendaName(index, e.target.value)}
+              value={item.activity_name.trim()}
+              onChange={(e) => updateAgendaName(index, e.target.value.trim())}
               className="body-large-primary"
               placeholder={tCreateEvent("descriptionPlaceholder")}
             />
@@ -574,11 +581,11 @@ const CreateEventStep1 = ({
           {tCreateEvent("organizer")} <span className="text-primary">*</span>
         </p>
         <Input
-          value={eventForm.organizer}
+          value={eventForm.organizer.trim()}
           placeholder={tCreateEvent("organizerPlaceholder")}
           className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
-            setEventForm({ ...eventForm, organizer: e.target.value })
+            setEventForm({ ...eventForm, organizer: e.target.value.trim() })
           }
         />
       </div>
