@@ -13,7 +13,7 @@ import {
 
 const handleLogOut = () => {
   alert("Logging out...");
-}
+};
 
 export function DashboardSidebar() {
   return (
@@ -40,7 +40,11 @@ export function DashboardSidebar() {
                 />
               </button>
             </PopoverTrigger>
-            <PopoverContent className="w-72 rounded-3xl p-6" align="end" side="right">
+            <PopoverContent
+              className="w-72 rounded-3xl p-6"
+              align="end"
+              side="right"
+            >
               <div className="flex flex-col space-y-6">
                 <section className="flex flex-row justify-between items-center">
                   <Image
@@ -121,7 +125,11 @@ export function DashboardSidebar() {
                 />
               </button>
             </PopoverTrigger>
-            <PopoverContent className="w-72 rounded-3xl p-6" align="end" side="right">
+            <PopoverContent
+              className="w-72 rounded-3xl p-6"
+              align="end"
+              side="right"
+            >
               <div className="flex flex-col space-y-6">
                 <section className="flex flex-row justify-between items-center">
                   <Image
