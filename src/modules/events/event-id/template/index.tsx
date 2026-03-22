@@ -152,7 +152,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
         </div>
         <div className="lg:flex-1 flex flex-col sm:flex-row lg:flex-col justify-between gap-6 lg:gap-10">
           <div className="flex-1 flex flex-col justify-center items-start lg:items-center bg-primary h-full px-8 py-6 lg:p-10 text-white rounded-3xl shadow-xs">
-            <div className="headline-small-emphasized lg:headline-small-emphasized">
+            <div className="headline-small-emphasized lg:headline-small-emphasized whitespace-nowrap">
               {t("registeredCount")}
             </div>
             <div className="flex items-baseline gap-2">
@@ -169,7 +169,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
                 {t("people")}
               </div>
             </div>
-            <div className="flex space-x-2.5 title-medium-primary lg:title-small-primary">
+            <div className="flex space-x-2.5 title-medium-primary lg:title-small-primary whitespace-nowrap">
               <div>
                 {t("student")} : 1090 {t("people")}
               </div>
@@ -179,7 +179,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
               </div>
             </div>
           </div>
-          <div className="flex-1 lg:flex-none flex flex-col justify-center items-center gap-2.5 bg-neutral-100 p-5 rounded-3xl shadow-xs text-center">
+          <div className="flex-1 lg:flex-none flex flex-col justify-center items-start gap-2.5 bg-neutral-100 px-8 py-6 rounded-3xl shadow-xs text-center">
             <div className="headline-small-emphasized">{t("organizedBy")}</div>
             <div className="body-large-primary">{eventData.organizer}</div>
           </div>

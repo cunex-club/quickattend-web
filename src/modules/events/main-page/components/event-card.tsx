@@ -201,20 +201,32 @@ const EventCard: StyleableFC<EventCardProps> = ({
           bordered="round"
           expanded
           onClick={handleScanClick}
+          className="!px-4 !py-2"
         >
           <div className="flex justify-center items-center gap-2">
-            <IonIcon name="ScanOutline" size="36px" className="text-white" />
-            <div className="title-large-primary text-white ">
+            <IonIcon
+              name="ScanOutline"
+              size="20px"
+              className="text-white"
+              noPadding
+            />
+            <div className="title-large-emphasized text-white ">
               {t("scanParticipant")}
             </div>
           </div>
         </Button>
-        <Button mode="outline" bordered="round" expanded={false}>
+        <Button
+          mode="outline"
+          bordered="round"
+          expanded={false}
+          className="!px-4 !py-2"
+        >
           <div className="flex justify-center items-center gap-2">
             <IonIcon
               name="TrendingUpOutline"
-              size="36px"
+              size="20px"
               className="text-primary"
+              noPadding
             />
           </div>
         </Button>

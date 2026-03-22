@@ -219,9 +219,9 @@ const ScanTemplate = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-neutral-200">
+    <div className="min-h-screen w-full lg:bg-neutral-200">
       {/* ── Desktop / laptop (2xl+, ≥1536px): Info panel + Participants stats, no camera ── */}
-      <div className="hidden 2xl:grid 2xl:grid-cols-2 2xl:gap-6 2xl:p-8 2xl:min-h-screen">
+      <div className="hidden 2xl:grid 2xl:grid-cols-[0.8fr_1.2fr] 2xl:gap-6 2xl:p-8 2xl:min-h-screen">
         <ScanInfoPanel
           events={events}
           selectedEvent={selectedEvent}
@@ -244,7 +244,7 @@ const ScanTemplate = () => {
       </div>
 
       {/* ── Tablet / iPad landscape (lg–2xl, 1024–1535px): Info panel + Camera/Result, side by side ── */}
-      <div className="hidden lg:grid lg:grid-cols-2 lg:gap-6 lg:p-8 lg:min-h-screen 2xl:hidden">
+      <div className="hidden lg:grid lg:grid-cols-[0.85fr_1.15fr] lg:gap-6 lg:p-8 lg:min-h-screen 2xl:hidden">
         <ScanInfoPanel
           events={events}
           selectedEvent={selectedEvent}
