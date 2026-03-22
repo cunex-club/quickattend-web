@@ -10,7 +10,57 @@ export default async function Home() {
   const t = await getTranslations("");
 
   return (
-    <div className="bg-white min-h-screen space-y-2 ">
+    <div className="bg-white min-h-screen space-y-6 p-6">
+      {/* Typography demo */}
+      <section className="grid grid-cols-2 space-y-2">
+        <div className="flex flex-col space-y-8">
+          <p className="display-large-primary border flex items-center">DisplayLarge</p>
+          <p className="display-medium-primary border">DisplayMedium</p>
+          <p className="display-small-primary border">DisplaySmall</p>
+          <p className="headline-large-primary border">HeadlineLarge</p>
+          <p className="headline-medium-primary border">HeadlineMedium</p>
+          <p className="headline-small-primary border">HeadlineSmall</p>
+          <p className="title-large-primary border">TitleLarge</p>
+          <p className="title-medium-primary border">TitleMedium</p>
+          <p className="title-small-primary border">TitleSmall</p>
+          <p className="label-large-primary border">LabelLarge</p>
+          <p className="label-medium-primary border">LabelMedium</p>
+          <p className="label-small-primary border">LabelSmall</p>
+          <p className="body-large-primary border">BodyLarge</p>
+          <p className="body-medium-primary border">BodyMedium</p>
+          <p className="body-small-primary border">BodySmall</p>
+          <p className="text-9xl border">Text 9xl</p>
+          <p className="text-7xl border">Text 7xl</p>
+          <p className="text-5xl border">Text 5xl</p>
+          <p className="text-3xl border">Text 3xl</p>
+          <p className="text-xl border">Text xl</p>
+          <p className="text-base border">Text base</p>
+          <p className="text-xs border">Text xs</p>
+        </div>
+        <div className="flex flex-col space-y-8">
+          <p className="display-large-emphasized border">DisplayLarge Emphasized</p>
+          <p className="display-medium-emphasized border">DisplayMedium Emphasized</p>
+          <p className="display-small-emphasized border">DisplaySmall Emphasized</p>
+          <p className="headline-large-emphasized border">HeadlineLarge Emphasized</p>
+          <p className="headline-medium-emphasized border">HeadlineMedium Emphasized</p>
+          <p className="headline-small-emphasized border">HeadlineSmall Emphasized</p>
+          <p className="title-large-emphasized border">TitleLarge Emphasized</p>
+          <p className="title-medium-emphasized border">TitleMedium Emphasized</p>
+          <p className="title-small-emphasized border">TitleSmall Emphasized</p>
+          <p className="label-large-emphasized border">LabelLarge Emphasized</p>
+          <p className="label-medium-emphasized border">LabelMedium Emphasized</p>
+          <p className="label-small-emphasized border">LabelSmall Emphasized</p>
+          <p className="body-large-emphasized border">BodyLarge Emphasized</p>
+          <p className="body-medium-emphasized border">BodyMedium Emphasized</p>
+          <p className="body-small-emphasized border">BodySmall Emphasized</p>
+          <p className="text-8xl border">Text 8xl</p>
+          <p className="text-6xl border">Text 6xl</p>
+          <p className="text-4xl border">Text 4xl</p>
+          <p className="text-2xl border">Text 2xl</p>
+          <p className="text-lg border">Text lg</p>
+          <p className="text-sm border">Text sm</p>
+        </div>
+      </section>
       <Button mode="filled" bordered="round" expanded={false}>
         {t("welcome")}
       </Button>
