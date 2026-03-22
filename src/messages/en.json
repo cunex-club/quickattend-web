@@ -99,6 +99,71 @@
       "notFound": "ไม่เจอผลการค้นหา"
     }
   },
+  "Scan": {
+    "page": {
+      "emptyEventName": "No events available",
+      "loading": "Loading...",
+      "scanning": "Scanning..."
+    },
+    "cameraPanel": {
+      "goToEvents": "Go to events",
+      "copyEventLink": "Copy event link",
+      "turnOnFlash": "Turn on flash",
+      "turnOffFlash": "Turn off flash"
+    },
+    "infoPanel": {
+      "selectEvent": "Select event",
+      "barcodeAlt": "Scan barcode",
+      "description": "Scan CU NEX students to register for the event.",
+      "adminLabel": "Event admin",
+      "timeSuffix": "hrs."
+    },
+    "participantsPanel": {
+      "totalAttendees": "Total event attendees",
+      "people": "people",
+      "recentRegistrants": "Recent registrants",
+      "time": "Time"
+    },
+    "resultPanel": {
+      "successTitle": "Registration successful",
+      "duplicateTitle": "Already registered",
+      "failedTitle": "Registration failed",
+      "people": "people",
+      "registrationTime": "Registered at:",
+      "notes": "Notes",
+      "notesPlaceholder": "Add a note (optional)",
+      "addNote": "Add note",
+      "defaultError": "Registration could not be completed right now.",
+      "permissionError": "You are not authorized to register for this event.",
+      "unknownParticipant": "Unknown participant"
+    },
+    "resultModal": {
+      "title": "Scan result",
+      "resultDetails": "Registration details",
+      "name": "Name",
+      "refId": "ID",
+      "organization": "Faculty / organization",
+      "registeredAt": "Registered at:",
+      "notes": "Notes",
+      "notesPlaceholder": "Add a note (optional)",
+      "done": "Done",
+      "defaultError": "Registration could not be completed right now.",
+      "permissionError": "You are not authorized to register for this event."
+    },
+    "noActiveEventsModal": {
+      "title": "Alert",
+      "message": "You don't have any active events right now.",
+      "cancel": "Cancel",
+      "confirm": "OK"
+    },
+    "errors": {
+      "failedToFetchEvents": "Failed to fetch events for the scan page",
+      "failedToFetchEventDetail": "Failed to fetch selected event detail",
+      "missingParticipantData": "Scan failed: missing participant data",
+      "unexpectedScanError": "Scan failed: unexpected error",
+      "failedToSubmitScan": "Failed to submit participant scan"
+    }
+  },
   "CreateEvent": {
     "createEvent": "Create an event",
     "showExample": "Show example",

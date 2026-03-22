@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { cn } from "@assets/lib/utils";
 import { StyleableFC } from "@utils/misc";
 import type { Participant } from "@modules/events/scan/constants";
@@ -12,6 +15,8 @@ const ScanParticipantsPanel: StyleableFC<ScanParticipantsPanelProps> = ({
   totalCount,
   className,
 }) => {
+  const t = useTranslations("Scan");
+
   return (
     <section
       className={cn(
@@ -21,7 +26,7 @@ const ScanParticipantsPanel: StyleableFC<ScanParticipantsPanelProps> = ({
     >
       <div className="flex w-full items-center justify-between gap-4">
         <h2 className="headline-medium-emphasized whitespace-nowrap leading-none text-neutral-600">
-          จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด
+          {t("participantsPanel.totalAttendees")}
         </h2>
         <p className="shrink-0 whitespace-nowrap text-center">
           <span
@@ -37,15 +42,19 @@ const ScanParticipantsPanel: StyleableFC<ScanParticipantsPanelProps> = ({
           >
             {totalCount}
           </span>
-          <span className="display-small-emphasized text-[#E36487]">คน</span>
+          <span className="display-small-emphasized text-[#E36487]">
+            {t("participantsPanel.people")}
+          </span>
         </p>
       </div>
 
       <div className="mt-8 grid w-full grid-cols-[1fr_auto] gap-x-6 gap-y-1">
         <p className="title-large-primary text-neutral-600">
-          ผู้ลงทะเบียนล่าสุด
+          {t("participantsPanel.recentRegistrants")}
         </p>
-        <p className="title-large-primary text-right text-neutral-600">เวลา</p>
+        <p className="title-large-primary text-right text-neutral-600">
+          {t("participantsPanel.time")}
+        </p>
 
         {participants.map((participant) => (
           <div key={participant.id} className="contents">

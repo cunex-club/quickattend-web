@@ -2,29 +2,30 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { cn } from "@assets/lib/utils";
 import { StyleableFC } from "@utils/misc";
 import IonIcon from "@shared/IonIcon";
 import TextField from "@shared/TextField";
 import Button from "@shared/Button";
 import scanResultMockupImage from "@assets/images/logo/scan-result-mockup-image.png";
-import type { ScanResultModalData } from "./ScanResultModal";
+import type { ScanResultModalData } from "@modules/events/scan/components/ScanResultModal";
 
 const SCAN_RESULT_THEME = {
   success: {
-    title: "ลงทะเบียนสำเร็จ",
+    titleKey: "resultPanel.successTitle",
     headerClass: "bg-success",
     iconName: "CheckmarkCircle",
     iconClass: "text-neutral-white",
   },
   duplicate: {
-    title: "ลงทะเบียนไปแล้ว",
+    titleKey: "resultPanel.duplicateTitle",
     headerClass: "bg-warning",
     iconName: "RefreshCircle",
     iconClass: "text-neutral-white",
   },
   failed: {
-    title: "ลงทะเบียนไม่สำเร็จ",
+    titleKey: "resultPanel.failedTitle",
     headerClass: "bg-error",
     iconName: "CloseCircle",
     iconClass: "text-neutral-white",
@@ -43,6 +44,7 @@ const ScanResultPanel: StyleableFC<ScanResultPanelProps> = ({
   onBackToScan,
   className,
 }) => {
+  const t = useTranslations("Scan");
   const [note, setNote] = useState("");
 
   useEffect(() => {
@@ -51,8 +53,7 @@ const ScanResultPanel: StyleableFC<ScanResultPanelProps> = ({
 
   const resultTheme = SCAN_RESULT_THEME[result?.status ?? "success"];
   const isFailed = result?.status === "failed";
-  const message =
-    result?.message || "ไม่อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม";
+  const message = result?.message || t("resultPanel.permissionError");
 
   return (
     <section
@@ -77,14 +78,16 @@ const ScanResultPanel: StyleableFC<ScanResultPanelProps> = ({
             />
           </span>
           <span className="headline-large-emphasized whitespace-nowrap">
-            {resultTheme.title}
+            {t(resultTheme.titleKey)}
           </span>
         </div>
         <div className="flex justify-center items-center text-primary gap-1">
           <div className="display-medium-emphasized whitespace-nowrap text-primary">
             {totalCount}
           </div>
-          <div className="headline-large-emphasized mt-2">คน</div>
+          <div className="headline-large-emphasized mt-2">
+            {t("resultPanel.people")}
+          </div>
         </div>
       </div>
 
@@ -110,7 +113,7 @@ const ScanResultPanel: StyleableFC<ScanResultPanelProps> = ({
 
             <div className="mt-6 text-center text-neutral-700">
               <p className="headline-large-emphasized">
-                {result?.participantName || "-"}
+                {result?.participantName || t("resultPanel.unknownParticipant")}
               </p>
               <p className="headline-large-emphasized mt-2">
                 {result?.refId || "-"}
@@ -129,7 +132,8 @@ const ScanResultPanel: StyleableFC<ScanResultPanelProps> = ({
                   noPadding
                 />
                 <p className="title-large-primary">
-                  เวลาที่ลงทะเบียน : {result?.checkInTime || "-"}
+                  {t("resultPanel.registrationTime")}{" "}
+                  {result?.checkInTime || "-"}
                 </p>
               </div>
             </div>
@@ -137,12 +141,14 @@ const ScanResultPanel: StyleableFC<ScanResultPanelProps> = ({
         )}
 
         <div className="mt-4 space-y-2">
-          <p className="title-small-emphasized text-neutral-600">หมายเหตุ</p>
+          <p className="title-small-emphasized text-neutral-600">
+            {t("resultPanel.notes")}
+          </p>
           <div className="flex items-center gap-3">
             <TextField
               value={note}
               onChange={(event) => setNote(event.target.value)}
-              placeholder="กรอกหมายเหตุ (ถ้ามี)"
+              placeholder={t("resultPanel.notesPlaceholder")}
               inputClassName="body-large-primary color-neutral-400 "
             />
             <Button
@@ -152,7 +158,7 @@ const ScanResultPanel: StyleableFC<ScanResultPanelProps> = ({
               className="title-large-primary whitespace-nowrap !px-4"
               onClick={onBackToScan}
             >
-              เพิ่มหมายเหตุ
+              {t("resultPanel.addNote")}
             </Button>
           </div>
         </div>

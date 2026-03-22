@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { cn } from "@assets/lib/utils";
 import {
   Dialog,
@@ -26,19 +27,19 @@ export type ScanResultModalData = {
 
 const SCAN_RESULT_THEME = {
   success: {
-    title: "ลงทะเบียนสำเร็จ",
+    titleKey: "resultPanel.successTitle",
     headerClass: "bg-success",
     iconName: "CheckmarkCircle",
     iconClass: "text-neutral-white",
   },
   duplicate: {
-    title: "ลงทะเบียนไปแล้ว",
+    titleKey: "resultPanel.duplicateTitle",
     headerClass: "bg-warning",
     iconName: "RefreshCircle",
     iconClass: "text-neutral-white",
   },
   failed: {
-    title: "ลงทะเบียนไม่สำเร็จ",
+    titleKey: "resultPanel.failedTitle",
     headerClass: "bg-error",
     iconName: "CloseCircle",
     iconClass: "text-neutral-white",
@@ -56,12 +57,12 @@ const ScanResultModal = ({
   onOpenChange,
   result,
 }: ScanResultModalProps) => {
+  const t = useTranslations("Scan");
   const [note, setNote] = useState("");
 
   const resultTheme = SCAN_RESULT_THEME[result?.status ?? "success"];
   const isFailed = result?.status === "failed";
-  const message =
-    result?.message || "ไม่อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม";
+  const message = result?.message || t("resultModal.permissionError");
 
   return (
     <Dialog
@@ -75,7 +76,7 @@ const ScanResultModal = ({
         showCloseButton={false}
         className="w-[min(92vw,360px)] p-0 overflow-hidden rounded-[28px] border-0 bg-neutral-100"
       >
-        <DialogTitle className="sr-only">Scan result</DialogTitle>
+        <DialogTitle className="sr-only">{t("resultModal.title")}</DialogTitle>
 
         <div
           className={cn(
@@ -93,7 +94,7 @@ const ScanResultModal = ({
               />
             </span>
             <span className="headline-large-emphasized">
-              {resultTheme.title}
+              {t(resultTheme.titleKey)}
             </span>
           </div>
         </div>
@@ -118,7 +119,7 @@ const ScanResultModal = ({
 
               <div className="space-y-2">
                 <p className="title-medium-emphasized text-neutral-600">
-                  รายละเอียดผู้ลงทะเบียนเข้างาน
+                  {t("resultModal.resultDetails")}
                 </p>
                 <div className="space-y-3 text-neutral-700">
                   <div className="flex items-center gap-2">
@@ -129,9 +130,11 @@ const ScanResultModal = ({
                       noPadding
                     />
                     <div>
-                      <p className="body-medium-primary">Name</p>
                       <p className="body-medium-primary">
-                        รหัสประจำตัว {result?.refId || "-"}
+                        {t("resultModal.name")}
+                      </p>
+                      <p className="body-medium-primary">
+                        {t("resultModal.refId")} {result?.refId || "-"}
                       </p>
                     </div>
                   </div>
@@ -144,7 +147,9 @@ const ScanResultModal = ({
                       noPadding
                     />
                     <div className="space-y-0.5">
-                      <p className="body-medium-primary">Faculty / org</p>
+                      <p className="body-medium-primary">
+                        {t("resultModal.organization")}
+                      </p>
                       <p className="body-medium-primary">
                         {result?.organization || "-"}
                       </p>
@@ -159,7 +164,8 @@ const ScanResultModal = ({
                       noPadding
                     />
                     <p className="body-medium-primary">
-                      ลงทะเบียนสำเร็จ : {result?.checkInTime || "-"}
+                      {t("resultModal.registeredAt")}{" "}
+                      {result?.checkInTime || "-"}
                     </p>
                   </div>
                 </div>
@@ -168,11 +174,13 @@ const ScanResultModal = ({
           )}
 
           <div className="space-y-2">
-            <p className="title-small-emphasized text-neutral-700">หมายเหตุ</p>
+            <p className="title-small-emphasized text-neutral-700">
+              {t("resultModal.notes")}
+            </p>
             <TextField
               value={note}
               onChange={(event) => setNote(event.target.value)}
-              placeholder="กรอกหมายเหตุ (ถ้ามี)"
+              placeholder={t("resultModal.notesPlaceholder")}
               inputClassName="body-small-primary"
             />
           </div>
@@ -184,7 +192,7 @@ const ScanResultModal = ({
             onClick={() => onOpenChange(false)}
             className="title-medium-emphasized"
           >
-            เสร็จสิ้น
+            {t("resultModal.done")}
           </Button>
         </div>
       </DialogContent>

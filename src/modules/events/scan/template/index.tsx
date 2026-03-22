@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import ScanInfoPanel from "@modules/events/scan/components/ScanInfoPanel";
 import ScanCameraPanel from "@modules/events/scan/components/ScanCameraPanel";
 import ScanParticipantsPanel from "@modules/events/scan/components/ScanParticipantsPanel";
-import ScanResultPanel from "../components/ScanResultPanel";
-import NoActiveEventsModal from "../components/NoActiveEventsModal";
+import ScanResultPanel from "@modules/events/scan/components/ScanResultPanel";
+import NoActiveEventsModal from "@modules/events/scan/components/NoActiveEventsModal";
 import ScanResultModal, {
   type ScanResultModalData,
-} from "../components/ScanResultModal";
+} from "@modules/events/scan/components/ScanResultModal";
 import type { Participant, ScanEvent } from "@modules/events/scan/constants";
 import { useIsMobile } from "@assets/hooks/use-mobile";
 import { useRouter } from "@i18n/navigation";
@@ -18,13 +19,6 @@ import {
   fetchManagedEvents,
   postParticipantScan,
 } from "@services/events";
-
-const EMPTY_SELECTED_EVENT: ScanEvent = {
-  id: "",
-  name: "No events available",
-  startTime: "--:--",
-  endTime: "--:--",
-};
 
 const formatTime = (isoTime: string) => {
   const date = new Date(isoTime);
@@ -42,15 +36,8 @@ const buildFailedScanResult = (message: string): ScanResultModalData => ({
   message,
 });
 
-const getFailedScanMessage = (error: APIRequestError) => {
-  if (error.code === "PARTICIPANT_NO_PERMISSION" || error.status === 403) {
-    return "ไม่อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม";
-  }
-
-  return error.message || "ไม่สามารถลงทะเบียนได้ในขณะนี้";
-};
-
 const ScanTemplate = () => {
+  const t = useTranslations("Scan");
   const isMobile = useIsMobile();
   const router = useRouter();
   const [events, setEvents] = useState<ScanEvent[]>([]);
@@ -67,6 +54,23 @@ const ScanTemplate = () => {
   const [scanResult, setScanResult] = useState<ScanResultModalData | null>(
     null,
   );
+  const emptySelectedEvent = useMemo<ScanEvent>(
+    () => ({
+      id: "",
+      name: t("page.emptyEventName"),
+      startTime: "--:--",
+      endTime: "--:--",
+    }),
+    [t],
+  );
+
+  const getFailedScanMessage = (error: APIRequestError) => {
+    if (error.code === "PARTICIPANT_NO_PERMISSION" || error.status === 403) {
+      return t("resultPanel.permissionError");
+    }
+
+    return error.message || t("resultPanel.defaultError");
+  };
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -85,7 +89,7 @@ const ScanTemplate = () => {
         setIsNoEventsModalOpen(mappedEvents.length === 0);
         setSelectedEventId((prev) => prev || mappedEvents[0]?.id || "");
       } catch (error) {
-        console.error("Failed to fetch events for scan page:", error);
+        console.error(t("errors.failedToFetchEvents"), error);
         setEvents([]);
         setSelectedEventId("");
         setIsNoEventsModalOpen(false);
@@ -109,7 +113,7 @@ const ScanTemplate = () => {
         const res = await fetchEventById(selectedEventId);
         setTotalParticipants(res.data.total_registered);
       } catch (error) {
-        console.error("Failed to fetch selected event detail:", error);
+        console.error(t("errors.failedToFetchEventDetail"), error);
       } finally {
         setLoadingDetail(false);
       }
@@ -127,8 +131,8 @@ const ScanTemplate = () => {
     () =>
       events.find((event) => event.id === selectedEventId) ??
       events[0] ??
-      EMPTY_SELECTED_EVENT,
-    [events, selectedEventId],
+      emptySelectedEvent,
+    [emptySelectedEvent, events, selectedEventId],
   );
 
   const handleScan = async (text: string) => {
@@ -146,11 +150,11 @@ const ScanTemplate = () => {
       const res = await postParticipantScan(text, selectedEventId);
 
       if (!res.data) {
-        setScanResult(buildFailedScanResult("ไม่สามารถลงทะเบียนได้ในขณะนี้"));
+        setScanResult(buildFailedScanResult(t("resultPanel.defaultError")));
         if (isMobile) {
           setIsResultModalOpen(true);
         }
-        console.error("Scan failed: missing participant data");
+        console.error(t("errors.missingParticipantData"));
         return;
       }
 
@@ -161,10 +165,10 @@ const ScanTemplate = () => {
         [res.data.title_en, res.data.firstname_en, res.data.surname_en]
           .filter(Boolean)
           .join(" ") ||
-        "Unknown participant";
+        t("resultPanel.unknownParticipant");
 
       const scannedAt = res.data.check_in_time
-        ? `${formatTime(res.data.check_in_time)} น.`
+        ? `${formatTime(res.data.check_in_time)} ${t("infoPanel.timeSuffix")}`
         : "-";
 
       const organization =
@@ -206,13 +210,13 @@ const ScanTemplate = () => {
           setIsResultModalOpen(true);
         }
       } else {
-        console.error("Scan failed: unexpected error");
-        setScanResult(buildFailedScanResult("ไม่สามารถลงทะเบียนได้ในขณะนี้"));
+        console.error(t("errors.unexpectedScanError"));
+        setScanResult(buildFailedScanResult(t("resultPanel.defaultError")));
         if (isMobile) {
           setIsResultModalOpen(true);
         }
       }
-      console.error("Failed to submit participant scan:", error);
+      console.error(t("errors.failedToSubmitScan"), error);
     } finally {
       setIsSubmittingScan(false);
     }
@@ -286,7 +290,7 @@ const ScanTemplate = () => {
       {(loadingEvents || loadingDetail || isSubmittingScan) && (
         <div className="fixed bottom-4 right-4 rounded-full bg-white/95 px-4 py-2 shadow-elevation-2">
           <span className="label-medium-primary text-neutral-600">
-            {isSubmittingScan ? "Scanning..." : "Loading..."}
+            {isSubmittingScan ? t("page.scanning") : t("page.loading")}
           </span>
         </div>
       )}

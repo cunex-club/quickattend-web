@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import IonIcon from "@shared/IonIcon";
 import {
   DropdownMenu,
@@ -28,6 +29,8 @@ const ScanInfoPanel: StyleableFC<ScanInfoPanelProps> = ({
   compact = false,
   className,
 }) => {
+  const t = useTranslations("Scan");
+
   return (
     <section
       className={cn(
@@ -43,7 +46,7 @@ const ScanInfoPanel: StyleableFC<ScanInfoPanelProps> = ({
               <button
                 type="button"
                 className="inline-flex items-center gap-1 rounded text-neutral-600 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                aria-label="Select event"
+                aria-label={t("infoPanel.selectEvent")}
               >
                 <span className="display-medium-emphasized md:display-large-emphasized">
                   {selectedEvent.name}
@@ -71,7 +74,8 @@ const ScanInfoPanel: StyleableFC<ScanInfoPanelProps> = ({
           </DropdownMenu>
 
           <p className="title-large-primary mt-1 text-neutral-600">
-            {selectedEvent.startTime} –{selectedEvent.endTime} น.
+            {selectedEvent.startTime} –{selectedEvent.endTime}{" "}
+            {t("infoPanel.timeSuffix")}
           </p>
         </div>
 
@@ -79,7 +83,7 @@ const ScanInfoPanel: StyleableFC<ScanInfoPanelProps> = ({
           <>
             <Image
               src={barcodeReaderIcon}
-              alt="Scan barcode"
+              alt={t("infoPanel.barcodeAlt")}
               width={150}
               height={210}
               className="h-auto w-[130px] md:w-[150px]"
@@ -87,9 +91,7 @@ const ScanInfoPanel: StyleableFC<ScanInfoPanelProps> = ({
             />
 
             <p className="headline-medium-emphasized text-center">
-              สแกนนิสิต CU NEX
-              <br />
-              เพื่อลงทะเบียนเข้าร่วมกิจกรรม
+              {t("infoPanel.description")}
             </p>
           </>
         )}
@@ -103,12 +105,14 @@ const ScanInfoPanel: StyleableFC<ScanInfoPanelProps> = ({
                 size="16px"
                 className="text-primary"
               />
-              <span className="title-medium-emphasized">ผู้ดูแลกิจกรรม</span>
+              <span className="title-medium-emphasized">
+                {t("infoPanel.adminLabel")}
+              </span>
             </div>
             <button
               type="button"
               className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-100 shadow-elevation-1"
-              aria-label="Copy event link"
+              aria-label={t("cameraPanel.copyEventLink")}
             >
               <IonIcon
                 name="LinkOutline"

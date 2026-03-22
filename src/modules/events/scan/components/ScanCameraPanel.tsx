@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { cn } from "@assets/lib/utils";
 import { StyleableFC } from "@utils/misc";
 import { ZXingScanner } from "@utils/scanner";
@@ -21,6 +22,7 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
   paused = false,
   className,
 }) => {
+  const t = useTranslations("Scan");
   const videoRef = useRef<HTMLVideoElement>(null);
   const onScanRef = useRef(onScan);
   const lastScannedTextRef = useRef<string | null>(null);
@@ -100,7 +102,7 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
             type="button"
             onClick={() => router.push("/events")}
             className="flex h-10 items-center justify-center rounded-full bg-white/90 px-3 shadow-md"
-            aria-label="Go to events"
+            aria-label={t("cameraPanel.goToEvents")}
           >
             <IonIcon
               name="HomeOutline"
@@ -113,7 +115,7 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
             type="button"
             onClick={onCopyLink}
             className="flex h-10 items-center justify-center rounded-full bg-white/90 px-3 shadow-md"
-            aria-label="Copy event link"
+            aria-label={t("cameraPanel.copyEventLink")}
           >
             <IonIcon
               name="LinkOutline"
@@ -129,7 +131,11 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
           type="button"
           onClick={toggleFlash}
           className="flex h-10 items-center justify-center rounded-full bg-white/90 px-3 shadow-md"
-          aria-label={flashOn ? "Turn off flash" : "Turn on flash"}
+          aria-label={
+            flashOn
+              ? t("cameraPanel.turnOffFlash")
+              : t("cameraPanel.turnOnFlash")
+          }
         >
           <IonIcon
             name={flashOn ? "Flash" : "FlashOffOutline"}

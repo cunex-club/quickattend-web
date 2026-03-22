@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +19,8 @@ const NoActiveEventsModal = ({
   onCancel,
   onConfirm,
 }: NoActiveEventsModalProps) => {
+  const t = useTranslations("Scan");
+
   return (
     <Dialog open={open} onOpenChange={() => onCancel()}>
       <DialogContent
@@ -25,11 +28,11 @@ const NoActiveEventsModal = ({
         className="w-[min(94vw,640px)] rounded-[32px] border-0 bg-neutral-white p-6 md:p-8"
       >
         <DialogTitle className="text-center headline-large-emphasized text-neutral-600">
-          แจ้งเตือน
+          {t("noActiveEventsModal.title")}
         </DialogTitle>
 
         <div className="text-center title-large-primary text-neutral-600 pt-2 pb-4">
-          ท่านไม่มีกิจกรรมที่กำลังจัดอยู่ในเวลา ณ ขณะนี้
+          {t("noActiveEventsModal.message")}
         </div>
 
         <div className="grid grid-cols-2 gap-3 md:gap-4">
@@ -40,10 +43,14 @@ const NoActiveEventsModal = ({
             onClick={onCancel}
             className="title-medium-emphasized text-neutral-600"
           >
-            <div className="title-medium-emphasized">ยกเลิก</div>
+            <div className="title-medium-emphasized">
+              {t("noActiveEventsModal.cancel")}
+            </div>
           </Button>
           <Button mode="filled" bordered="round" expanded onClick={onConfirm}>
-            <div className="title-medium-emphasized">ตกลง</div>
+            <div className="title-medium-emphasized">
+              {t("noActiveEventsModal.confirm")}
+            </div>
           </Button>
         </div>
       </DialogContent>
