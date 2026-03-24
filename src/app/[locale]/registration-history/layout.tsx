@@ -2,7 +2,7 @@ import { RoleProvider } from "@context/RoleContext";
 import { getUserRole } from "@lib/auth";
 import React from "react";
 
-export default async function DashboardCompareLayout({
+export default async function DashboardRegistrationLayout({
   children,
 }: {
   children: React.ReactNode;
