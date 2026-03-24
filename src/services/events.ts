@@ -70,8 +70,6 @@ export async function fetchManagedEvents(
 ): Promise<EventsAPIResponse> {
   const params = new URLSearchParams({
     myevents: "true",
-    page: "1",
-    pageSize: "8",
   });
   if (search) params.set("search", search);
 

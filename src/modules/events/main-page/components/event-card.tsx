@@ -52,6 +52,10 @@ const EventCard: StyleableFC<EventCardProps> = ({
   };
 
   const handleCardKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.target !== event.currentTarget) {
+      return;
+    }
+
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       handleCardClick();
@@ -228,33 +232,6 @@ const EventCard: StyleableFC<EventCardProps> = ({
               className="text-primary"
               noPadding
             />
-          </div>
-        </Button>
-      </div>
-      <div className="hidden lg:">
-        <Button
-          mode="filled"
-          bordered="round"
-          expanded
-          onClick={handleScanClick}
-        >
-          <div className="flex justify-center items-center gap-2">
-            <IonIcon name="ScanOutline" size="36px" className="text-white" />
-            <div className="title-large-primary text-white ">
-              {t("scanParticipant")}
-            </div>
-          </div>
-        </Button>
-        <Button mode="outline" bordered="round" expanded={false}>
-          <div className="flex justify-center items-center gap-2">
-            <IonIcon
-              name="TrendingUpOutline"
-              size="36px"
-              className="text-primary"
-            />
-            <div className="title-large-primary text-primary hidden sm:block">
-              {t("activityStatistics")}
-            </div>
           </div>
         </Button>
       </div>

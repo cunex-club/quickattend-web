@@ -149,7 +149,7 @@ const ScanResultPanel: StyleableFC<ScanResultPanelProps> = ({
               value={note}
               onChange={(event) => setNote(event.target.value)}
               placeholder={t("resultPanel.notesPlaceholder")}
-              inputClassName="body-large-primary color-neutral-400 "
+              inputClassName="body-large-primary text-neutral-400 "
             />
             <Button
               mode="filled"
