@@ -60,7 +60,7 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
               variantClasses[filterVariant]
             )}
           >
-            <div className="space-y-2">
+            <div className="space-y-2 border">
               {items.map((item) => (
                 <div
                   key={item.id}
