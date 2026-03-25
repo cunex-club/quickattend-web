@@ -1,7 +1,9 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { RegistrationItem } from "@customTypes/registration";
 import { timeToSeconds, escapeCsv, toExcelTextValue } from "@utils/function";
 import { STATUS_LABEL_MAP } from "@components/StatusBadge";
+
+const ITEMS_PER_PAGE = 20;
 
 export const useRegistration = (initialData: RegistrationItem[]) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -9,6 +11,7 @@ export const useRegistration = (initialData: RegistrationItem[]) => {
   const [facultyFilter, setFacultyFilter] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc" | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const typeOptions = useMemo(() => [...new Set(initialData.map((d) => d.type))], [initialData]);
   const facultyOptions = useMemo(() => [...new Set(initialData.map((d) => d.faculty))], [initialData]);
@@ -39,6 +42,25 @@ export const useRegistration = (initialData: RegistrationItem[]) => {
 
     return data;
   }, [initialData, searchQuery, typeFilter, facultyFilter, statusFilter, sortDirection]);
+
+  const totalItems = filteredData.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, typeFilter, facultyFilter, statusFilter, sortDirection]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return filteredData.slice(startIndex, endIndex);
+  }, [filteredData, currentPage]);
 
   const handleDownloadCsv = () => {
     const headers = ["ชื่อ-นามสกุล", "รหัสประจำตัว", "ประเภท", "คณะ/หน่วยงาน", "เวลา", "สถานะการลงทะเบียน", "หมายเหตุ"];
@@ -73,7 +95,13 @@ export const useRegistration = (initialData: RegistrationItem[]) => {
     facultyFilter, setFacultyFilter, facultyOptions,
     statusFilter, setStatusFilter, statusOptions,
     sortDirection, setSortDirection,
+    currentPage,
+    setCurrentPage,
+    itemsPerPage: ITEMS_PER_PAGE,
+    totalItems,
+    totalPages,
     filteredData,
+    paginatedData,
     handleDownloadCsv,
   };
 };

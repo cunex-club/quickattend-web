@@ -49,11 +49,11 @@ export const TableFilterPopover = ({
           </div>
         </th>
       </PopoverTrigger>
-      <PopoverContent className="w-64 p-6" align="start">
-        <div className="flex flex-col">
+      <PopoverContent className="w-64 py-6 pl-6 pr-2" align="start">
+        <div className="h-auto max-h-64 w-full rounded-md overflow-y-auto">
           <div className="flex flex-col h-auto space-y-4">
             {options.map((opt) => (
-              <div key={opt} className="flex items-center space-x-3 py-1">
+              <div key={opt} className="flex items-center space-x-3 p-1">
                 <Checkbox
                   id={`filter-${opt}`}
                   checked={selectedValues.includes(opt)}

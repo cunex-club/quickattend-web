@@ -1,4 +1,5 @@
 "use client";
+import { useMemo } from "react";
 import IonIcon from "@shared/IonIcon";
 import Link from "next/link";
 import SearchBar from "@components/dashboard/DashboardSearchBar";
@@ -11,14 +12,14 @@ import {
 } from "@assets/components/ui/dropdown-menu";
 import { cn } from "@assets/lib/utils";
 
-import { registrationData } from "@utils/data";
+import { registrationMockData60 } from "@utils/data";
 import { STATUS_LABEL_MAP } from "@components/StatusBadge";
 import { TableFilterPopover } from "@components/dashboard/TableFilterPopover";
 import { RegistrationTableRow } from "@components/dashboard/template/RegistrationTableRow";
 import { useRegistration } from "@hooks/useRegistration";
 import type { RegistrationItem } from "@customTypes/registration";
 
-const REGISTRATION_DATA = registrationData as RegistrationItem[];
+const REGISTRATION_DATA = registrationMockData60 as RegistrationItem[];
 
 export const RegistrationView = () => {
   const {
@@ -34,9 +35,24 @@ export const RegistrationView = () => {
     statusOptions,
     sortDirection,
     setSortDirection,
-    filteredData,
+    currentPage,
+    setCurrentPage,
+    itemsPerPage,
+    totalItems,
+    totalPages,
+    paginatedData,
     handleDownloadCsv,
   } = useRegistration(REGISTRATION_DATA);
+
+  const { startResult, endResult } = useMemo(() => {
+    if (totalItems === 0) {
+      return { startResult: 0, endResult: 0 };
+    }
+
+    const start = (currentPage - 1) * itemsPerPage + 1;
+    const end = Math.min(currentPage * itemsPerPage, totalItems);
+    return { startResult: start, endResult: end };
+  }, [currentPage, itemsPerPage, totalItems]);
 
   return (
     <div className="flex flex-col items-center w-full max-h-screen px-4 md:px-8 py-6 bg-neutral-white space-y-4">
@@ -93,7 +109,7 @@ export const RegistrationView = () => {
               <th className="px-4 py-3 w-40 min-w-40 whitespace-nowrap label-large-emphasized">
                 รหัสประจำตัว
               </th>
-
+              {/* type filter */}
               <TableFilterPopover
                 options={typeOptions}
                 selectedValues={typeFilter}
@@ -102,7 +118,7 @@ export const RegistrationView = () => {
               >
                 ประเภท
               </TableFilterPopover>
-
+              {/* faculty filter */}
               <TableFilterPopover
                 options={facultyOptions}
                 selectedValues={facultyFilter}
@@ -111,7 +127,7 @@ export const RegistrationView = () => {
               >
                 คณะ/หน่วยงาน
               </TableFilterPopover>
-              
+
               <th className="px-4 py-3 w-32 min-w-32 whitespace-nowrap cursor-pointer hover:bg-white/10 transition-colors">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -140,7 +156,7 @@ export const RegistrationView = () => {
                   >
                     <DropdownMenuItem
                       className={cn(
-                        "rounded-none",
+                        "rounded-none px-4",
                         sortDirection === "desc" &&
                           "font-bold bg-neutral-200 hover:bg-neutral-200",
                       )}
@@ -157,9 +173,9 @@ export const RegistrationView = () => {
 
                     <DropdownMenuItem
                       className={cn(
-                        "rounded-none",
+                        "rounded-none px-4",
                         sortDirection === "asc" &&
-                          "font-bold bg-neutral-200 hover:bg-neutral-200",
+                          "font-bold bg-neutral-200 hover:bg-neutral-500",
                       )}
                       onClick={() =>
                         setSortDirection((prev) =>
@@ -191,11 +207,11 @@ export const RegistrationView = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((item, index) => (
+            {paginatedData.map((item, index) => (
               <RegistrationTableRow
                 key={`${item.id}-${index}`}
                 item={item}
-                index={index}
+                index={(currentPage - 1) * itemsPerPage + index}
               />
             ))}
           </tbody>
@@ -205,9 +221,13 @@ export const RegistrationView = () => {
       {/* --- ส่วน Footer --- */}
       <footer className="w-full flex flex-col md:flex-row justify-between gap-4 mt-0 md:mt-4">
         <p className="label-large-primary text-neutral-600">
-          แสดงผลลัพธ์ 1 ถึง 20 จาก 620 รายการ
+          แสดงผลลัพธ์ {startResult} ถึง {endResult} จาก {totalItems} รายการ
         </p>
-        <Pagination totalPages={5} currentPage={1} onPageChange={() => {}} />
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
       </footer>
     </div>
   );
