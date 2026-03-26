@@ -10,6 +10,8 @@ import Button from "@shared/Button";
 
 const LoginTemplate = () => {
   const locale = useLocale();
+  const authUrl =
+    "https://culab-authen.azurewebsites.net/?partnerid=9f2b4a1c8d3e0f7b2a6c9e4d1b0f3a2c";
 
   return (
     <div className="flex min-h-screen w-full gap-6 bg-neutral-200 overflow-hidden">
@@ -57,6 +59,9 @@ const LoginTemplate = () => {
               bordered="round"
               expanded={false}
               className="flex items-center gap-2"
+              onClick={() => {
+                window.location.href = authUrl;
+              }}
             >
               <IonIcon
                 name="LogInOutline"
