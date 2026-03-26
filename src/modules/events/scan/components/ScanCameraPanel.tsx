@@ -42,35 +42,20 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
     if (!video || paused) return;
 
     const scanner = new ZXingScanner();
-    let cancelled = false;
-
-    void (async () => {
-      try {
-        await scanner.start({
-          videoElement: video,
-          deviceId,
-          onDecode: ({ text }) => {
-            if (lastScannedTextRef.current === text) {
-              return;
-            }
-
-            lastScannedTextRef.current = text;
-            onScanRef.current?.(text);
-          },
-        });
-      } catch (error) {
-        console.error("Failed to start scanner", error);
-      } finally {
-        if (cancelled) {
-          scanner.stop();
+    scanner.start({
+      videoElement: video,
+      deviceId,
+      onDecode: ({ text }) => {
+        if (lastScannedTextRef.current === text) {
+          return;
         }
-      }
-    })();
 
-    return () => {
-      cancelled = true;
-      scanner.stop();
-    };
+        lastScannedTextRef.current = text;
+        onScanRef.current?.(text);
+      },
+    });
+
+    return () => scanner.stop();
   }, [deviceId, paused]);
 
   const toggleFlash = useCallback(async () => {
