@@ -14,7 +14,9 @@ export default async function Home() {
       {/* Typography demo */}
       <section className="grid grid-cols-2 space-y-2">
         <div className="flex flex-col space-y-8">
-          <p className="display-large-primary border flex items-center">DisplayLarge</p>
+          <p className="display-large-primary border flex items-center">
+            DisplayLarge
+          </p>
           <p className="display-medium-primary border">DisplayMedium</p>
           <p className="display-small-primary border">DisplaySmall</p>
           <p className="headline-large-primary border">HeadlineLarge</p>
@@ -38,17 +40,33 @@ export default async function Home() {
           <p className="text-xs border">Text xs</p>
         </div>
         <div className="flex flex-col space-y-8">
-          <p className="display-large-emphasized border">DisplayLarge Emphasized</p>
-          <p className="display-medium-emphasized border">DisplayMedium Emphasized</p>
-          <p className="display-small-emphasized border">DisplaySmall Emphasized</p>
-          <p className="headline-large-emphasized border">HeadlineLarge Emphasized</p>
-          <p className="headline-medium-emphasized border">HeadlineMedium Emphasized</p>
-          <p className="headline-small-emphasized border">HeadlineSmall Emphasized</p>
+          <p className="display-large-emphasized border">
+            DisplayLarge Emphasized
+          </p>
+          <p className="display-medium-emphasized border">
+            DisplayMedium Emphasized
+          </p>
+          <p className="display-small-emphasized border">
+            DisplaySmall Emphasized
+          </p>
+          <p className="headline-large-emphasized border">
+            HeadlineLarge Emphasized
+          </p>
+          <p className="headline-medium-emphasized border">
+            HeadlineMedium Emphasized
+          </p>
+          <p className="headline-small-emphasized border">
+            HeadlineSmall Emphasized
+          </p>
           <p className="title-large-emphasized border">TitleLarge Emphasized</p>
-          <p className="title-medium-emphasized border">TitleMedium Emphasized</p>
+          <p className="title-medium-emphasized border">
+            TitleMedium Emphasized
+          </p>
           <p className="title-small-emphasized border">TitleSmall Emphasized</p>
           <p className="label-large-emphasized border">LabelLarge Emphasized</p>
-          <p className="label-medium-emphasized border">LabelMedium Emphasized</p>
+          <p className="label-medium-emphasized border">
+            LabelMedium Emphasized
+          </p>
           <p className="label-small-emphasized border">LabelSmall Emphasized</p>
           <p className="body-large-emphasized border">BodyLarge Emphasized</p>
           <p className="body-medium-emphasized border">BodyMedium Emphasized</p>
@@ -98,11 +116,11 @@ export default async function Home() {
       <Icon name="link" size={24} />
       <EventNameScan label="Event Name" link="https://example.com" />
       <WheelPicker />
-      // Variant 1: Basic input
+      {/* Variant 1: Basic input */}
       <TextField placeholder="Place holder" />
-      // Variant 2: With supporting text
+      {/* Variant 2: With supporting text */}
       <TextField placeholder="Place holder" supportingText="Supporting text" />
-      // Variant 3: With separator and icon
+      {/* Variant 3: With separator and icon */}
       <TextField
         placeholder="Label"
         endIcon={<Icon name="arrow_circle_up" fill />}
@@ -110,7 +128,7 @@ export default async function Home() {
         endIconWrapperClassName="bg-pink-500 text-white rounded-r-lg py-3"
         supportingText="Supporting text"
       />
-      // Variant 4: Just icon
+      {/* Variant 4: Just icon */}
       <TextField
         placeholder="Label"
         endIcon={<Icon name="arrow_circle_up" fill />}

@@ -1,4 +1,4 @@
-export function deepEqual(a: any, b: any): boolean {
+export function deepEqual(a: unknown, b: unknown): boolean {
   if (a === b) return true;
 
   if (
@@ -15,5 +15,10 @@ export function deepEqual(a: any, b: any): boolean {
 
   if (keysA.length !== keysB.length) return false;
 
-  return keysA.every((key) => keysB.includes(key) && deepEqual(a[key], b[key]));
+  const objectA = a as Record<string, unknown>;
+  const objectB = b as Record<string, unknown>;
+
+  return keysA.every(
+    (key) => keysB.includes(key) && deepEqual(objectA[key], objectB[key]),
+  );
 }
