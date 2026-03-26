@@ -32,12 +32,6 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
   const [flashOn, setFlashOn] = useState(false);
 
   useEffect(() => {
-    if (paused) {
-      lastScannedTextRef.current = null;
-    }
-  }, [paused]);
-
-  useEffect(() => {
     const video = videoRef.current;
     if (!video || paused) return;
 

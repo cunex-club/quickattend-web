@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import ScanInfoPanel from "@modules/events/scan/components/ScanInfoPanel";
 import ScanCameraPanel from "@modules/events/scan/components/ScanCameraPanel";
@@ -51,7 +51,12 @@ const ScanTemplate = () => {
   const [isSubmittingScan, setIsSubmittingScan] = useState(false);
   const [isResultModalOpen, setIsResultModalOpen] = useState(false);
   const [isNoEventsModalOpen, setIsNoEventsModalOpen] = useState(false);
+  const [isScanCooldown, setIsScanCooldown] = useState(false);
   const [scanResult, setScanResult] = useState<ScanResultModalData | null>(
+    null,
+  );
+  const isScanLockedRef = useRef(false);
+  const scanCooldownTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
   const emptySelectedEvent = useMemo<ScanEvent>(
@@ -71,6 +76,26 @@ const ScanTemplate = () => {
 
     return error.message || t("resultPanel.defaultError");
   };
+
+  const startScanCooldown = () => {
+    if (scanCooldownTimerRef.current) {
+      clearTimeout(scanCooldownTimerRef.current);
+    }
+
+    setIsScanCooldown(true);
+    scanCooldownTimerRef.current = setTimeout(() => {
+      setIsScanCooldown(false);
+      scanCooldownTimerRef.current = null;
+    }, 1200);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (scanCooldownTimerRef.current) {
+        clearTimeout(scanCooldownTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -138,12 +163,15 @@ const ScanTemplate = () => {
   const handleScan = async (text: string) => {
     if (
       !selectedEventId ||
+      isScanLockedRef.current ||
       isSubmittingScan ||
+      isScanCooldown ||
       (isMobile && isResultModalOpen)
     ) {
       return;
     }
 
+    isScanLockedRef.current = true;
     setIsSubmittingScan(true);
 
     try {
@@ -219,6 +247,8 @@ const ScanTemplate = () => {
       console.error(t("errors.failedToSubmitScan"), error);
     } finally {
       setIsSubmittingScan(false);
+      isScanLockedRef.current = false;
+      startScanCooldown();
     }
   };
 
@@ -264,7 +294,7 @@ const ScanTemplate = () => {
         ) : (
           <ScanCameraPanel
             key={selectedEventId}
-            paused={isSubmittingScan || isResultModalOpen}
+            paused={isSubmittingScan || isResultModalOpen || isScanCooldown}
             onScan={handleScan}
             className="min-h-0"
           />
@@ -275,7 +305,7 @@ const ScanTemplate = () => {
       <div className="flex flex-col lg:hidden min-h-screen p-4 gap-4">
         <ScanCameraPanel
           key={selectedEventId}
-          paused={isSubmittingScan || isResultModalOpen}
+          paused={isSubmittingScan || isResultModalOpen || isScanCooldown}
           onScan={handleScan}
           className="flex-1 min-h-[60vh]"
         />
