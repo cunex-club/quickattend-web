@@ -136,12 +136,12 @@ const EventEditTemplate = () => {
   useEffect(() => {
     if (
       // Section 1
-      eventForm.name &&
+      eventForm.name.trim() &&
       eventForm.date &&
       eventForm.startTime &&
       eventForm.endTime &&
-      eventForm.location &&
-      eventForm.organizer &&
+      eventForm.location.trim() &&
+      eventForm.organizer.trim() &&
       // Section 2
       (eventForm.attendance_type == AttendanceType.ALL ||
         (eventForm.attendance_type == AttendanceType.FACULTIES &&
@@ -150,7 +150,8 @@ const EventEditTemplate = () => {
           eventForm.selectedStudents.length > 0)) &&
       eventForm.revealed_fields.length > 0 &&
       // Section 3
-      (!eventForm.evaluation_form || isValidUrl(eventForm.evaluation_form))
+      (!eventForm.evaluation_form.trim() ||
+        isValidUrl(eventForm.evaluation_form.trim()))
     ) {
       setValid(true);
     } else {
@@ -778,9 +779,13 @@ const EventEditTemplate = () => {
               }
             }}
           >
-            <DialogContent className="bg-transparent border-none [&>button]:hidden min-w-[60vw] max-w-[80vw] h-[80vh] p-0">
+            <DialogContent
+              className={`bg-transparent border-none [&>button]:hidden min-w-[60vw] max-w-[80vw] ${cardMode == CardPreviewType.CARD_PREVIEW ? "h-fit" : "h-[80vh]"} p-0`}
+            >
               {/* Header */}
-              <div className="w-full h-full flex justify-between gap-2 px-6 py-4 bg-neutral-white rounded-2xl items-center">
+              <div
+                className={`w-full ${cardMode == CardPreviewType.CARD_PREVIEW ? "h-fit" : "h-full"} flex justify-between gap-2 px-6 py-4 bg-neutral-white rounded-2xl items-center`}
+              >
                 <DialogTitle className="headline-small-emphasized text-primary">
                   {tEditEvent("eventPreview")}
                 </DialogTitle>

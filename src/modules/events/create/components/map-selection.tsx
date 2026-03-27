@@ -4,7 +4,6 @@ import { EventFormInterface } from "../template";
 import { Input } from "@assets/components/ui/input";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
-import GoogleMapsProvider from "../../../../providers/GoogleMapProvider";
 
 export const DEFAULT_CENTER = { lat: 13.7386, lng: 100.5321 };
 export const GoogleMapContainerStyle = { width: "100%", height: "180px" };
@@ -78,20 +77,4 @@ const MapSelectionComponent = ({
   );
 };
 
-const GoogleMapSelection = ({
-  eventForm,
-  setEventForm,
-  isPreview,
-}: MapSelectionProps) => {
-  return (
-    <GoogleMapsProvider>
-      <MapSelectionComponent
-        eventForm={eventForm}
-        setEventForm={setEventForm}
-        isPreview={isPreview}
-      />
-    </GoogleMapsProvider>
-  );
-};
-
-export default GoogleMapSelection;
+export default MapSelectionComponent;

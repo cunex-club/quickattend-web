@@ -6,7 +6,7 @@ import {
   PopoverTrigger,
 } from "@assets/components/ui/popover";
 import { cn } from "@assets/lib/utils";
-import GoogleMapSelection from "@modules/events/create/components/map-selection";
+import MapSelectionComponent from "@modules/events/create/components/map-selection";
 import { EventFormInterface } from "@modules/events/create/template";
 import IonIcon from "@shared/IonIcon";
 import { format, startOfDay } from "date-fns";
@@ -237,7 +237,7 @@ const EditEventDuplicateStep1 = ({
         <p className="title-large-emphasized">
           {tEditEvent("location")} <span className="text-primary">*</span>
         </p>
-        <GoogleMapSelection
+        <MapSelectionComponent
           eventForm={duplicatedEventForm}
           setEventForm={setDuplicatedEventForm}
           isPreview={false}
