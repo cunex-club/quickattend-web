@@ -24,9 +24,10 @@ export interface FilterValues {
 
 interface FilterMenuProps {
   onFilterChange?: (values: FilterValues) => void;
+  menuId?: string;
 }
 
-const FilterMenu = ({ onFilterChange }: FilterMenuProps) => {
+const FilterMenu = ({ onFilterChange, menuId }: FilterMenuProps) => {
   const [accessOptions, setAccessOptions] = useState<FilterOption[]>([
     { id: "owner", label: "เจ้าของกิจกรรม", checked: true },
     { id: "manager", label: "ผู้จัดการกิจกรรม", checked: false },
@@ -61,6 +62,7 @@ const FilterMenu = ({ onFilterChange }: FilterMenuProps) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
+          id={menuId ? `${menuId}-trigger` : undefined}
           aria-label="Open filter menu"
           className="rounded-full p-1 hover:bg-muted/40 transition-colors duration-200 [&>div]:!p-0"
         >
@@ -72,6 +74,7 @@ const FilterMenu = ({ onFilterChange }: FilterMenuProps) => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
+        id={menuId ? `${menuId}-content` : undefined}
         sideOffset={8}
         align="end"
         className="w-80 p-0 rounded-2xl shadow-elevation-3 border-0 bg-neutral-white overflow-hidden"

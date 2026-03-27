@@ -17,6 +17,10 @@ interface EventTimePickerProps {
   disabled?: boolean;
 }
 
+type InputWithPicker = HTMLInputElement & {
+  showPicker?: () => void;
+};
+
 const EventTimePicker = ({
   startTime,
   endTime,
@@ -64,8 +68,9 @@ const EventTimePicker = ({
 
   const triggerPicker = (ref: React.RefObject<HTMLInputElement | null>) => {
     if (!ref.current) return;
-    if (typeof (ref.current as any).showPicker === "function") {
-      (ref.current as any).showPicker();
+    const pickerInput = ref.current as InputWithPicker;
+    if (typeof pickerInput.showPicker === "function") {
+      pickerInput.showPicker();
     } else {
       ref.current.click();
     }

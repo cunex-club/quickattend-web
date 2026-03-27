@@ -47,6 +47,7 @@ const EventSearchTemplate = () => {
             {filteredEvents.map((event) => (
               <EventCard
                 key={event.id}
+                eventId={String(event.id)}
                 title={event.title}
                 description={event.description}
                 date={event.date}

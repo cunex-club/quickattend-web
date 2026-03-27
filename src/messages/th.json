@@ -100,6 +100,71 @@
     }
   },
 
+  "Scan": {
+    "page": {
+      "emptyEventName": "ไม่มีกิจกรรม",
+      "loading": "กำลังโหลด...",
+      "scanning": "กำลังสแกน..."
+    },
+    "cameraPanel": {
+      "goToEvents": "ไปหน้ากิจกรรม",
+      "copyEventLink": "คัดลอกลิงก์กิจกรรม",
+      "turnOnFlash": "เปิดแฟลช",
+      "turnOffFlash": "ปิดแฟลช"
+    },
+    "infoPanel": {
+      "selectEvent": "เลือกกิจกรรม",
+      "barcodeAlt": "สแกนบาร์โค้ด",
+      "description": "สแกนนิสิต CU NEX เพื่อลงทะเบียนเข้าร่วมกิจกรรม",
+      "adminLabel": "ผู้ดูแลกิจกรรม",
+      "timeSuffix": "น."
+    },
+    "participantsPanel": {
+      "totalAttendees": "จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด",
+      "people": "คน",
+      "recentRegistrants": "ผู้ลงทะเบียนล่าสุด",
+      "time": "เวลา"
+    },
+    "resultPanel": {
+      "successTitle": "ลงทะเบียนสำเร็จ",
+      "duplicateTitle": "ลงทะเบียนไปแล้ว",
+      "failedTitle": "ลงทะเบียนไม่สำเร็จ",
+      "people": "คน",
+      "registrationTime": "เวลาที่ลงทะเบียน :",
+      "notes": "หมายเหตุ",
+      "notesPlaceholder": "กรอกหมายเหตุ (ถ้ามี)",
+      "addNote": "เพิ่มหมายเหตุ",
+      "defaultError": "ไม่สามารถลงทะเบียนได้ในขณะนี้",
+      "permissionError": "ไม่อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม",
+      "unknownParticipant": "ไม่พบข้อมูลผู้เข้าร่วม"
+    },
+    "resultModal": {
+      "title": "ผลการสแกน",
+      "resultDetails": "รายละเอียดผู้ลงทะเบียนเข้างาน",
+      "name": "ชื่อ",
+      "refId": "รหัสประจำตัว",
+      "organization": "คณะ / หน่วยงาน",
+      "registeredAt": "ลงทะเบียนสำเร็จ :",
+      "notes": "หมายเหตุ",
+      "notesPlaceholder": "กรอกหมายเหตุ (ถ้ามี)",
+      "done": "เสร็จสิ้น",
+      "defaultError": "ไม่สามารถลงทะเบียนได้ในขณะนี้",
+      "permissionError": "ไม่อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม"
+    },
+    "noActiveEventsModal": {
+      "title": "แจ้งเตือน",
+      "message": "ท่านไม่มีกิจกรรมที่กำลังจัดอยู่ในเวลานี้",
+      "cancel": "ยกเลิก",
+      "confirm": "ตกลง"
+    },
+    "errors": {
+      "failedToFetchEvents": "ไม่สามารถดึงรายการกิจกรรมสำหรับหน้าสแกนได้",
+      "failedToFetchEventDetail": "ไม่สามารถดึงรายละเอียดกิจกรรมที่เลือกได้",
+      "missingParticipantData": "การสแกนล้มเหลว: ไม่มีข้อมูลผู้เข้าร่วม",
+      "unexpectedScanError": "การสแกนล้มเหลว: เกิดข้อผิดพลาดที่ไม่คาดคิด",
+      "failedToSubmitScan": "ไม่สามารถส่งข้อมูลการสแกนผู้เข้าร่วมได้"
+    }
+  },
   "CreateEvent": {
     "createEvent": "สร้างกิจกรรม",
     "showExample": "ดูตัวอย่าง",
