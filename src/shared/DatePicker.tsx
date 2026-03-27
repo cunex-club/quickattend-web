@@ -11,6 +11,10 @@ interface DatePickerProps {
   className?: string;
 }
 
+type InputWithPicker = HTMLInputElement & {
+  showPicker?: () => void;
+};
+
 const THAI_MONTHS = [
   "มกราคม",
   "กุมภาพันธ์",
@@ -64,8 +68,9 @@ const DatePicker = ({
     const input = inputRef.current;
     if (!input) return;
 
-    if (typeof (input as any).showPicker === "function") {
-      (input as any).showPicker();
+    const pickerInput = input as InputWithPicker;
+    if (typeof pickerInput.showPicker === "function") {
+      pickerInput.showPicker();
     } else {
       input.click();
     }

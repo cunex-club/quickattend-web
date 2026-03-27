@@ -84,4 +84,6 @@ const TextField: StyleableFC<TextFieldProps> = React.forwardRef<
   },
 );
 
+TextField.displayName = "TextField";
+
 export default TextField;

@@ -16,13 +16,15 @@ export type SortOption = {
 interface SortMenuProps {
   options: SortOption[];
   onSelect: (value: string) => void;
+  menuId?: string;
 }
 
-const SortMenu = ({ options, onSelect }: SortMenuProps) => {
+const SortMenu = ({ options, onSelect, menuId }: SortMenuProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
+          id={menuId ? `${menuId}-trigger` : undefined}
           type="button"
           aria-label="Sort"
           className="p-1 text-primary cursor-pointer rounded focus:outline-none focus:ring-2 focus:ring-primary/50 [&>div]:!p-0"
@@ -33,7 +35,11 @@ const SortMenu = ({ options, onSelect }: SortMenuProps) => {
           />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="py-2">
+      <DropdownMenuContent
+        id={menuId ? `${menuId}-content` : undefined}
+        align="end"
+        className="py-2"
+      >
         {options.map((option) => (
           <DropdownMenuItem
             key={option.value}

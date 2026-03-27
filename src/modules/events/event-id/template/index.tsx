@@ -13,6 +13,7 @@ import { MOCK_SHARE_MODAL_DATA } from "@modules/events/event-id/constants/mock-u
 import { fetchEventById } from "@services/events";
 import EventDetailSkeleton from "@modules/events/event-id/components/event-detail-skeleton";
 import type { GetOneEventRes, EventInfo } from "@customTypes/events";
+import { useRouter } from "@i18n/navigation";
 
 interface EventIdPageTemplateProps {
   eventId: string;
@@ -20,6 +21,7 @@ interface EventIdPageTemplateProps {
 
 const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   const t = useTranslations("EventDetail");
+  const router = useRouter();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false);
   const [isMobileManageModalOpen, setIsMobileManageModalOpen] = useState(false);
@@ -129,7 +131,9 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           </div>
           <div className="flex flex-col gap-y-2">
             <div className="headline-small-emphasized">{t("eventDetails")}</div>
-            <div className="body-large-primary">{eventData.description ?? ""}</div>
+            <div className="body-large-primary">
+              {eventData.description ?? ""}
+            </div>
           </div>
           <div>
             <div className="headline-small-emphasized">{t("agenda")}</div>
@@ -148,12 +152,12 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
         </div>
         <div className="lg:flex-1 flex flex-col sm:flex-row lg:flex-col justify-between gap-6 lg:gap-10">
           <div className="flex-1 flex flex-col justify-center items-start lg:items-center bg-primary h-full px-8 py-6 lg:p-10 text-white rounded-3xl shadow-xs">
-            <div className="title-medium-emphasized lg:headline-small-emphasized">
+            <div className="headline-small-emphasized lg:headline-small-emphasized whitespace-nowrap">
               {t("registeredCount")}
             </div>
             <div className="flex items-baseline gap-2">
               <div
-                className="text-center headline-large-emphasized lg:text-[72px] lg:leading-[140%] lg:tracking-[-0.792px] lg:font-bold"
+                className="text-center display-small-emphasized lg:text-[72px] lg:leading-[140%] lg:tracking-[-0.792px] lg:font-bold"
                 style={{
                   fontFamily:
                     "CHULALONGKORNBold, var(--font-chula-bold), sans-serif",
@@ -165,7 +169,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
                 {t("people")}
               </div>
             </div>
-            <div className="flex space-x-2.5 label-medium-primary lg:title-small-primary">
+            <div className="flex space-x-2.5 title-medium-primary lg:title-small-primary whitespace-nowrap">
               <div>
                 {t("student")} : 1090 {t("people")}
               </div>
@@ -175,7 +179,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
               </div>
             </div>
           </div>
-          <div className="flex-1 lg:flex-none flex flex-col justify-center items-center gap-2.5 bg-neutral-100 p-5 rounded-3xl shadow-xs text-center">
+          <div className="flex-1 lg:flex-none flex flex-col justify-center items-start gap-2.5 bg-neutral-100 px-8 py-6 rounded-3xl shadow-xs text-center">
             <div className="headline-small-emphasized">{t("organizedBy")}</div>
             <div className="body-large-primary">{eventData.organizer}</div>
           </div>
@@ -187,6 +191,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           bordered="round"
           expanded={true}
           className="flex-1"
+          onClick={() => router.push("/scan")}
         >
           <div className="flex justify-center items-center gap-2 text-neutral-white">
             <IonIcon name="Scan" className="w-6 h-6 md:w-9 md:h-9" />
