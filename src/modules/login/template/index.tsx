@@ -9,7 +9,7 @@ const LoginTemplate = () => {
 
   return (
     <>
-      <div className="lg:hidden">
+      <div className="md:hidden">
         <LoginMobilePage authUrl={authUrl} />
       </div>
       <LoginDesktopPage authUrl={authUrl} />

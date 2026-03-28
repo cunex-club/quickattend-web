@@ -16,53 +16,59 @@ const LoginDesktopPage = ({ authUrl }: LoginDesktopPageProps) => {
   const locale = useLocale();
 
   return (
-    <div className="hidden min-h-screen w-full overflow-hidden bg-neutral-200 lg:flex">
-      <div className="flex flex-[1.2] items-end justify-center px-10 py-10">
+    <div className="hidden min-h-screen w-full overflow-hidden bg-neutral-200 md:flex">
+      <div className="flex flex-[1.2] items-end justify-center">
         <Image
           src={LoginLogo}
           alt="QuickAttend illustration"
-          className="h-[78vh] w-full max-w-[720px] object-contain object-bottom"
+          className="h-auto w-full max-w-[468px] object-contain object-bottom"
           priority
         />
       </div>
 
       <div className="flex flex-[0.8] items-center justify-start px-8 py-10">
-        <div className="w-full max-w-[460px] rounded-[2rem] bg-white px-8 py-8 shadow-[0_24px_80px_rgba(0,0,0,0.12)]">
+        <div className="w-full max-w-[460px] rounded-[2rem] bg-white p-6 pr-12 shadow-[0_24px_80px_rgba(0,0,0,0.12)]">
           <div className="space-y-2">
             <Image src={CunexLogo} alt="CU NEX logo" className="h-8 w-auto" />
             <div className="display-large-primary">QuickAttend</div>
           </div>
 
           <div className="mt-8 space-y-3 text-neutral-700">
-            <div className="flex items-start gap-3">
-              <IonIcon
-                name="PeopleOutline"
-                className="mt-0.5 text-primary"
-                size="18px"
-                noPadding
-              />
+            <div className="flex items-center gap-2">
+              <div className="py-0.5">
+                <IonIcon
+                  name="PeopleOutline"
+                  className="text-primary"
+                  size="20px"
+                  noPadding
+                />
+              </div>
               <div className="body-medium-primary">
                 สร้างกิจกรรมสำหรับแอพ CU NEX
               </div>
             </div>
-            <div className="flex items-start gap-3">
-              <IonIcon
-                name="BarcodeOutline"
-                className="mt-0.5 text-primary"
-                size="18px"
-                noPadding
-              />
+            <div className="flex items-center gap-2">
+              <div className="py-0.5">
+                <IonIcon
+                  name="BarcodeOutline"
+                  className="text-primary"
+                  size="20px"
+                  noPadding
+                />
+              </div>
               <div className="body-medium-primary">
                 สแกนเข้าร่วมกิจกรรมด้วย Digital ID
               </div>
             </div>
-            <div className="flex items-start gap-3">
-              <IonIcon
-                name="LinkOutline"
-                className="mt-0.5 text-primary"
-                size="18px"
-                noPadding
-              />
+            <div className="flex items-center gap-2">
+              <div className="pt-0.5">
+                <IonIcon
+                  name="LinkOutline"
+                  className="text-primary"
+                  size="20px"
+                  noPadding
+                />
+              </div>
               <div className="body-medium-primary">
                 แชร์ลิงก์ให้คนอื่นมาช่วยได้ง่ายๆ
               </div>
@@ -74,32 +80,37 @@ const LoginDesktopPage = ({ authUrl }: LoginDesktopPageProps) => {
               mode="filled"
               bordered="round"
               expanded={true}
-              className="min-h-12 gap-2 px-5"
+              className="gap-2 pl-2 pr-3 py-2 flex items-center"
               onClick={() => {
                 window.location.href = authUrl;
               }}
             >
               <IonIcon
                 name="LogInOutline"
-                size="18px"
+                size="20px"
                 className="text-neutral-white"
                 noPadding
               />
-              <div className="title-medium-primary whitespace-nowrap text-neutral-white">
+              <div className="title-large-emphasis whitespace-nowrap text-neutral-white">
                 ดำเนินการต่อด้วย CU NEX
               </div>
             </Button>
           </div>
 
-          <div className="mt-5 flex items-center gap-2 text-sm">
-            <span className="h-2 w-2 rounded-full bg-primary" />
+          <div className="mt-6 flex items-center gap-2">
+            <IonIcon
+              name="GlobeOutline"
+              size="20px"
+              className="text-primary"
+              noPadding
+            />
             <Link
               href="/login"
               locale="th"
               className={
                 locale === "th"
-                  ? "font-medium text-neutral-black"
-                  : "text-primary transition hover:text-neutral-black"
+                  ? "label-large-emphasized text-neutral-black"
+                  : "label-large-primary text-primary transition hover:text-neutral-black"
               }
             >
               ภาษาไทย
@@ -110,8 +121,8 @@ const LoginDesktopPage = ({ authUrl }: LoginDesktopPageProps) => {
               locale="en"
               className={
                 locale === "en"
-                  ? "font-medium text-neutral-black"
-                  : "text-primary transition hover:text-neutral-black"
+                  ? "label-large-emphasized text-neutral-black"
+                  : "label-large-primary text-primary transition hover:text-neutral-black"
               }
             >
               English
