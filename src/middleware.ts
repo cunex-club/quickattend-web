@@ -67,16 +67,21 @@ export default function middleware(request: NextRequest) {
   const pathname = normalizePathname(request.nextUrl.pathname);
   const localizedPath = stripLocale(pathname);
   const locale = getLocale(pathname);
+  const hasToken = hasUsableToken(request);
 
   if (localizedPath === "/") {
     return redirectToEvents(request, locale);
   }
 
   if (localizedPath === "/login") {
+    if (hasToken) {
+      return redirectToEvents(request, locale);
+    }
+
     return intlMiddleware(request);
   }
 
-  if (!hasUsableToken(request)) {
+  if (!hasToken) {
     return redirectToLogin(request, locale);
   }
 
