@@ -55,12 +55,24 @@ function redirectToLogin(request: NextRequest, locale: string) {
   return NextResponse.redirect(url);
 }
 
+function redirectToEvents(request: NextRequest, locale: string) {
+  const url = request.nextUrl.clone();
+  url.pathname = buildLocalizedPath(locale, "/events");
+  url.search = "";
+
+  return NextResponse.redirect(url);
+}
+
 export default function middleware(request: NextRequest) {
   const pathname = normalizePathname(request.nextUrl.pathname);
   const localizedPath = stripLocale(pathname);
   const locale = getLocale(pathname);
 
-  if (localizedPath === "/" || localizedPath === "/login") {
+  if (localizedPath === "/") {
+    return redirectToEvents(request, locale);
+  }
+
+  if (localizedPath === "/login") {
     return intlMiddleware(request);
   }
 
