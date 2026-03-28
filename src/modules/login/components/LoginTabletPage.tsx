@@ -33,7 +33,7 @@ const LoginTabletPage = ({ authUrl }: LoginTabletPageProps) => {
           <div className="display-large-primary">QuickAttend</div>
         </div>
 
-        <div className="mt-6 space-y-3 text-neutral-black">
+        <div className="mt-8 space-y-2 text-neutral-black">
           <div className="flex items-center gap-2">
             <div className="py-0.5">
               <IonIcon
@@ -75,7 +75,7 @@ const LoginTabletPage = ({ authUrl }: LoginTabletPageProps) => {
           </div>
         </div>
 
-        <div className="mt-8">
+        <div className="mt-10">
           <Button
             mode="filled"
             bordered="round"
@@ -97,7 +97,7 @@ const LoginTabletPage = ({ authUrl }: LoginTabletPageProps) => {
           </Button>
         </div>
 
-        <div className="mt-5 flex items-center gap-2">
+        <div className="mt-4 flex items-center gap-2">
           <IonIcon
             name="GlobeOutline"
             size="20px"
