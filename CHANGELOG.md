@@ -1,3 +1,27 @@
+# [1.0.0-dev.2](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2026-03-28)
+
+
+### Bug Fixes
+
+* **login:** change config using ENV instead ([a40e828](https://github.com/cunex-club/quickattend-web/commit/a40e8281c382ac3b22cbf4dfa693bac583881178))
+* **login:** fix coding style ([9505548](https://github.com/cunex-club/quickattend-web/commit/95055489f43f20ee12001b40f229e27721449dca))
+* **login:** fix login ui ([aee900f](https://github.com/cunex-club/quickattend-web/commit/aee900f0cce19adfaa28792ce2f149d490180a43))
+* **login:** fix padding ([5db93e5](https://github.com/cunex-club/quickattend-web/commit/5db93e50b5a44e0ba70a99b8f223125baef72696))
+* **login:** fix wording and auth api ([3cac01d](https://github.com/cunex-club/quickattend-web/commit/3cac01dbb1bc15798c86a2b8fa5e9394e88ef3b3))
+
+
+### Features
+
+* **login:** add cunex icon ([a345508](https://github.com/cunex-club/quickattend-web/commit/a345508e071e7f9cd44bffb15d9ca6c24cb3415f))
+* **login:** add login mobile ([586c9c1](https://github.com/cunex-club/quickattend-web/commit/586c9c19c87b76e05ee9d34f37ab251cfe73b1a9))
+* **login:** add login on ipad ([d4af25c](https://github.com/cunex-club/quickattend-web/commit/d4af25cfbcaf04d9d2a6699d0728ab2ddde062b1))
+* **login:** add login process ([30a9f92](https://github.com/cunex-club/quickattend-web/commit/30a9f92f460af44490a933cd31b4c38be246bec3))
+* **login:** add logo to assets ([79271de](https://github.com/cunex-club/quickattend-web/commit/79271de34350dc4e46ab1d85cf8b363e3d684467))
+* **login:** add page ([d2646bc](https://github.com/cunex-club/quickattend-web/commit/d2646bcc3befcff5aa1926f2daa37474e2c4486e))
+* **login:** add template ([abf8e1f](https://github.com/cunex-club/quickattend-web/commit/abf8e1f559f614e745dd0fbfb669111e5241b5b7))
+* **login:** add url to go for login ([0b9752f](https://github.com/cunex-club/quickattend-web/commit/0b9752ff49c133d26f3f7144074aaf5510e57a42))
+* **login:** create mock up ui ([68cca22](https://github.com/cunex-club/quickattend-web/commit/68cca229a73ea3c750503d8e4c9dd646a7382ed1))
+
 # 1.0.0-dev.1 (2026-03-27)
 
 
