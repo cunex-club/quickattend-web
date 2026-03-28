@@ -16,7 +16,7 @@ const LoginDesktopPage = ({ authUrl }: LoginDesktopPageProps) => {
   const locale = useLocale();
 
   return (
-    <div className="hidden min-h-screen w-full overflow-hidden bg-neutral-200 md:flex">
+    <div className="hidden min-h-screen w-full overflow-hidden bg-neutral-200 lg:flex">
       <div className="flex flex-[1.2] items-end justify-center">
         <Image
           src={LoginLogo}
@@ -91,7 +91,7 @@ const LoginDesktopPage = ({ authUrl }: LoginDesktopPageProps) => {
                 className="text-neutral-white"
                 noPadding
               />
-              <div className="title-large-emphasis whitespace-nowrap text-neutral-white">
+              <div className="title-large-emphasized whitespace-nowrap text-neutral-white">
                 ดำเนินการต่อด้วย CU NEX
               </div>
             </Button>

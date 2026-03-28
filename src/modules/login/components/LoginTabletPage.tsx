@@ -8,32 +8,32 @@ import CunexLogo from "@assets/images/logo/cu-nex-mini.png";
 import IonIcon from "@shared/IonIcon";
 import Button from "@shared/Button";
 
-type LoginMobilePageProps = {
+type LoginTabletPageProps = {
   authUrl: string;
 };
 
-const LoginMobilePage = ({ authUrl }: LoginMobilePageProps) => {
+const LoginTabletPage = ({ authUrl }: LoginTabletPageProps) => {
   const locale = useLocale();
 
   return (
-    <div className="relative flex h-dvh w-full flex-col overflow-hidden bg-neutral-200">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[56dvh]">
-        <div className="absolute inset-x-6 top-8 h-56 rounded-full bg-primary/10 blur-3xl" />
+    <div className="flex min-h-dvh w-full flex-col overflow-hidden bg-neutral-200 md:flex lg:hidden">
+      <div className="relative flex h-[54dvh] items-end justify-center px-6 pt-6">
+        <div className="pointer-events-none absolute inset-x-10 top-8 h-64 rounded-full bg-primary/10 blur-3xl" />
         <Image
           src={LoginLogo}
           alt="QuickAttend illustration"
-          className="absolute inset-x-0 bottom-0 mx-auto h-full w-full object-contain object-bottom"
+          className="relative h-full w-full max-w-[560px] object-contain object-bottom"
           priority
         />
       </div>
 
-      <div className="relative z-10 mt-auto flex flex-col rounded-t-[2rem] bg-white px-6 pb-7 pt-6 shadow-[0_-18px_45px_rgba(0,0,0,0.06)]">
+      <div className="relative z-10 mt-auto flex flex-col rounded-t-[2.25rem] bg-white px-10 pb-10 pt-8 shadow-[0_-18px_45px_rgba(0,0,0,0.06)]">
         <div>
-          <Image src={CunexLogo} alt="CU NEX logo" className="h-6.5 w-auto" />
-          <div className="display-medium-primary">QuickAttend</div>
+          <Image src={CunexLogo} alt="CU NEX logo" className="h-7 w-auto" />
+          <div className="display-large-primary">QuickAttend</div>
         </div>
 
-        <div className="mt-6 space-y-2 text-neutral-black">
+        <div className="mt-6 space-y-3 text-neutral-black">
           <div className="flex items-center gap-2">
             <div className="py-0.5">
               <IonIcon
@@ -43,7 +43,7 @@ const LoginMobilePage = ({ authUrl }: LoginMobilePageProps) => {
                 noPadding
               />
             </div>
-            <div className="body-large-primary">
+            <div className="title-large-primary">
               สร้างกิจกรรมสำหรับแอพ CU NEX
             </div>
           </div>
@@ -56,7 +56,7 @@ const LoginMobilePage = ({ authUrl }: LoginMobilePageProps) => {
                 noPadding
               />
             </div>
-            <div className="body-large-primary">
+            <div className="title-large-primary">
               สแกนเข้าร่วมกิจกรรมด้วย Digital ID
             </div>
           </div>
@@ -69,13 +69,13 @@ const LoginMobilePage = ({ authUrl }: LoginMobilePageProps) => {
                 noPadding
               />
             </div>
-            <div className="body-large-primary">
+            <div className="title-large-primary">
               แชร์ลิงก์ให้คนอื่นมาช่วยได้ง่ายๆ
             </div>
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-8">
           <Button
             mode="filled"
             bordered="round"
@@ -91,13 +91,13 @@ const LoginMobilePage = ({ authUrl }: LoginMobilePageProps) => {
               className="text-neutral-white"
               noPadding
             />
-            <div className="label-large-emphasized whitespace-nowrap text-neutral-white">
+            <div className="title-medium-emphasized whitespace-nowrap text-neutral-white">
               ดำเนินการต่อด้วย CU NEX
             </div>
           </Button>
         </div>
 
-        <div className="mt-4 flex items-center gap-2">
+        <div className="mt-5 flex items-center gap-2">
           <IonIcon
             name="GlobeOutline"
             size="20px"
@@ -133,4 +133,4 @@ const LoginMobilePage = ({ authUrl }: LoginMobilePageProps) => {
   );
 };
 
-export default LoginMobilePage;
+export default LoginTabletPage;
