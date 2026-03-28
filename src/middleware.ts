@@ -167,16 +167,13 @@ export default async function middleware(request: NextRequest) {
   const pathname = normalizePathname(request.nextUrl.pathname);
   const localizedPath = stripLocale(pathname);
   const locale = detectLocale(request, pathname);
+  const isAuthenticated = hasUsableToken(request);
 
   if (localizedPath === "/login") {
-    if (hasUsableToken(request)) {
-      return redirectToEvents(request, locale);
-    }
-
     return intlMiddleware(request);
   }
 
-  if (!hasUsableToken(request)) {
+  if (!isAuthenticated) {
     return redirectToLogin(request, locale);
   }
 
