@@ -7,7 +7,7 @@ type SidebarProps = {
 };
 
 const Sidebar = async ({ currentUser }: SidebarProps) => {
-  const user = currentUser ?? (await getCurrentUser());
+  const user = currentUser === undefined ? await getCurrentUser() : currentUser;
 
   return <SidebarClient currentUser={user} />;
 };

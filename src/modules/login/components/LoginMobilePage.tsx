@@ -35,7 +35,11 @@ const LoginMobilePage = ({ authUrl }: LoginMobilePageProps) => {
 
       <div className="relative z-10 mt-auto flex flex-col rounded-t-[2rem] bg-white px-6 pb-7 pt-6 shadow-[0_-18px_45px_rgba(0,0,0,0.06)]">
         <div>
-          <Image src={CunexLogo} alt="CU NEX logo" className="h-6.5 w-auto" />
+          <Image
+            src={CunexLogo}
+            alt="CU NEX logo"
+            className="h-[26px] w-auto"
+          />
           <div className="display-medium-primary">QuickAttend</div>
         </div>
 
