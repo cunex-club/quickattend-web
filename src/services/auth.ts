@@ -3,13 +3,7 @@ import "server-only";
 import { cookies } from "next/headers";
 
 import type { CurrentUser } from "@customTypes/auth";
-
-const AUTH_USER_URL = process.env.BACKEND_PROXY_URL
-  ? `${process.env.BACKEND_PROXY_URL}/api/auth/user`
-  : process.env.NEXT_PUBLIC_API_HOST
-    ? `${process.env.NEXT_PUBLIC_API_HOST}/auth/user`
-    : null;
-const JWT_COOKIE_NAME = "jwt";
+import { AUTH_USER_URL, JWT_COOKIE_NAME } from "@constants/auth";
 
 export async function getCurrentUser(): Promise<CurrentUser | null> {
   try {
