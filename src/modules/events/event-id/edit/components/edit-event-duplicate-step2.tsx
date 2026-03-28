@@ -255,9 +255,9 @@ const EditEventDuplicateStep2 = ({
 
           {/* Description */}
           <Input
-            value={agendaName.trim()}
+            value={agendaName}
             placeholder={tEditEvent("descriptionPlaceholder")}
-            onChange={(e) => setAgendaName(e.target.value.trim())}
+            onChange={(e) => setAgendaName(e.target.value)}
             className="w-full h-10 body-large-primary"
           />
 
@@ -317,8 +317,8 @@ const EditEventDuplicateStep2 = ({
 
             {/* Name */}
             <Input
-              value={item.activity_name.trim()}
-              onChange={(e) => updateAgendaName(index, e.target.value.trim())}
+              value={item.activity_name}
+              onChange={(e) => updateAgendaName(index, e.target.value)}
               className="body-large-primary"
               placeholder={tEditEvent("descriptionPlaceholder")}
             />
@@ -332,13 +332,13 @@ const EditEventDuplicateStep2 = ({
           {tEditEvent("organizer")} <span className="text-primary">*</span>
         </p>
         <Input
-          value={duplicatedEventForm.organizer.trim()}
+          value={duplicatedEventForm.organizer}
           placeholder={tEditEvent("organizerPlaceholder")}
           className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
             setDuplicatedEventForm({
               ...duplicatedEventForm,
-              organizer: e.target.value.trim(),
+              organizer: e.target.value,
             })
           }
         />
@@ -351,13 +351,13 @@ const EditEventDuplicateStep2 = ({
         </p>
         <Input
           type="url"
-          value={duplicatedEventForm.evaluation_form.trim()}
+          value={duplicatedEventForm.evaluation_form}
           placeholder={tEditEvent("evaluationFormLinkPlaceholder")}
           className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) => {
             setDuplicatedEventForm({
               ...duplicatedEventForm,
-              evaluation_form: e.target.value.trim(),
+              evaluation_form: e.target.value,
             });
           }}
         />

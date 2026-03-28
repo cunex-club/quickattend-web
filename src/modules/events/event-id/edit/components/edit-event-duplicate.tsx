@@ -36,11 +36,11 @@ const EditEventDuplicate = ({
   useEffect(() => {
     if (
       // Step 1
-      duplicatedEventForm.name &&
+      duplicatedEventForm.name.trim() &&
       duplicatedEventForm.date &&
       duplicatedEventForm.startTime &&
       duplicatedEventForm.endTime &&
-      duplicatedEventForm.location
+      duplicatedEventForm.location.trim()
     ) {
       setValidStep1(true);
     } else {
@@ -49,9 +49,9 @@ const EditEventDuplicate = ({
 
     if (
       // Step 2
-      duplicatedEventForm.organizer &&
-      (!duplicatedEventForm.evaluation_form ||
-        isValidUrl(duplicatedEventForm.evaluation_form))
+      duplicatedEventForm.organizer.trim() &&
+      (!duplicatedEventForm.evaluation_form.trim() ||
+        isValidUrl(duplicatedEventForm.evaluation_form.trim()))
     ) {
       setValidStep2(true);
     } else {

@@ -5,7 +5,7 @@ import {
   CardPreviewType,
   EventFormInterface,
 } from "@modules/events/create/template";
-import GoogleMapPreview from "../../../create/components/map-preview";
+import MapPreviewComponent from "@modules/events/create/components/map-preview";
 
 interface EditEventPreviewProps {
   eventForm: EventFormInterface;
@@ -118,20 +118,20 @@ const EditEventPreview = ({ eventForm, cardMode }: EditEventPreviewProps) => {
               {eventForm.organizer || tEditEvent("organizer")}
             </p>
           </div>
+
+          {/* Map */}
+          <div className="flex flex-col gap-2">
+            <h2 className="title-medium-emphasized text-neutral-600">
+              {tEditEvent("mapPreview")}
+            </h2>
+            <MapPreviewComponent
+              lat={eventForm.lat}
+              lng={eventForm.lng}
+              isPreview={true}
+            />
+          </div>
         </div>
       )}
-
-      {/* Map */}
-      <div className="flex flex-col gap-2 mb-4 ml-2">
-        <h2 className="title-medium-emphasized text-neutral-600">
-          {tEditEvent("mapPreview")}
-        </h2>
-        <GoogleMapPreview
-          lat={eventForm.lat}
-          lng={eventForm.lng}
-          isPreview={true}
-        />
-      </div>
     </div>
   );
 };

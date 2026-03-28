@@ -8,13 +8,13 @@ import {
 import { Textarea } from "@assets/components/ui/textarea";
 import { cn } from "@assets/lib/utils";
 import EditableTime from "@modules/events/create/components/editable-time";
+import MapSelectionComponent from "@modules/events/create/components/map-selection";
 import { EventFormInterface } from "@modules/events/create/template";
 import Button from "@shared/Button";
 import IonIcon from "@shared/IonIcon";
 import { format, startOfDay } from "date-fns";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import GoogleMapSelection from "@modules/events/create/components/map-selection";
 
 interface EditEventSection1Props {
   eventForm: EventFormInterface;
@@ -251,12 +251,10 @@ const EditEventSection1 = ({
           {tEditEvent("name")} <span className="text-primary">*</span>
         </p>
         <Input
-          value={eventForm.name.trim()}
+          value={eventForm.name}
           placeholder={tEditEvent("namePlaceholder")}
           className="body-large-primary focus:border-primary focus-visible:ring-0"
-          onChange={(e) =>
-            setEventForm({ ...eventForm, name: e.target.value.trim() })
-          }
+          onChange={(e) => setEventForm({ ...eventForm, name: e.target.value })}
         />
       </div>
 
@@ -264,11 +262,11 @@ const EditEventSection1 = ({
       <div className="flex flex-col gap-2">
         <p className="title-medium-emphasized">{tEditEvent("description")}</p>
         <Textarea
-          value={eventForm.description.trim()}
+          value={eventForm.description}
           placeholder={tEditEvent("descriptionPlaceholder")}
           className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
-            setEventForm({ ...eventForm, description: e.target.value.trim() })
+            setEventForm({ ...eventForm, description: e.target.value })
           }
         />
       </div>
@@ -390,7 +388,7 @@ const EditEventSection1 = ({
         <p className="title-medium-emphasized">
           {tEditEvent("location")} <span className="text-primary">*</span>
         </p>
-        <GoogleMapSelection
+        <MapSelectionComponent
           eventForm={eventForm}
           setEventForm={setEventForm}
           isPreview={false}
@@ -497,10 +495,10 @@ const EditEventSection1 = ({
 
           {/* Description */}
           <Input
-            value={agendaName.trim()}
+            value={agendaName}
             placeholder={tEditEvent("descriptionPlaceholder")}
             disabled={!eventForm.startTime || !eventForm.endTime}
-            onChange={(e) => setAgendaName(e.target.value.trim())}
+            onChange={(e) => setAgendaName(e.target.value)}
             className="w-full h-10 body-large-primary disabled:cursor-not-allowed"
           />
 
@@ -563,8 +561,8 @@ const EditEventSection1 = ({
 
             {/* Name */}
             <Input
-              value={item.activity_name.trim()}
-              onChange={(e) => updateAgendaName(index, e.target.value.trim())}
+              value={item.activity_name}
+              onChange={(e) => updateAgendaName(index, e.target.value)}
               className="body-large-primary"
               placeholder={tEditEvent("descriptionPlaceholder")}
             />
@@ -578,11 +576,11 @@ const EditEventSection1 = ({
           {tEditEvent("organizer")} <span className="text-primary">*</span>
         </p>
         <Input
-          value={eventForm.organizer.trim()}
+          value={eventForm.organizer}
           placeholder={tEditEvent("organizerPlaceholder")}
           className="body-large-primary focus:border-primary focus-visible:ring-0"
           onChange={(e) =>
-            setEventForm({ ...eventForm, organizer: e.target.value.trim() })
+            setEventForm({ ...eventForm, organizer: e.target.value })
           }
         />
       </div>
