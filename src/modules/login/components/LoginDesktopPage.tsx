@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useLocale } from "next-intl";
 import { Link } from "@i18n/navigation";
+import { cn } from "@assets/lib/utils";
 import LoginLogo from "@assets/images/logo/login-logo.png";
 import CunexLogo from "@assets/images/logo/cu-nex-mini.png";
 import IonIcon from "@shared/IonIcon";
@@ -14,6 +15,11 @@ type LoginDesktopPageProps = {
 
 const LoginDesktopPage = ({ authUrl }: LoginDesktopPageProps) => {
   const locale = useLocale();
+  const languageLinkClass = (isActive: boolean) =>
+    cn(
+      "label-large-primary text-primary transition hover:text-neutral-black",
+      isActive && "label-large-emphasized text-neutral-black",
+    );
 
   return (
     <div className="hidden min-h-screen w-full overflow-hidden bg-neutral-200 lg:flex">
@@ -107,11 +113,7 @@ const LoginDesktopPage = ({ authUrl }: LoginDesktopPageProps) => {
             <Link
               href="/login"
               locale="th"
-              className={
-                locale === "th"
-                  ? "label-large-emphasized text-neutral-black"
-                  : "label-large-primary text-primary transition hover:text-neutral-black"
-              }
+              className={languageLinkClass(locale === "th")}
             >
               ภาษาไทย
             </Link>
@@ -119,11 +121,7 @@ const LoginDesktopPage = ({ authUrl }: LoginDesktopPageProps) => {
             <Link
               href="/login"
               locale="en"
-              className={
-                locale === "en"
-                  ? "label-large-emphasized text-neutral-black"
-                  : "label-large-primary text-primary transition hover:text-neutral-black"
-              }
+              className={languageLinkClass(locale === "en")}
             >
               English
             </Link>
