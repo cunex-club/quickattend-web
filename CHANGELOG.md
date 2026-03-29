@@ -1,3 +1,12 @@
+# [1.0.0-dev.3](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2026-03-29)
+
+
+### Features
+
+* **login:** force /events to be landing page instead of / ([77fcf78](https://github.com/cunex-club/quickattend-web/commit/77fcf78b04321b6ae3ae24e7c45aea4c316ec7ac))
+* **middleware:** add middleware that can check that if user has no toek will force to /login ([ea70931](https://github.com/cunex-club/quickattend-web/commit/ea709318a8f14eaf15122ac8fee0ebb9f9e3a0ae))
+* **middleware:** improve login redirection logic by checking token presence ([7b6be03](https://github.com/cunex-club/quickattend-web/commit/7b6be03324f3327c9630c71f24ab610089143503))
+
 # [1.0.0-dev.2](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2026-03-28)
 
 
