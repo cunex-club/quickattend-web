@@ -52,9 +52,6 @@ export type SideTabType = (typeof SideTabType)[keyof typeof SideTabType];
 
 const EventEditTemplate = () => {
   const { id: eventId } = useParams();
-  console.log("Event ID: ", eventId);
-
-  // TODO: Check for validation (id มีอยู่จริงหรือไม่, คนนี้มีสิทธิ์เข้าถึง event นี้หรือไม่)
 
   const { setShowSidebar } = useSidebar();
   const router = useRouter();
@@ -93,6 +90,7 @@ const EventEditTemplate = () => {
     useState<EventFormInterface>(EMPTY_EVENT_FORM);
   const [ownerRefId, setOwnerRefId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [unauthorized, setUnauthorized] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const section1Ref = useRef<HTMLDivElement>(null);
@@ -104,6 +102,12 @@ const EventEditTemplate = () => {
       setLoading(true);
       try {
         const res = await fetchEventById(String(eventId));
+        const canEdit = res.data.role === "OWNER" || res.data.role === "MANAGER";
+        if (!canEdit) {
+          setUnauthorized(true);
+          return;
+        }
+
         const { form, ownerRefId: fetchedOwnerRefId } = mapEventResToForm(
           res.data,
         );
@@ -118,6 +122,12 @@ const EventEditTemplate = () => {
 
     loadEvent();
   }, [eventId]);
+
+  useEffect(() => {
+    if (unauthorized) {
+      router.replace(`/events/${eventId}`);
+    }
+  }, [unauthorized, eventId, router]);
 
   const isValidUrl = (value: string) => {
     try {
@@ -204,7 +214,7 @@ const EventEditTemplate = () => {
     }
   };
 
-  if (loading) {
+  if (loading || unauthorized) {
     return <EventDetailSkeleton />;
   }
 

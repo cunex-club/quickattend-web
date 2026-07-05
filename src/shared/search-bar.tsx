@@ -34,13 +34,14 @@ const SearchBar = ({
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="flex-1 bg-transparent outline-none body-large placeholder:text-neutral-400 text-black title-large-primary"
+        className="min-w-0 flex-1 bg-transparent outline-none body-large placeholder:text-neutral-400 text-black title-large-primary"
       />
       <button
         type="button"
         onClick={handleSearch}
         aria-label="Search"
-        className="cursor-pointer"
+        className="shrink-0 cursor-pointer"
+        style={{ flexShrink: 0, minWidth: "40px", minHeight: "40px" }}
       >
         <IonIcon name="SearchOutline" size="24px" className="text-primary" />
       </button>

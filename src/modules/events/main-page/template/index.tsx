@@ -96,13 +96,21 @@ const EventPageTemplate = () => {
   const [loading, setLoading] = useState(true);
 
   const [myEventsFilter, setMyEventsFilter] = useState<FilterValues>(
-    () => loadStoredFilters()?.myEventsFilter ?? { accessRights: [], date: undefined },
+    () =>
+      loadStoredFilters()?.myEventsFilter ?? {
+        accessRights: [],
+        date: undefined,
+      },
   );
   const [myEventsSort, setMyEventsSort] = useState(
     () => loadStoredFilters()?.myEventsSort ?? "newest",
   );
   const [pastEventsFilter, setPastEventsFilter] = useState<FilterValues>(
-    () => loadStoredFilters()?.pastEventsFilter ?? { accessRights: [], date: undefined },
+    () =>
+      loadStoredFilters()?.pastEventsFilter ?? {
+        accessRights: [],
+        date: undefined,
+      },
   );
   const [pastEventsSort, setPastEventsSort] = useState(
     () => loadStoredFilters()?.pastEventsSort ?? "newest",
@@ -147,9 +155,6 @@ const EventPageTemplate = () => {
           fetchAttendedEvents(currentPage),
         ]);
 
-        console.log("Managed Events:", managedRes.data);
-        console.log("Attended Events:", attendedRes.data);
-
         setManagedEvents(managedRes.data);
         setAttendedEvents(attendedRes.data);
         if (attendedRes.meta?.pagination) {
@@ -192,9 +197,6 @@ const EventPageTemplate = () => {
           <div className="headline-small-emphasized lg:display-medium-emphasized">
             {t("myEvents")}
           </div>
-          <Link href="/search" className="lg:hidden text-primary p-1">
-            <IonIcon name="SearchOutline" className="w-6 h-6" />
-          </Link>
           <div className="hidden lg:flex lg:flex-wrap lg:items-center lg:gap-1 lg:gap-2.25">
             <FilterMenu
               menuId="my-events-filter"

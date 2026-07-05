@@ -95,7 +95,8 @@
       "scanParticipant": "สแกนผู้เข้าร่วม",
       "activityStatistics": "สถิติกิจกรรม",
       "eventDetails": "รายละเอียดกิจกรรม",
-      "downloadStatistics": "ดาวน์โหลดสถิติ"
+      "downloadStatistics": "ดาวน์โหลดสถิติ",
+      "ended": "สิ้นสุดกิจกรรมแล้ว"
     },
     "Search": {
       "back": "ย้อนกลับ",

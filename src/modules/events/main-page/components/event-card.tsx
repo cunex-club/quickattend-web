@@ -75,7 +75,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
       )}
       {...props}
     >
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center gap-2">
         <div className="headline-large-emphasized">{title}</div>
       </div>
       <div className="flex flex-col sm:flex-row sm:items-start gap-y-4 sm:gap-x-6 md:gap-x-12.5">
@@ -128,25 +128,32 @@ const EventCard: StyleableFC<EventCardProps> = ({
         </div>
       </div>
       {/* Desktop View */}
-      <div className="hidden lg:flex flex-row gap-4 sm:gap-6">
-        <Button
-          mode="filled"
-          bordered="round"
-          expanded
-          onClick={handleScanClick}
-        >
-          <div className="flex justify-center items-center gap-2">
-            <IonIcon
-              name="ScanOutline"
-              size="36px"
-              className="text-white"
-              noPadding
-            />
-            <div className="title-medium-emphasized text-white ">
-              {t("scanParticipant")}
+      <div
+        className={cn(
+          "hidden lg:flex flex-row gap-4 sm:gap-6",
+          isEnd && "justify-end",
+        )}
+      >
+        {!isEnd && (
+          <Button
+            mode="filled"
+            bordered="round"
+            expanded
+            onClick={handleScanClick}
+          >
+            <div className="flex justify-center items-center gap-2">
+              <IonIcon
+                name="ScanOutline"
+                size="36px"
+                className="text-white"
+                noPadding
+              />
+              <div className="title-medium-emphasized text-white ">
+                {t("scanParticipant")}
+              </div>
             </div>
-          </div>
-        </Button>
+          </Button>
+        )}
         <Button
           mode="outline"
           bordered="round"
@@ -168,26 +175,33 @@ const EventCard: StyleableFC<EventCardProps> = ({
       </div>
 
       {/* Mobile View */}
-      <div className="flex lg:hidden flex-row gap-4 sm:gap-6">
-        <Button
-          mode="filled"
-          bordered="round"
-          expanded
-          onClick={handleScanClick}
-          className="!px-4 !py-2"
-        >
-          <div className="flex justify-center items-center gap-2">
-            <IonIcon
-              name="ScanOutline"
-              size="20px"
-              className="text-white"
-              noPadding
-            />
-            <div className="title-large-emphasized text-white ">
-              {t("scanParticipant")}
+      <div
+        className={cn(
+          "flex lg:hidden flex-row gap-4 sm:gap-6",
+          isEnd && "justify-end",
+        )}
+      >
+        {!isEnd && (
+          <Button
+            mode="filled"
+            bordered="round"
+            expanded
+            onClick={handleScanClick}
+            className="!px-4 !py-2"
+          >
+            <div className="flex justify-center items-center gap-2">
+              <IonIcon
+                name="ScanOutline"
+                size="20px"
+                className="text-white"
+                noPadding
+              />
+              <div className="title-large-emphasized text-white ">
+                {t("scanParticipant")}
+              </div>
             </div>
-          </div>
-        </Button>
+          </Button>
+        )}
         <Button
           mode="outline"
           bordered="round"

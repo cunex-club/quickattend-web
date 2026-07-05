@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { cn } from "@assets/lib/utils";
 import IonIcon from "@shared/IonIcon";
 import Icon from "@shared/Icon";
 import Button from "@shared/Button";
@@ -26,7 +27,6 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
       setLoading(true);
       try {
         const res = await fetchEventById(eventId);
-        console.log("Event by ID:", res.data);
         setEventData(res.data);
       } catch (err) {
         console.error("Failed to fetch event:", err);
@@ -51,6 +51,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   }
 
   const canEdit = eventData.role === "OWNER" || eventData.role === "MANAGER";
+  const isEnd = new Date(eventData.end_time) < new Date();
 
   const roleLabel =
     eventData.role === "OWNER"
@@ -204,21 +205,28 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-row w-full gap-4 lg:gap-6">
-        <Button
-          mode="filled"
-          bordered="round"
-          expanded={true}
-          className="flex-1"
-          onClick={() => router.push("/scan")}
-        >
-          <div className="flex justify-center items-center gap-2 text-neutral-white">
-            <IonIcon name="Scan" className="w-6 h-6 md:w-9 md:h-9" />
-            <div className="label-large-primary md:title-large-primary whitespace-nowrap">
-              {t("scanParticipant")}
+      <div
+        className={cn(
+          "flex flex-row w-full gap-4 lg:gap-6",
+          isEnd && "justify-end",
+        )}
+      >
+        {!isEnd && (
+          <Button
+            mode="filled"
+            bordered="round"
+            expanded={true}
+            className="flex-1"
+            onClick={() => router.push("/scan")}
+          >
+            <div className="flex justify-center items-center gap-2 text-neutral-white">
+              <IonIcon name="Scan" className="w-6 h-6 md:w-9 md:h-9" />
+              <div className="label-large-primary md:title-large-primary whitespace-nowrap">
+                {t("scanParticipant")}
+              </div>
             </div>
-          </div>
-        </Button>
+          </Button>
+        )}
         <Button
           mode="outline"
           bordered="round"

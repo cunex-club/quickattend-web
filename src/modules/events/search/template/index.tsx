@@ -69,7 +69,7 @@ const EventSearchTemplate = () => {
 
   return (
     <div className="w-full min-h-screen">
-      <div className="px-12 pt-20 pb-6">
+      <div className="px-4 sm:px-8 md:px-12 pt-20 pb-6">
         <SearchBar
           placeholder="Search events..."
           onsearch={handleSearch}
@@ -91,7 +91,7 @@ const EventSearchTemplate = () => {
           </div>
         </div>
       ) : (
-        <div className="px-12 pb-12">
+        <div className="px-4 sm:px-8 md:px-12 pb-12">
           <div className="space-y-6">
             {loading
               ? [1, 2].map((key) => <EventCardSkeleton key={key} />)
