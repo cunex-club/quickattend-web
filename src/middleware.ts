@@ -47,19 +47,6 @@ function hasUsableToken(request: NextRequest) {
   return token.split(".").length === 3;
 }
 
-function devAutoLoginResponse(
-  request: NextRequest,
-  response: NextResponse,
-): NextResponse {
-  const devToken = process.env.NEXT_PUBLIC_LOG_IN_TOKEN;
-
-  if (process.env.NODE_ENV === "development" && devToken) {
-    response.cookies.set("jwt", devToken, { path: "/" });
-  }
-
-  return response;
-}
-
 function redirectToLogin(request: NextRequest, locale: string) {
   const url = request.nextUrl.clone();
   url.pathname = buildLocalizedPath(locale, "/login");
@@ -80,18 +67,15 @@ export default function middleware(request: NextRequest) {
   const pathname = normalizePathname(request.nextUrl.pathname);
   const localizedPath = stripLocale(pathname);
   const locale = getLocale(pathname);
-  const isDev =
-    process.env.NODE_ENV === "development" &&
-    !!process.env.NEXT_PUBLIC_LOG_IN_TOKEN;
-  const hasToken = hasUsableToken(request) || isDev;
+  const hasToken = hasUsableToken(request);
 
   if (localizedPath === "/") {
-    return devAutoLoginResponse(request, redirectToEvents(request, locale));
+    return redirectToEvents(request, locale);
   }
 
   if (localizedPath === "/login") {
     if (hasToken) {
-      return devAutoLoginResponse(request, redirectToEvents(request, locale));
+      return redirectToEvents(request, locale);
     }
 
     return intlMiddleware(request);
@@ -101,7 +85,7 @@ export default function middleware(request: NextRequest) {
     return redirectToLogin(request, locale);
   }
 
-  return devAutoLoginResponse(request, intlMiddleware(request));
+  return intlMiddleware(request);
 }
 
 export const config = {

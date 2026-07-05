@@ -103,7 +103,8 @@ const EventEditTemplate = () => {
       try {
         const res = await fetchEventById(String(eventId));
         const canEdit = res.data.role === "OWNER" || res.data.role === "MANAGER";
-        if (!canEdit) {
+        const hasEnded = new Date(res.data.end_time) < new Date();
+        if (!canEdit || hasEnded) {
           setUnauthorized(true);
           return;
         }
