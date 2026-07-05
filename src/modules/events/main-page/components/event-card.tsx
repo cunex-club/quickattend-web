@@ -2,21 +2,8 @@
 
 import { StyleableFC } from "@utils/misc";
 import { cn } from "@assets/lib/utils";
-import Icon from "@shared/Icon";
 import IonIcon from "@shared/IonIcon";
 import Button from "@shared/Button";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@assets/components/ui/accordion";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@assets/components/ui/dropdown-menu";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@i18n/navigation";
 import type { KeyboardEvent, MouseEvent } from "react";
@@ -82,39 +69,6 @@ const EventCard: StyleableFC<EventCardProps> = ({
     >
       <div className="flex justify-between items-center">
         <div className="headline-large-emphasized">{title}</div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              aria-label="Sort"
-              onClick={(event) => event.stopPropagation()}
-              className="m-2.5 text-primary cursor-pointer rounded focus:outline-none focus:ring-2 focus:ring-primary/50"
-            >
-              <Icon
-                name="more_vert"
-                size={20}
-                className="text-primary lg:hidden"
-              />
-              <Icon
-                name="more_vert"
-                size={32}
-                className="text-primary hidden lg:block"
-              />
-            </button>
-          </DropdownMenuTrigger>
-          {/* will replace with custom drop down later */}
-          <DropdownMenuContent align="end" className="py-2">
-            <DropdownMenuItem>
-              <div className="body-small-primary">{t("shareQr")}</div>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <div className="body-small-primary">{t("shareStatistics")}</div>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <div className="body-small-primary">{t("repeatActivity")}</div>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
       <div className="flex flex-col sm:flex-row sm:items-start gap-y-4 sm:gap-x-6 md:gap-x-12.5">
         <div className="flex flex-col order-1 sm:order-2 sm:flex-1 space-y-2">
