@@ -228,6 +228,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           bordered="round"
           expanded={true}
           className="hidden md:block flex-1"
+          onClick={() => router.push("/dashboard/insights")}
         >
           <div className="flex justify-center text-primary items-center gap-2">
             <IonIcon name="TrendingUp" className="w-6 h-6 md:w-9 md:h-9" />
@@ -242,6 +243,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             bordered="round"
             expanded={false}
             className="md:hidden"
+            onClick={() => router.push("/dashboard/insights")}
           >
             <IonIcon
               name="TrendingUp"

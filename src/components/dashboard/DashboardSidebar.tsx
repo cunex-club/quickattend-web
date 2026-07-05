@@ -12,7 +12,7 @@ import {
 } from "@assets/components/ui/popover";
 
 const handleLogOut = () => {
-  alert("Logging out...");
+  window.location.href = "/api/auth/logout";
 };
 
 export function DashboardSidebar() {

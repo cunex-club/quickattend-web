@@ -24,7 +24,7 @@ type SidebarClientProps = {
 };
 
 const handleLogOut = () => {
-  alert("Logging out...");
+  window.location.href = "/api/auth/logout";
 };
 
 function formatFullName(user: CurrentUser | null): string {
@@ -153,10 +153,7 @@ const SidebarClient = ({ currentUser }: SidebarClientProps) => {
           <PopoverTrigger asChild>
             <button className="rounded-full overflow-hidden border-2 border-primary hover:border-secondary transition-colors cursor-pointer">
               <Avatar className="w-15 h-15">
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt={displayName}
-                />
+                <AvatarImage src="/logo/cu-nex.png" alt={displayName} />
                 <AvatarFallback>{avatarFallback}</AvatarFallback>
               </Avatar>
             </button>
@@ -169,10 +166,7 @@ const SidebarClient = ({ currentUser }: SidebarClientProps) => {
             <div className="flex flex-col space-y-6">
               <section className="flex flex-row justify-between items-center">
                 <Avatar className="w-15 h-15 border-2 border-neutral-300">
-                  <AvatarImage
-                    src="https://github.com/shadcn.png"
-                    alt={displayName}
-                  />
+                  <AvatarImage src="/logo/cu-nex.png" alt={displayName} />
                   <AvatarFallback>{avatarFallback}</AvatarFallback>
                 </Avatar>
                 <button onClick={handleLogOut}>

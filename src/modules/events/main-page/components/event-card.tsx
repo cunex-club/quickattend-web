@@ -57,6 +57,12 @@ const EventCard: StyleableFC<EventCardProps> = ({
     router.push("/scan");
   };
 
+  const handleStatsClick = (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    router.push("/dashboard/insights");
+  };
+
   return (
     <div
       role="link"
@@ -141,7 +147,12 @@ const EventCard: StyleableFC<EventCardProps> = ({
             </div>
           </div>
         </Button>
-        <Button mode="outline" bordered="round" expanded>
+        <Button
+          mode="outline"
+          bordered="round"
+          expanded
+          onClick={handleStatsClick}
+        >
           <div className="flex justify-center items-center gap-2">
             <IonIcon
               name="TrendingUpOutline"
@@ -182,6 +193,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
           bordered="round"
           expanded={false}
           className="!px-4 !py-2"
+          onClick={handleStatsClick}
         >
           <div className="flex justify-center items-center gap-2">
             <IonIcon
