@@ -15,6 +15,7 @@ import {
   PopoverTrigger,
 } from "@assets/components/ui/popover";
 import type { CurrentUser } from "@customTypes/auth";
+import { formatFullName, getAvatarFallback } from "@modules/layout/utils";
 import SidebarNavigation from "@modules/layout/sidebar/components/sidebar-navigation";
 import Button from "@shared/Button";
 import IonIcon from "@shared/IonIcon";
@@ -27,22 +28,6 @@ const handleLogOut = () => {
   window.location.href = "/api/auth/logout";
 };
 
-function formatFullName(user: CurrentUser | null): string {
-  if (!user) {
-    return "Guest";
-  }
-
-  return (
-    [user.title_th, user.firstname_th, user.surname_th]
-      .filter(Boolean)
-      .join(" ") ||
-    [user.title_en, user.firstname_en, user.surname_en]
-      .filter(Boolean)
-      .join(" ") ||
-    user.ref_id
-  );
-}
-
 function formatEnglishName(user: CurrentUser | null): string {
   if (!user) {
     return "Guest";
@@ -53,19 +38,6 @@ function formatEnglishName(user: CurrentUser | null): string {
       .filter(Boolean)
       .join(" ") || user.ref_id
   );
-}
-
-function getAvatarFallback(user: CurrentUser | null): string {
-  if (!user) {
-    return "GU";
-  }
-
-  const initials = [user.firstname_th, user.surname_th]
-    .map((part) => part.trim().charAt(0))
-    .filter(Boolean)
-    .join("");
-
-  return (initials || user.ref_id.slice(0, 2)).toUpperCase();
 }
 
 const SidebarClient = ({ currentUser }: SidebarClientProps) => {

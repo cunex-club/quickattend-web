@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 
 import { SidebarProvider, useSidebar } from "@context/SidebarContext";
+import MobileNav from "@modules/layout/mobile-nav";
 
 type EventsLayoutClientProps = {
   children: ReactNode;
@@ -25,7 +26,10 @@ function EventsLayoutContent({
           <div className="block lg:hidden">{header}</div>
         </>
       )}
-      <main className="flex-1 overflow-y-auto bg-white">{children}</main>
+      <main className="flex-1 overflow-y-auto bg-white pb-16 lg:pb-0">
+        {children}
+      </main>
+      {showSidebar && <MobileNav />}
     </div>
   );
 }

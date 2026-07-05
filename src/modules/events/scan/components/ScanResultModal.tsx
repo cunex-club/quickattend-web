@@ -131,7 +131,8 @@ const ScanResultModal = ({
                     />
                     <div>
                       <p className="body-medium-primary">
-                        {t("resultModal.name")}
+                        {result?.participantName ||
+                          t("resultPanel.unknownParticipant")}
                       </p>
                       <p className="body-medium-primary">
                         {t("resultModal.refId")} {result?.refId || "-"}

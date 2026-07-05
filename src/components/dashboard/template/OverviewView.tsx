@@ -112,7 +112,7 @@ export function OverviewView() {
 
   const handleViewInsights = () => {
     if (canViewInsights) {
-      router.push("./dashboard/insights");
+      router.push("./dashboard");
     }
   };
 

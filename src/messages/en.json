@@ -15,6 +15,9 @@
     "search": "Search"
   },
   "Dashboard": {
+    "sidebar": {
+      "compare": "Compare"
+    },
     "navbar": {
       "overview": "Overview",
       "insights": "Insights"
@@ -123,7 +126,8 @@
       "totalAttendees": "Total event attendees",
       "people": "people",
       "recentRegistrants": "Recent registrants",
-      "time": "Time"
+      "time": "Time",
+      "noRecentRegistrants": "No recent registrants yet"
     },
     "resultPanel": {
       "successTitle": "Registration successful",
@@ -134,6 +138,7 @@
       "notes": "Notes",
       "notesPlaceholder": "Add a note (optional)",
       "addNote": "Add note",
+      "save": "Save",
       "defaultError": "Registration could not be completed right now.",
       "permissionError": "You are not authorized to register for this event.",
       "unknownParticipant": "Unknown participant"

@@ -15,6 +15,9 @@
     "search": "ค้นหา"
   },
   "Dashboard": {
+    "sidebar": {
+      "compare": "เปรียบเทียบ"
+    },
     "navbar": {
       "overview": "ภาพรวม",
       "insights": "ข้อมูลเชิงลึก"
@@ -124,17 +127,19 @@
       "totalAttendees": "จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด",
       "people": "คน",
       "recentRegistrants": "ผู้ลงทะเบียนล่าสุด",
-      "time": "เวลา"
+      "time": "เวลา",
+      "noRecentRegistrants": "ยังไม่มีผู้ลงทะเบียนล่าสุด"
     },
     "resultPanel": {
       "successTitle": "ลงทะเบียนสำเร็จ",
-      "duplicateTitle": "ลงทะเบียนไปแล้ว",
+      "duplicateTitle": "ลงทะเบียนแล้ว",
       "failedTitle": "ลงทะเบียนไม่สำเร็จ",
       "people": "คน",
       "registrationTime": "เวลาที่ลงทะเบียน :",
       "notes": "หมายเหตุ",
       "notesPlaceholder": "กรอกหมายเหตุ (ถ้ามี)",
       "addNote": "เพิ่มหมายเหตุ",
+      "save": "บันทึก",
       "defaultError": "ไม่สามารถลงทะเบียนได้ในขณะนี้",
       "permissionError": "ไม่อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม",
       "unknownParticipant": "ไม่พบข้อมูลผู้เข้าร่วม"

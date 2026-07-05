@@ -143,11 +143,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             </div>
             {roleLabel && (
               <div className="flex gap-2 items-center">
-                <IonIcon
-                  name="Person"
-                  size="16px"
-                  className="text-secondary"
-                />
+                <IonIcon name="Person" size="16px" className="text-secondary" />
                 <div className="body-large-primary">{roleLabel}</div>
               </div>
             )}
@@ -228,7 +224,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           bordered="round"
           expanded={true}
           className="hidden md:block flex-1"
-          onClick={() => router.push("/dashboard/insights")}
+          onClick={() => router.push("/dashboard")}
         >
           <div className="flex justify-center text-primary items-center gap-2">
             <IonIcon name="TrendingUp" className="w-6 h-6 md:w-9 md:h-9" />

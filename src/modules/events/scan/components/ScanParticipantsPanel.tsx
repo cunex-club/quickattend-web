@@ -24,16 +24,16 @@ const ScanParticipantsPanel: StyleableFC<ScanParticipantsPanelProps> = ({
         className,
       )}
     >
-      <div className="flex w-full items-center justify-between gap-4">
-        <h2 className="headline-medium-emphasized whitespace-nowrap leading-none text-neutral-600">
+      <div className="flex w-full flex-wrap items-center justify-between gap-4">
+        <h2 className="headline-medium-emphasized leading-none text-neutral-600">
           {t("participantsPanel.totalAttendees")}
         </h2>
-        <p className="shrink-0 whitespace-nowrap text-center">
+        <p className="min-w-0 text-center">
           <span
             style={{
               color: "var(--Text-Filled, #E36487)",
               fontFamily: "CHULALONGKORNBold, sans-serif",
-              fontSize: "96px",
+              fontSize: "clamp(2.5rem, 6vw, 6rem)",
               fontStyle: "normal",
               fontWeight: 700,
               lineHeight: "140%",
@@ -42,13 +42,13 @@ const ScanParticipantsPanel: StyleableFC<ScanParticipantsPanelProps> = ({
           >
             {totalCount}
           </span>
-          <span className="display-small-emphasized text-[#E36487]">
+          <span className="display-small-emphasized ml-2 text-[#E36487]">
             {t("participantsPanel.people")}
           </span>
         </p>
       </div>
 
-      <div className="mt-8 grid w-full grid-cols-[1fr_auto] gap-x-6 gap-y-1">
+      <div className="mt-8 grid w-full grid-cols-[1fr_auto] gap-x-10 gap-y-1">
         <p className="title-large-primary text-neutral-600">
           {t("participantsPanel.recentRegistrants")}
         </p>
@@ -56,16 +56,22 @@ const ScanParticipantsPanel: StyleableFC<ScanParticipantsPanelProps> = ({
           {t("participantsPanel.time")}
         </p>
 
-        {participants.map((participant) => (
-          <div key={participant.id} className="contents">
-            <p className="body-large-primary text-neutral-600">
-              {participant.id} {participant.name}
-            </p>
-            <p className="body-large-primary text-right text-neutral-600">
-              {participant.time}
-            </p>
-          </div>
-        ))}
+        {participants.length === 0 ? (
+          <p className="body-large-primary col-span-2 text-neutral-400">
+            {t("participantsPanel.noRecentRegistrants")}
+          </p>
+        ) : (
+          participants.map((participant) => (
+            <div key={participant.id} className="contents">
+              <p className="body-large-primary text-neutral-600">
+                {participant.id} {participant.name}
+              </p>
+              <p className="body-large-primary text-right text-neutral-600">
+                {participant.time}
+              </p>
+            </div>
+          ))
+        )}
       </div>
     </section>
   );

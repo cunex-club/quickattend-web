@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import IonIcon from "@shared/IonIcon";
@@ -18,8 +19,10 @@ type ScanInfoPanelProps = {
   events: ScanEvent[];
   selectedEvent: ScanEvent;
   onEventChange: (id: string) => void;
-  /** Mobile compact mode: hides the barcode image and description text */
+  /** Mobile compact mode: hides the barcode image/camera and description text */
   compact?: boolean;
+  /** When provided, renders in place of the static barcode illustration (e.g. a live camera feed) */
+  cameraSlot?: ReactNode;
 };
 
 const ScanInfoPanel: StyleableFC<ScanInfoPanelProps> = ({
@@ -27,9 +30,21 @@ const ScanInfoPanel: StyleableFC<ScanInfoPanelProps> = ({
   selectedEvent,
   onEventChange,
   compact = false,
+  cameraSlot,
   className,
 }) => {
   const t = useTranslations("Scan");
+  const tRole = useTranslations("EventDetail");
+  const hasEvents = events.length > 0;
+
+  const roleLabel =
+    selectedEvent.role === "OWNER"
+      ? tRole("owner")
+      : selectedEvent.role === "MANAGER"
+        ? tRole("manager")
+        : selectedEvent.role === "STAFF"
+          ? tRole("staff")
+          : null;
 
   return (
     <section
@@ -41,85 +56,83 @@ const ScanInfoPanel: StyleableFC<ScanInfoPanelProps> = ({
     >
       <div className="flex flex-col items-center justify-center gap-8 text-center">
         <div className="flex flex-col items-center">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                className="inline-flex items-center gap-1 rounded text-neutral-600 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                aria-label={t("infoPanel.selectEvent")}
-              >
-                <span className="display-medium-emphasized md:display-large-emphasized">
-                  {selectedEvent.name}
-                </span>
-                <IonIcon
-                  name="ChevronDownOutline"
-                  size="24px"
-                  className="text-primary"
-                />
-              </button>
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent align="start" className="min-w-65">
-              {events.map((event) => (
-                <DropdownMenuItem
-                  key={event.id}
-                  onClick={() => onEventChange(event.id)}
+          {hasEvents ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex max-w-full items-start gap-1 rounded text-neutral-600 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  aria-label={t("infoPanel.selectEvent")}
+                  title={selectedEvent.name}
                 >
-                  <span className="title-medium-primary text-neutral-600">
-                    {event.name}
+                  <span className="display-medium-emphasized md:display-large-emphasized line-clamp-2 max-w-[280px] break-words md:max-w-[420px]">
+                    {selectedEvent.name}
                   </span>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                  <IonIcon
+                    name="ChevronDownOutline"
+                    size="24px"
+                    className="shrink-0 text-primary"
+                  />
+                </button>
+              </DropdownMenuTrigger>
 
-          <p className="title-large-primary mt-1 text-neutral-600">
-            {selectedEvent.startTime} –{selectedEvent.endTime}{" "}
-            {t("infoPanel.timeSuffix")}
-          </p>
+              <DropdownMenuContent
+                align="start"
+                className="min-w-65 max-h-[9.25rem] overflow-y-auto"
+              >
+                {events.map((event) => (
+                  <DropdownMenuItem
+                    key={event.id}
+                    onClick={() => onEventChange(event.id)}
+                  >
+                    <span className="title-medium-primary text-neutral-600">
+                      {event.name}
+                    </span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <span className="display-medium-emphasized md:display-large-emphasized line-clamp-2 max-w-[280px] break-words text-center text-neutral-600 md:max-w-[420px]">
+              {selectedEvent.name}
+            </span>
+          )}
+
+          {hasEvents && (
+            <p className="title-large-primary mt-1 text-neutral-600">
+              {selectedEvent.startTime} – {selectedEvent.endTime}{" "}
+              {t("infoPanel.timeSuffix")}
+            </p>
+          )}
         </div>
 
-        {!compact && (
-          <>
-            <Image
-              src={barcodeReaderIcon}
-              alt={t("infoPanel.barcodeAlt")}
-              width={150}
-              height={210}
-              className="h-auto w-[130px] md:w-[150px]"
-              priority
+        {!compact &&
+          (cameraSlot ?? (
+            <>
+              <Image
+                src={barcodeReaderIcon}
+                alt={t("infoPanel.barcodeAlt")}
+                width={150}
+                height={210}
+                className="h-auto w-[130px] md:w-[150px]"
+                priority
+              />
+
+              <p className="headline-medium-emphasized text-center">
+                {t("infoPanel.description")}
+              </p>
+            </>
+          ))}
+
+        {/* Admin row — only shown in full (desktop) mode, and only if there's a real role to show */}
+        {!compact && hasEvents && roleLabel && (
+          <div className="flex items-center justify-center gap-1 text-neutral-600">
+            <IonIcon
+              name="PersonOutline"
+              size="16px"
+              className="text-primary"
             />
-
-            <p className="headline-medium-emphasized text-center">
-              {t("infoPanel.description")}
-            </p>
-          </>
-        )}
-
-        {/* Admin row — only shown in full (desktop) mode */}
-        {!compact && (
-          <div className="flex items-center justify-center gap-4">
-            <div className="flex items-center gap-1 text-neutral-600">
-              <IonIcon
-                name="PersonOutline"
-                size="16px"
-                className="text-primary"
-              />
-              <span className="title-medium-emphasized">
-                {t("infoPanel.adminLabel")}
-              </span>
-            </div>
-            <button
-              type="button"
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-100 shadow-elevation-1"
-              aria-label={t("cameraPanel.copyEventLink")}
-            >
-              <IonIcon
-                name="LinkOutline"
-                size="16px"
-                className="text-primary"
-              />
-            </button>
+            <span className="title-medium-emphasized">{roleLabel}</span>
           </div>
         )}
       </div>
