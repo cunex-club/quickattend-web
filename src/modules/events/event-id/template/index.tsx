@@ -50,6 +50,8 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
     );
   }
 
+  const canEdit = eventData.role === "OWNER" || eventData.role === "MANAGER";
+
   // Format date from ISO string to "3 สิงหาคม 2568"
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -88,18 +90,29 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
 
   return (
     <div className="w-full flex flex-col justify-center items-center px-6 md:px-10 lg:px-25 py-10 lg:pt-35 gap-6 lg:gap-7.5 pb-24">
+      <button
+        type="button"
+        onClick={() => router.back()}
+        aria-label="Go back"
+        className="w-full text-primary font-semibold cursor-pointer flex items-center gap-1"
+      >
+        <IonIcon name="ChevronBack" size="16px" />
+        <p className="label-large-emphasized">{t("back")}</p>
+      </button>
       <div className="w-full flex flex-col lg:flex-row gap-6 lg:gap-10">
         <div className="lg:flex-[4] bg-neutral-100 p-6 lg:p-10 space-y-5 rounded-3xl shadow-xs">
           <div className="flex w-full items-center justify-between">
             <div className="display-medium-emphasized ">{eventData.name}</div>
-            <button
-              type="button"
-              aria-label={t("edit")}
-              onClick={() => router.push(`/events/${eventId}/edit`)}
-              className="cursor-pointer"
-            >
-              <Icon name="edit" size={32} className="text-primary" />
-            </button>
+            {canEdit && (
+              <button
+                type="button"
+                aria-label={t("edit")}
+                onClick={() => router.push(`/events/${eventId}/edit`)}
+                className="cursor-pointer"
+              >
+                <Icon name="edit" size={32} className="text-primary" />
+              </button>
+            )}
           </div>
           <div>
             <div className="flex gap-2 items-center">
@@ -127,7 +140,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           <div className="flex flex-col gap-y-2">
             <div className="headline-small-emphasized">{t("eventDetails")}</div>
             <div className="body-large-primary">
-              {eventData.description ?? ""}
+              {eventData.description || "-"}
             </div>
           </div>
           <div>
@@ -166,11 +179,11 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             </div>
             <div className="flex space-x-2.5 title-medium-primary lg:title-small-primary whitespace-nowrap">
               <div>
-                {t("student")} : 1090 {t("people")}
+                {t("student")} : {eventData.total_registered} {t("people")}
               </div>
               <div>|</div>
               <div>
-                {t("staff")} : 6 {t("people")}
+                {t("staff")} : {eventData.users.length} {t("people")}
               </div>
             </div>
           </div>

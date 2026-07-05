@@ -95,6 +95,7 @@
       "downloadStatistics": "ดาวน์โหลดสถิติ"
     },
     "Search": {
+      "back": "ย้อนกลับ",
       "searching": "กำลังค้นหากิจกรรมที่ต้องการ",
       "notFound": "ไม่เจอผลการค้นหา"
     }
@@ -294,6 +295,7 @@
     "submitDelete": "ลบกิจกรรม"
   },
   "EventDetail": {
+    "back": "ย้อนกลับ",
     "edit": "แก้ไขกิจกรรม",
     "registeredCount": "จำนวนผู้ลงทะเบียน",
     "eventDetails": "รายละเอียดกิจกรรม",

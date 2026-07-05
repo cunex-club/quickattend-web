@@ -15,11 +15,7 @@ import {
   buildCreateEventReq,
   mapEventResToForm,
 } from "@modules/events/create/mappers";
-import {
-  fetchEventById,
-  updateEvent,
-  APIRequestError,
-} from "@services/events";
+import { fetchEventById, updateEvent, APIRequestError } from "@services/events";
 import EditEventSection1 from "../components/edit-event-section1";
 import EditEventSection2 from "../components/edit-event-section2";
 import EditEventSection3 from "../components/edit-event-section3";
@@ -43,7 +39,6 @@ import {
   DialogContent,
   DialogTitle,
 } from "@assets/components/ui/dialog";
-import EditEventDuplicate from "../components/edit-event-duplicate";
 import EditEventDelete from "../components/edit-event-delete";
 import { DEFAULT_CENTER } from "@modules/events/create/components/map-selection";
 import EventDetailSkeleton from "@modules/events/event-id/components/event-detail-skeleton";
@@ -67,7 +62,6 @@ const EventEditTemplate = () => {
 
   const [width, setWidth] = useState(0);
   const [sidetabMode, setSidetabMode] = useState<SideTabType | null>(null);
-  const [openDuplicate, setOpenDuplicate] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [cardMode, setCardMode] = useState<CardPreviewType>(
     CardPreviewType.CARD_PREVIEW,
@@ -95,8 +89,6 @@ const EventEditTemplate = () => {
     evaluation_form: "",
   };
 
-  const [lastSavedEventForm, setLastSavedEventForm] =
-    useState<EventFormInterface>(EMPTY_EVENT_FORM);
   const [eventForm, setEventForm] =
     useState<EventFormInterface>(EMPTY_EVENT_FORM);
   const [ownerRefId, setOwnerRefId] = useState<string | null>(null);
@@ -115,7 +107,6 @@ const EventEditTemplate = () => {
         const { form, ownerRefId: fetchedOwnerRefId } = mapEventResToForm(
           res.data,
         );
-        setLastSavedEventForm(form);
         setEventForm(form);
         setOwnerRefId(fetchedOwnerRefId);
       } catch (err) {
@@ -176,10 +167,10 @@ const EventEditTemplate = () => {
   }, [setShowSidebar]);
 
   useEffect(() => {
-    if ((openDelete || openDuplicate) && width < 768) {
+    if (openDelete && width < 768) {
       setSidetabMode(null);
     }
-  }, [openDelete, openDuplicate, width]);
+  }, [openDelete, width]);
 
   const saveEvent = async () => {
     if (!eventForm.date || !eventForm.startTime || !eventForm.endTime) return;
@@ -195,13 +186,10 @@ const EventEditTemplate = () => {
     setIsSaving(true);
     try {
       await updateEvent(String(eventId), body);
-      setLastSavedEventForm(eventForm);
       return true;
     } catch (err) {
       const message =
-        err instanceof APIRequestError
-          ? err.message
-          : "Failed to update event";
+        err instanceof APIRequestError ? err.message : "Failed to update event";
       alert(message);
       return false;
     } finally {
@@ -284,15 +272,7 @@ const EventEditTemplate = () => {
                 setSidetabMode(SideTabType.PREVIEW);
               }}
             />
-            <hr className="border-neutral-300 border w-[60%]" />
-            <IonIcon
-              name="DuplicateOutline"
-              size="18px"
-              className="text-primary cursor-pointer"
-              onClick={() => {
-                setOpenDuplicate(true);
-              }}
-            />
+
             <IonIcon
               name="TrashOutline"
               size="18px"
@@ -446,7 +426,7 @@ const EventEditTemplate = () => {
           </div>
         </main>
 
-        <footer className="md:hidden fixed bottom-0 left-0 w-full h-16 px-4 bg-neutral-200 rounded-t-4xl z-50 grid grid-cols-4 gap-2 place-items-center">
+        <footer className="md:hidden fixed bottom-0 left-0 w-full h-16 px-4 bg-neutral-200 rounded-t-4xl z-50 grid grid-cols-3 gap-2 place-items-center">
           <IonIcon
             name="List"
             size="18px"
@@ -461,14 +441,6 @@ const EventEditTemplate = () => {
             className="text-primary cursor-pointer"
             onClick={() => {
               setSidetabMode(SideTabType.PREVIEW);
-            }}
-          />
-          <IonIcon
-            name="DuplicateOutline"
-            size="18px"
-            className="text-primary cursor-pointer"
-            onClick={() => {
-              setOpenDuplicate(true);
             }}
           />
           <IonIcon
@@ -606,27 +578,6 @@ const EventEditTemplate = () => {
                 className={`max-w-full h-fit max-h-[60vh] ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100"} rounded-4xl p-4 mb-6 overflow-y-auto break-all`}
               >
                 <EditEventPreview eventForm={eventForm} cardMode={cardMode} />
-              </div>
-            </DrawerContent>
-          </Drawer>
-
-          {/* Duplicate */}
-          <Drawer open={openDuplicate} onOpenChange={setOpenDuplicate}>
-            <DrawerContent className="px-4 py-2 bg-neutral-white h-fit max-h-[80vh]">
-              <DrawerHeader>
-                <DrawerTitle className="title-large-emphasized text-primary">
-                  {tEditEvent("eventDuplicate")}
-                </DrawerTitle>
-              </DrawerHeader>
-
-              <div
-                className={`max-w-full h-fit max-h-[60vh] rounded-4xl p-4 mb-6 overflow-y-auto break-all`}
-              >
-                <EditEventDuplicate
-                  eventForm={lastSavedEventForm}
-                  setOpenDuplicate={setOpenDuplicate}
-                  width={width}
-                />
               </div>
             </DrawerContent>
           </Drawer>
@@ -783,25 +734,6 @@ const EventEditTemplate = () => {
             </DialogContent>
           </Dialog>
 
-          {/* Duplicate */}
-          <Dialog open={openDuplicate} onOpenChange={setOpenDuplicate}>
-            <DialogContent className="[&>button]:hidden min-w-[60vw] overflow-auto max-w-[80vw] h-[80vh] bg-neutral-white flex flex-col gap-4">
-              {/* Header */}
-              <DialogTitle className="headline-large-emphasized text-primary">
-                {tEditEvent("eventDuplicate")}
-              </DialogTitle>
-
-              {/* Content */}
-              <>
-                <EditEventDuplicate
-                  eventForm={lastSavedEventForm}
-                  setOpenDuplicate={setOpenDuplicate}
-                  width={width}
-                />
-              </>
-            </DialogContent>
-          </Dialog>
-
           {/* Delete */}
           <Dialog open={openDelete} onOpenChange={setOpenDelete}>
             <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
@@ -823,25 +755,6 @@ const EventEditTemplate = () => {
       {/* For PC */}
       {width >= 768 && (
         <>
-          {/* Duplicate */}
-          <Dialog open={openDuplicate} onOpenChange={setOpenDuplicate}>
-            <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4 overflow-auto">
-              {/* Header */}
-              <DialogTitle className="headline-large-emphasized text-primary">
-                {tEditEvent("eventDuplicate")}
-              </DialogTitle>
-
-              {/* Content */}
-              <>
-                <EditEventDuplicate
-                  eventForm={lastSavedEventForm}
-                  setOpenDuplicate={setOpenDuplicate}
-                  width={width}
-                />
-              </>
-            </DialogContent>
-          </Dialog>
-
           {/* Delete */}
           <Dialog open={openDelete} onOpenChange={setOpenDelete}>
             <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">

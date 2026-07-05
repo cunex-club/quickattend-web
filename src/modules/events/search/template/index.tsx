@@ -1,26 +1,59 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "@shared/search-bar";
 import IonIcon from "@shared/IonIcon";
 import EventCard from "@modules/events/main-page/components/event-card";
-import { mockEvents } from "../constant/mock";
+import EventCardSkeleton from "@modules/events/main-page/components/event-card-skeleton";
 import { useTranslations } from "next-intl";
+import { fetchDiscoveryEvents } from "@services/events";
+import type { GetEventsRes } from "@customTypes/events";
 
 const EventSearchTemplate = () => {
   const t = useTranslations("Events.Search");
   const [searchQuery, setSearchQuery] = useState("");
+  const [events, setEvents] = useState<GetEventsRes[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
-  const filteredEvents = mockEvents.filter((event) =>
-    event.title.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
-
-  const hasResults = filteredEvents.length > 0;
   const isSearching = searchQuery.length > 0;
+
+  useEffect(() => {
+    if (!isSearching) {
+      setEvents([]);
+      return;
+    }
+
+    let cancelled = false;
+    const timeout = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const res = await fetchDiscoveryEvents(1, 20, searchQuery);
+        if (!cancelled) {
+          setEvents(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch discovery events:", err);
+        if (!cancelled) {
+          setEvents([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }, 300);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
+  }, [searchQuery, isSearching]);
+
+  const hasResults = events.length > 0;
 
   return (
     <div className="w-full min-h-screen">
@@ -28,7 +61,7 @@ const EventSearchTemplate = () => {
         <SearchBar placeholder="Search events..." onsearch={handleSearch} />
       </div>
 
-      {!isSearching || !hasResults ? (
+      {!isSearching || (!loading && !hasResults) ? (
         <div className="flex flex-col justify-center items-center space-y-4 py-16">
           <div className="p-6">
             <IonIcon
@@ -44,19 +77,33 @@ const EventSearchTemplate = () => {
       ) : (
         <div className="px-12 pb-12">
           <div className="space-y-6">
-            {filteredEvents.map((event) => (
-              <EventCard
-                key={event.id}
-                eventId={String(event.id)}
-                title={event.title}
-                description={event.description}
-                date={event.date}
-                time={event.time}
-                location={event.location}
-                role={event.role}
-                isEnd={event.isEnd}
-              />
-            ))}
+            {loading
+              ? [1, 2].map((key) => <EventCardSkeleton key={key} />)
+              : events.map((event) => {
+                  const start = new Date(event.start_time);
+                  const end = new Date(event.end_time);
+                  const isEnd = end < new Date();
+                  const dateStr = start.toLocaleDateString("th-TH", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  });
+                  const timeStr = `${start.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} - ${end.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} น.`;
+
+                  return (
+                    <EventCard
+                      key={event.id}
+                      eventId={event.id}
+                      title={event.name}
+                      description={event.description ?? ""}
+                      date={dateStr}
+                      time={timeStr}
+                      location={event.location}
+                      role={event.role ?? ""}
+                      isEnd={isEnd}
+                    />
+                  );
+                })}
           </div>
         </div>
       )}
