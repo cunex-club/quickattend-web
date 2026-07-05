@@ -25,6 +25,7 @@ export interface FilterValues {
 interface FilterMenuProps {
   onFilterChange?: (values: FilterValues) => void;
   menuId?: string;
+  initialFilter?: FilterValues;
 }
 
 const DEFAULT_ACCESS_OPTIONS: FilterOption[] = [
@@ -33,13 +34,20 @@ const DEFAULT_ACCESS_OPTIONS: FilterOption[] = [
   { id: "staff", label: "ผู้ดูแลงาน", checked: true },
 ];
 
-const FilterMenu = ({ onFilterChange, menuId }: FilterMenuProps) => {
-  const [accessOptions, setAccessOptions] = useState<FilterOption[]>(
-    DEFAULT_ACCESS_OPTIONS,
+const FilterMenu = ({ onFilterChange, menuId, initialFilter }: FilterMenuProps) => {
+  const [accessOptions, setAccessOptions] = useState<FilterOption[]>(() =>
+    initialFilter
+      ? DEFAULT_ACCESS_OPTIONS.map((option) => ({
+          ...option,
+          checked: initialFilter.accessRights.includes(option.id),
+        }))
+      : DEFAULT_ACCESS_OPTIONS,
   );
   const [datePickerKey, setDatePickerKey] = useState(0);
 
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    initialFilter?.date,
+  );
 
   const isFilterActive =
     accessOptions.some((option) => !option.checked) ||

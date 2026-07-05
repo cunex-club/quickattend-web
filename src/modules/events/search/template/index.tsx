@@ -9,15 +9,27 @@ import { useTranslations } from "next-intl";
 import { fetchDiscoveryEvents } from "@services/events";
 import type { GetEventsRes } from "@customTypes/events";
 
+const SEARCH_STORAGE_KEY = "cunex_events_search_query_v1";
+
+const loadStoredSearchQuery = (): string => {
+  if (typeof window === "undefined") return "";
+  return sessionStorage.getItem(SEARCH_STORAGE_KEY) ?? "";
+};
+
 const EventSearchTemplate = () => {
   const t = useTranslations("Events.Search");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(loadStoredSearchQuery);
   const [events, setEvents] = useState<GetEventsRes[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    sessionStorage.setItem(SEARCH_STORAGE_KEY, searchQuery);
+  }, [searchQuery]);
 
   const isSearching = searchQuery.length > 0;
 
@@ -31,7 +43,7 @@ const EventSearchTemplate = () => {
     const timeout = setTimeout(async () => {
       setLoading(true);
       try {
-        const res = await fetchDiscoveryEvents(1, 20, searchQuery);
+        const res = await fetchDiscoveryEvents(1, 10, searchQuery);
         if (!cancelled) {
           setEvents(res.data);
         }
@@ -58,7 +70,11 @@ const EventSearchTemplate = () => {
   return (
     <div className="w-full min-h-screen">
       <div className="px-12 pt-20 pb-6">
-        <SearchBar placeholder="Search events..." onsearch={handleSearch} />
+        <SearchBar
+          placeholder="Search events..."
+          onsearch={handleSearch}
+          defaultValue={searchQuery}
+        />
       </div>
 
       {!isSearching || (!loading && !hasResults) ? (
@@ -99,7 +115,8 @@ const EventSearchTemplate = () => {
                       date={dateStr}
                       time={timeStr}
                       location={event.location}
-                      role={event.role ?? ""}
+                      role=""
+                      hideRole
                       isEnd={isEnd}
                     />
                   );

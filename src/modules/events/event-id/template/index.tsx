@@ -52,6 +52,15 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
 
   const canEdit = eventData.role === "OWNER" || eventData.role === "MANAGER";
 
+  const roleLabel =
+    eventData.role === "OWNER"
+      ? t("owner")
+      : eventData.role === "MANAGER"
+        ? t("manager")
+        : eventData.role === "STAFF"
+          ? t("staff")
+          : null;
+
   // Format date from ISO string to "3 สิงหาคม 2568"
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -132,10 +141,16 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
               <IonIcon name="Location" size="16px" className="text-secondary" />
               <div className="body-large-primary">{eventData.location}</div>
             </div>
-            <div className="flex gap-2 items-center">
-              <IonIcon name="Person" size="16px" className="text-secondary" />
-              <div className="body-large-primary">{t("owner")}</div>
-            </div>
+            {roleLabel && (
+              <div className="flex gap-2 items-center">
+                <IonIcon
+                  name="Person"
+                  size="16px"
+                  className="text-secondary"
+                />
+                <div className="body-large-primary">{roleLabel}</div>
+              </div>
+            )}
           </div>
           <div className="flex flex-col gap-y-2">
             <div className="headline-small-emphasized">{t("eventDetails")}</div>

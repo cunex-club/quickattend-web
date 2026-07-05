@@ -6,10 +6,15 @@ import { useState } from "react";
 type SearchBarProps = {
   placeholder: string;
   onsearch: (query: string) => void;
+  defaultValue?: string;
 };
 
-const SearchBar = ({ placeholder, onsearch }: SearchBarProps) => {
-  const [query, setQuery] = useState("");
+const SearchBar = ({
+  placeholder,
+  onsearch,
+  defaultValue = "",
+}: SearchBarProps) => {
+  const [query, setQuery] = useState(defaultValue);
 
   const handleSearch = () => {
     onsearch(query);

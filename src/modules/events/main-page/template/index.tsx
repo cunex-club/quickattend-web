@@ -21,6 +21,42 @@ const isSameDay = (a: Date, b: Date) =>
   a.getMonth() === b.getMonth() &&
   a.getDate() === b.getDate();
 
+const FILTERS_STORAGE_KEY = "cunex_events_filters_v1";
+
+interface StoredFiltersState {
+  myEventsFilter: FilterValues;
+  myEventsSort: string;
+  pastEventsFilter: FilterValues;
+  pastEventsSort: string;
+}
+
+const loadStoredFilters = (): StoredFiltersState | null => {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem(FILTERS_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return {
+      myEventsFilter: {
+        accessRights: parsed.myEventsFilter?.accessRights ?? [],
+        date: parsed.myEventsFilter?.date
+          ? new Date(parsed.myEventsFilter.date)
+          : undefined,
+      },
+      myEventsSort: parsed.myEventsSort ?? "newest",
+      pastEventsFilter: {
+        accessRights: parsed.pastEventsFilter?.accessRights ?? [],
+        date: parsed.pastEventsFilter?.date
+          ? new Date(parsed.pastEventsFilter.date)
+          : undefined,
+      },
+      pastEventsSort: parsed.pastEventsSort ?? "newest",
+    };
+  } catch {
+    return null;
+  }
+};
+
 const applyFilterAndSort = (
   events: GetEventsRes[],
   filter: FilterValues,
@@ -59,16 +95,29 @@ const EventPageTemplate = () => {
     useState<APIPagination | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [myEventsFilter, setMyEventsFilter] = useState<FilterValues>({
-    accessRights: [],
-    date: undefined,
-  });
-  const [myEventsSort, setMyEventsSort] = useState("newest");
-  const [pastEventsFilter, setPastEventsFilter] = useState<FilterValues>({
-    accessRights: [],
-    date: undefined,
-  });
-  const [pastEventsSort, setPastEventsSort] = useState("newest");
+  const [myEventsFilter, setMyEventsFilter] = useState<FilterValues>(
+    () => loadStoredFilters()?.myEventsFilter ?? { accessRights: [], date: undefined },
+  );
+  const [myEventsSort, setMyEventsSort] = useState(
+    () => loadStoredFilters()?.myEventsSort ?? "newest",
+  );
+  const [pastEventsFilter, setPastEventsFilter] = useState<FilterValues>(
+    () => loadStoredFilters()?.pastEventsFilter ?? { accessRights: [], date: undefined },
+  );
+  const [pastEventsSort, setPastEventsSort] = useState(
+    () => loadStoredFilters()?.pastEventsSort ?? "newest",
+  );
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const state: StoredFiltersState = {
+      myEventsFilter,
+      myEventsSort,
+      pastEventsFilter,
+      pastEventsSort,
+    };
+    sessionStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(state));
+  }, [myEventsFilter, myEventsSort, pastEventsFilter, pastEventsSort]);
 
   // Separate current and past managed events
   const currentManagedEvents = managedEvents.filter(
@@ -150,6 +199,7 @@ const EventPageTemplate = () => {
             <FilterMenu
               menuId="my-events-filter"
               onFilterChange={handleMyEventsFilterChange}
+              initialFilter={myEventsFilter}
             />
             <SortMenu
               menuId="my-events-sort"
@@ -163,6 +213,7 @@ const EventPageTemplate = () => {
                   value: "oldest",
                 },
               ]}
+              value={myEventsSort}
               onSelect={handleMyEventsSortChange}
             />
           </div>
@@ -217,6 +268,7 @@ const EventPageTemplate = () => {
             <FilterMenu
               menuId="past-events-filter"
               onFilterChange={handlePastEventsFilterChange}
+              initialFilter={pastEventsFilter}
             />
             <SortMenu
               menuId="past-events-sort"
@@ -230,6 +282,7 @@ const EventPageTemplate = () => {
                   value: "oldest",
                 },
               ]}
+              value={pastEventsSort}
               onSelect={handlePastEventsSortChange}
             />
           </div>

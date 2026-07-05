@@ -17,6 +17,7 @@ type EventCardProps = {
   location: string;
   role: string;
   isEnd: boolean;
+  hideRole?: boolean;
 };
 
 const EventCard: StyleableFC<EventCardProps> = ({
@@ -28,6 +29,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
   location,
   role,
   isEnd,
+  hideRole = false,
   className,
   ...props
 }) => {
@@ -106,15 +108,17 @@ const EventCard: StyleableFC<EventCardProps> = ({
               {description}
             </div>
           </div>
-          <div className="hidden sm:flex items-center gap-2">
-            <IonIcon
-              name="Person"
-              size="16px"
-              className="text-primary"
-              noPadding
-            />
-            <span className="body-large-primary">{role || "-"}</span>
-          </div>
+          {!hideRole && (
+            <div className="hidden sm:flex items-center gap-2">
+              <IonIcon
+                name="Person"
+                size="16px"
+                className="text-primary"
+                noPadding
+              />
+              <span className="body-large-primary">{role || "-"}</span>
+            </div>
+          )}
         </div>
       </div>
       {/* Desktop View */}
