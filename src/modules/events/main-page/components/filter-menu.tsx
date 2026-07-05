@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import IonIcon from "@shared/IonIcon";
 import {
   DropdownMenu,
@@ -27,16 +27,23 @@ interface FilterMenuProps {
   menuId?: string;
 }
 
-const FilterMenu = ({ onFilterChange, menuId }: FilterMenuProps) => {
-  const [accessOptions, setAccessOptions] = useState<FilterOption[]>([
-    { id: "owner", label: "เจ้าของกิจกรรม", checked: true },
-    { id: "manager", label: "ผู้จัดการกิจกรรม", checked: false },
-    { id: "staff", label: "ผู้ดูแลงาน", checked: false },
-  ]);
+const DEFAULT_ACCESS_OPTIONS: FilterOption[] = [
+  { id: "owner", label: "เจ้าของกิจกรรม", checked: true },
+  { id: "manager", label: "ผู้จัดการกิจกรรม", checked: true },
+  { id: "staff", label: "ผู้ดูแลงาน", checked: true },
+];
 
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date(2025, 7, 17),
+const FilterMenu = ({ onFilterChange, menuId }: FilterMenuProps) => {
+  const [accessOptions, setAccessOptions] = useState<FilterOption[]>(
+    DEFAULT_ACCESS_OPTIONS,
   );
+  const [datePickerKey, setDatePickerKey] = useState(0);
+
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+
+  const isFilterActive =
+    accessOptions.some((option) => !option.checked) ||
+    selectedDate !== undefined;
 
   const handleCheckboxChange = (id: string) => {
     setAccessOptions((prev) =>
@@ -46,17 +53,27 @@ const FilterMenu = ({ onFilterChange, menuId }: FilterMenuProps) => {
     );
   };
 
-  // Emit filter values when they change
+  const handleClearFilter = () => {
+    setAccessOptions(DEFAULT_ACCESS_OPTIONS);
+    setSelectedDate(undefined);
+    setDatePickerKey((k) => k + 1);
+  };
+
+  const onFilterChangeRef = useRef(onFilterChange);
+  useEffect(() => {
+    onFilterChangeRef.current = onFilterChange;
+  });
+
   useEffect(() => {
     const selectedRights = accessOptions
       .filter((opt) => opt.checked)
       .map((opt) => opt.id);
 
-    onFilterChange?.({
+    onFilterChangeRef.current?.({
       accessRights: selectedRights,
       date: selectedDate,
     });
-  }, [accessOptions, selectedDate, onFilterChange]);
+  }, [accessOptions, selectedDate]);
 
   return (
     <DropdownMenu>
@@ -64,12 +81,15 @@ const FilterMenu = ({ onFilterChange, menuId }: FilterMenuProps) => {
         <button
           id={menuId ? `${menuId}-trigger` : undefined}
           aria-label="Open filter menu"
-          className="rounded-full p-1 hover:bg-muted/40 transition-colors duration-200 [&>div]:!p-0"
+          className="relative rounded-full p-1 hover:bg-muted/40 transition-colors duration-200 [&>div]:!p-0"
         >
           <IonIcon
             name="FunnelOutline"
             className="text-primary cursor-pointer w-6 h-6 lg:w-8 lg:h-8"
           />
+          {isFilterActive && (
+            <span className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-primary border-2 border-neutral-white" />
+          )}
         </button>
       </DropdownMenuTrigger>
 
@@ -78,12 +98,29 @@ const FilterMenu = ({ onFilterChange, menuId }: FilterMenuProps) => {
         sideOffset={8}
         align="end"
         className="w-80 p-0 rounded-2xl shadow-elevation-3 border-0 bg-neutral-white overflow-hidden"
+        onInteractOutside={(e) => {
+          const target = e.target as HTMLElement;
+          if (target.closest("[data-radix-popper-content-wrapper]")) {
+            e.preventDefault();
+          }
+        }}
       >
         {/* Access Rights Section */}
         <div className="p-4 pb-2">
-          <DropdownMenuLabel className="px-0 py-0 mb-4 title-medium-emphasized text-neutral-600">
-            สิทธิ์การเข้าถึง
-          </DropdownMenuLabel>
+          <div className="flex items-center justify-between mb-4">
+            <DropdownMenuLabel className="px-0 py-0 title-medium-emphasized text-neutral-600">
+              สิทธิ์การเข้าถึง
+            </DropdownMenuLabel>
+            {isFilterActive && (
+              <button
+                type="button"
+                onClick={handleClearFilter}
+                className="label-large-primary text-primary hover:underline"
+              >
+                ล้างตัวกรอง
+              </button>
+            )}
+          </div>
 
           <div className="space-y-1">
             {accessOptions.map((option, index) => (
@@ -117,6 +154,7 @@ const FilterMenu = ({ onFilterChange, menuId }: FilterMenuProps) => {
           </DropdownMenuLabel>
 
           <DockInputDatePicker
+            key={datePickerKey}
             value={selectedDate}
             onChange={setSelectedDate}
             label="Date"

@@ -117,7 +117,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
         </DropdownMenu>
       </div>
       <div className="flex flex-col sm:flex-row sm:items-start gap-y-4 sm:gap-x-6 md:gap-x-12.5">
-        <div className="order-1 sm:order-2 sm:flex-1 space-y-2">
+        <div className="flex flex-col order-1 sm:order-2 sm:flex-1 space-y-2">
           <div className="flex justify-start space-x-4 pl-0">
             <div className="flex items-center gap-1">
               <IonIcon
@@ -147,7 +147,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
             />
             <span className="body-large-primary">{location}</span>
           </div>
-          <div className="order-2 sm:order-1 sm:flex-2 lg:px-1">
+          <div className="order-2 sm:order-1 sm:flex-2 mt-3">
             <div className="body-large-primary line-clamp-3 sm:line-clamp-none mb-4 sm:mb-0">
               {description}
             </div>
@@ -159,7 +159,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
               className="text-primary"
               noPadding
             />
-            <span className="body-large-primary">{role}</span>
+            <span className="body-large-primary">{role || "-"}</span>
           </div>
         </div>
       </div>

@@ -16,9 +16,41 @@ import IonIcon from "@shared/IonIcon";
 import { fetchManagedEvents, fetchAttendedEvents } from "@services/events";
 import type { GetEventsRes, APIPagination } from "@customTypes/events";
 
+const isSameDay = (a: Date, b: Date) =>
+  a.getFullYear() === b.getFullYear() &&
+  a.getMonth() === b.getMonth() &&
+  a.getDate() === b.getDate();
+
+const applyFilterAndSort = (
+  events: GetEventsRes[],
+  filter: FilterValues,
+  sortOrder: string,
+) => {
+  let result = events;
+
+  if (filter.accessRights.length > 0) {
+    result = result.filter((event) =>
+      filter.accessRights.some(
+        (right) => event.role?.toLowerCase() === right.toLowerCase(),
+      ),
+    );
+  }
+
+  if (filter.date) {
+    result = result.filter((event) =>
+      isSameDay(new Date(event.start_time), filter.date!),
+    );
+  }
+
+  return [...result].sort((a, b) => {
+    const diff =
+      new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
+    return sortOrder === "oldest" ? diff : -diff;
+  });
+};
+
 const EventPageTemplate = () => {
   const t = useTranslations("Events");
-  const [sortOrder, setSortOrder] = useState("newest");
   const [currentPage, setCurrentPage] = useState(1);
 
   const [managedEvents, setManagedEvents] = useState<GetEventsRes[]>([]);
@@ -27,12 +59,34 @@ const EventPageTemplate = () => {
     useState<APIPagination | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const [myEventsFilter, setMyEventsFilter] = useState<FilterValues>({
+    accessRights: [],
+    date: undefined,
+  });
+  const [myEventsSort, setMyEventsSort] = useState("newest");
+  const [pastEventsFilter, setPastEventsFilter] = useState<FilterValues>({
+    accessRights: [],
+    date: undefined,
+  });
+  const [pastEventsSort, setPastEventsSort] = useState("newest");
+
   // Separate current and past managed events
   const currentManagedEvents = managedEvents.filter(
     (event) => new Date(event.end_time) >= new Date(),
   );
   const pastManagedEvents = managedEvents.filter(
     (event) => new Date(event.end_time) < new Date(),
+  );
+
+  const filteredCurrentManagedEvents = applyFilterAndSort(
+    currentManagedEvents,
+    myEventsFilter,
+    myEventsSort,
+  );
+  const filteredPastEvents = applyFilterAndSort(
+    [...pastManagedEvents, ...attendedEvents],
+    pastEventsFilter,
+    pastEventsSort,
   );
 
   useEffect(() => {
@@ -67,26 +121,19 @@ const EventPageTemplate = () => {
     : 1;
 
   const handleMyEventsFilterChange = (values: FilterValues) => {
-    console.log("กิจกรรมของฉัน filter:", {
-      accessRights: values.accessRights,
-      date: values.date?.toLocaleDateString("th-TH"),
-    });
+    setMyEventsFilter(values);
   };
 
   const handleMyEventsSortChange = (value: string) => {
-    setSortOrder(value);
-    console.log("กิจกรรมของฉัน sort:", value);
+    setMyEventsSort(value);
   };
 
   const handlePastEventsFilterChange = (values: FilterValues) => {
-    console.log("กิจกรรมที่ผ่านมา filter:", {
-      accessRights: values.accessRights,
-      date: values.date?.toLocaleDateString("th-TH"),
-    });
+    setPastEventsFilter(values);
   };
 
   const handlePastEventsSortChange = (value: string) => {
-    console.log("กิจกรรมที่ผ่านมา sort:", value);
+    setPastEventsSort(value);
   };
 
   return (
@@ -125,7 +172,7 @@ const EventPageTemplate = () => {
             <EventCardSkeleton />
             <EventCardSkeleton />
           </div>
-        ) : currentManagedEvents.length === 0 ? (
+        ) : filteredCurrentManagedEvents.length === 0 ? (
           <EventEmptyState
             iconName="AlbumsOutline"
             title="ยังไม่มีกิจกรรมที่เข้าร่วม"
@@ -133,7 +180,7 @@ const EventPageTemplate = () => {
           />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {currentManagedEvents.map((event) => {
+            {filteredCurrentManagedEvents.map((event) => {
               const start = new Date(event.start_time);
               const end = new Date(event.end_time);
               const isEnd = end < new Date();
@@ -192,7 +239,7 @@ const EventPageTemplate = () => {
             <EventCardSkeleton isEnd />
             <EventCardSkeleton isEnd />
           </div>
-        ) : pastManagedEvents.length === 0 && attendedEvents.length === 0 ? (
+        ) : filteredPastEvents.length === 0 ? (
           <EventEmptyState
             iconName="TimerOutline"
             title="ยังไม่มีกิจกรรมที่ผ่านมา"
@@ -205,7 +252,7 @@ const EventPageTemplate = () => {
           />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {[...pastManagedEvents, ...attendedEvents].map((event) => {
+            {filteredPastEvents.map((event) => {
               const start = new Date(event.start_time);
               const end = new Date(event.end_time);
               const isEnd = end < new Date();
