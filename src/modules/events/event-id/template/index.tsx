@@ -5,14 +5,9 @@ import { useTranslations } from "next-intl";
 import IonIcon from "@shared/IonIcon";
 import Icon from "@shared/Icon";
 import Button from "@shared/Button";
-import ShareModal from "@modules/events/event-id/components/shareModal";
-import DuplicateModal from "@modules/events/event-id/components/duplicateModal";
-import MobileManageModal from "@modules/events/event-id/components/mobileManageModal";
-import MobileDuplicateSheet from "@modules/events/event-id/components/mobileDuplicateSheet";
-import { MOCK_SHARE_MODAL_DATA } from "@modules/events/event-id/constants/mock-up";
 import { fetchEventById } from "@services/events";
 import EventDetailSkeleton from "@modules/events/event-id/components/event-detail-skeleton";
-import type { GetOneEventRes, EventInfo } from "@customTypes/events";
+import type { GetOneEventRes } from "@customTypes/events";
 import { useRouter } from "@i18n/navigation";
 
 interface EventIdPageTemplateProps {
@@ -22,11 +17,6 @@ interface EventIdPageTemplateProps {
 const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   const t = useTranslations("EventDetail");
   const router = useRouter();
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false);
-  const [isMobileManageModalOpen, setIsMobileManageModalOpen] = useState(false);
-  const [isMobileDuplicateSheetOpen, setIsMobileDuplicateSheetOpen] =
-    useState(false);
 
   const [eventData, setEventData] = useState<GetOneEventRes | null>(null);
   const [loading, setLoading] = useState(true);
@@ -230,86 +220,8 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
               className="w-6 h-6 md:w-9 md:h-9 text-primary"
             />
           </Button>
-          <Button
-            mode="outline"
-            bordered="round"
-            expanded={false}
-            className="hidden md:block"
-            onClick={() => setIsDuplicateModalOpen(true)}
-          >
-            <IonIcon
-              name="DuplicateOutline"
-              className="w-6 h-6 md:w-9 md:h-9 text-primary"
-            />
-          </Button>
-          <Button
-            mode="outline"
-            bordered="round"
-            expanded={false}
-            className="md:hidden"
-            onClick={() => setIsMobileManageModalOpen(true)}
-          >
-            <IonIcon
-              name="ArrowRedoOutline"
-              className="w-6 h-6 md:w-9 md:h-9 text-primary"
-            />
-          </Button>
-          <Button
-            mode="outline"
-            bordered="round"
-            expanded={false}
-            className="hidden md:block"
-            onClick={() => setIsShareModalOpen(true)}
-          >
-            <IonIcon
-              name="ArrowRedoOutline"
-              className="w-6 h-6 md:w-9 md:h-9 text-primary"
-            />
-          </Button>
         </div>
       </div>
-
-      <ShareModal
-        open={isShareModalOpen}
-        onOpenChange={setIsShareModalOpen}
-        eventData={MOCK_SHARE_MODAL_DATA}
-      />
-
-      <DuplicateModal
-        open={isDuplicateModalOpen}
-        onOpenChange={setIsDuplicateModalOpen}
-        eventData={
-          {
-            ...eventData,
-            description: eventData.description ?? "",
-            evaluation_form: eventData.evaluation_form ?? "",
-            date: eventData.start_time,
-          } as EventInfo
-        }
-      />
-
-      <MobileManageModal
-        open={isMobileManageModalOpen}
-        onOpenChange={setIsMobileManageModalOpen}
-        eventData={MOCK_SHARE_MODAL_DATA}
-        onDuplicate={() => {
-          setIsMobileManageModalOpen(false);
-          setIsMobileDuplicateSheetOpen(true);
-        }}
-      />
-
-      <MobileDuplicateSheet
-        open={isMobileDuplicateSheetOpen}
-        onOpenChange={setIsMobileDuplicateSheetOpen}
-        eventData={
-          {
-            ...eventData,
-            description: eventData.description ?? "",
-            evaluation_form: eventData.evaluation_form ?? "",
-            date: eventData.start_time,
-          } as EventInfo
-        }
-      />
     </div>
   );
 };

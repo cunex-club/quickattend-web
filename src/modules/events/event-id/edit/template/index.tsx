@@ -45,7 +45,6 @@ import {
 } from "@assets/components/ui/dialog";
 import EditEventDuplicate from "../components/edit-event-duplicate";
 import EditEventDelete from "../components/edit-event-delete";
-import { deepEqual } from "@utils/function";
 import { DEFAULT_CENTER } from "@modules/events/create/components/map-selection";
 import EventDetailSkeleton from "@modules/events/event-id/components/event-detail-skeleton";
 
@@ -101,7 +100,6 @@ const EventEditTemplate = () => {
   const [eventForm, setEventForm] =
     useState<EventFormInterface>(EMPTY_EVENT_FORM);
   const [ownerRefId, setOwnerRefId] = useState<string | null>(null);
-  const [canSave, setCanSave] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -138,10 +136,6 @@ const EventEditTemplate = () => {
       return false;
     }
   };
-
-  useEffect(() => {
-    setCanSave(!deepEqual(lastSavedEventForm, eventForm));
-  }, [eventForm, lastSavedEventForm]);
 
   useEffect(() => {
     if (
@@ -245,28 +239,6 @@ const EventEditTemplate = () => {
           <p className="headline-small-emphasized">{tEditEvent("editEvent")}</p>
 
           <div className="flex gap-2 items-center">
-            <Button
-              mode="outline"
-              bordered="round"
-              expanded={false}
-              disabled={!canSave || isSaving}
-              onClick={() => {
-                if (canSave && !isSaving) {
-                  saveEvent();
-                }
-              }}
-              className={`${
-                canSave
-                  ? "cursor-pointer border-primary text-primary"
-                  : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
-              } w-fit h-9 px-1 pr-2 flex items-center`}
-            >
-              <IonIcon
-                name="SaveOutline"
-                size="16px"
-                className="font-semibold"
-              />
-            </Button>
             <Button
               mode="filled"
               bordered="square"
