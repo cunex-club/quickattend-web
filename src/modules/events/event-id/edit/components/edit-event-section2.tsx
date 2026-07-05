@@ -30,13 +30,22 @@ import Button from "@shared/Button";
 import IonIcon from "@shared/IonIcon";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { fetchUserByRefId, type UserByRefIdRes } from "@services/users";
+import { APIRequestError } from "@services/events";
 
 interface EditEventSection1Props {
   eventForm: EventFormInterface;
   setEventForm: (formdata: EventFormInterface) => void;
 }
 
-const MOCK_STUDENTNAME = "นางสาวปริณ ไกรภพ";
+const formatUserName = (user: UserByRefIdRes) =>
+  [user.title_th, user.firstname_th, user.surname_th]
+    .filter(Boolean)
+    .join(" ") ||
+  [user.title_en, user.firstname_en, user.surname_en]
+    .filter(Boolean)
+    .join(" ") ||
+  user.ref_id;
 
 const EditEventSection2 = ({
   eventForm,
@@ -61,6 +70,9 @@ const EditEventSection2 = ({
     useState<string[]>([]);
 
   const [openFacultyFilter, setOpenFacultyFilter] = useState(false);
+
+  const [isLookingUpStudent, setIsLookingUpStudent] = useState(false);
+  const [isLookingUpManager, setIsLookingUpManager] = useState(false);
 
   useEffect(() => {
     if (!facultyQuery) {
@@ -298,7 +310,8 @@ const EditEventSection2 = ({
                     studentIdPermissionQuery?.length != 8) ||
                   selectedStudentIdsPermission?.includes(
                     studentIdPermissionQuery,
-                  )
+                  ) ||
+                  isLookingUpStudent
                 }
                 className={`w-fit h-9 shrink-0 ${
                   eventForm.attendance_type == AttendanceType.WHITELIST &&
@@ -310,7 +323,7 @@ const EditEventSection2 = ({
                     ? "cursor-pointer"
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
                 }`}
-                onClick={() => {
+                onClick={async () => {
                   if (eventForm.attendance_type != AttendanceType.WHITELIST)
                     return;
 
@@ -326,30 +339,41 @@ const EditEventSection2 = ({
                   )
                     return;
 
-                  // =====
-                  // TODO: Fetch Student Name from Student Id
-                  // =====
+                  setIsLookingUpStudent(true);
+                  try {
+                    const res = await fetchUserByRefId(
+                      studentIdPermissionQuery,
+                    );
 
-                  const student: Student = {
-                    id: studentIdPermissionQuery,
-                    name: MOCK_STUDENTNAME,
-                  };
+                    const student: Student = {
+                      id: studentIdPermissionQuery,
+                      name: formatUserName(res.data),
+                    };
 
-                  setEventForm({
-                    ...eventForm,
-                    selectedStudents: [
-                      ...eventForm.selectedStudents,
-                      student,
-                    ].sort((a, b) => {
-                      return Number(a.id) - Number(b.id);
-                    }),
-                  });
+                    setEventForm({
+                      ...eventForm,
+                      selectedStudents: [
+                        ...eventForm.selectedStudents,
+                        student,
+                      ].sort((a, b) => {
+                        return Number(a.id) - Number(b.id);
+                      }),
+                    });
 
-                  setSelectedStudentIdsPermission((prev) => [
-                    ...prev,
-                    studentIdPermissionQuery,
-                  ]);
-                  setStudentIdPermissionQuery("");
+                    setSelectedStudentIdsPermission((prev) => [
+                      ...prev,
+                      studentIdPermissionQuery,
+                    ]);
+                    setStudentIdPermissionQuery("");
+                  } catch (err) {
+                    const message =
+                      err instanceof APIRequestError
+                        ? err.message
+                        : "Failed to fetch student";
+                    alert(message);
+                  } finally {
+                    setIsLookingUpStudent(false);
+                  }
                 }}
               >
                 <p className="label-large-primary -translate-y-1">
@@ -614,7 +638,8 @@ const EditEventSection2 = ({
                   selectedStudentIdsAccessibility?.includes(
                     studentIdAccessibilityQuery,
                   ) ||
-                  roleAccessibilityQuery == ""
+                  roleAccessibilityQuery == "" ||
+                  isLookingUpManager
                 }
                 className={`w-fit h-9 shrink-0 ${
                   (studentIdAccessibilityQuery?.length == 10 ||
@@ -626,7 +651,7 @@ const EditEventSection2 = ({
                     ? "cursor-pointer"
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
                 }`}
-                onClick={() => {
+                onClick={async () => {
                   if (
                     studentIdAccessibilityQuery.length != 10 &&
                     studentIdAccessibilityQuery.length != 8
@@ -640,33 +665,44 @@ const EditEventSection2 = ({
                     return;
                   if (roleAccessibilityQuery == "") return;
 
-                  // =====
-                  // TODO: Fetch Student Name from Student Id
-                  // =====
+                  setIsLookingUpManager(true);
+                  try {
+                    const res = await fetchUserByRefId(
+                      studentIdAccessibilityQuery,
+                    );
 
-                  const manager: EventManager = {
-                    id: studentIdAccessibilityQuery,
-                    name: MOCK_STUDENTNAME,
-                    role: roleAccessibilityQuery ?? "",
-                  };
+                    const manager: EventManager = {
+                      id: studentIdAccessibilityQuery,
+                      name: formatUserName(res.data),
+                      role: roleAccessibilityQuery,
+                    };
 
-                  setEventForm({
-                    ...eventForm,
-                    managers_and_staff: [
-                      ...eventForm.managers_and_staff,
-                      manager,
-                    ].sort((a, b) => {
-                      return Number(a.id) - Number(b.id);
-                    }),
-                  });
+                    setEventForm({
+                      ...eventForm,
+                      managers_and_staff: [
+                        ...eventForm.managers_and_staff,
+                        manager,
+                      ].sort((a, b) => {
+                        return Number(a.id) - Number(b.id);
+                      }),
+                    });
 
-                  setSelectedStudentIdsAccessibility((prev) => [
-                    ...prev,
-                    studentIdAccessibilityQuery,
-                  ]);
+                    setSelectedStudentIdsAccessibility((prev) => [
+                      ...prev,
+                      studentIdAccessibilityQuery,
+                    ]);
 
-                  setRoleAccessibilityQuery("");
-                  setStudentIdAccessibilityQuery("");
+                    setRoleAccessibilityQuery("");
+                    setStudentIdAccessibilityQuery("");
+                  } catch (err) {
+                    const message =
+                      err instanceof APIRequestError
+                        ? err.message
+                        : "Failed to fetch manager";
+                    alert(message);
+                  } finally {
+                    setIsLookingUpManager(false);
+                  }
                 }}
               >
                 <p className="label-large-primary -translate-y-1">

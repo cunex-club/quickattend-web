@@ -171,6 +171,7 @@
     "back": "ย้อนกลับ",
     "next": "ถัดไป",
     "create": "สร้างกิจกรรม",
+    "creating": "กำลังสร้าง...",
     "eventDetail": "รายละเอียดกิจกรรม",
     "name": "ชื่อกิจกรรม",
     "namePlaceholder": "ชื่อกิจกรรม",
@@ -293,6 +294,7 @@
     "submitDelete": "ลบกิจกรรม"
   },
   "EventDetail": {
+    "edit": "แก้ไขกิจกรรม",
     "registeredCount": "จำนวนผู้ลงทะเบียน",
     "eventDetails": "รายละเอียดกิจกรรม",
     "agenda": "กำหนดการกิจกรรม",

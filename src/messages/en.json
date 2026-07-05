@@ -170,6 +170,7 @@
     "back": "Back",
     "next": "Next",
     "create": "Create an event",
+    "creating": "Creating...",
     "eventDetail": "Event Detail",
     "name": "Event name",
     "namePlaceholder": "Event name",
@@ -292,6 +293,7 @@
     "submitDelete": "Delete"
   },
   "EventDetail": {
+    "edit": "แก้ไขกิจกรรม",
     "registeredCount": "จำนวนผู้ลงทะเบียน",
     "eventDetails": "รายละเอียดกิจกรรม",
     "agenda": "กำหนดการกิจกรรม",

@@ -29,99 +29,52 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@assets/components/ui/select";
+import {
+  fetchUserByRefId,
+  type UserByRefIdRes,
+} from "@services/users";
+import { APIRequestError } from "@services/events";
 
-const MOCK_STUDENTNAME = "นางสาวปริณ ไกรภพ";
+const formatUserName = (user: UserByRefIdRes) =>
+  [user.title_th, user.firstname_th, user.surname_th]
+    .filter(Boolean)
+    .join(" ") ||
+  [user.title_en, user.firstname_en, user.surname_en]
+    .filter(Boolean)
+    .join(" ") ||
+  user.ref_id;
+
 interface CreateEventStep2Props {
   eventForm: EventFormInterface;
   setEventForm: (formdata: EventFormInterface) => void;
 }
 
-export const FacultyList: string[] = [
-  "คณะครุศาสตร์",
-  "คณะจิตวิทยา",
-  "คณะทันตแพทยศาสตร์",
-  "คณะนิติศาสตร์",
-  "คณะนิเทศศาสตร์",
-  "คณะพยาบาลศาสตร์",
-  "คณะพาณิชยศาสตร์และการบัญชี",
-  "คณะแพทยศาสตร์",
-  "คณะเภสัชศาสตร์",
-  "คณะรัฐศาสตร์",
-  "คณะวิทยาศาสตร์",
-  "คณะวิทยาศาสตร์การกีฬา",
-  "คณะวิศวกรรมศาสตร์",
-  "คณะศิลปกรรมศาสตร์",
-  "คณะสถาปัตยกรรมศาสตร์",
-  "คณะสหเวชศาสตร์",
-  "คณะสัตวแพทยศาสตร์",
-  "คณะอักษรศาสตร์",
-  "คณะเศรษฐศาสตร์",
-  "จุฬาลงกรณ์มหาวิทยาลัย",
-  "บัณฑิตวิทยาลัย",
-  "วิทยาลัยประชากรศาสตร์",
-  "วิทยาลัยปิโตรเลียมและปิโตรเคมี",
-  "วิทยาลัยวิทยาศาสตร์สาธารณสุข",
-  "ศูนย์การจัดการทรัพยากรของมหาวิทยาลัย",
-  "ศูนย์การศึกษาทั่วไป",
-  "ศูนย์กีฬาแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์ความเป็นเลิศด้านเทคโนโลยีปิโตรเคมีและวัสดุ",
-  "ศูนย์ความปลอดภัย อาชีวอนามัยและสิ่งแวดล้อม จุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์จุฬาฯ-ชนบท",
-  "ศูนย์เชี่ยวชาญไฟฟ้ากำลัง",
-  "ศูนย์ทดสอบทางวิชาการแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์นวัตกรรมการเรียนรู้",
-  "ศูนย์บริหารกลาง",
-  "ศูนย์บริหารความเสี่ยง",
-  "ศูนย์บริการสุขภาพแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์บริการวิชาการแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์พัฒนกิจและนิสิตเก่าสัมพันธ์",
-  "ศูนย์รักษาความปลอดภัยและจัดการจราจรแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์ระดับภูมิภาคทางวิศวกรรม",
-  "ศูนย์วิทยาศาสตร์ฮาลาล จุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์วิเคราะห์รายได้และปฏิบัติการลงทุน",
-  "ศูนย์สัตว์ทดลอง จุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์สื่อสารองค์กร",
-  "ศูนย์หนังสือแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์เครือข่ายการเรียนรู้เพื่อภูมิภาค จุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์เครื่องมือวิจัยวิทยาศาสตร์และเทคโนโลยี จุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์กลางนวัตกรรมแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "สถาบันการขนส่ง",
-  "สถาบันขงจื่อแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "สถาบันนวัตกรรมบูรณาการแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "สถาบันบัณฑิตบริหารธุรกิจ ศศินทร์ แห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "สถาบันภาษา",
-  "สถาบันภาษาไทยสิรินธรแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "สถาบันวิจัยทรัพยากรทางน้ำ",
-  "สถาบันวิจัยพลังงาน",
-  "สถาบันวิจัยสังคม",
-  "สถาบันวิจัยสิ่งแวดล้อมเพื่อความยั่งยืน",
-  "สถาบันวิจัยเทคโนโลยีชีวภาพและวิศวกรรมพันธุศาสตร์",
-  "สถาบันวิจัยโลหะและวัสดุ",
-  "สถาบันเอเชียศึกษา",
-  "สถาบันไทยศึกษา",
-  "สภาคณาจารย์",
-  "สำนักกฎหมายและนิติการ",
-  "สำนักกิจการวุฒยาจารย์",
-  "สำนักตรวจสอบ",
-  "สำนักบริหารกิจการนิสิต",
-  "สำนักบริหารการเงิน การบัญชี และการพัสดุ",
-  "สำนักบริหารทรัพยากรมนุษย์",
-  "สำนักบริหารระบบกายภาพ",
-  "สำนักบริหารวิชาการ",
-  "สำนักบริหารวิจัย",
-  "สำนักบริหารวิรัชกิจและเครือข่ายนานาชาติ",
-  "สำนักบริหารศิลปวัฒนธรรม",
-  "สำนักบริหารเทคโนโลยีสารสนเทศ",
-  "สำนักบริหารแผนและการงบประมาณ",
-  "สำนักพิมพ์แห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "สำนักยุทธศาสตร์และการขับเคลื่อน",
-  "สำนักวิชาทรัพยากรการเกษตร",
-  "สำนักงานการทะเบียน",
-  "สำนักงานจัดการทรัพย์สิน",
-  "สำนักงานมหาวิทยาลัย",
-  "สำนักงานวิทยทรัพยากร",
-  "สำนักงานสภามหาวิทยาลัย",
-];
+export const FacultyCodeMap: Record<string, number> = {
+  คณะวิศวกรรมศาสตร์: 21,
+  คณะอักษรศาสตร์: 22,
+  คณะวิทยาศาสตร์: 23,
+  คณะรัฐศาสตร์: 24,
+  คณะสถาปัตยกรรมศาสตร์: 25,
+  คณะพาณิชยศาสตร์และการบัญชี: 26,
+  คณะครุศาสตร์: 27,
+  คณะนิเทศศาสตร์: 28,
+  คณะเศรษฐศาสตร์: 29,
+  คณะแพทยศาสตร์: 30,
+  คณะสัตวแพทยศาสตร์: 31,
+  คณะทันตแพทยศาสตร์: 32,
+  คณะเภสัชศาสตร์: 33,
+  คณะนิติศาสตร์: 34,
+  คณะศิลปกรรมศาสตร์: 35,
+  คณะพยาบาลศาสตร์: 36,
+  คณะสหเวชศาสตร์: 37,
+  คณะจิตวิทยา: 38,
+  คณะวิทยาศาสตร์การกีฬา: 39,
+  สำนักวิชาทรัพยากรการเกษตร: 40,
+};
+
+export const FacultyList: string[] = Object.keys(FacultyCodeMap).sort((a, b) =>
+  a.localeCompare(b, "th"),
+);
 
 const CreateEventStep2 = ({
   eventForm,
@@ -146,6 +99,9 @@ const CreateEventStep2 = ({
     useState<string[]>([]);
 
   const [openFacultyFilter, setOpenFacultyFilter] = useState(false);
+
+  const [isLookingUpStudent, setIsLookingUpStudent] = useState(false);
+  const [isLookingUpManager, setIsLookingUpManager] = useState(false);
 
   useEffect(() => {
     if (!facultyQuery) {
@@ -383,7 +339,8 @@ const CreateEventStep2 = ({
                     studentIdPermissionQuery?.length != 8) ||
                   selectedStudentIdsPermission?.includes(
                     studentIdPermissionQuery,
-                  )
+                  ) ||
+                  isLookingUpStudent
                 }
                 className={`w-fit h-9 shrink-0 ${
                   eventForm.attendance_type == AttendanceType.WHITELIST &&
@@ -395,7 +352,7 @@ const CreateEventStep2 = ({
                     ? "cursor-pointer"
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
                 }`}
-                onClick={() => {
+                onClick={async () => {
                   if (eventForm.attendance_type != AttendanceType.WHITELIST)
                     return;
 
@@ -411,30 +368,41 @@ const CreateEventStep2 = ({
                   )
                     return;
 
-                  // =====
-                  // TODO: Fetch Student Name from Student Id
-                  // =====
+                  setIsLookingUpStudent(true);
+                  try {
+                    const res = await fetchUserByRefId(
+                      studentIdPermissionQuery,
+                    );
 
-                  const student: Student = {
-                    id: studentIdPermissionQuery,
-                    name: MOCK_STUDENTNAME,
-                  };
+                    const student: Student = {
+                      id: studentIdPermissionQuery,
+                      name: formatUserName(res.data),
+                    };
 
-                  setEventForm({
-                    ...eventForm,
-                    selectedStudents: [
-                      ...eventForm.selectedStudents,
-                      student,
-                    ].sort((a, b) => {
-                      return Number(a.id) - Number(b.id);
-                    }),
-                  });
+                    setEventForm({
+                      ...eventForm,
+                      selectedStudents: [
+                        ...eventForm.selectedStudents,
+                        student,
+                      ].sort((a, b) => {
+                        return Number(a.id) - Number(b.id);
+                      }),
+                    });
 
-                  setSelectedStudentIdsPermission((prev) => [
-                    ...prev,
-                    studentIdPermissionQuery,
-                  ]);
-                  setStudentIdPermissionQuery("");
+                    setSelectedStudentIdsPermission((prev) => [
+                      ...prev,
+                      studentIdPermissionQuery,
+                    ]);
+                    setStudentIdPermissionQuery("");
+                  } catch (err) {
+                    const message =
+                      err instanceof APIRequestError
+                        ? err.message
+                        : "Failed to fetch student";
+                    alert(message);
+                  } finally {
+                    setIsLookingUpStudent(false);
+                  }
                 }}
               >
                 <p className="label-large-primary -translate-y-1">
@@ -698,7 +666,8 @@ const CreateEventStep2 = ({
                   selectedStudentIdsAccessibility?.includes(
                     studentIdAccessibilityQuery,
                   ) ||
-                  roleAccessibilityQuery == ""
+                  roleAccessibilityQuery == "" ||
+                  isLookingUpManager
                 }
                 expanded={false}
                 className={`w-fit h-9 shrink-0 ${
@@ -711,7 +680,7 @@ const CreateEventStep2 = ({
                     ? "cursor-pointer"
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
                 }`}
-                onClick={() => {
+                onClick={async () => {
                   if (
                     studentIdAccessibilityQuery.length != 8 &&
                     studentIdAccessibilityQuery.length != 10
@@ -725,33 +694,44 @@ const CreateEventStep2 = ({
                     return;
                   if (roleAccessibilityQuery == "") return;
 
-                  // =====
-                  // TODO: Fetch Student Name from Student Id
-                  // =====
+                  setIsLookingUpManager(true);
+                  try {
+                    const res = await fetchUserByRefId(
+                      studentIdAccessibilityQuery,
+                    );
 
-                  const manager: EventManager = {
-                    id: studentIdAccessibilityQuery,
-                    name: MOCK_STUDENTNAME,
-                    role: roleAccessibilityQuery ?? "",
-                  };
+                    const manager: EventManager = {
+                      id: studentIdAccessibilityQuery,
+                      name: formatUserName(res.data),
+                      role: roleAccessibilityQuery,
+                    };
 
-                  setEventForm({
-                    ...eventForm,
-                    managers_and_staff: [
-                      ...eventForm.managers_and_staff,
-                      manager,
-                    ].sort((a, b) => {
-                      return Number(a.id) - Number(b.id);
-                    }),
-                  });
+                    setEventForm({
+                      ...eventForm,
+                      managers_and_staff: [
+                        ...eventForm.managers_and_staff,
+                        manager,
+                      ].sort((a, b) => {
+                        return Number(a.id) - Number(b.id);
+                      }),
+                    });
 
-                  setSelectedStudentIdsAccessibility((prev) => [
-                    ...prev,
-                    studentIdAccessibilityQuery,
-                  ]);
+                    setSelectedStudentIdsAccessibility((prev) => [
+                      ...prev,
+                      studentIdAccessibilityQuery,
+                    ]);
 
-                  setRoleAccessibilityQuery("");
-                  setStudentIdAccessibilityQuery("");
+                    setRoleAccessibilityQuery("");
+                    setStudentIdAccessibilityQuery("");
+                  } catch (err) {
+                    const message =
+                      err instanceof APIRequestError
+                        ? err.message
+                        : "Failed to fetch manager";
+                    alert(message);
+                  } finally {
+                    setIsLookingUpManager(false);
+                  }
                 }}
               >
                 <p className="label-large-primary -translate-y-1">

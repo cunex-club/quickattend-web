@@ -11,6 +11,15 @@ import {
   CardPreviewType,
   EventFormInterface,
 } from "@modules/events/create/template";
+import {
+  buildCreateEventReq,
+  mapEventResToForm,
+} from "@modules/events/create/mappers";
+import {
+  fetchEventById,
+  updateEvent,
+  APIRequestError,
+} from "@services/events";
 import EditEventSection1 from "../components/edit-event-section1";
 import EditEventSection2 from "../components/edit-event-section2";
 import EditEventSection3 from "../components/edit-event-section3";
@@ -38,6 +47,7 @@ import EditEventDuplicate from "../components/edit-event-duplicate";
 import EditEventDelete from "../components/edit-event-delete";
 import { deepEqual } from "@utils/function";
 import { DEFAULT_CENTER } from "@modules/events/create/components/map-selection";
+import EventDetailSkeleton from "@modules/events/event-id/components/event-detail-skeleton";
 
 export const SideTabType = {
   NAVIGATE: "navigate",
@@ -66,59 +76,59 @@ const EventEditTemplate = () => {
 
   const [valid, setValid] = useState(false);
 
-  // NOTE: MOCK VERSION
-  const fetchedEventForm: EventFormInterface = {
-    name: "Sample Event",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    date: new Date("2026-02-10"),
+  const EMPTY_EVENT_FORM: EventFormInterface = {
+    name: "",
+    description: "",
+    date: undefined,
+    startTime: undefined,
+    endTime: undefined,
+    location: "",
     lat: DEFAULT_CENTER.lat,
     lng: DEFAULT_CENTER.lng,
-    startTime: new Date("2026-02-10T09:00:00"),
-    endTime: new Date("2026-02-10T16:00:00"),
-    location: "Main Auditorium, Building A",
-    agenda: [
-      {
-        id: "1",
-        activity_name: "Opening Ceremony",
-        startTime: new Date("2026-02-10T09:00:00"),
-        endTime: new Date("2026-02-10T09:30:00"),
-      },
-      {
-        id: "2",
-        activity_name: "Keynote Speech",
-        startTime: new Date("2026-02-10T09:30:00"),
-        endTime: new Date("2026-02-10T10:30:00"),
-      },
-    ],
-    organizer: "Student Affairs Office",
-    attendance_type: "faculties",
-    selectedFaculties: ["คณะวิศวกรรมศาสตร์"],
+    agenda: [],
+    organizer: "",
+    attendance_type: "all",
+    selectedFaculties: [],
     selectedStudents: [],
-    revealed_fields: ["name"],
-    managers_and_staff: [
-      {
-        id: "6631333321",
-        name: "บลา บาล",
-        role: "manager",
-      },
-    ],
+    revealed_fields: [],
+    managers_and_staff: [],
     allow_all_to_scan: true,
-    evaluation_form: "https://forms.google.com/sample-evaluation-form",
+    evaluation_form: "",
   };
 
   const [lastSavedEventForm, setLastSavedEventForm] =
-    useState<EventFormInterface>(fetchedEventForm);
+    useState<EventFormInterface>(EMPTY_EVENT_FORM);
   const [eventForm, setEventForm] =
-    useState<EventFormInterface>(fetchedEventForm);
+    useState<EventFormInterface>(EMPTY_EVENT_FORM);
+  const [ownerRefId, setOwnerRefId] = useState<string | null>(null);
   const [canSave, setCanSave] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   const section1Ref = useRef<HTMLDivElement>(null);
   const section2Ref = useRef<HTMLDivElement>(null);
   const section3Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // TODO: Fetch event information using eventID
-  }, []);
+    const loadEvent = async () => {
+      setLoading(true);
+      try {
+        const res = await fetchEventById(String(eventId));
+        const { form, ownerRefId: fetchedOwnerRefId } = mapEventResToForm(
+          res.data,
+        );
+        setLastSavedEventForm(form);
+        setEventForm(form);
+        setOwnerRefId(fetchedOwnerRefId);
+      } catch (err) {
+        console.error("Failed to fetch event:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadEvent();
+  }, [eventId]);
 
   const isValidUrl = (value: string) => {
     try {
@@ -177,62 +187,44 @@ const EventEditTemplate = () => {
     }
   }, [openDelete, openDuplicate, width]);
 
-  const saveEvent = () => {
-    const agendaText = eventForm.agenda
-      .map((item, index) => {
-        return `${index + 1}. ${item.activity_name} 
-                        - Start: ${item.startTime}
-                        - End: ${item.endTime}`;
-      })
-      .join("\n");
+  const saveEvent = async () => {
+    if (!eventForm.date || !eventForm.startTime || !eventForm.endTime) return;
 
-    let attendeeText = "-";
-    if (eventForm.attendance_type == AttendanceType.FACULTIES) {
-      attendeeText = eventForm.selectedFaculties
-        .map((item, index) => {
-          return `${index + 1} ${item}`;
-        })
-        .join("\n");
-    } else if (eventForm.attendance_type == AttendanceType.WHITELIST) {
-      attendeeText = eventForm.selectedStudents
-        .map((item, index) => {
-          return `${index + 1} ${item.id} ${item.name}`;
-        })
-        .join("\n");
+    const body = buildCreateEventReq(eventForm);
+    if (ownerRefId) {
+      body.managers_and_staff.push({
+        ref_id: Number(ownerRefId),
+        role: "OWNER",
+      });
     }
 
-    const revealedFieldText = eventForm.revealed_fields.join(", ");
-
-    const managerAndStaffText = eventForm.managers_and_staff
-      .map((item, index) => {
-        return `${index + 1} ${item.id} ${item.name} ${item.role}`;
-      })
-      .join("\n");
-
-    alert(`Name: ${eventForm.name}
-    Description: ${eventForm.description}
-    Date: ${eventForm.date}
-    Start Time: ${eventForm.startTime}
-    End Date: ${eventForm.endTime}
-    Location: ${eventForm.location}
-    Lat: ${eventForm.lat}
-    Lng: ${eventForm.lng}
-    Agenda: ${agendaText}
-    Organizer: ${eventForm.organizer}
-    Attendance Type: ${eventForm.attendance_type}
-    Attendee: ${attendeeText}
-    Revealed Fields: ${revealedFieldText}
-    Manager and Staff: ${managerAndStaffText}
-    Allow All to Scan: ${eventForm.allow_all_to_scan}
-    Evaluation Form: ${eventForm.evaluation_form}`);
-
-    setLastSavedEventForm(eventForm);
+    setIsSaving(true);
+    try {
+      await updateEvent(String(eventId), body);
+      setLastSavedEventForm(eventForm);
+      return true;
+    } catch (err) {
+      const message =
+        err instanceof APIRequestError
+          ? err.message
+          : "Failed to update event";
+      alert(message);
+      return false;
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  const saveAndExit = () => {
-    saveEvent();
-    window.location.href = "/events";
+  const saveAndExit = async () => {
+    const saved = await saveEvent();
+    if (saved) {
+      window.location.href = "/events";
+    }
   };
+
+  if (loading) {
+    return <EventDetailSkeleton />;
+  }
 
   return (
     <>
@@ -257,9 +249,9 @@ const EventEditTemplate = () => {
               mode="outline"
               bordered="round"
               expanded={false}
-              disabled={!canSave}
+              disabled={!canSave || isSaving}
               onClick={() => {
-                if (canSave) {
+                if (canSave && !isSaving) {
                   saveEvent();
                 }
               }}
@@ -279,9 +271,9 @@ const EventEditTemplate = () => {
               mode="filled"
               bordered="square"
               expanded={false}
-              disabled={!valid}
+              disabled={!valid || isSaving}
               onClick={() => {
-                if (valid) {
+                if (valid && !isSaving) {
                   saveAndExit();
                 }
               }}

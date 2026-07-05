@@ -158,6 +158,10 @@ const CreateEventStep1 = ({
     return time;
   };
 
+  const lastAgendaEndTime =
+    eventForm.agenda[eventForm.agenda.length - 1]?.endTime ??
+    eventForm.startTime;
+
   const handleAddAgenda = () => {
     if (!eventForm.startTime || !eventForm.endTime) return;
 
@@ -166,7 +170,7 @@ const CreateEventStep1 = ({
     const start = buildAgendaDate(eventForm.startTime, agendaStart);
     const end = buildAgendaDate(eventForm.startTime, agendaEnd);
 
-    if (start < eventForm.startTime || end > eventForm.endTime) return;
+    if (start < lastAgendaEndTime || end > eventForm.endTime) return;
 
     if (end < start) return;
 
@@ -177,18 +181,12 @@ const CreateEventStep1 = ({
       endTime: end,
     };
 
-    const sortedAgenda = [...eventForm.agenda, newAgenda].sort(
-      (a, b) =>
-        a.startTime.getTime() - b.startTime.getTime() ||
-        a.endTime.getTime() - b.endTime.getTime(),
-    );
-
     setEventForm({
       ...eventForm,
-      agenda: sortedAgenda,
+      agenda: [...eventForm.agenda, newAgenda],
     });
 
-    setAgendaStart(format(eventForm.startTime, "HH:mm"));
+    setAgendaStart(format(end, "HH:mm"));
     setAgendaEnd(format(eventForm.endTime, "HH:mm"));
     setAgendaName("");
   };
@@ -207,30 +205,27 @@ const CreateEventStep1 = ({
     field: "startTime" | "endTime",
     time: string,
   ) => {
+    if (!eventForm.startTime || !eventForm.endTime) return;
+
     const updated = [...eventForm.agenda];
     const base = updated[index][field];
     const newDate = updateTime(base, time);
 
-    if (!eventForm.startTime || !eventForm.endTime) return;
+    const prevEnd = updated[index - 1]?.endTime ?? eventForm.startTime;
+    const nextStart = updated[index + 1]?.startTime ?? eventForm.endTime;
 
     if (field === "startTime" && newDate > updated[index].endTime) return;
-    if (field === "startTime" && newDate < eventForm.startTime) return;
+    if (field === "startTime" && newDate < prevEnd) return;
 
     if (field === "endTime" && newDate < updated[index].startTime) return;
-    if (field === "endTime" && newDate > eventForm.endTime) return;
+    if (field === "endTime" && newDate > nextStart) return;
 
     updated[index] = {
       ...updated[index],
       [field]: newDate,
     };
 
-    const sortedAgenda = updated.sort(
-      (a, b) =>
-        a.startTime.getTime() - b.startTime.getTime() ||
-        a.endTime.getTime() - b.endTime.getTime(),
-    );
-
-    setEventForm({ ...eventForm, agenda: sortedAgenda });
+    setEventForm({ ...eventForm, agenda: updated });
   };
 
   const updateAgendaName = (index: number, name: string) => {
@@ -415,13 +410,13 @@ const CreateEventStep1 = ({
                   type="time"
                   step="60"
                   value={agendaStart}
-                  min={formatTime(eventForm.startTime) ?? undefined}
+                  min={formatTime(lastAgendaEndTime) ?? undefined}
                   max={formatTime(eventForm.endTime) ?? undefined}
                   disabled={!eventForm.startTime || !eventForm.endTime}
                   onChange={(e) => {
                     const value = clampTime(
                       e.target.value,
-                      eventForm.startTime,
+                      lastAgendaEndTime,
                       eventForm.endTime,
                     );
 
@@ -548,7 +543,7 @@ const CreateEventStep1 = ({
               {/* Start Time */}
               <EditableTime
                 value={item.startTime}
-                min={eventForm.startTime}
+                min={eventForm.agenda[index - 1]?.endTime ?? eventForm.startTime}
                 max={item.endTime}
                 onChange={(time) => updateAgendaTime(index, "startTime", time)}
               />
@@ -557,7 +552,7 @@ const CreateEventStep1 = ({
               <EditableTime
                 value={item.endTime}
                 min={item.startTime}
-                max={eventForm.endTime}
+                max={eventForm.agenda[index + 1]?.startTime ?? eventForm.endTime}
                 onChange={(time) => updateAgendaTime(index, "endTime", time)}
               />
             </div>

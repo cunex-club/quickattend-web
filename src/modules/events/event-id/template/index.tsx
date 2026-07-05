@@ -102,9 +102,14 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
         <div className="lg:flex-[4] bg-neutral-100 p-6 lg:p-10 space-y-5 rounded-3xl shadow-xs">
           <div className="flex w-full items-center justify-between">
             <div className="display-medium-emphasized ">{eventData.name}</div>
-            <div>
+            <button
+              type="button"
+              aria-label={t("edit")}
+              onClick={() => router.push(`/events/${eventId}/edit`)}
+              className="cursor-pointer"
+            >
               <Icon name="edit" size={32} className="text-primary" />
-            </div>
+            </button>
           </div>
           <div>
             <div className="flex gap-2 items-center">

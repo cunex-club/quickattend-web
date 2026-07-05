@@ -30,87 +30,15 @@ import {
   DialogTitle,
 } from "@assets/components/ui/dialog";
 import { DEFAULT_CENTER } from "../components/map-selection";
+import { createEvent, APIRequestError } from "@services/events";
+import { buildCreateEventReq } from "../mappers";
+import {
+  AttendanceType,
+  CardPreviewType,
+  type EventFormInterface,
+} from "../types";
 
-export interface Agenda {
-  id: string;
-  activity_name: string;
-  startTime: Date;
-  endTime: Date;
-}
-
-export const AttendanceType = {
-  ALL: "all",
-  FACULTIES: "faculties",
-  WHITELIST: "whitelist",
-} as const;
-
-export const ParticipantFieldType = {
-  NAME: "name",
-  ORGANIZATION: "organization",
-  REFID: "refid",
-  PHOTO: "photo",
-} as const;
-
-export type AttendanceType =
-  (typeof AttendanceType)[keyof typeof AttendanceType];
-
-export const ScanPermissionType = {
-  LIMITED: "limited",
-  ANYONE: "anyone",
-} as const;
-
-export type ScanPermissionType =
-  (typeof ScanPermissionType)[keyof typeof ScanPermissionType];
-
-export interface Student {
-  id: string;
-  name: string;
-}
-
-export const EventManagerType = {
-  MANAGER: "manager",
-  STAFF: "staff",
-};
-
-export type EventManagerType =
-  (typeof EventManagerType)[keyof typeof EventManagerType];
-
-export type ParticipantFieldType =
-  (typeof ParticipantFieldType)[keyof typeof ParticipantFieldType];
-
-export const CardPreviewType = {
-  CARD_PREVIEW: "cardPreview",
-  DETAIL_PREVIEW: "detailPreview",
-};
-
-export type CardPreviewType =
-  (typeof CardPreviewType)[keyof typeof CardPreviewType];
-
-export interface EventManager {
-  id: string;
-  name: string;
-  role: EventManagerType;
-}
-
-export interface EventFormInterface {
-  name: string;
-  description: string;
-  date: Date | undefined;
-  startTime: Date | undefined;
-  endTime: Date | undefined;
-  location: string;
-  lat: number;
-  lng: number;
-  agenda: Agenda[];
-  organizer: string;
-  attendance_type: AttendanceType;
-  selectedFaculties: string[];
-  selectedStudents: Student[];
-  revealed_fields: ParticipantFieldType[];
-  managers_and_staff: EventManager[];
-  allow_all_to_scan: boolean;
-  evaluation_form: string;
-}
+export * from "../types";
 
 const EventCreateTemplate = () => {
   const { setShowSidebar } = useSidebar();
@@ -144,6 +72,7 @@ const EventCreateTemplate = () => {
   const [validStep1, setValidStep1] = useState(false);
   const [validStep2, setValidStep2] = useState(false);
   const [validStep3, setValidStep3] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [cardMode, setCardMode] = useState<CardPreviewType>(
     CardPreviewType.CARD_PREVIEW,
@@ -213,6 +142,26 @@ const EventCreateTemplate = () => {
       return true;
     } catch {
       return false;
+    }
+  };
+
+  const handleCreateEvent = async () => {
+    if (!eventForm.date || !eventForm.startTime || !eventForm.endTime) return;
+
+    const body = buildCreateEventReq(eventForm);
+
+    setIsSubmitting(true);
+    try {
+      const res = await createEvent(body);
+      router.push(`/events/${res.data.id}`);
+    } catch (err) {
+      const message =
+        err instanceof APIRequestError
+          ? err.message
+          : "Failed to create event";
+      alert(message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -431,70 +380,23 @@ const EventCreateTemplate = () => {
                   mode="filled"
                   bordered="square"
                   expanded
-                  disabled={step == 3 && !validStep3}
+                  disabled={(step == 3 && !validStep3) || isSubmitting}
                   className={`cursor-pointer max-w-40 h-9 ${
                     validStep3
                       ? "cursor-pointer border-primary"
                       : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
                   }`}
                   onClick={() => {
-                    if (step == 3 && validStep3) {
-                      const agendaText = eventForm.agenda
-                        .map((item, index) => {
-                          return `${index + 1}. ${item.activity_name} 
-                    - Start: ${item.startTime}
-                    - End: ${item.endTime}`;
-                        })
-                        .join("\n");
-
-                      let attendeeText = "-";
-                      if (
-                        eventForm.attendance_type == AttendanceType.FACULTIES
-                      ) {
-                        attendeeText = eventForm.selectedFaculties
-                          .map((item, index) => {
-                            return `${index + 1} ${item}`;
-                          })
-                          .join("\n");
-                      } else if (
-                        eventForm.attendance_type == AttendanceType.WHITELIST
-                      ) {
-                        attendeeText = eventForm.selectedStudents
-                          .map((item, index) => {
-                            return `${index + 1} ${item.id} ${item.name}`;
-                          })
-                          .join("\n");
-                      }
-
-                      const revealedFieldText =
-                        eventForm.revealed_fields.join(", ");
-
-                      const managerAndStaffText = eventForm.managers_and_staff
-                        .map((item, index) => {
-                          return `${index + 1} ${item.id} ${item.name} ${item.role}`;
-                        })
-                        .join("\n");
-
-                      alert(`Name: ${eventForm.name}
-                Description: ${eventForm.description}
-                Date: ${eventForm.date}
-                Start Time: ${eventForm.startTime}
-                End Date: ${eventForm.endTime}
-                Location: ${eventForm.location}
-                Lat: ${eventForm.lat}
-                Lng: ${eventForm.lng}
-                Agenda: ${agendaText}
-                Organizer: ${eventForm.organizer}
-                Attendance Type: ${eventForm.attendance_type}
-                Attendee: ${attendeeText}
-                Revealed Fields: ${revealedFieldText}
-                Manager and Staff: ${managerAndStaffText}
-                Allow All to Scan: ${eventForm.allow_all_to_scan}
-                Evaluation Form: ${eventForm.evaluation_form}`);
+                    if (step == 3 && validStep3 && !isSubmitting) {
+                      handleCreateEvent();
                     }
                   }}
                 >
-                  <p className="-translate-y-1">{tCreateEvent("create")}</p>
+                  <p className="-translate-y-1">
+                    {isSubmitting
+                      ? tCreateEvent("creating")
+                      : tCreateEvent("create")}
+                  </p>
                 </Button>
               )}
             </div>
