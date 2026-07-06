@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import {
   Bar,
   BarChart,
@@ -71,6 +72,7 @@ const addPercentageMetadata = (data: BarChartVerticalData[]) => {
 export function BarChartVerticalOverview({
   data,
 }: BarChartVerticalOverviewProps) {
+  const t = useTranslations("Charts");
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
 
@@ -91,7 +93,7 @@ export function BarChartVerticalOverview({
                   {item.faculty}
                 </p>
                 <p className="body-medium-primary md:body-large-primary text-[var(--color-label)]">
-                  {item.total} คน ({item.percentage}%)
+                  {item.total} {t("unit")} ({item.percentage}%)
                 </p>
               </div>
               <ChartContainer

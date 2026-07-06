@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname, useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import IonIcon from "@shared/IonIcon";
 import {
@@ -35,10 +35,11 @@ export function DashboardSidebar({
   currentUser = null,
 }: DashboardSidebarProps) {
   const t = useTranslations("Dashboard.sidebar");
+  const locale = useLocale();
   const pathname = usePathname();
   const { id } = useParams<{ id?: string }>();
 
-  const displayName = formatFullName(currentUser);
+  const displayName = formatFullName(currentUser, locale);
   const avatarFallback = getAvatarFallback(currentUser);
 
   const backToEventHref = id ? `/events/${id}` : "/events";
@@ -49,7 +50,9 @@ export function DashboardSidebar({
     <>
       {/* Mobile: Horizontal nav at top */}
       <nav className="lg:hidden w-full bg-neutral-100 px-4 py-3 flex flex-row justify-between">
-        <p className="headline-small-emphasized my-auto">สถิติการลงทะเบียน</p>
+        <p className="headline-small-emphasized my-auto">
+          {t("mobileTitle")}
+        </p>
         <div className="flex items-center space-x-4">
           <Popover>
             <PopoverTrigger asChild>

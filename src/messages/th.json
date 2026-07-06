@@ -8,6 +8,12 @@
   "profile": "โปรไฟล์",
   "help": "ช่วยเหลือ",
   "contactSupport": "ติดต่อฝ่ายสนับสนุน",
+  "Login": {
+    "featureCreateEvent": "สร้างกิจกรรมสำหรับแอพ CU NEX",
+    "featureScanDigitalId": "สแกนเข้าร่วมกิจกรรมด้วย Digital ID",
+    "featureShareLink": "แชร์ลิงก์ให้คนอื่นมาช่วยได้ง่ายๆ",
+    "continueWithCunex": "ดำเนินการต่อด้วย CU NEX"
+  },
   "ErrorPage": {
     "title": "เกิดข้อผิดพลาดบางอย่าง",
     "description": "ขออภัย ระบบไม่สามารถโหลดหน้านี้ได้ในขณะนี้",
@@ -28,7 +34,8 @@
   "Dashboard": {
     "sidebar": {
       "compare": "เปรียบเทียบ",
-      "back": "ย้อนกลับ"
+      "back": "ย้อนกลับ",
+      "mobileTitle": "สถิติการลงทะเบียน"
     },
     "navbar": {
       "overview": "ภาพรวม",
@@ -98,9 +105,21 @@
       "timeStatsTitle": "สถิติการลงทะเบียนแยกตามช่วงเวลา"
     }
   },
+  "Charts": {
+    "unit": "คน",
+    "totalParticipants": "จำนวนผู้เข้าร่วม",
+    "registered": "ลงทะเบียนแล้ว",
+    "notRegistered": "ยังไม่ลงทะเบียน"
+  },
   "Events": {
     "myEvents": "กิจกรรมของฉัน",
     "pastEvents": "กิจกรรมที่ผ่านมา",
+    "sortNewest": "วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด",
+    "sortOldest": "วันที่จัดกิจกรรม : เก่าสุด - ใหม่สุด",
+    "noJoinedEventsTitle": "ยังไม่มีกิจกรรมที่เข้าร่วม",
+    "noJoinedEventsDescription": "เริ่มเข้าร่วมกิจกรรม เพื่อสร้างประวัติและประสบการณ์ของคุณ",
+    "noPastEventsTitle": "ยังไม่มีกิจกรรมที่ผ่านมา",
+    "noPastEventsDescription": "เมื่อคุณเข้าร่วมและทำกิจกรรมสำเร็จ ประวัติและประสบการณ์ทั้งหมดของคุณจะแสดงที่นี่",
     "EventCard": {
       "shareQr": "แชร์ตัวสแกน QR",
       "shareStatistics": "แชร์สถิติ",
@@ -112,8 +131,20 @@
       "downloadStatistics": "ดาวน์โหลดสถิติ",
       "ended": "สิ้นสุดกิจกรรมแล้ว"
     },
+    "FilterMenu": {
+      "openFilterMenu": "เปิดเมนูตัวกรอง",
+      "accessRights": "สิทธิ์การเข้าถึง",
+      "clearFilter": "ล้างตัวกรอง",
+      "dateLabel": "วัน เดือน ปี",
+      "accessRightsOptions": {
+        "owner": "เจ้าของกิจกรรม",
+        "manager": "ผู้จัดการกิจกรรม",
+        "staff": "ผู้ดูแลงาน"
+      }
+    },
     "Search": {
       "back": "ย้อนกลับ",
+      "placeholder": "ค้นหากิจกรรม...",
       "searching": "กำลังค้นหากิจกรรมที่ต้องการ",
       "notFound": "ไม่เจอผลการค้นหา"
     }
@@ -315,6 +346,7 @@
   },
   "EventDetail": {
     "back": "ย้อนกลับ",
+    "notFound": "ไม่พบกิจกรรม",
     "edit": "แก้ไขกิจกรรม",
     "registeredCount": "จำนวนผู้ลงทะเบียน",
     "eventDetails": "รายละเอียดกิจกรรม",
@@ -360,7 +392,6 @@
     "addSchedule": "เพิ่มตารางกิจกรรม",
     "evaluationFormLink": "ลิงก์แบบฟอร์มประเมินกิจกรรม",
     "evaluationFormLinkPlaceholder": "วางลิงก์แบบฟอร์มประเมินกิจกรรม",
-    "back": "ย้อนกลับ",
     "submitDuplicate": "ยืนยันสร้างกิจกรรม",
     "Roles": {
       "owner": "Owner",

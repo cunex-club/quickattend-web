@@ -9,12 +9,11 @@ import FilterMenu, {
   FilterValues,
 } from "@modules/events/main-page/components/filter-menu";
 import Pagination from "@shared/Pagination";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
-import { Link } from "@i18n/navigation";
-import IonIcon from "@shared/IonIcon";
 import { fetchManagedEvents, fetchAttendedEvents } from "@services/events";
 import type { GetEventsRes, APIPagination } from "@customTypes/events";
+import { formatEventDate, formatEventTimeRange } from "@utils/eventDateTime";
 
 const isSameDay = (a: Date, b: Date) =>
   a.getFullYear() === b.getFullYear() &&
@@ -87,6 +86,7 @@ const applyFilterAndSort = (
 
 const EventPageTemplate = () => {
   const t = useTranslations("Events");
+  const locale = useLocale();
   const [currentPage, setCurrentPage] = useState(1);
 
   const [managedEvents, setManagedEvents] = useState<GetEventsRes[]>([]);
@@ -197,7 +197,7 @@ const EventPageTemplate = () => {
           <div className="headline-small-emphasized lg:display-medium-emphasized">
             {t("myEvents")}
           </div>
-          <div className="hidden lg:flex lg:flex-wrap lg:items-center lg:gap-1 lg:gap-2.25">
+          <div className="flex flex-wrap items-center gap-1 lg:gap-2.25">
             <FilterMenu
               menuId="my-events-filter"
               onFilterChange={handleMyEventsFilterChange}
@@ -207,11 +207,11 @@ const EventPageTemplate = () => {
               menuId="my-events-sort"
               options={[
                 {
-                  label: "วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด",
+                  label: t("sortNewest"),
                   value: "newest",
                 },
                 {
-                  label: "วันที่จัดกิจกรรม : เก่าสุด - ใหม่สุด",
+                  label: t("sortOldest"),
                   value: "oldest",
                 },
               ]}
@@ -228,21 +228,19 @@ const EventPageTemplate = () => {
         ) : filteredCurrentManagedEvents.length === 0 ? (
           <EventEmptyState
             iconName="AlbumsOutline"
-            title="ยังไม่มีกิจกรรมที่เข้าร่วม"
-            description="เริ่มเข้าร่วมกิจกรรม เพื่อสร้างประวัติและประสบการณ์ของคุณ"
+            title={t("noJoinedEventsTitle")}
+            description={t("noJoinedEventsDescription")}
           />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {filteredCurrentManagedEvents.map((event) => {
-              const start = new Date(event.start_time);
-              const end = new Date(event.end_time);
-              const isEnd = end < new Date();
-              const dateStr = start.toLocaleDateString("th-TH", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              });
-              const timeStr = `${start.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} - ${end.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} น.`;
+              const isEnd = new Date(event.end_time) < new Date();
+              const dateStr = formatEventDate(event.start_time, locale);
+              const timeStr = formatEventTimeRange(
+                event.start_time,
+                event.end_time,
+                locale,
+              );
 
               return (
                 <EventCard
@@ -276,11 +274,11 @@ const EventPageTemplate = () => {
               menuId="past-events-sort"
               options={[
                 {
-                  label: "วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด",
+                  label: t("sortNewest"),
                   value: "newest",
                 },
                 {
-                  label: "วันที่จัดกิจกรรม : เก่าสุด - ใหม่สุด",
+                  label: t("sortOldest"),
                   value: "oldest",
                 },
               ]}
@@ -297,26 +295,19 @@ const EventPageTemplate = () => {
         ) : filteredPastEvents.length === 0 ? (
           <EventEmptyState
             iconName="TimerOutline"
-            title="ยังไม่มีกิจกรรมที่ผ่านมา"
-            description={
-              <>
-                เมื่อคุณเข้าร่วมและทำกิจกรรมสำเร็จ
-                ประวัติและประสบการณ์ทั้งหมดของคุณจะแสดงที่นี่
-              </>
-            }
+            title={t("noPastEventsTitle")}
+            description={t("noPastEventsDescription")}
           />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {filteredPastEvents.map((event) => {
-              const start = new Date(event.start_time);
-              const end = new Date(event.end_time);
-              const isEnd = end < new Date();
-              const dateStr = start.toLocaleDateString("th-TH", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              });
-              const timeStr = `${start.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} - ${end.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} น.`;
+              const isEnd = new Date(event.end_time) < new Date();
+              const dateStr = formatEventDate(event.start_time, locale);
+              const timeStr = formatEventTimeRange(
+                event.start_time,
+                event.end_time,
+                locale,
+              );
 
               return (
                 <EventCard

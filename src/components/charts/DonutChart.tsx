@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { cn } from "@assets/lib/utils";
 import { Label, Pie, PieChart } from "recharts";
 
@@ -110,7 +111,7 @@ const getResponsiveRadius = (
   };
 };
 
-const createCustomLabel = () => {
+const createCustomLabel = (unit: string) => {
   const RADIAN = Math.PI / 180;
 
   const LabelComponent = (props: LabelProps) => {
@@ -141,7 +142,7 @@ const createCustomLabel = () => {
           {name}
         </tspan>
         <tspan x={x} dy="1.5em" className="label-small-primary">
-          {value} คน ({pct})
+          {value} {unit} ({pct})
         </tspan>
       </text>
     );
@@ -154,6 +155,7 @@ const createCustomLabel = () => {
 // Component
 
 export function DonutChart({ data }: { data: DonutChartProps[] }) {
+  const t = useTranslations("Charts");
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const isIpadPro = useIsIpadPro();
@@ -165,7 +167,7 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
     isTablet,
     isIpadPro,
   );
-  const customLabel = createCustomLabel();
+  const customLabel = createCustomLabel(t("unit"));
 
   return (
     <Card className="flex flex-col py-12 sm:py-10 md:py-0 justify-center border-none shadow-none h-full">

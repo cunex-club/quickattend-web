@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Bar,
   BarChart,
@@ -79,6 +80,7 @@ export function BarChartVertical({
   data: BarChartVerticalProps[];
   timeDetailData?: Record<string, TimeDetailData[]>;
 }) {
+  const t = useTranslations("Charts");
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -153,7 +155,7 @@ export function BarChartVertical({
                       {item.faculty}
                     </p>
                     <p className="body-medium-primary md:body-large-primary text-neutral-black">
-                      {item.total} คน ({item.percentage}%)
+                      {item.total} {t("unit")} ({item.percentage}%)
                     </p>
                   </div>
                   <ChartContainer
@@ -231,7 +233,7 @@ export function BarChartVertical({
               <ChartContainer
                 config={{
                   total: {
-                    label: "จำนวนผู้เข้าร่วม",
+                    label: t("totalParticipants"),
                     color: "var(--color-primary)",
                   },
                 }}

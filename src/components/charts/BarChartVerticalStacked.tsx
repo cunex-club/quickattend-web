@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Bar,
   BarChart,
@@ -19,17 +20,6 @@ import {
 } from "@customTypes/chart";
 import { cn } from "@assets/lib/utils";
 import IonIcon from "@shared/IonIcon";
-
-const chartConfig = {
-  unregistered: {
-    label: "จำนวนผู้ที่ยังไม่ได้ลงทะเบียน",
-    color: "var(--chart-pink-200)",
-  },
-  registered: {
-    label: "จำนวนผู้ลงทะเบียนสำเร็จ",
-    color: "var(--color-primary)",
-  },
-} satisfies ChartConfig;
 
 const DETAIL_CHART_CONSTANTS = {
   BAR_RADIUS: [8, 8, 0, 0] as [number, number, number, number],
@@ -55,8 +45,20 @@ export function BarChartVerticalStacked({
   data: BarChartVerticalStackedProps[];
   timeDetailData?: Record<string, TimeDetailData[]>;
 }) {
+  const t = useTranslations("Charts");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isLocked, setIsLocked] = useState(false);
+
+  const chartConfig = {
+    unregistered: {
+      label: t("notRegistered"),
+      color: "var(--chart-pink-200)",
+    },
+    registered: {
+      label: t("registered"),
+      color: "var(--color-primary)",
+    },
+  } satisfies ChartConfig;
 
   const LEFT_BAR_BORDER_RADIUS: [number, number, number, number] = [2, 0, 0, 2];
   const RIGHT_BAR_BORDER_RADIUS: [number, number, number, number] = [
@@ -165,7 +167,7 @@ export function BarChartVerticalStacked({
                       {item.faculty}
                     </p>
                     <p className="body-medium-primary md:body-large-primary text-neutral-black">
-                      {item.total} คน ({item.percentage}%)
+                      {item.total} {t("unit")} ({item.percentage}%)
                     </p>
                   </div>
                   <ChartContainer
@@ -279,7 +281,7 @@ export function BarChartVerticalStacked({
               <ChartContainer
                 config={{
                   total: {
-                    label: "จำนวนผู้เข้าร่วม",
+                    label: t("totalParticipants"),
                     color: "var(--color-primary)",
                   },
                 }}

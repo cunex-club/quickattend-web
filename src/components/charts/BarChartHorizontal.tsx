@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Bar,
   BarChart,
@@ -41,17 +42,6 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const detailChartConfig = {
-  unregistered: {
-    label: "จำนวนผู้ที่ยังไม่ได้ลงทะเบียน",
-    color: "var(--chart-pink-200)",
-  },
-  registered: {
-    label: "จำนวนผู้ลงทะเบียนสำเร็จ",
-    color: "var(--color-primary)",
-  },
-} satisfies ChartConfig;
-
 const CHART_CONSTANTS = {
   BAR_RADIUS: [8, 8, 0, 0] as [number, number, number, number],
   BAR_CATEGORY_GAP: 1,
@@ -84,12 +74,24 @@ export function BarChartHorizontal({
   data: BarChartHorizontalProps[];
   facultyDetailData?: Record<string, FacultyDetailData[]>;
 }) {
+  const t = useTranslations("Charts");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isLocked, setIsLocked] = useState(false);
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const chartWidth = getChartWidth(data.length, isMobile, isTablet);
+
+  const detailChartConfig = {
+    unregistered: {
+      label: t("notRegistered"),
+      color: "var(--chart-pink-200)",
+    },
+    registered: {
+      label: t("registered"),
+      color: "var(--color-primary)",
+    },
+  } satisfies ChartConfig;
 
   const handleBackgroundClick = () => {
     setHoveredIndex(null);
@@ -230,7 +232,7 @@ export function BarChartHorizontal({
                       <div className="flex items-center justify-between">
                         <p className="title-medium-primary">{item.faculty}</p>
                         <p className="body-medium-primary text-neutral-black">
-                          {item.total} คน ({percentage}%)
+                          {item.total} {t("unit")} ({percentage}%)
                         </p>
                       </div>
                       <ChartContainer

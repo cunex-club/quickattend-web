@@ -5,9 +5,13 @@ import SearchBar from "@shared/search-bar";
 import IonIcon from "@shared/IonIcon";
 import EventCard from "@modules/events/main-page/components/event-card";
 import EventCardSkeleton from "@modules/events/main-page/components/event-card-skeleton";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { fetchDiscoveryEvents } from "@services/events";
 import type { GetEventsRes } from "@customTypes/events";
+import {
+  formatEventDate,
+  formatEventTimeRange,
+} from "@utils/eventDateTime";
 
 const SEARCH_STORAGE_KEY = "cunex_events_search_query_v1";
 
@@ -18,6 +22,7 @@ const loadStoredSearchQuery = (): string => {
 
 const EventSearchTemplate = () => {
   const t = useTranslations("Events.Search");
+  const locale = useLocale();
   const [searchQuery, setSearchQuery] = useState(loadStoredSearchQuery);
   const [events, setEvents] = useState<GetEventsRes[]>([]);
   const [loading, setLoading] = useState(false);
@@ -71,7 +76,7 @@ const EventSearchTemplate = () => {
     <div className="w-full min-h-screen">
       <div className="px-4 sm:px-8 md:px-12 pt-20 pb-6">
         <SearchBar
-          placeholder="Search events..."
+          placeholder={t("placeholder")}
           onsearch={handleSearch}
           defaultValue={searchQuery}
         />
@@ -96,15 +101,13 @@ const EventSearchTemplate = () => {
             {loading
               ? [1, 2].map((key) => <EventCardSkeleton key={key} />)
               : events.map((event) => {
-                  const start = new Date(event.start_time);
-                  const end = new Date(event.end_time);
-                  const isEnd = end < new Date();
-                  const dateStr = start.toLocaleDateString("th-TH", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  });
-                  const timeStr = `${start.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} - ${end.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} น.`;
+                  const isEnd = new Date(event.end_time) < new Date();
+                  const dateStr = formatEventDate(event.start_time, locale);
+                  const timeStr = formatEventTimeRange(
+                    event.start_time,
+                    event.end_time,
+                    locale,
+                  );
 
                   return (
                     <EventCard

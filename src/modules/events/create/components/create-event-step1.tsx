@@ -158,10 +158,6 @@ const CreateEventStep1 = ({
     return time;
   };
 
-  const lastAgendaEndTime =
-    eventForm.agenda[eventForm.agenda.length - 1]?.endTime ??
-    eventForm.startTime;
-
   const handleAddAgenda = () => {
     if (!eventForm.startTime || !eventForm.endTime) return;
 
@@ -170,7 +166,7 @@ const CreateEventStep1 = ({
     const start = buildAgendaDate(eventForm.startTime, agendaStart);
     const end = buildAgendaDate(eventForm.startTime, agendaEnd);
 
-    if (start < lastAgendaEndTime || end > eventForm.endTime) return;
+    if (start < eventForm.startTime || end > eventForm.endTime) return;
 
     if (end < start) return;
 
@@ -410,13 +406,13 @@ const CreateEventStep1 = ({
                   type="time"
                   step="60"
                   value={agendaStart}
-                  min={formatTime(lastAgendaEndTime) ?? undefined}
+                  min={formatTime(eventForm.startTime) ?? undefined}
                   max={formatTime(eventForm.endTime) ?? undefined}
                   disabled={!eventForm.startTime || !eventForm.endTime}
                   onChange={(e) => {
                     const value = clampTime(
                       e.target.value,
-                      lastAgendaEndTime,
+                      eventForm.startTime,
                       eventForm.endTime,
                     );
 

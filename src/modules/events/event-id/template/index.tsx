@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@assets/lib/utils";
 import IonIcon from "@shared/IonIcon";
 import Icon from "@shared/Icon";
@@ -10,6 +10,7 @@ import { fetchEventById } from "@services/events";
 import EventDetailSkeleton from "@modules/events/event-id/components/event-detail-skeleton";
 import type { GetOneEventRes } from "@customTypes/events";
 import { useRouter } from "@i18n/navigation";
+import { formatEventDate, formatEventTimeRange } from "@utils/eventDateTime";
 
 interface EventIdPageTemplateProps {
   eventId: string;
@@ -17,6 +18,7 @@ interface EventIdPageTemplateProps {
 
 const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   const t = useTranslations("EventDetail");
+  const locale = useLocale();
   const router = useRouter();
 
   const [eventData, setEventData] = useState<GetOneEventRes | null>(null);
@@ -45,7 +47,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   if (!eventData) {
     return (
       <div className="w-full flex justify-center items-center py-20">
-        <div className="body-large-primary">Event not found.</div>
+        <div className="body-large-primary">{t("notFound")}</div>
       </div>
     );
   }
@@ -62,41 +64,8 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           ? t("staff")
           : null;
 
-  // Format date from ISO string to "3 สิงหาคม 2568"
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const thaiMonths = [
-      "มกราคม",
-      "กุมภาพันธ์",
-      "มีนาคม",
-      "เมษายน",
-      "พฤษภาคม",
-      "มิถุนายน",
-      "กรกฎาคม",
-      "สิงหาคม",
-      "กันยายน",
-      "ตุลาคม",
-      "พฤศจิกายน",
-      "ธันวาคม",
-    ];
-    const day = date.getDate();
-    const month = thaiMonths[date.getMonth()];
-    const year = date.getFullYear() + 543;
-    return `${day} ${month} ${year}`;
-  };
-
-  // Format time from ISO string to "HH:MM น."
-  const formatTime = (isoStr: string) => {
-    const date = new Date(isoStr);
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    return `${hours}:${minutes}`;
-  };
-
-  // Format agenda time range
-  const formatAgendaTime = (startTime: string, endTime: string) => {
-    return `${formatTime(startTime)} - ${formatTime(endTime)} น.`;
-  };
+  const formatAgendaTime = (startTime: string, endTime: string) =>
+    formatEventTimeRange(startTime, endTime, locale);
 
   return (
     <div className="w-full flex flex-col justify-center items-center px-6 md:px-10 lg:px-25 py-10 lg:pt-35 gap-6 lg:gap-7.5 pb-24">
@@ -128,14 +97,17 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             <div className="flex gap-2 items-center">
               <IonIcon name="Calendar" size="16px" className="text-secondary" />
               <div className="body-large-primary">
-                {formatDate(eventData.start_time)}
+                {formatEventDate(eventData.start_time, locale)}
               </div>
             </div>
             <div className="flex gap-2 items-center">
               <IonIcon name="Time" size="16px" className="text-secondary" />
               <div className="body-large-primary">
-                {formatTime(eventData.start_time)} -{" "}
-                {formatTime(eventData.end_time)} น.
+                {formatEventTimeRange(
+                  eventData.start_time,
+                  eventData.end_time,
+                  locale,
+                )}
               </div>
             </div>
             <div className="flex gap-2 items-center">

@@ -32,7 +32,7 @@ export default function DashboardNav({
             href={isTabDisabled ? "#" : `/${locale}${tab.href}`}
             aria-disabled={isTabDisabled}
             className={cn(
-              "w-28 transition-colors duration-200 border-b-2",
+              "w-28 flex justify-center transition-colors duration-200 border-b-2",
               isActive
                 ? "border-primary text-primary"
                 : "border-transparent text-neutral-600 hover:text-primary",

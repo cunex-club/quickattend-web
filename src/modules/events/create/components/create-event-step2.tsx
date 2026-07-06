@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   AttendanceType,
   EventFormInterface,
@@ -33,14 +33,18 @@ import { fetchUserByRefId, type UserByRefIdRes } from "@services/users";
 import { APIRequestError } from "@services/events";
 import faculties from "./faculties.json";
 
-const formatUserName = (user: UserByRefIdRes) =>
-  [user.title_th, user.firstname_th, user.surname_th]
+const formatUserName = (user: UserByRefIdRes, locale: string) => {
+  const thName = [user.title_th, user.firstname_th, user.surname_th]
     .filter(Boolean)
-    .join(" ") ||
-  [user.title_en, user.firstname_en, user.surname_en]
+    .join(" ");
+  const enName = [user.title_en, user.firstname_en, user.surname_en]
     .filter(Boolean)
-    .join(" ") ||
-  user.ref_id;
+    .join(" ");
+
+  return locale === "en"
+    ? enName || thName || user.ref_id
+    : thName || enName || user.ref_id;
+};
 
 interface CreateEventStep2Props {
   eventForm: EventFormInterface;
@@ -66,6 +70,10 @@ export const FacultyOptions: { th: string; en: string }[] = FacultyList.map(
   (th) => ({ th, en: FacultyNameEnByCode[FacultyCodeMap[th]] ?? "" }),
 );
 
+export const FacultyEnByTh: Record<string, string> = Object.fromEntries(
+  FacultyOptions.map(({ th, en }) => [th, en]),
+);
+
 export function filterFacultyOptions(query: string): string[] {
   const normalizedQuery = query.trim().toLowerCase();
   if (!normalizedQuery) return [];
@@ -81,6 +89,7 @@ const CreateEventStep2 = ({
   setEventForm,
 }: CreateEventStep2Props) => {
   const tCreateEvent = useTranslations("CreateEvent");
+  const locale = useLocale();
 
   const [facultyQuery, setFacultyQuery] = useState("");
   const [studentIdPermissionQuery, setStudentIdPermissionQuery] = useState("");
@@ -210,7 +219,7 @@ const CreateEventStep2 = ({
                               }}
                               className="body-large-primary"
                             >
-                              {f}
+                              {locale === "en" ? FacultyEnByTh[f] ?? f : f}
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -290,7 +299,11 @@ const CreateEventStep2 = ({
                   <IonIcon name="RemoveCircleOutline" size="18px" />
                 </button>
 
-                <p className="body-large-primary">{faculty}</p>
+                <p className="body-large-primary">
+                  {locale === "en"
+                    ? FacultyEnByTh[faculty] ?? faculty
+                    : faculty}
+                </p>
               </div>
             ))}
           </div>
@@ -376,7 +389,7 @@ const CreateEventStep2 = ({
 
                     const student: Student = {
                       id: studentIdPermissionQuery,
-                      name: formatUserName(res.data),
+                      name: formatUserName(res.data, locale),
                     };
 
                     setEventForm({
@@ -702,7 +715,7 @@ const CreateEventStep2 = ({
 
                     const manager: EventManager = {
                       id: studentIdAccessibilityQuery,
-                      name: formatUserName(res.data),
+                      name: formatUserName(res.data, locale),
                       role: roleAccessibilityQuery,
                     };
 

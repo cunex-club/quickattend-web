@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "@i18n/navigation";
 
 import {
@@ -28,25 +28,13 @@ const handleLogOut = () => {
   window.location.href = "/api/auth/logout";
 };
 
-function formatEnglishName(user: CurrentUser | null): string {
-  if (!user) {
-    return "Guest";
-  }
-
-  return (
-    [user.title_en, user.firstname_en, user.surname_en]
-      .filter(Boolean)
-      .join(" ") || user.ref_id
-  );
-}
-
 const SidebarClient = ({ currentUser }: SidebarClientProps) => {
   const t = useTranslations("Sidebar");
+  const locale = useLocale();
   const pathname = usePathname();
 
   const isActivePath = (href: string) => pathname === href;
-  const displayName = formatFullName(currentUser);
-  const englishName = formatEnglishName(currentUser);
+  const displayName = formatFullName(currentUser, locale);
   const avatarFallback = getAvatarFallback(currentUser);
 
   return (
@@ -154,7 +142,6 @@ const SidebarClient = ({ currentUser }: SidebarClientProps) => {
                 <p className="title-medium-primary">
                   {currentUser?.ref_id ?? "-"}
                 </p>
-                <p className="title-medium-primary">{englishName}</p>
               </section>
             </div>
           </PopoverContent>

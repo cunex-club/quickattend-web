@@ -80,25 +80,23 @@ const EventCard: StyleableFC<EventCardProps> = ({
       </div>
       <div className="flex flex-col sm:flex-row sm:items-start gap-y-4 sm:gap-x-6 md:gap-x-12.5">
         <div className="flex flex-col order-1 sm:order-2 sm:flex-1 space-y-2">
-          <div className="flex justify-start space-x-4 pl-0">
-            <div className="flex items-center gap-1">
-              <IonIcon
-                name="Calendar"
-                size="16px"
-                className="text-primary"
-                noPadding
-              />
-              <span className="body-large-primary">{date}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <IonIcon
-                name="Time"
-                size="16px"
-                className="text-primary"
-                noPadding
-              />
-              <span className="body-large-primary">{time}</span>
-            </div>
+          <div className="flex items-center gap-2">
+            <IonIcon
+              name="Calendar"
+              size="16px"
+              className="text-primary"
+              noPadding
+            />
+            <span className="body-large-primary">{date}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <IonIcon
+              name="Time"
+              size="16px"
+              className="text-primary"
+              noPadding
+            />
+            <span className="body-large-primary">{time}</span>
           </div>
           <div className="flex items-center gap-2">
             <IonIcon
