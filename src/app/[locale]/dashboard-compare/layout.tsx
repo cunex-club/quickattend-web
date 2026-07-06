@@ -11,9 +11,7 @@ export default async function DashboardLayout({
 
   return (
     <RoleProvider initialRole={role}>
-      <div className="w-full min-h-screen">
-        {children}
-      </div>
+      <div className="w-full min-h-screen">{children}</div>
     </RoleProvider>
   );
 }

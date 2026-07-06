@@ -156,9 +156,7 @@ const EventCreateTemplate = () => {
       router.push(`/events/${res.data.id}`);
     } catch (err) {
       const message =
-        err instanceof APIRequestError
-          ? err.message
-          : "Failed to create event";
+        err instanceof APIRequestError ? err.message : "Failed to create event";
       alert(message);
     } finally {
       setIsSubmitting(false);

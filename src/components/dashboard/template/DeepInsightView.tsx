@@ -112,12 +112,19 @@ export function DeepInsightView() {
   );
 
   const filteredFacultyData = useMemo(
-    () => filterFacultyData(appliedFaculties, appliedTimes, userFilter, dataSources),
+    () =>
+      filterFacultyData(
+        appliedFaculties,
+        appliedTimes,
+        userFilter,
+        dataSources,
+      ),
     [appliedFaculties, appliedTimes, userFilter, dataSources],
   );
 
   const filteredTimeData = useMemo(
-    () => filterTimeData(appliedFaculties, appliedTimes, userFilter, dataSources),
+    () =>
+      filterTimeData(appliedFaculties, appliedTimes, userFilter, dataSources),
     [appliedFaculties, appliedTimes, userFilter, dataSources],
   );
 
@@ -166,13 +173,13 @@ export function DeepInsightView() {
         if (userFilter === "student") {
           total = f.students;
           // Proportionally adjust registered/unregistered for students
-          const studentRatio = f.students / ((f.students + f.staff) || 1);
+          const studentRatio = f.students / (f.students + f.staff || 1);
           registered = Math.round(f.registered * studentRatio);
           unregistered = Math.round(f.unregistered * studentRatio);
         } else if (userFilter === "staff") {
           total = f.staff;
           // Proportionally adjust registered/unregistered for staff
-          const staffRatio = f.staff / ((f.students + f.staff) || 1);
+          const staffRatio = f.staff / (f.students + f.staff || 1);
           registered = Math.round(f.registered * staffRatio);
           unregistered = Math.round(f.unregistered * staffRatio);
         }

@@ -59,7 +59,10 @@ const EndedCardSkeleton = ({ className }: { className?: string }) => (
   </div>
 );
 
-const EventCardSkeleton = ({ isEnd = false, className }: EventCardSkeletonProps) => {
+const EventCardSkeleton = ({
+  isEnd = false,
+  className,
+}: EventCardSkeletonProps) => {
   if (isEnd) return <EndedCardSkeleton className={className} />;
   return <ActiveCardSkeleton className={className} />;
 };

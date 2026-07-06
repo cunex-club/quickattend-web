@@ -41,9 +41,7 @@ export default function DashboardNav({
                 : "",
             )}
           >
-            <span className="headline-small-emphasized">
-              {tab.label}
-            </span>
+            <span className="headline-small-emphasized">{tab.label}</span>
           </Link>
         );
       })}

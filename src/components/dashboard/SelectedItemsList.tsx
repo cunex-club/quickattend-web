@@ -31,7 +31,7 @@ export const SelectedItemsList: React.FC<SelectedItemsListProps> = ({
               "absolute -top-3 -right-3 bg-primary border-4 rounded-full w-[28px] h-[28px] flex items-center justify-center",
               filterVariant === "secondary"
                 ? "border-white"
-                : "border-neutral-100"
+                : "border-neutral-100",
             )}
           >
             <IonIcon

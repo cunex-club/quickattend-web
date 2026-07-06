@@ -19,21 +19,29 @@ export interface FilterHandlers {
   selectedTimeIds: string[];
 }
 
-export function useFilterLogic(config: UseFilterLogicConfig = {}): FilterHandlers {
-  const { maxSelectionLimit, warnOnEmptyApply = false} = config;
+export function useFilterLogic(
+  config: UseFilterLogicConfig = {},
+): FilterHandlers {
+  const { maxSelectionLimit, warnOnEmptyApply = false } = config;
 
   // Selected filters - updated when user clicks on filter items
-  const [selectedFaculties, setSelectedFaculties] = useState<Record<string, boolean>>({});
-  const [selectedTimes, setSelectedTimes] = useState<Record<string, boolean>>({});
+  const [selectedFaculties, setSelectedFaculties] = useState<
+    Record<string, boolean>
+  >({});
+  const [selectedTimes, setSelectedTimes] = useState<Record<string, boolean>>(
+    {},
+  );
 
   // Applied filters - only updated when user clicks "Apply Filter" or "Compare Data"
-  const [appliedFaculties, setAppliedFaculties] = useState<Record<string, boolean>>({});
+  const [appliedFaculties, setAppliedFaculties] = useState<
+    Record<string, boolean>
+  >({});
   const [appliedTimes, setAppliedTimes] = useState<Record<string, boolean>>({});
 
   const createSelectionHandler = useCallback(
     (
       setter: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
-      allItemId?: string
+      allItemId?: string,
     ) =>
       (itemId: string, checked: boolean) => {
         setter((prevSelected) => {
@@ -47,7 +55,8 @@ export function useFilterLogic(config: UseFilterLogicConfig = {}): FilterHandler
               delete newSelected[allItemId];
             }
             if (maxSelectionLimit && !prevSelected[itemId]) {
-              const selectedCount = Object.values(newSelected).filter(Boolean).length;
+              const selectedCount =
+                Object.values(newSelected).filter(Boolean).length;
               if (selectedCount >= maxSelectionLimit) {
                 return prevSelected;
               }
@@ -61,19 +70,27 @@ export function useFilterLogic(config: UseFilterLogicConfig = {}): FilterHandler
           return newSelected;
         });
       },
-    [maxSelectionLimit]
+    [maxSelectionLimit],
   );
 
   // Handler for faculty filter changes
   const handleFacultyChange = useMemo(
-    () => createSelectionHandler(setSelectedFaculties, maxSelectionLimit ? "f-0" : undefined),
-    [createSelectionHandler, maxSelectionLimit]
+    () =>
+      createSelectionHandler(
+        setSelectedFaculties,
+        maxSelectionLimit ? "f-0" : undefined,
+      ),
+    [createSelectionHandler, maxSelectionLimit],
   );
 
   // Handler for time filter changes
   const handleTimeChange = useMemo(
-    () => createSelectionHandler(setSelectedTimes, maxSelectionLimit ? "t-0" : undefined),
-    [createSelectionHandler, maxSelectionLimit]
+    () =>
+      createSelectionHandler(
+        setSelectedTimes,
+        maxSelectionLimit ? "t-0" : undefined,
+      ),
+    [createSelectionHandler, maxSelectionLimit],
   );
 
   const handleClearFilters = useCallback(() => {
@@ -96,28 +113,29 @@ export function useFilterLogic(config: UseFilterLogicConfig = {}): FilterHandler
     setAppliedTimes(selectedTimes);
   }, [selectedFaculties, selectedTimes, warnOnEmptyApply]);
 
-
-
   const hasActiveFilters = useMemo(() => {
     const hasFacultyFilter =
-      Object.keys(appliedFaculties).filter((key) => appliedFaculties[key]).length > 0;
+      Object.keys(appliedFaculties).filter((key) => appliedFaculties[key])
+        .length > 0;
     const hasTimeFilter =
       Object.keys(appliedTimes).filter((key) => appliedTimes[key]).length > 0;
     return hasFacultyFilter || hasTimeFilter;
   }, [appliedFaculties, appliedTimes]);
 
   const selectedFacultyIds = useMemo(
-    () => Object.keys(appliedFaculties).filter(
-      (key) => appliedFaculties[key] && key !== "f-0"
-    ),
-    [appliedFaculties]
+    () =>
+      Object.keys(appliedFaculties).filter(
+        (key) => appliedFaculties[key] && key !== "f-0",
+      ),
+    [appliedFaculties],
   );
 
   const selectedTimeIds = useMemo(
-    () => Object.keys(appliedTimes).filter(
-      (key) => appliedTimes[key] && key !== "t-0"
-    ),
-    [appliedTimes]
+    () =>
+      Object.keys(appliedTimes).filter(
+        (key) => appliedTimes[key] && key !== "t-0",
+      ),
+    [appliedTimes],
   );
 
   return {

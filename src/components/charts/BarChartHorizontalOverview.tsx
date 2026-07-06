@@ -51,7 +51,8 @@ export function BarChartHorizontalOverview({
   maxValue,
 }: BarChartHorizontalOverviewProps) {
   const chartWidth = data.length * CHART_CONSTANTS.WIDTH_PER_BAR;
-  const domainY = maxValue ?? data.reduce((max, item) => Math.max(max, item.total), 0);
+  const domainY =
+    maxValue ?? data.reduce((max, item) => Math.max(max, item.total), 0);
 
   return (
     <Card className="py-0 px-0 h-full relative border-none shadow-none">

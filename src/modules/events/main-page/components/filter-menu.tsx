@@ -34,7 +34,11 @@ const DEFAULT_ACCESS_OPTIONS: FilterOption[] = [
   { id: "staff", label: "ผู้ดูแลงาน", checked: true },
 ];
 
-const FilterMenu = ({ onFilterChange, menuId, initialFilter }: FilterMenuProps) => {
+const FilterMenu = ({
+  onFilterChange,
+  menuId,
+  initialFilter,
+}: FilterMenuProps) => {
   const [accessOptions, setAccessOptions] = useState<FilterOption[]>(() =>
     initialFilter
       ? DEFAULT_ACCESS_OPTIONS.map((option) => ({

@@ -29,10 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@assets/components/ui/select";
-import {
-  fetchUserByRefId,
-  type UserByRefIdRes,
-} from "@services/users";
+import { fetchUserByRefId, type UserByRefIdRes } from "@services/users";
 import { APIRequestError } from "@services/events";
 
 const formatUserName = (user: UserByRefIdRes) =>

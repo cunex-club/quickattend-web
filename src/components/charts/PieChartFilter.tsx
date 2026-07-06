@@ -78,7 +78,7 @@ export function PieChartFilter({ data }: { data: DonutChartProps[] }) {
           className={cn(
             "mx-auto h-full w-full p-4",
             "[&_.recharts-surface]:overflow-visible",
-            "chart-pie-stacked"
+            "chart-pie-stacked",
           )}
         >
           <PieChart>
@@ -100,7 +100,10 @@ export function PieChartFilter({ data }: { data: DonutChartProps[] }) {
               {chartDataInner.map((entry, index) => {
                 const opacity =
                   hoveredIndex !== null && hoveredIndex !== index ? 0.5 : 1;
-                const fillColor = index === 0 ? "var(--color-primary)" : "var(--color-neutral-200)";
+                const fillColor =
+                  index === 0
+                    ? "var(--color-primary)"
+                    : "var(--color-neutral-200)";
                 return (
                   <Cell
                     key={`cell-inner-${index}`}
@@ -120,7 +123,8 @@ export function PieChartFilter({ data }: { data: DonutChartProps[] }) {
                     style={{
                       cursor: "pointer",
                       opacity: opacity,
-                      transition: "opacity 0.3s ease-in-out, fill 0.3s ease-in-out",
+                      transition:
+                        "opacity 0.3s ease-in-out, fill 0.3s ease-in-out",
                       outline: "none",
                     }}
                   />
@@ -143,14 +147,18 @@ export function PieChartFilter({ data }: { data: DonutChartProps[] }) {
               isAnimationActive={false}
             >
               {chartDataOuter.map((entry, index) => {
-                const fillColor = index === 0 ? "var(--color-pink-300)" : "var(--color-neutral-200)";
+                const fillColor =
+                  index === 0
+                    ? "var(--color-pink-300)"
+                    : "var(--color-neutral-200)";
                 return (
                   <Cell
                     key={`cell-outer-${index}`}
                     fill={fillColor}
                     fillOpacity={hoveredIndex === index ? 0.5 : 0}
                     style={{
-                      transition: "fill-opacity 0.3s ease-in-out, fill 0.3s ease-in-out",
+                      transition:
+                        "fill-opacity 0.3s ease-in-out, fill 0.3s ease-in-out",
                       pointerEvents: "none",
                     }}
                   />

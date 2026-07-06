@@ -77,7 +77,7 @@ const calculateRegisteredPercent = (data: DonutChartProps[]): string => {
 const getResponsiveRadius = (
   isMobile: boolean,
   isTablet: boolean,
-  isIpadPro: boolean
+  isIpadPro: boolean,
 ): RadiusConfig => {
   if (isMobile) {
     return {
@@ -163,7 +163,7 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
   const { innerRadius, outerRadius, showLabels } = getResponsiveRadius(
     isMobile,
     isTablet,
-    isIpadPro
+    isIpadPro,
   );
   const customLabel = createCustomLabel();
 
@@ -177,7 +177,7 @@ export function DonutChart({ data }: { data: DonutChartProps[] }) {
             "[&_.recharts-surface]:overflow-visible",
             "[&_.recharts-pie-label-line]:stroke-[var(--color-gray-300)]",
             "[&_.recharts-pie-label-text]:fill-[var(--color-primary)]",
-            "chart-hover-pie"
+            "chart-hover-pie",
           )}
         >
           <PieChart>

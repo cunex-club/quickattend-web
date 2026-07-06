@@ -540,7 +540,9 @@ const EditEventSection1 = ({
               {/* Start Time */}
               <EditableTime
                 value={item.startTime}
-                min={eventForm.agenda[index - 1]?.endTime ?? eventForm.startTime}
+                min={
+                  eventForm.agenda[index - 1]?.endTime ?? eventForm.startTime
+                }
                 max={item.endTime}
                 onChange={(time) => updateAgendaTime(index, "startTime", time)}
               />
@@ -549,7 +551,9 @@ const EditEventSection1 = ({
               <EditableTime
                 value={item.endTime}
                 min={item.startTime}
-                max={eventForm.agenda[index + 1]?.startTime ?? eventForm.endTime}
+                max={
+                  eventForm.agenda[index + 1]?.startTime ?? eventForm.endTime
+                }
                 onChange={(time) => updateAgendaTime(index, "endTime", time)}
               />
             </div>

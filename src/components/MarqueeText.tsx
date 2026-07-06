@@ -45,11 +45,11 @@ export default function MarqueeText({ text, className }: MarqueeTextProps) {
         className="flex whitespace-nowrap"
         style={
           overflow
-            ? {
+            ? ({
                 animation: `marquee-scroll ${duration}s linear infinite`,
                 animationDelay: "0.6s",
                 "--marquee-distance": `-${distance}px`,
-              } as React.CSSProperties
+              } as React.CSSProperties)
             : undefined
         }
       >
@@ -57,11 +57,7 @@ export default function MarqueeText({ text, className }: MarqueeTextProps) {
           {text}
         </div>
 
-        {overflow && (
-          <div className={`mr-8 ${className}`}>
-            {text}
-          </div>
-        )}
+        {overflow && <div className={`mr-8 ${className}`}>{text}</div>}
       </div>
     </div>
   );

@@ -1,7 +1,4 @@
-import {
-  deepInsightFacultyData,
-  deepInsightTimeData,
-} from "./data";
+import { deepInsightFacultyData, deepInsightTimeData } from "./data";
 import { getSelectedIds } from "./filterUtils";
 
 export interface ComparisonFacultyData {
@@ -34,13 +31,11 @@ export interface PieChartDataItem {
   fill: string;
 }
 
-
-
 // Transform faculty data for comparison charts
 // Shows faculty breakdown with time periods
 export function transformFacultyDataForComparison(
   appliedFaculties: Record<string, boolean>,
-  appliedTimes: Record<string, boolean>
+  appliedTimes: Record<string, boolean>,
 ): ComparisonFacultyData[] {
   const selectedFacultyIds = getSelectedIds(appliedFaculties, "f-0");
   const selectedTimeIds = getSelectedIds(appliedTimes, "t-0");
@@ -52,7 +47,7 @@ export function transformFacultyDataForComparison(
 
   // Filter faculties
   const faculties = deepInsightFacultyData.filter((f) =>
-    selectedFacultyIds.includes(f.facultyId)
+    selectedFacultyIds.includes(f.facultyId),
   );
 
   // Transform to comparison format
@@ -74,12 +69,11 @@ export function transformFacultyDataForComparison(
   });
 }
 
-
 // Transform time data for comparison charts
 // Shows time period breakdown with faculty series
 export function transformTimeDataForComparison(
   appliedFaculties: Record<string, boolean>,
-  appliedTimes: Record<string, boolean>
+  appliedTimes: Record<string, boolean>,
 ): ComparisonTimeData[] {
   const selectedFacultyIds = getSelectedIds(appliedFaculties, "f-0");
   const selectedTimeIds = getSelectedIds(appliedTimes, "t-0");
@@ -91,14 +85,14 @@ export function transformTimeDataForComparison(
 
   // Filter time periods
   const times = deepInsightTimeData.filter((t) =>
-    selectedTimeIds.includes(t.timeId)
+    selectedTimeIds.includes(t.timeId),
   );
 
   // Get unique faculties to show
   const facultiesToShow =
     selectedFacultyIds.length > 0
       ? deepInsightFacultyData.filter((f) =>
-          selectedFacultyIds.includes(f.facultyId)
+          selectedFacultyIds.includes(f.facultyId),
         )
       : deepInsightFacultyData;
 
@@ -108,7 +102,7 @@ export function transformTimeDataForComparison(
     const facultyTimeData = times.map((timeItem) => {
       // Find this faculty's data in this time period
       const facultyEntry = timeItem.data.find(
-        (f) => f.facultyId === faculty.facultyId
+        (f) => f.facultyId === faculty.facultyId,
       );
 
       return {
@@ -124,11 +118,10 @@ export function transformTimeDataForComparison(
   });
 }
 
-
 // Calculate summary statistics based on selected filters
 export function calculateSummaryStats(
   appliedFaculties: Record<string, boolean>,
-  appliedTimes: Record<string, boolean>
+  appliedTimes: Record<string, boolean>,
 ): SummaryStats {
   // Before any comparison is submitted both maps are empty → return zeros
   // (keeps stat cards consistent with the pie chart "No Data" placeholder)
@@ -152,7 +145,7 @@ export function calculateSummaryStats(
   let faculties = deepInsightFacultyData;
   if (!appliedFaculties["f-0"] && selectedFacultyIds.length > 0) {
     faculties = faculties.filter((f) =>
-      selectedFacultyIds.includes(f.facultyId)
+      selectedFacultyIds.includes(f.facultyId),
     );
   }
 
@@ -181,17 +174,17 @@ export function calculateSummaryStats(
 
   // Total Attendees = Registered (actual participants)
   const totalAttendees = totalRegistered;
-  
+
   // Student/Staff counts (eligible totals)
   const studentCount = totalStudents;
   const staffCount = totalStaff;
 
   return {
-    totalAttendees,      // Registered participants
-    studentCount,        // Total students (eligible)
-    staffCount,          // Total staff (eligible)
-    totalRegistered,     // Registered participants (same  as totalAttendees)
-    totalUnregistered,   // Unregistered (eligible but didn't attend)
+    totalAttendees, // Registered participants
+    studentCount, // Total students (eligible)
+    staffCount, // Total staff (eligible)
+    totalRegistered, // Registered participants (same  as totalAttendees)
+    totalUnregistered, // Unregistered (eligible but didn't attend)
   };
 }
 
@@ -200,7 +193,7 @@ export function calculateSummaryStats(
 
 export function preparePieChartData(
   appliedFaculties: Record<string, boolean>,
-  appliedTimes: Record<string, boolean>
+  appliedTimes: Record<string, boolean>,
 ): PieChartDataItem[] {
   // Check if comparison has been submitted successfully
   const hasAppliedFilters =
@@ -232,7 +225,7 @@ export function preparePieChartData(
   const facultyDistribution = facultiesToDisplay
     .map((facultyId) => {
       const faculty = deepInsightFacultyData.find(
-        (f) => f.facultyId === facultyId
+        (f) => f.facultyId === facultyId,
       );
       if (!faculty) return null;
 
@@ -251,7 +244,8 @@ export function preparePieChartData(
       };
     })
     .filter(
-      (item): item is { name: string; value: number } => item !== null && item.value > 0
+      (item): item is { name: string; value: number } =>
+        item !== null && item.value > 0,
     )
     // Sort by value descending to get top items
     .sort((a, b) => b.value - a.value);
@@ -260,9 +254,9 @@ export function preparePieChartData(
   if (facultyDistribution.length > 5) {
     const top5 = facultyDistribution.slice(0, 5);
     const others = facultyDistribution.slice(5);
-    
+
     const othersTotal = others.reduce((sum, item) => sum + item.value, 0);
-    
+
     // Add colors to top 5
     const top5WithColors = top5.map((item, index) => ({
       ...item,
@@ -287,7 +281,6 @@ export function preparePieChartData(
   }));
 }
 
-
 // Validation result types for comparison submission
 export type ValidationErrorType =
   | "NO_FACULTY_AND_TIME"
@@ -302,13 +295,12 @@ export interface ValidationResult {
   severity: "error" | "warning" | null;
 }
 
-
 // Validate comparison filter selections
 // Returns validation result indicating if selections are valid and what error exists
 
 export function validateComparisonFilters(
   selectedFaculties: Record<string, boolean>,
-  selectedTimes: Record<string, boolean>
+  selectedTimes: Record<string, boolean>,
 ): ValidationResult {
   const hasFacultySelection = Object.keys(selectedFaculties).length > 0;
   const hasTimeSelection = Object.keys(selectedTimes).length > 0;
@@ -356,5 +348,3 @@ export function validateComparisonFilters(
     severity: null,
   };
 }
-
-
