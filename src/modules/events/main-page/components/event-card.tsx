@@ -15,7 +15,6 @@ type EventCardProps = {
   date: string;
   time: string;
   location: string;
-  role: string;
   organizer?: string;
   isEnd: boolean;
   hideRole?: boolean;
@@ -29,7 +28,6 @@ const EventCard: StyleableFC<EventCardProps> = ({
   date,
   time,
   location,
-  role,
   organizer,
   isEnd,
   hideRole = false,

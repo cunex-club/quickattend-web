@@ -257,7 +257,6 @@ const EventPageTemplate = () => {
                   date={dateStr}
                   time={timeStr}
                   location={event.location}
-                  role={event.role ?? ""}
                   organizer={event.organizer}
                   isEnd={isEnd}
                   evaluationForm={event.evaluation_form}
@@ -326,7 +325,6 @@ const EventPageTemplate = () => {
                   date={dateStr}
                   time={timeStr}
                   location={event.location}
-                  role={event.role ?? ""}
                   organizer={event.organizer}
                   isEnd={isEnd}
                   evaluationForm={event.evaluation_form}

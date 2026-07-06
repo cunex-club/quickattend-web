@@ -83,8 +83,6 @@ const ScanTemplate = () => {
     [],
   );
   const [totalParticipants, setTotalParticipants] = useState(0);
-  const [loadingEvents, setLoadingEvents] = useState(true);
-  const [loadingDetail, setLoadingDetail] = useState(false);
   const [isSubmittingScan, setIsSubmittingScan] = useState(false);
   const [isResultModalOpen, setIsResultModalOpen] = useState(false);
   const [isNoEventsModalOpen, setIsNoEventsModalOpen] = useState(false);
@@ -136,8 +134,6 @@ const ScanTemplate = () => {
 
   useEffect(() => {
     const loadEvents = async () => {
-      setLoadingEvents(true);
-
       try {
         const res = await fetchManagedEvents();
         const mappedEvents: ScanEvent[] = res.data.map((event) => ({
@@ -156,8 +152,6 @@ const ScanTemplate = () => {
         setEvents([]);
         setSelectedEventId("");
         setIsNoEventsModalOpen(false);
-      } finally {
-        setLoadingEvents(false);
       }
     };
 
@@ -171,14 +165,11 @@ const ScanTemplate = () => {
         return;
       }
 
-      setLoadingDetail(true);
       try {
         const res = await fetchEventById(selectedEventId);
         setTotalParticipants(res.data.total_registered);
       } catch (error) {
         console.error(t("errors.failedToFetchEventDetail"), error);
-      } finally {
-        setLoadingDetail(false);
       }
     };
 
