@@ -15,11 +15,16 @@ import IonIcon from "@shared/IonIcon";
 import { toast } from "sonner";
 import { Skeleton } from "@assets/components/ui/skeleton";
 import { useTranslations, useLocale } from "next-intl";
-import { useRole } from "@context/RoleContext";
 import { useEventDashboardData } from "@graphql/hooks/useDashboardQueries";
 import { fetchEventById } from "@services/events";
 import type { GetOneEventRes } from "@customTypes/events";
-import { FacultyNameEnByCode } from "@modules/events/create/components/create-event-step2";
+import { FacultyNameEnByCode } from "@utils/faculty";
+import {
+  formatEventDate,
+  formatEventTimeRange,
+  formatHourBucket,
+} from "@utils/eventDateTime";
+import { toTitleCase } from "@utils/function";
 
 // Lazy load charts for better initial page load performance
 const BarChartHorizontalOverview = dynamic(
@@ -54,50 +59,6 @@ interface OverviewViewProps {
   eventId: string;
 }
 
-const localeToIntlTag = (locale: string) =>
-  locale === "th" ? "th-TH" : "en-US";
-
-const formatEventDate = (isoStr: string, locale: string) =>
-  new Date(isoStr).toLocaleDateString(localeToIntlTag(locale), {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-
-const formatEventTimeRange = (
-  startIso: string,
-  endIso: string,
-  locale: string,
-) => {
-  const opts: Intl.DateTimeFormatOptions = {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  };
-  const tag = localeToIntlTag(locale);
-  const start = new Date(startIso).toLocaleTimeString(tag, opts);
-  const end = new Date(endIso).toLocaleTimeString(tag, opts);
-  return locale === "th" ? `${start} - ${end} น.` : `${start} - ${end}`;
-};
-
-const formatHourBucket = (isoStr: string, locale: string) =>
-  new Date(isoStr).toLocaleTimeString(localeToIntlTag(locale), {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-
-const MINOR_WORDS = new Set(["of"]);
-const toTitleCase = (str: string) =>
-  str
-    .split(" ")
-    .map((word) =>
-      MINOR_WORDS.has(word.toLowerCase())
-        ? word.toLowerCase()
-        : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
-    )
-    .join(" ");
-
 export function OverviewView({ eventId }: OverviewViewProps) {
   const t = useTranslations("Dashboard.overview");
   const locale = useLocale();
@@ -107,9 +68,6 @@ export function OverviewView({ eventId }: OverviewViewProps) {
   const [selectedFilter, setSelectedFilter] = useState<
     "student" | "staff" | null
   >(null);
-  const { role } = useRole();
-  const canViewInsights = role === "manager" || role === "owner";
-
   const [eventDetail, setEventDetail] = useState<GetOneEventRes | null>(null);
   const [eventDetailLoading, setEventDetailLoading] = useState(true);
 
@@ -144,7 +102,7 @@ export function OverviewView({ eventId }: OverviewViewProps) {
 
   const loading = eventDetailLoading || dashboardLoading;
 
-  const top3 = useMemo(() => {
+  const facultyStats = useMemo(() => {
     const stats = dashboardData?.organizationStats ?? [];
 
     const baseline = new Map<string, number>();
@@ -157,18 +115,12 @@ export function OverviewView({ eventId }: OverviewViewProps) {
       baseline.set(name, (baseline.get(name) ?? 0) + item.totalCount);
     }
 
-    const sorted = [...baseline.entries()].sort(
-      ([nameA, totalA], [nameB, totalB]) =>
+    return [...baseline.entries()]
+      .sort(([nameA, totalA], [nameB, totalB]) =>
         totalB - totalA || nameA.localeCompare(nameB),
-    );
-
-    const top = sorted.slice(0, 3).map(([faculty, total]) => ({
-      faculty,
-      total,
-    }));
-
-    return top;
-  }, [dashboardData, eventDetail, t]);
+      )
+      .map(([faculty, total]) => ({ faculty, total }));
+  }, [dashboardData, eventDetail]);
 
   const timeStats = useMemo(
     () =>
@@ -210,12 +162,6 @@ export function OverviewView({ eventId }: OverviewViewProps) {
       document.exitFullscreen();
     }
   }, []);
-
-  const handleViewInsights = () => {
-    if (canViewInsights) {
-      router.push(`/dashboard/${eventId}/insights`);
-    }
-  };
 
   const handleCopyEventLink = async () => {
     const eventLink = `${window.location.origin}/events/${eventId}`;
@@ -274,6 +220,8 @@ export function OverviewView({ eventId }: OverviewViewProps) {
         location: eventDetail.location,
         description: eventDetail.description ?? "",
         totalAttendees: eventTotal,
+        studentCount: dashboardData?.summary.totalStudent ?? 0,
+        staffCount: dashboardData?.summary.totalStaff ?? 0,
       }
     : null;
 
@@ -312,6 +260,16 @@ export function OverviewView({ eventId }: OverviewViewProps) {
     <div className="relative">
       {!isFullscreen && (
         <div className="flex flex-col space-y-8">
+          <button
+            type="button"
+            onClick={() => router.push(`/events/${eventId}`)}
+            aria-label={t("back")}
+            className="w-full text-primary font-semibold cursor-pointer flex items-center gap-1"
+          >
+            <IonIcon name="ChevronBack" size="16px" />
+            <p className="label-large-emphasized">{t("back")}</p>
+          </button>
+
           {/* event information section */}
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="flex flex-col space-y-6 order-2 lg:order-1">
@@ -391,35 +349,37 @@ export function OverviewView({ eventId }: OverviewViewProps) {
                 unit={t("unit")}
                 variant="filled"
                 className="p-8 min-h-[230px]"
-              />
+              >
+                <div className="flex space-x-2.5 title-medium-primary text-neutral-white whitespace-nowrap">
+                  <p>
+                    {t("student")}: {dashboardData?.summary.totalStudent ?? 0}{" "}
+                    {t("unit")}
+                  </p>
+                  <p>|</p>
+                  <p>
+                    {t("staff")}: {dashboardData?.summary.totalStaff ?? 0}{" "}
+                    {t("unit")}
+                  </p>
+                </div>
+              </StatCard>
             </div>
           </section>
 
           {/* chart section */}
           <section className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
             <div className="space-y-6 md:space-y-4">
-              <p className="headline-medium-emphasized">{t("topTitle")}</p>
+              <p className="headline-medium-emphasized">
+                {t("facultyStatsTitle")}
+              </p>
               {eventTotal === 0 ? (
                 <p className="body-large-primary text-neutral-500 text-center py-10">
                   {t("noScanResultsYet")}
                 </p>
               ) : (
-                <div className="max-h-[280px] md:max-h-[320px]">
-                  <BarChartVerticalOverview data={top3} />
+                <div className="h-[400px] md:h-[360px] lg:h-[350px] xl:max-h-[320px] overflow-auto">
+                  <BarChartVerticalOverview data={facultyStats} />
                 </div>
               )}
-              <Button
-                mode="filled"
-                bordered="square"
-                expanded={false}
-                disabled={!canViewInsights}
-                onClick={handleViewInsights}
-                className={
-                  !canViewInsights ? "opacity-50 cursor-not-allowed" : ""
-                }
-              >
-                <p className="label-large-emphasized">{t("viewAll")}</p>
-              </Button>
             </div>
             <div className="flex flex-col space-y-3 md:space-y-4">
               <p className="headline-medium-emphasized">
@@ -497,6 +457,8 @@ export function OverviewView({ eventId }: OverviewViewProps) {
               eventDetails: t("eventDetails"),
               totalAttendees: t("totalAttendees"),
               unit: t("unit"),
+              student: t("student"),
+              staff: t("staff"),
             }}
           />
         )}

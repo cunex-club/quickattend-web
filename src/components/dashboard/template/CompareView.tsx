@@ -1,46 +1,45 @@
 "use client";
 
-import React from "react";
-import { useMemo } from "react";
-import { redirect } from "next/navigation";
+import React, { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import { StatCard } from "@components/StatCard";
 import Button from "@components/Button";
 import { FilterableList } from "@components/dashboard/FilterableList";
-import { FilterFacultyOptions, FilterTimeOptions } from "@utils/data";
 import { useRole } from "@context/RoleContext";
 import { toast } from "sonner";
 import { Skeleton } from "@assets/components/ui/skeleton";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import IonIcon from "@shared/IonIcon";
-import Link from "next/link";
-import { useFilterLogic } from "@hooks/useFilterLogic";
+import { useEventDashboardData } from "@graphql/hooks/useDashboardQueries";
 import {
-  transformFacultyDataForComparison,
-  transformTimeDataForComparison,
   calculateSummaryStats,
   preparePieChartData,
+  type CompareStat,
 } from "@utils/compareHelpers";
+import { formatHourBucket } from "@utils/eventDateTime";
+import { toTitleCase } from "@utils/function";
+import { FacultyThByEnLower } from "@utils/faculty";
 
-const BarChartHorizontalMulti = dynamic(
+const BarChartVerticalOverview = dynamic(
   () =>
-    import("@components/charts/BarChartHorizontalMulti").then((mod) => ({
-      default: mod.BarChartHorizontalMulti,
+    import("@components/charts/BarChartVerticalOverview").then((mod) => ({
+      default: mod.BarChartVerticalOverview,
     })),
   {
     ssr: false,
-    loading: () => <Skeleton className="h-[450px] w-full rounded-lg" />,
+    loading: () => <Skeleton className="h-[400px] w-full rounded-lg" />,
   },
 );
 
-const BarChartVerticalMulti = dynamic(
+const BarChartHorizontalOverview = dynamic(
   () =>
-    import("@components/charts/BarChartVerticalMulti").then((mod) => ({
-      default: mod.BarChartVerticalMulti,
+    import("@components/charts/BarChartHorizontalOverview").then((mod) => ({
+      default: mod.BarChartHorizontalOverview,
     })),
   {
     ssr: false,
-    loading: () => <Skeleton className="h-[500px] w-full rounded-lg" />,
+    loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />,
   },
 );
 
@@ -55,260 +54,280 @@ const PieChartWithLabel = dynamic(
   },
 );
 
-const canViewPage = (role: string) => {
-  return role === "manager" || role === "owner";
-};
+const canViewPage = (role: string) => role === "manager" || role === "owner";
 
-export function CompareView() {
+const MAX_SELECTION = 5;
+
+type CompareMode = "faculty" | "time";
+
+interface CompareViewProps {
+  eventId: string;
+}
+
+export function CompareView({ eventId }: CompareViewProps) {
   const t = useTranslations("Dashboard.compare");
+  const locale = useLocale();
   const { role } = useRole();
+  const router = useRouter();
 
-  const {
-    selectedFaculties,
-    selectedTimes,
-    appliedFaculties,
-    appliedTimes,
-    handleFacultyChange,
-    handleTimeChange,
-    handleClearFilters,
-    handleApplyFilters,
-  } = useFilterLogic({
-    maxSelectionLimit: 5,
-  });
+  const { dashboardData, loading } = useEventDashboardData(eventId);
+
+  const [mode, setMode] = useState<CompareMode>("faculty");
+  const [selected, setSelected] = useState<Record<string, boolean>>({});
+  const [applied, setApplied] = useState<Record<string, boolean>>({});
+
+  const facultyStats: CompareStat[] = useMemo(
+    () =>
+      (dashboardData?.organizationStats ?? []).map((item) => {
+        const thName = FacultyThByEnLower[item.organization.toLowerCase()];
+        return {
+          id: item.organization,
+          label:
+            locale === "th" && thName ? thName : toTitleCase(item.organization),
+          total: item.totalCount,
+          studentCount: item.studentCount,
+          staffCount: item.staffCount,
+        };
+      }),
+    [dashboardData, locale],
+  );
+
+  const timeStats: CompareStat[] = useMemo(
+    () =>
+      (dashboardData?.timeSeriesStats ?? []).map((item) => ({
+        id: item.timeBucket,
+        label: formatHourBucket(item.timeBucket, locale),
+        total: item.totalCount,
+        studentCount: item.studentCount,
+        staffCount: item.staffCount,
+      })),
+    [dashboardData, locale],
+  );
+
+  const activeStats = mode === "faculty" ? facultyStats : timeStats;
+  const filterItems = useMemo(
+    () => activeStats.map((s) => ({ id: s.id, label: s.label })),
+    [activeStats],
+  );
+
+  const selectedIds = useMemo(
+    () => Object.keys(applied).filter((key) => applied[key]),
+    [applied],
+  );
+
+  const handleModeChange = (nextMode: CompareMode) => {
+    setMode(nextMode);
+    setSelected({});
+    setApplied({});
+  };
+
+  const handleCheckedChange = (itemId: string, checked: boolean) => {
+    setSelected((prev) => {
+      const next = { ...prev };
+      if (checked) {
+        const count = Object.values(next).filter(Boolean).length;
+        if (count >= MAX_SELECTION) return prev;
+        next[itemId] = true;
+      } else {
+        delete next[itemId];
+      }
+      return next;
+    });
+  };
+
+  const handleClearFilters = () => {
+    setSelected({});
+    setApplied({});
+  };
 
   const handleSubmitComparison = () => {
-    const hasFacultySelection = Object.keys(selectedFaculties).length > 0;
-    const hasTimeSelection = Object.keys(selectedTimes).length > 0;
+    const hasSelection = Object.keys(selected).length > 0;
 
-    // Case 1: No time and no faculty filter
-    if (!hasFacultySelection && !hasTimeSelection) {
+    if (!hasSelection) {
       toast.error(
         <p className="title-medium-primary text-neutral-white">
-          {t("noFacultyAndTimeError")}
+          {mode === "faculty" ? t("noFacultyError") : t("noTimeError")}
         </p>,
         {
-          style: {
-            background: "var(--error)",
-            color: "var(--neutral-white)",
-            width: "max-content",
-          },
+          style: { background: "var(--warning)", color: "var(--neutral-white)" },
           duration: 2500,
         },
       );
       return;
     }
 
-    // Case 2: No time filter
-    if (!hasTimeSelection) {
-      toast.error(
-        <p className="title-medium-primary text-neutral-white">
-          {t("noTimeError")}
-        </p>,
-        {
-          style: {
-            background: "var(--warning)",
-            color: "var(--neutral-white)",
-            width: "max-content",
-          },
-          duration: 2500,
-        },
-      );
-      return;
-    }
-
-    // Case 3: No faculty filter
-    if (!hasFacultySelection) {
-      toast.error(
-        <p className="title-medium-primary text-neutral-white">
-          {t("noFacultyError")}
-        </p>,
-        {
-          style: {
-            background: "var(--warning)",
-            color: "var(--neutral-white)",
-            width: "max-content",
-          },
-          duration: 2500,
-        },
-      );
-      return;
-    }
-
-    // Check if both "All" options are selected
-    if (selectedFaculties["f-0"] && selectedTimes["t-0"]) {
-      toast.error(
-        <p className="title-medium-primary text-neutral-white">
-          {t("bothAllError")}
-        </p>,
-        {
-          style: {
-            background: "var(--error)",
-            color: "var(--neutral-white)",
-            width: "max-content",
-          },
-          duration: 2500,
-        },
-      );
-      return;
-    }
-
-    handleApplyFilters();
+    setApplied(selected);
 
     toast.success(
       <p className="title-medium-primary text-neutral-white">
         {t("comparingData")}
       </p>,
       {
-        style: {
-          background: "var(--success)",
-          color: "var(--neutral-white)",
-        },
+        style: { background: "var(--success)", color: "var(--neutral-white)" },
         duration: 2500,
       },
     );
   };
 
-  // Filter and transform faculty data for comparison
-  const comparedFacultyData = useMemo(
-    () => transformFacultyDataForComparison(appliedFaculties, appliedTimes),
-    [appliedFaculties, appliedTimes],
-  );
-
-  // Filter and transform time data for comparison
-  const comparedTimeData = useMemo(
-    () => transformTimeDataForComparison(appliedFaculties, appliedTimes),
-    [appliedFaculties, appliedTimes],
-  );
-
   const summaryStats = useMemo(
-    () => calculateSummaryStats(appliedFaculties, appliedTimes),
-    [appliedFaculties, appliedTimes],
+    () => calculateSummaryStats(activeStats, selectedIds),
+    [activeStats, selectedIds],
   );
 
   const pieChartData = useMemo(
-    () => preparePieChartData(appliedFaculties, appliedTimes),
-    [appliedFaculties, appliedTimes],
+    () => preparePieChartData(activeStats, selectedIds, t("other")),
+    [activeStats, selectedIds, t],
+  );
+
+  const chartData = useMemo(
+    () =>
+      activeStats
+        .filter((s) => selectedIds.includes(s.id))
+        .map((s) => ({ faculty: s.label, total: s.total })),
+    [activeStats, selectedIds],
+  );
+
+  const maxChartValue = useMemo(
+    () => Math.max(0, ...chartData.map((d) => d.total)),
+    [chartData],
   );
 
   if (!canViewPage(role)) {
-    redirect("/dashboard");
+    router.push(`/dashboard/${eventId}`);
     return null;
   }
 
-  // layout
+  if (loading) {
+    return (
+      <div className="flex flex-col space-y-8 w-full">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-[300px] w-full rounded-lg" />
+      </div>
+    );
+  }
+
+  const hasAnyData = (dashboardData?.summary.totalAll ?? 0) > 0;
+
   return (
-    <div className="flex flex-col items-center w-full min-h-screen px-4 md:px-8 py-12 bg-neutral-white">
-      <div className="container flex flex-col items-center bg-neutral-white space-y-4">
-        {/* back button */}
-        <div className="relative flex items-center w-full h-10">
-          <Link
-            href="/dashboard/insights"
-            className="flex flex-row space-x-1 items-center cursor-pointer z-10 text-primary transition-all duration-300 ease-in-out hover:scale-110 hover:opacity-80"
-          >
-            <IonIcon name="ChevronBackOutline" size="20px" />
-            <p className="label-large-emphasized hidden md:block">
-              {t("back")}
-            </p>
-          </Link>
+    <div className="flex flex-col items-center w-full space-y-8">
+      <button
+        type="button"
+        onClick={() => router.push(`/events/${eventId}`)}
+        aria-label={t("back")}
+        className="w-full text-primary font-semibold cursor-pointer flex items-center gap-1"
+      >
+        <IonIcon name="ChevronBack" size="16px" />
+        <p className="label-large-emphasized">{t("back")}</p>
+      </button>
 
-          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <p className="headline-small-emphasized text-center whitespace-nowrap">
-              {t("title")}
-            </p>
-          </div>
-        </div>
+      <div className="w-full flex flex-col space-y-8">
+        {!hasAnyData ? (
+          <p className="body-large-primary text-neutral-500 text-center py-10">
+            {t("noScanResultsYet")}
+          </p>
+        ) : (
+          <>
+            <section className="w-full h-auto flex flex-col space-y-8 bg-neutral-100 p-8 sm:p-12 md:p-16 rounded-2xl">
+              <div className="flex justify-center gap-4">
+                <Button
+                  mode={mode === "faculty" ? "filled" : "outline"}
+                  bordered="round"
+                  expanded={false}
+                  className={mode === "faculty" ? "" : "bg-transparent"}
+                  onClick={() => handleModeChange("faculty")}
+                >
+                  <p className="label-large-emphasized">{t("faculty")}</p>
+                </Button>
+                <Button
+                  mode={mode === "time" ? "filled" : "outline"}
+                  bordered="round"
+                  expanded={false}
+                  className={mode === "time" ? "" : "bg-transparent"}
+                  onClick={() => handleModeChange("time")}
+                >
+                  <p className="label-large-emphasized">{t("timePeriod")}</p>
+                </Button>
+              </div>
 
-        <div className="flex flex-col w-full rounded-xl bg-neutral-white space-y-16">
-          {/* filter section */}
-          <section className="w-full h-auto flex flex-col space-y-8 bg-neutral-100 p-8 sm:p-12 md:p-16 rounded-2xl">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <FilterableList
-                title={t("faculty")}
-                items={FilterFacultyOptions}
-                selectedItems={selectedFaculties}
-                onCheckedChange={handleFacultyChange}
+                title={mode === "faculty" ? t("faculty") : t("timePeriod")}
+                items={filterItems}
+                selectedItems={selected}
+                onCheckedChange={handleCheckedChange}
                 hasDescription
               />
-              <FilterableList
-                title={t("timePeriod")}
-                items={FilterTimeOptions}
-                selectedItems={selectedTimes}
-                onCheckedChange={handleTimeChange}
-                hasDescription
-              />
-            </div>
-            <div className="flex justify-end">
-              <div className="flex flex-col-reverse md:flex-row gap-4 md:gap-8 w-full md:w-auto">
-                <div className="w-full md:w-[240px]">
+              <div className="flex justify-end">
+                <div className="flex flex-col-reverse sm:flex-row gap-3 w-full sm:w-auto">
                   <Button
                     mode="outline"
                     bordered="round"
-                    expanded={true}
+                    expanded={false}
                     className="bg-transparent"
                     onClick={handleClearFilters}
                   >
-                    <p className="title-large-emphasized">{t("clearData")}</p>
+                    <p className="label-large-emphasized">{t("clearData")}</p>
                   </Button>
-                </div>
-                <div className="w-full md:w-[240px]">
                   <Button
                     mode="filled"
                     bordered="round"
-                    expanded={true}
+                    expanded={false}
                     onClick={handleSubmitComparison}
                   >
-                    <p className="title-large-emphasized">{t("compareData")}</p>
+                    <p className="label-large-emphasized">
+                      {t("compareData")}
+                    </p>
                   </Button>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
 
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="w-full">
-              <StatCard
-                title={t("totalAttendees")}
-                value={summaryStats.totalRegistered.toLocaleString("en-US")}
-                unit={t("unit")}
-                variant="outline"
-                switchNumberPosition={true}
-                mobileLeftAlign={true}
-              >
-                <div className="flex flex-col justify-center items-center gap-4 mt-2">
-                  <p className="title-medium-emphasized lg:title-large-emphasized text-center">
-                    {t("outOfTotal")}{" "}
-                    {summaryStats.totalRegistered +
-                      summaryStats.totalUnregistered}{" "}
-                    {t("unit")}
-                  </p>
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="w-full">
+                <StatCard
+                  title={t("totalAttendees")}
+                  value={summaryStats.totalAttendees}
+                  unit={t("unit")}
+                  variant="outline"
+                  switchNumberPosition={true}
+                  mobileLeftAlign={true}
+                >
+                  <div className="flex flex-col justify-center items-center gap-4 mt-2">
+                    <p className="title-medium-emphasized lg:title-large-emphasized text-center">
+                      {t("student")}: {summaryStats.studentCount} {t("unit")}{" "}
+                      | {t("staff")}: {summaryStats.staffCount} {t("unit")}
+                    </p>
+                  </div>
+                </StatCard>
+              </div>
+              <div className="w-full h-full">
+                <PieChartWithLabel data={pieChartData} />
+              </div>
+            </section>
+
+            {selectedIds.length > 0 && (
+              <section className="flex flex-col space-y-8">
+                <p className="headline-large-emphasized">
+                  {mode === "faculty"
+                    ? t("facultyStatsTitle")
+                    : t("timeStatsTitle")}
+                </p>
+                <div className="h-auto">
+                  {mode === "faculty" ? (
+                    <BarChartVerticalOverview data={chartData} />
+                  ) : (
+                    <BarChartHorizontalOverview
+                      data={chartData.map((d) => ({
+                        time: d.faculty,
+                        total: d.total,
+                      }))}
+                      maxValue={maxChartValue}
+                    />
+                  )}
                 </div>
-              </StatCard>
-            </div>
-            <div className="w-full h-full">
-              <PieChartWithLabel data={pieChartData} />
-            </div>
-          </section>
-
-          {/* Chart Section */}
-          {comparedFacultyData.length > 0 && (
-            <section className="flex flex-col space-y-8">
-              <p className="headline-large-emphasized">
-                {t("facultyStatsTitle")}
-              </p>
-              <div className="h-auto">
-                <BarChartVerticalMulti data={comparedFacultyData} />
-              </div>
-            </section>
-          )}
-          {comparedTimeData.length > 0 && (
-            <section className="flex flex-col space-y-8">
-              <p className="headline-large-emphasized">{t("timeStatsTitle")}</p>
-              <div className="h-auto w-full">
-                <BarChartHorizontalMulti data={comparedTimeData} />
-              </div>
-            </section>
-          )}
-        </div>
+              </section>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

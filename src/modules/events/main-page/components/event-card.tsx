@@ -108,8 +108,11 @@ const EventCard: StyleableFC<EventCardProps> = ({
             <span className="body-large-primary">{location}</span>
           </div>
           <div className="order-2 sm:order-1 sm:flex-2 mt-3">
+            <div className="headline-small-emphasized mb-1">
+              {t("eventDetails")}
+            </div>
             <div className="body-large-primary line-clamp-3 sm:line-clamp-none mb-4 sm:mb-0">
-              {description}
+              {description || "-"}
             </div>
           </div>
           {!hideRole && (

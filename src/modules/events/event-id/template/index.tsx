@@ -68,7 +68,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
     formatEventTimeRange(startTime, endTime, locale);
 
   return (
-    <div className="w-full flex flex-col justify-center items-center px-6 md:px-10 lg:px-25 py-10 lg:pt-35 gap-6 lg:gap-7.5 pb-24">
+    <div className="w-full flex flex-col justify-center items-center px-6 md:px-10 lg:px-25 py-10 gap-6 lg:gap-7.5 pb-24">
       <button
         type="button"
         onClick={() => router.push("/events")}
@@ -130,15 +130,21 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           <div>
             <div className="headline-small-emphasized">{t("agenda")}</div>
             <div className="body-large-primary">
-              {eventData.agenda.map((item) => (
-                <div
-                  key={item.start_time}
-                  className="flex w-full justify-between"
-                >
-                  <div>{item.activity_name}</div>
-                  <div>{formatAgendaTime(item.start_time, item.end_time)}</div>
-                </div>
-              ))}
+              {eventData.agenda.length === 0 ? (
+                <div>-</div>
+              ) : (
+                eventData.agenda.map((item) => (
+                  <div
+                    key={item.start_time}
+                    className="flex w-full justify-between"
+                  >
+                    <div>{item.activity_name}</div>
+                    <div>
+                      {formatAgendaTime(item.start_time, item.end_time)}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>

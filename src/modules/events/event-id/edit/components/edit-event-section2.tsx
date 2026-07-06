@@ -20,7 +20,7 @@ import {
   FacultyEnByTh,
   FacultyList,
   filterFacultyOptions,
-} from "@modules/events/create/components/create-event-step2";
+} from "@utils/faculty";
 import {
   AttendanceType,
   EventFormInterface,

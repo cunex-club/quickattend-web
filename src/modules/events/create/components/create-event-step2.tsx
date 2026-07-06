@@ -31,7 +31,11 @@ import {
 } from "@assets/components/ui/select";
 import { fetchUserByRefId, type UserByRefIdRes } from "@services/users";
 import { APIRequestError } from "@services/events";
-import faculties from "./faculties.json";
+import {
+  FacultyList,
+  FacultyEnByTh,
+  filterFacultyOptions,
+} from "@utils/faculty";
 
 const formatUserName = (user: UserByRefIdRes, locale: string) => {
   const thName = [user.title_th, user.firstname_th, user.surname_th]
@@ -49,39 +53,6 @@ const formatUserName = (user: UserByRefIdRes, locale: string) => {
 interface CreateEventStep2Props {
   eventForm: EventFormInterface;
   setEventForm: (formdata: EventFormInterface) => void;
-}
-
-const thFacultyNames = faculties.th as Record<string, string>;
-const enFacultyNames = faculties.en as Record<string, string>;
-
-export const FacultyCodeMap: Record<string, number> = Object.fromEntries(
-  Object.entries(thFacultyNames).map(([code, name]) => [name, Number(code)]),
-);
-
-export const FacultyNameEnByCode: Record<number, string> = Object.fromEntries(
-  Object.entries(enFacultyNames).map(([code, name]) => [Number(code), name]),
-);
-
-export const FacultyList: string[] = Object.keys(FacultyCodeMap).sort((a, b) =>
-  a.localeCompare(b, "th"),
-);
-
-export const FacultyOptions: { th: string; en: string }[] = FacultyList.map(
-  (th) => ({ th, en: FacultyNameEnByCode[FacultyCodeMap[th]] ?? "" }),
-);
-
-export const FacultyEnByTh: Record<string, string> = Object.fromEntries(
-  FacultyOptions.map(({ th, en }) => [th, en]),
-);
-
-export function filterFacultyOptions(query: string): string[] {
-  const normalizedQuery = query.trim().toLowerCase();
-  if (!normalizedQuery) return [];
-
-  return FacultyOptions.filter(
-    ({ th, en }) =>
-      th.includes(query) || en.toLowerCase().includes(normalizedQuery),
-  ).map(({ th }) => th);
 }
 
 const CreateEventStep2 = ({

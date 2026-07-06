@@ -14,7 +14,7 @@ export default function DashboardNav({
   tabs: { id: string; label: string; href: string }[];
 }) {
   const pathname = usePathname();
-  const canViewInsights = (role: UserRole) => {
+  const canViewCompare = (role: UserRole) => {
     return role === "manager" || role === "owner";
   };
   return (
@@ -24,7 +24,7 @@ export default function DashboardNav({
         const isActive =
           normalizedPathname === tab.href ||
           (tab.href === "/dashboard" && normalizedPathname === "/dashboard");
-        const isTabDisabled = tab.id === "insights" && !canViewInsights(role);
+        const isTabDisabled = tab.id === "compare" && !canViewCompare(role);
 
         return (
           <Link

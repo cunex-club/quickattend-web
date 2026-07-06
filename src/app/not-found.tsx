@@ -1,3 +1,4 @@
+import Link from "next/link";
 import "@styles/globals.css";
 
 export default function RootNotFound() {
@@ -15,12 +16,12 @@ export default function RootNotFound() {
               Sorry, we couldn&apos;t find the page you&apos;re looking for.
             </p>
           </div>
-          <a
+          <Link
             href="/"
             className="label-large-emphasized rounded-full bg-primary px-6 py-3 text-neutral-white"
           >
             กลับหน้าแรก / Go home
-          </a>
+          </Link>
         </main>
       </body>
     </html>

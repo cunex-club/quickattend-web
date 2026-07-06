@@ -32,77 +32,44 @@
     "search": "Search"
   },
   "Dashboard": {
-    "sidebar": {
-      "compare": "Compare",
-      "back": "Back",
-      "mobileTitle": "Registration statistics"
-    },
     "navbar": {
       "overview": "Overview",
-      "insights": "Insights"
+      "compare": "Compare"
     },
     "overview": {
+      "back": "Back",
       "eventDetails": "Event Details",
       "totalAttendees": "Total Attendees",
       "unit": "people",
-      "topTitle": "Top Departments by Registration",
       "timeStatsTitle": "Registration Statistics by Time Period",
-      "facultyStatsTitle": "Registration Statistics by Faculty/Department",
-      "compareData": "Compare Data",
-      "viewAll": "View All",
+      "facultyStatsTitle": "Registration Statistics by Faculty",
       "viewFullscreen": "View Fullscreen",
       "copyLink": "Copy Link",
       "linkCopied": "Event link copied successfully",
       "linkCopyFailed": "Failed to copy link",
       "student": "Students",
       "staff": "Staff",
-      "noScanResultsYet": "No scan results yet for this event",
-      "noFacultyData": "No data yet"
-    },
-    "insights": {
-      "all": "All",
-      "student": "Students",
-      "staff": "Staff",
-      "filter": "Filter",
-      "filterDataTitle": "Data Filters",
-      "faculty": "Faculty/Department",
-      "timePeriod": "Time Period",
-      "clearFilter": "Clear Filters",
-      "applyFilter": "Apply Filters",
-      "applyFilterWarning": "Please select at least one filter",
-      "totalAttendees": "Total Attendees",
-      "unit": "people",
-      "students": "Students",
-      "staffs": "Staff",
-      "totalEligible": "Total Eligible Registrants",
-      "totalEligibleShort": "Total Eligible",
-      "totalUnregistered": "Total Unregistered",
-      "totalUnregisteredShort": "Total Unregistered",
-      "facultyStatsTitle": "Registration Statistics by Faculty/Department",
-      "timeStatsTitle": "Registration Statistics by Time Period",
-      "sortNewest": "Event Date: Newest - Oldest",
-      "sortOldest": "Event Date: Oldest - Newest",
-      "compareButton": "Compare Registration Statistics"
+      "noScanResultsYet": "No scan results yet for this event"
     },
     "compare": {
       "title": "Compare Data",
-      "faculty": "Faculty/Department",
+      "faculty": "Faculty",
       "back": "Back",
       "timePeriod": "Time Period",
       "clearData": "Clear Data",
       "compareData": "Compare Data",
       "maxSelectionError": "You can select up to 5 options",
-      "minSelectionError": "Please select at least one option to compare data",
-      "noFacultyAndTimeError": "Please select at least one faculty and one time period",
       "noTimeError": "Please select at least one time period",
       "noFacultyError": "Please select at least one faculty",
-      "bothAllError": "Cannot select \"All Faculties/Departments\" and \"All Time Periods\" simultaneously",
       "comparingData": "Comparing data...",
       "totalAttendees": "Total Attendees",
-      "outOfTotal": "Out of total",
       "unit": "people",
-      "facultyStatsTitle": "Registration Statistics by Faculty/Department",
-      "timeStatsTitle": "Registration Statistics by Time Period"
+      "student": "Students",
+      "staff": "Staff",
+      "other": "Other",
+      "facultyStatsTitle": "Registration Statistics by Faculty",
+      "timeStatsTitle": "Registration Statistics by Time Period",
+      "noScanResultsYet": "No scan results yet for this event"
     }
   },
   "Charts": {

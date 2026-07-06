@@ -18,15 +18,15 @@ export default function DashboardGroupLayout({
   const tabs = [
     { id: "overview", label: t("overview"), href: `/dashboard/${id}` },
     {
-      id: "insights",
-      label: t("insights"),
-      href: `/dashboard/${id}/insights`,
+      id: "compare",
+      label: t("compare"),
+      href: `/dashboard/${id}/compare`,
     },
   ];
 
   return (
     <DashboardApolloProvider>
-      <div className="flex flex-col items-center w-full min-h-screen py-6 px-5 bg-neutral-white">
+      <div className="flex flex-col items-center w-full min-h-screen pt-10 pb-6 px-6 lg:px-16 bg-neutral-white">
         <div className="container space-y-6 h-full flex flex-col">
           <DashboardNav locale={locale} role={role} tabs={tabs} />
           <main className="w-full flex-1">{children}</main>

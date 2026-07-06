@@ -23,3 +23,10 @@ export const formatEventTimeRange = (
   const end = new Date(endIso).toLocaleTimeString(tag, opts);
   return `${start} - ${end}`;
 };
+
+export const formatHourBucket = (isoStr: string, locale: string) =>
+  new Date(isoStr).toLocaleTimeString(localeToIntlTag(locale), {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
