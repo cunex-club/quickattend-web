@@ -54,6 +54,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
 
   const canEdit = eventData.role === "OWNER" || eventData.role === "MANAGER";
   const isEnd = new Date(eventData.end_time) < new Date();
+  const showEvaluationForm = isEnd && !!eventData.evaluation_form;
 
   const roleLabel =
     eventData.role === "OWNER"
@@ -219,6 +220,28 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             </div>
           </div>
         </Button>
+        {showEvaluationForm && (
+          <Button
+            mode="outline"
+            bordered="round"
+            expanded={true}
+            className="hidden md:block flex-1"
+            onClick={() =>
+              window.open(
+                eventData.evaluation_form!,
+                "_blank",
+                "noopener,noreferrer",
+              )
+            }
+          >
+            <div className="flex justify-center text-primary items-center gap-2">
+              <IonIcon name="DocumentText" className="w-6 h-6 md:w-9 md:h-9" />
+              <div className="title-large-primary whitespace-nowrap">
+                {t("evaluationForm")}
+              </div>
+            </div>
+          </Button>
+        )}
         <div className="flex gap-2 justify-center md:justify-start">
           <Button
             mode="outline"
@@ -232,6 +255,26 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
               className="w-6 h-6 md:w-9 md:h-9 text-primary"
             />
           </Button>
+          {showEvaluationForm && (
+            <Button
+              mode="outline"
+              bordered="round"
+              expanded={false}
+              className="md:hidden"
+              onClick={() =>
+                window.open(
+                  eventData.evaluation_form!,
+                  "_blank",
+                  "noopener,noreferrer",
+                )
+              }
+            >
+              <IonIcon
+                name="DocumentText"
+                className="w-6 h-6 md:w-9 md:h-9 text-primary"
+              />
+            </Button>
+          )}
         </div>
       </div>
     </div>
