@@ -29,7 +29,7 @@ interface FilterMenuProps {
   initialFilter?: FilterValues;
 }
 
-const DEFAULT_ACCESS_OPTION_IDS = ["owner", "manager", "staff"] as const;
+export const DEFAULT_ACCESS_OPTION_IDS = ["owner", "manager", "staff"] as const;
 
 const FilterMenu = ({
   onFilterChange,

@@ -114,7 +114,8 @@ export function OverviewView({ eventId }: OverviewViewProps) {
     >();
     for (const { faculty_no } of eventDetail?.allowed_faculties ?? []) {
       const name = FacultyNameEnByCode[faculty_no];
-      if (name) baseline.set(toTitleCase(name), { student: 0, staff: 0, total: 0 });
+      if (name)
+        baseline.set(toTitleCase(name), { student: 0, staff: 0, total: 0 });
     }
     for (const item of stats) {
       const name = toTitleCase(item.organization);
@@ -344,6 +345,14 @@ export function OverviewView({ eventId }: OverviewViewProps) {
                     />
                     <p>{eventDetail?.location}</p>
                   </span>
+                  <span className="flex flex-row space-x-2 items-center">
+                    <IonIcon
+                      name="Person"
+                      size="20px"
+                      className="text-primary"
+                    />
+                    <p>{eventDetail?.organizer}</p>
+                  </span>
                 </div>
                 <div className="flex flex-col space-y-2 px-4 ">
                   <p className="headline-small-emphasized">
@@ -432,9 +441,7 @@ export function OverviewView({ eventId }: OverviewViewProps) {
                           )
                         }
                       >
-                        <p className="label-large-emphasized">
-                          {t("student")}
-                        </p>
+                        <p className="label-large-emphasized">{t("student")}</p>
                       </Button>
                       <Button
                         mode={
@@ -487,14 +494,10 @@ export function OverviewView({ eventId }: OverviewViewProps) {
                           )
                         }
                       >
-                        <p className="label-large-emphasized">
-                          {t("student")}
-                        </p>
+                        <p className="label-large-emphasized">{t("student")}</p>
                       </Button>
                       <Button
-                        mode={
-                          selectedFilter === "staff" ? "filled" : "outline"
-                        }
+                        mode={selectedFilter === "staff" ? "filled" : "outline"}
                         bordered="square"
                         expanded={false}
                         onClick={() =>

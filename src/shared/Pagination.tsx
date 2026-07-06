@@ -9,6 +9,8 @@ interface PaginationProps {
   totalPages: number;
   onPageChange: (page: number) => void;
   siblingCount?: number; // Number of siblings to show on each side of current page
+  /** Authoritative "is there a next page" signal from the API; overrides the totalPages-derived check when provided */
+  hasNext?: boolean;
 }
 
 /**
@@ -63,6 +65,7 @@ const Pagination: StyleableFC<PaginationProps> = ({
   totalPages,
   onPageChange,
   siblingCount = 1,
+  hasNext,
   className,
   style,
 }) => {
@@ -71,6 +74,7 @@ const Pagination: StyleableFC<PaginationProps> = ({
     totalPages,
     siblingCount,
   );
+  const canGoNext = hasNext ?? currentPage < totalPages;
 
   const handlePrevious = () => {
     if (currentPage > 1) {
@@ -79,7 +83,7 @@ const Pagination: StyleableFC<PaginationProps> = ({
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages) {
+    if (canGoNext) {
       onPageChange(currentPage + 1);
     }
   };
@@ -145,12 +149,12 @@ const Pagination: StyleableFC<PaginationProps> = ({
       {/* Next Button */}
       <button
         onClick={handleNext}
-        disabled={currentPage === totalPages}
+        disabled={!canGoNext}
         aria-label="Next page"
         className={cn(
           "flex h-10 w-10 mb-4 items-center justify-center rounded-full border-2 transition-all duration-200",
           "border-neutral-300 bg-neutral-white",
-          currentPage === totalPages ? "text-neutral-400" : "text-primary",
+          !canGoNext ? "text-neutral-400" : "text-primary",
           "hover:border-primary hover:text-primary",
           "disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-neutral-300 disabled:hover:text-neutral-400",
         )}

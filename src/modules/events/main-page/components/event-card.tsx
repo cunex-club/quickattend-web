@@ -16,6 +16,7 @@ type EventCardProps = {
   time: string;
   location: string;
   role: string;
+  organizer?: string;
   isEnd: boolean;
   hideRole?: boolean;
   evaluationForm?: string | null;
@@ -29,6 +30,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
   time,
   location,
   role,
+  organizer,
   isEnd,
   hideRole = false,
   evaluationForm,
@@ -132,7 +134,9 @@ const EventCard: StyleableFC<EventCardProps> = ({
                 className="text-primary"
                 noPadding
               />
-              <span className="body-large-primary">{role || "-"}</span>
+              <span className="body-large-primary">
+                {organizer ? `${organizer}` : "-"}
+              </span>
             </div>
           )}
         </div>

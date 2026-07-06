@@ -6,6 +6,7 @@ import EventCardSkeleton from "@modules/events/main-page/components/event-card-s
 import EventEmptyState from "@modules/events/main-page/components/event-empty-state";
 import SortMenu from "@modules/events/main-page/components/sort-menu";
 import FilterMenu, {
+  DEFAULT_ACCESS_OPTION_IDS,
   FilterValues,
 } from "@modules/events/main-page/components/filter-menu";
 import Pagination from "@shared/Pagination";
@@ -29,6 +30,8 @@ interface StoredFiltersState {
   pastEventsSort: string;
 }
 
+const DEFAULT_ACCESS_RIGHTS: string[] = [...DEFAULT_ACCESS_OPTION_IDS];
+
 const loadStoredFilters = (): StoredFiltersState | null => {
   if (typeof window === "undefined") return null;
   try {
@@ -37,14 +40,16 @@ const loadStoredFilters = (): StoredFiltersState | null => {
     const parsed = JSON.parse(raw);
     return {
       myEventsFilter: {
-        accessRights: parsed.myEventsFilter?.accessRights ?? [],
+        accessRights:
+          parsed.myEventsFilter?.accessRights ?? DEFAULT_ACCESS_RIGHTS,
         date: parsed.myEventsFilter?.date
           ? new Date(parsed.myEventsFilter.date)
           : undefined,
       },
       myEventsSort: parsed.myEventsSort ?? "newest",
       pastEventsFilter: {
-        accessRights: parsed.pastEventsFilter?.accessRights ?? [],
+        accessRights:
+          parsed.pastEventsFilter?.accessRights ?? DEFAULT_ACCESS_RIGHTS,
         date: parsed.pastEventsFilter?.date
           ? new Date(parsed.pastEventsFilter.date)
           : undefined,
@@ -98,7 +103,7 @@ const EventPageTemplate = () => {
   const [myEventsFilter, setMyEventsFilter] = useState<FilterValues>(
     () =>
       loadStoredFilters()?.myEventsFilter ?? {
-        accessRights: [],
+        accessRights: DEFAULT_ACCESS_RIGHTS,
         date: undefined,
       },
   );
@@ -108,7 +113,7 @@ const EventPageTemplate = () => {
   const [pastEventsFilter, setPastEventsFilter] = useState<FilterValues>(
     () =>
       loadStoredFilters()?.pastEventsFilter ?? {
-        accessRights: [],
+        accessRights: DEFAULT_ACCESS_RIGHTS,
         date: undefined,
       },
   );
@@ -159,6 +164,7 @@ const EventPageTemplate = () => {
         setAttendedEvents(attendedRes.data);
         if (attendedRes.meta?.pagination) {
           setAttendedPagination(attendedRes.meta.pagination);
+          setCurrentPage(attendedRes.meta.pagination.page);
         }
       } catch (err) {
         console.error("Failed to fetch events:", err);
@@ -252,6 +258,7 @@ const EventPageTemplate = () => {
                   time={timeStr}
                   location={event.location}
                   role={event.role ?? ""}
+                  organizer={event.organizer}
                   isEnd={isEnd}
                   evaluationForm={event.evaluation_form}
                 />
@@ -320,6 +327,7 @@ const EventPageTemplate = () => {
                   time={timeStr}
                   location={event.location}
                   role={event.role ?? ""}
+                  organizer={event.organizer}
                   isEnd={isEnd}
                   evaluationForm={event.evaluation_form}
                 />
@@ -333,6 +341,7 @@ const EventPageTemplate = () => {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
+          hasNext={attendedPagination?.hasNext}
         />
       </div>
     </div>
