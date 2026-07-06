@@ -8,6 +8,17 @@
   "profile": "โปรไฟล์",
   "help": "ช่วยเหลือ",
   "contactSupport": "ติดต่อฝ่ายสนับสนุน",
+  "ErrorPage": {
+    "title": "เกิดข้อผิดพลาดบางอย่าง",
+    "description": "ขออภัย ระบบไม่สามารถโหลดหน้านี้ได้ในขณะนี้",
+    "retry": "ลองอีกครั้ง",
+    "backToEvents": "กลับไปหน้ากิจกรรม"
+  },
+  "NotFoundPage": {
+    "title": "ไม่พบหน้านี้",
+    "description": "ขออภัย ไม่พบหน้าที่คุณต้องการ",
+    "back": "ย้อนกลับ"
+  },
   "Sidebar": {
     "addevent": "สร้างกิจกรรม",
     "activities": "กิจกรรม",
@@ -16,7 +27,8 @@
   },
   "Dashboard": {
     "sidebar": {
-      "compare": "เปรียบเทียบ"
+      "compare": "เปรียบเทียบ",
+      "back": "ย้อนกลับ"
     },
     "navbar": {
       "overview": "ภาพรวม",
@@ -26,7 +38,7 @@
       "eventDetails": "รายละเอียดกิจกรรม",
       "totalAttendees": "จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด",
       "unit": "คน",
-      "top3Title": "3 อันดับแรกของคณะ/หน่วยงานที่ลงทะเบียน",
+      "topTitle": "คณะ/หน่วยงานที่ลงทะเบียนมากที่สุด",
       "timeStatsTitle": "สถิติการลงทะเบียนแยกตามช่วงเวลา",
       "facultyStatsTitle": "สถิติการลงทะเบียนแยกตามคณะ/หน่วยงาน",
       "compareData": "เปรียบเทียบข้อมูล",
@@ -36,7 +48,9 @@
       "linkCopied": "คัดลอกลิงก์กิจกรรมเรียบร้อยแล้ว",
       "linkCopyFailed": "ไม่สามารถคัดลอกลิงก์ได้",
       "student": "นิสิต",
-      "staff": "บุคลากร"
+      "staff": "บุคลากร",
+      "noScanResultsYet": "ยังไม่มีผลลัพธ์การสแกนสำหรับกิจกรรมนี้",
+      "noFacultyData": "ยังไม่มีข้อมูล"
     },
     "insights": {
       "all": "ทั้งหมด",
@@ -113,16 +127,15 @@
     },
     "cameraPanel": {
       "goToEvents": "ไปหน้ากิจกรรม",
-      "copyEventLink": "คัดลอกลิงก์กิจกรรม",
-      "turnOnFlash": "เปิดแฟลช",
-      "turnOffFlash": "ปิดแฟลช"
+      "copyLink": "คัดลอกลิงก์",
+      "linkCopied": "คัดลอกลิงก์เรียบร้อยแล้ว",
+      "linkCopyFailed": "ไม่สามารถคัดลอกลิงก์ได้"
     },
     "infoPanel": {
       "selectEvent": "เลือกกิจกรรม",
       "barcodeAlt": "สแกนบาร์โค้ด",
       "description": "สแกนนิสิต CU NEX เพื่อลงทะเบียนเข้าร่วมกิจกรรม",
-      "adminLabel": "ผู้ดูแลกิจกรรม",
-      "timeSuffix": "น."
+      "adminLabel": "ผู้ดูแลกิจกรรม"
     },
     "participantsPanel": {
       "totalAttendees": "จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด",

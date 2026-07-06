@@ -84,8 +84,18 @@ const ScanInfoPanel: StyleableFC<ScanInfoPanelProps> = ({
                   <DropdownMenuItem
                     key={event.id}
                     onClick={() => onEventChange(event.id)}
+                    className={cn(
+                      event.id === selectedEvent.id &&
+                        "bg-primary/10 focus:bg-primary/15",
+                    )}
                   >
-                    <span className="title-medium-primary text-neutral-600">
+                    <span
+                      className={cn(
+                        "title-medium-primary text-neutral-600",
+                        event.id === selectedEvent.id &&
+                          "text-primary font-semibold",
+                      )}
+                    >
                       {event.name}
                     </span>
                   </DropdownMenuItem>
@@ -100,8 +110,7 @@ const ScanInfoPanel: StyleableFC<ScanInfoPanelProps> = ({
 
           {hasEvents && (
             <p className="title-large-primary mt-1 text-neutral-600">
-              {selectedEvent.startTime} – {selectedEvent.endTime}{" "}
-              {t("infoPanel.timeSuffix")}
+              {selectedEvent.startTime} – {selectedEvent.endTime}
             </p>
           )}
         </div>

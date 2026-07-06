@@ -7,7 +7,7 @@ import {
   ParticipantFieldType,
   ScanPermissionType,
   Student,
-} from "../template";
+} from "../types";
 import { RadioGroup, RadioGroupItem } from "@assets/components/ui/radio-group";
 import {
   Command,
@@ -31,6 +31,7 @@ import {
 } from "@assets/components/ui/select";
 import { fetchUserByRefId, type UserByRefIdRes } from "@services/users";
 import { APIRequestError } from "@services/events";
+import faculties from "./faculties.json";
 
 const formatUserName = (user: UserByRefIdRes) =>
   [user.title_th, user.firstname_th, user.surname_th]
@@ -46,32 +47,34 @@ interface CreateEventStep2Props {
   setEventForm: (formdata: EventFormInterface) => void;
 }
 
-export const FacultyCodeMap: Record<string, number> = {
-  คณะวิศวกรรมศาสตร์: 21,
-  คณะอักษรศาสตร์: 22,
-  คณะวิทยาศาสตร์: 23,
-  คณะรัฐศาสตร์: 24,
-  คณะสถาปัตยกรรมศาสตร์: 25,
-  คณะพาณิชยศาสตร์และการบัญชี: 26,
-  คณะครุศาสตร์: 27,
-  คณะนิเทศศาสตร์: 28,
-  คณะเศรษฐศาสตร์: 29,
-  คณะแพทยศาสตร์: 30,
-  คณะสัตวแพทยศาสตร์: 31,
-  คณะทันตแพทยศาสตร์: 32,
-  คณะเภสัชศาสตร์: 33,
-  คณะนิติศาสตร์: 34,
-  คณะศิลปกรรมศาสตร์: 35,
-  คณะพยาบาลศาสตร์: 36,
-  คณะสหเวชศาสตร์: 37,
-  คณะจิตวิทยา: 38,
-  คณะวิทยาศาสตร์การกีฬา: 39,
-  สำนักวิชาทรัพยากรการเกษตร: 40,
-};
+const thFacultyNames = faculties.th as Record<string, string>;
+const enFacultyNames = faculties.en as Record<string, string>;
+
+export const FacultyCodeMap: Record<string, number> = Object.fromEntries(
+  Object.entries(thFacultyNames).map(([code, name]) => [name, Number(code)]),
+);
+
+export const FacultyNameEnByCode: Record<number, string> = Object.fromEntries(
+  Object.entries(enFacultyNames).map(([code, name]) => [Number(code), name]),
+);
 
 export const FacultyList: string[] = Object.keys(FacultyCodeMap).sort((a, b) =>
   a.localeCompare(b, "th"),
 );
+
+export const FacultyOptions: { th: string; en: string }[] = FacultyList.map(
+  (th) => ({ th, en: FacultyNameEnByCode[FacultyCodeMap[th]] ?? "" }),
+);
+
+export function filterFacultyOptions(query: string): string[] {
+  const normalizedQuery = query.trim().toLowerCase();
+  if (!normalizedQuery) return [];
+
+  return FacultyOptions.filter(
+    ({ th, en }) =>
+      th.includes(query) || en.toLowerCase().includes(normalizedQuery),
+  ).map(({ th }) => th);
+}
 
 const CreateEventStep2 = ({
   eventForm,
@@ -106,7 +109,7 @@ const CreateEventStep2 = ({
       setOpenFacultyFilter(false);
       return;
     }
-    const filtered = FacultyList.filter((org) => org.includes(facultyQuery));
+    const filtered = filterFacultyOptions(facultyQuery);
     setFilteredOrganization(filtered);
     setOpenFacultyFilter(true);
   }, [facultyQuery]);
@@ -175,7 +178,7 @@ const CreateEventStep2 = ({
                   onChange={(e) => {
                     const value = e.target.value;
 
-                    if (/^[\u0E00-\u0E7F]*$/.test(value)) {
+                    if (/^[\u0E00-\u0E7Fa-zA-Z\s]*$/.test(value)) {
                       setFacultyQuery(value);
                       setOpenFacultyFilter(true);
                     }

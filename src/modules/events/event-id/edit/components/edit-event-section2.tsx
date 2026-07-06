@@ -16,7 +16,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@assets/components/ui/select";
-import { FacultyList } from "@modules/events/create/components/create-event-step2";
+import {
+  FacultyList,
+  filterFacultyOptions,
+} from "@modules/events/create/components/create-event-step2";
 import {
   AttendanceType,
   EventFormInterface,
@@ -25,7 +28,7 @@ import {
   ParticipantFieldType,
   ScanPermissionType,
   Student,
-} from "@modules/events/create/template";
+} from "@modules/events/create/types";
 import Button from "@shared/Button";
 import IonIcon from "@shared/IonIcon";
 import { useTranslations } from "next-intl";
@@ -80,7 +83,7 @@ const EditEventSection2 = ({
       setOpenFacultyFilter(false);
       return;
     }
-    const filtered = FacultyList.filter((org) => org.includes(facultyQuery));
+    const filtered = filterFacultyOptions(facultyQuery);
     setFilteredOrganization(filtered);
     setOpenFacultyFilter(true);
   }, [facultyQuery]);
@@ -149,7 +152,7 @@ const EditEventSection2 = ({
                   onChange={(e) => {
                     const value = e.target.value;
 
-                    if (/^[\u0E00-\u0E7F]*$/.test(value)) {
+                    if (/^[\u0E00-\u0E7Fa-zA-Z\s]*$/.test(value)) {
                       setFacultyQuery(value);
                       setOpenFacultyFilter(true);
                     }

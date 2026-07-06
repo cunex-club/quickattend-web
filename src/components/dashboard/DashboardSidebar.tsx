@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 import IonIcon from "@shared/IonIcon";
@@ -35,11 +35,13 @@ export function DashboardSidebar({
   currentUser = null,
 }: DashboardSidebarProps) {
   const t = useTranslations("Dashboard.sidebar");
-  const tSidebar = useTranslations("Sidebar");
   const pathname = usePathname();
+  const { id } = useParams<{ id?: string }>();
 
   const displayName = formatFullName(currentUser);
   const avatarFallback = getAvatarFallback(currentUser);
+
+  const backToEventHref = id ? `/events/${id}` : "/events";
 
   const isActivePath = (href: string) => pathname === href;
 
@@ -95,15 +97,13 @@ export function DashboardSidebar({
 
       {/* Mobile: Bottom footer nav */}
       <nav className="fixed bottom-0 left-0 z-40 flex w-full items-center border-t border-neutral-200 bg-neutral-white px-2 py-2 lg:hidden">
-        <Link href="/events" className={NAV_ITEM_CLASS}>
+        <Link href={backToEventHref} className={NAV_ITEM_CLASS}>
           <IonIcon
-            name={isActivePath("/events") ? "Home" : "HomeOutline"}
+            name="ChevronBackOutline"
             size="24px"
-            className={
-              isActivePath("/events") ? "text-primary" : "text-primary/70"
-            }
+            className="text-primary/70"
           />
-          <p className={NAV_LABEL_CLASS}>{tSidebar("activities")}</p>
+          <p className={NAV_LABEL_CLASS}>{t("back")}</p>
         </Link>
 
         <Link href="/dashboard-compare" className={NAV_ITEM_CLASS}>
@@ -136,17 +136,15 @@ export function DashboardSidebar({
           <div className="px-4">
             <nav className="flex flex-col space-y-2">
               <Link
-                href="/events"
+                href={backToEventHref}
                 className="flex flex-col items-center px-4 py-2 rounded-lg"
               >
                 <IonIcon
-                  name="HomeOutline"
+                  name="ChevronBackOutline"
                   className="text-primary"
                   size="32px"
                 />
-                <span className="title-small-primary">
-                  {tSidebar("activities")}
-                </span>
+                <span className="title-small-primary">{t("back")}</span>
               </Link>
               <Link
                 href="/dashboard-compare"

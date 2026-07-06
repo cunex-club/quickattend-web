@@ -8,6 +8,17 @@
   "profile": "Profile",
   "help": "Help",
   "contactSupport": "Contact Support",
+  "ErrorPage": {
+    "title": "Something went wrong",
+    "description": "Sorry, we couldn't load this page right now.",
+    "retry": "Try again",
+    "backToEvents": "Back to events"
+  },
+  "NotFoundPage": {
+    "title": "Page not found",
+    "description": "Sorry, we couldn't find the page you're looking for.",
+    "back": "Go back"
+  },
   "Sidebar": {
     "addevent": "Create Event",
     "activities": "Activities",
@@ -16,7 +27,8 @@
   },
   "Dashboard": {
     "sidebar": {
-      "compare": "Compare"
+      "compare": "Compare",
+      "back": "Back"
     },
     "navbar": {
       "overview": "Overview",
@@ -26,7 +38,7 @@
       "eventDetails": "Event Details",
       "totalAttendees": "Total Attendees",
       "unit": "people",
-      "top3Title": "Top 3 Departments by Registration",
+      "topTitle": "Top Departments by Registration",
       "timeStatsTitle": "Registration Statistics by Time Period",
       "facultyStatsTitle": "Registration Statistics by Faculty/Department",
       "compareData": "Compare Data",
@@ -36,7 +48,9 @@
       "linkCopied": "Event link copied successfully",
       "linkCopyFailed": "Failed to copy link",
       "student": "Students",
-      "staff": "Staff"
+      "staff": "Staff",
+      "noScanResultsYet": "No scan results yet for this event",
+      "noFacultyData": "No data yet"
     },
     "insights": {
       "all": "All",
@@ -106,22 +120,19 @@
   },
   "Scan": {
     "page": {
-      "emptyEventName": "No events available",
-      "loading": "Loading...",
-      "scanning": "Scanning..."
+      "emptyEventName": "No events available"
     },
     "cameraPanel": {
       "goToEvents": "Go to events",
-      "copyEventLink": "Copy event link",
-      "turnOnFlash": "Turn on flash",
-      "turnOffFlash": "Turn off flash"
+      "copyLink": "Copy Link",
+      "linkCopied": "Link copied successfully",
+      "linkCopyFailed": "Failed to copy link"
     },
     "infoPanel": {
       "selectEvent": "Select event",
       "barcodeAlt": "Scan barcode",
       "description": "Scan CU NEX students to register for the event.",
-      "adminLabel": "Event admin",
-      "timeSuffix": "hrs."
+      "adminLabel": "Event admin"
     },
     "participantsPanel": {
       "totalAttendees": "Total event attendees",
@@ -300,7 +311,7 @@
     "submitDelete": "Delete"
   },
   "EventDetail": {
-    "back": "ย้อนกลับ",
+    "back": "Back",
     "edit": "แก้ไขกิจกรรม",
     "registeredCount": "จำนวนผู้ลงทะเบียน",
     "eventDetails": "รายละเอียดกิจกรรม",

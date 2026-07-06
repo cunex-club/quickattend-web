@@ -60,7 +60,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
   const handleStatsClick = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    router.push("/dashboard");
+    router.push(`/dashboard/${eventId}`);
   };
 
   return (

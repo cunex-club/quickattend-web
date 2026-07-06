@@ -1,32 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import DashboardNav from "@components/dashboard/DashboardNav";
 import { useRole } from "@context/RoleContext";
 import { useTranslations } from "next-intl";
 import { DashboardApolloProvider } from "@graphql/provider";
-interface DashboardGroupLayoutProps {
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
-}
 
 export default function DashboardGroupLayout({
   children,
-  params,
-}: DashboardGroupLayoutProps) {
+}: {
+  children: React.ReactNode;
+}) {
   const { role } = useRole();
   const t = useTranslations("Dashboard.navbar");
-  const [locale, setLocale] = useState<string>("");
-
-  useEffect(() => {
-    params.then(({ locale }) => setLocale(locale));
-  }, [params]);
-
-  if (!locale) return null;
+  const { locale, id } = useParams<{ locale: string; id: string }>();
 
   const tabs = [
-    { id: "overview", label: t("overview"), href: "/dashboard" },
-    { id: "insights", label: t("insights"), href: "/dashboard/insights" },
+    { id: "overview", label: t("overview"), href: `/dashboard/${id}` },
+    {
+      id: "insights",
+      label: t("insights"),
+      href: `/dashboard/${id}/insights`,
+    },
   ];
 
   return (

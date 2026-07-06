@@ -102,8 +102,8 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
     <div className="w-full flex flex-col justify-center items-center px-6 md:px-10 lg:px-25 py-10 lg:pt-35 gap-6 lg:gap-7.5 pb-24">
       <button
         type="button"
-        onClick={() => router.back()}
-        aria-label="Go back"
+        onClick={() => router.push("/events")}
+        aria-label={t("back")}
         className="w-full text-primary font-semibold cursor-pointer flex items-center gap-1"
       >
         <IonIcon name="ChevronBack" size="16px" />
@@ -232,7 +232,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           bordered="round"
           expanded={true}
           className="hidden md:block flex-1"
-          onClick={() => router.push("/dashboard")}
+          onClick={() => router.push(`/dashboard/${eventId}`)}
         >
           <div className="flex justify-center text-primary items-center gap-2">
             <IonIcon name="TrendingUp" className="w-6 h-6 md:w-9 md:h-9" />
@@ -247,7 +247,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             bordered="round"
             expanded={false}
             className="md:hidden"
-            onClick={() => router.push("/dashboard/insights")}
+            onClick={() => router.push(`/dashboard/${eventId}`)}
           >
             <IonIcon
               name="TrendingUp"
