@@ -235,7 +235,7 @@ const ScanTemplate = () => {
         t("resultPanel.unknownParticipant");
 
       const scannedAt = res.data.check_in_time
-        ? `${formatTime(res.data.check_in_time)} ${t("infoPanel.timeSuffix")}`
+        ? formatTime(res.data.check_in_time)
         : "-";
 
       const organization =
@@ -247,6 +247,7 @@ const ScanTemplate = () => {
         organization,
         checkInTime: scannedAt,
         status: res.data.status === "duplicate" ? "duplicate" : "success",
+        profileImageUrl: res.data.profile_image_url || undefined,
       };
 
       if (res.data.status !== "duplicate") {
@@ -363,14 +364,6 @@ const ScanTemplate = () => {
           compact
         />
       </div>
-
-      {(loadingEvents || loadingDetail || isSubmittingScan) && (
-        <div className="fixed bottom-4 right-4 rounded-full bg-white/95 px-4 py-2 shadow-elevation-2">
-          <span className="label-medium-primary text-neutral-600">
-            {isSubmittingScan ? t("page.scanning") : t("page.loading")}
-          </span>
-        </div>
-      )}
 
       <ScanResultModal
         open={isCompactLayout && isResultModalOpen}

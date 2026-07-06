@@ -7,8 +7,7 @@ import SidebarNavigation from "@modules/layout/sidebar/components/sidebar-naviga
 
 const NAV_ITEM_CLASS =
   "flex min-w-0 flex-1 flex-col items-center gap-0.5 px-1 py-1";
-const NAV_LABEL_CLASS =
-  "label-small-primary w-full truncate text-center";
+const NAV_LABEL_CLASS = "label-small-primary w-full truncate text-center";
 
 const MobileNav = () => {
   const t = useTranslations("Sidebar");
@@ -22,7 +21,9 @@ const MobileNav = () => {
         <IonIcon
           name={isActivePath("/events") ? "Home" : "HomeOutline"}
           size="24px"
-          className={isActivePath("/events") ? "text-primary" : "text-primary/70"}
+          className={
+            isActivePath("/events") ? "text-primary" : "text-primary/70"
+          }
         />
         <p className={NAV_LABEL_CLASS}>{t("activities")}</p>
       </SidebarNavigation>
@@ -51,7 +52,9 @@ const MobileNav = () => {
         <IonIcon
           name={isActivePath("/search") ? "Search" : "SearchOutline"}
           size="24px"
-          className={isActivePath("/search") ? "text-primary" : "text-primary/70"}
+          className={
+            isActivePath("/search") ? "text-primary" : "text-primary/70"
+          }
         />
         <p className={NAV_LABEL_CLASS}>{t("search")}</p>
       </SidebarNavigation>

@@ -27,7 +27,7 @@ export const FilterableList: React.FC<FilterableListProps> = ({
   // Memoize derived state to avoid unnecessary recalculations
   const selectedItemsArray = useMemo(
     () => items.filter((item) => selectedItems[item.id]),
-    [items, selectedItems]
+    [items, selectedItems],
   );
 
   const handleRemoveItem = (itemId: string) => {

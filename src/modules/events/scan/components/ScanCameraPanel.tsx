@@ -6,6 +6,7 @@ import { cn } from "@assets/lib/utils";
 import { StyleableFC } from "@utils/misc";
 import { ZXingScanner } from "@utils/scanner";
 import IonIcon from "@shared/IonIcon";
+import { toast } from "sonner";
 
 type ScanCameraPanelProps = {
   deviceId?: string;
@@ -53,10 +54,33 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
       await navigator.clipboard.writeText(window.location.href);
       setLinkCopied(true);
       setTimeout(() => setLinkCopied(false), 1500);
+      toast.success(
+        <p className="title-medium-primary text-neutral-white">
+          {t("cameraPanel.linkCopied")}
+        </p>,
+        {
+          style: {
+            background: "var(--success)",
+            color: "var(--neutral-white)",
+          },
+          duration: 1500,
+        },
+      );
     } catch {
-      // clipboard access not available — silently ignore
+      toast.error(
+        <p className="title-medium-primary text-neutral-white">
+          {t("cameraPanel.linkCopyFailed")}
+        </p>,
+        {
+          style: {
+            background: "var(--error)",
+            color: "var(--neutral-white)",
+          },
+          duration: 1500,
+        },
+      );
     }
-  }, []);
+  }, [t]);
 
   return (
     <div
@@ -79,7 +103,7 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
           type="button"
           onClick={copyLink}
           className="flex h-10 items-center justify-center rounded-full bg-white/90 px-3 shadow-md"
-          aria-label={t("cameraPanel.copyEventLink")}
+          aria-label={t("cameraPanel.copyLink")}
         >
           <IonIcon
             name={linkCopied ? "Checkmark" : "LinkOutline"}

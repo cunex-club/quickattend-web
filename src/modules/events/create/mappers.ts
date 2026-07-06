@@ -1,4 +1,4 @@
-import { FacultyCodeMap } from "./components/create-event-step2";
+import { FacultyCodeMap } from "@utils/faculty";
 import {
   AttendanceType,
   EventManagerType,

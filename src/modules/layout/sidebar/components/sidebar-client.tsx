@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "@i18n/navigation";
 
 import {
@@ -28,26 +29,19 @@ const handleLogOut = () => {
   window.location.href = "/api/auth/logout";
 };
 
-function formatEnglishName(user: CurrentUser | null): string {
-  if (!user) {
-    return "Guest";
-  }
-
-  return (
-    [user.title_en, user.firstname_en, user.surname_en]
-      .filter(Boolean)
-      .join(" ") || user.ref_id
-  );
-}
-
 const SidebarClient = ({ currentUser }: SidebarClientProps) => {
   const t = useTranslations("Sidebar");
+  const locale = useLocale();
   const pathname = usePathname();
 
   const isActivePath = (href: string) => pathname === href;
-  const displayName = formatFullName(currentUser);
-  const englishName = formatEnglishName(currentUser);
+  const displayName = formatFullName(currentUser, locale);
   const avatarFallback = getAvatarFallback(currentUser);
+  const [avatarError, setAvatarError] = useState(false);
+  const avatarSrc =
+    !avatarError && currentUser?.profile_image_url
+      ? currentUser.profile_image_url
+      : "/logo/cu-nex.png";
 
   return (
     <div className="w-38.5 px-10 pt-8 pb-10 bg-neutral-100 h-screen justify-between flex flex-col">
@@ -125,8 +119,14 @@ const SidebarClient = ({ currentUser }: SidebarClientProps) => {
           <PopoverTrigger asChild>
             <button className="rounded-full overflow-hidden border-2 border-primary hover:border-secondary transition-colors cursor-pointer">
               <Avatar className="w-15 h-15">
-                <AvatarImage src="/logo/cu-nex.png" alt={displayName} />
-                <AvatarFallback>{avatarFallback}</AvatarFallback>
+                <AvatarImage
+                  src={avatarSrc}
+                  alt={displayName}
+                  onError={() => setAvatarError(true)}
+                />
+                <AvatarFallback className="text-primary">
+                  {avatarFallback}
+                </AvatarFallback>
               </Avatar>
             </button>
           </PopoverTrigger>
@@ -138,8 +138,14 @@ const SidebarClient = ({ currentUser }: SidebarClientProps) => {
             <div className="flex flex-col space-y-6">
               <section className="flex flex-row justify-between items-center">
                 <Avatar className="w-15 h-15 border-2 border-neutral-300">
-                  <AvatarImage src="/logo/cu-nex.png" alt={displayName} />
-                  <AvatarFallback>{avatarFallback}</AvatarFallback>
+                  <AvatarImage
+                    src={avatarSrc}
+                    alt={displayName}
+                    onError={() => setAvatarError(true)}
+                  />
+                  <AvatarFallback className="text-primary">
+                    {avatarFallback}
+                  </AvatarFallback>
                 </Avatar>
                 <button onClick={handleLogOut}>
                   <IonIcon
@@ -154,7 +160,6 @@ const SidebarClient = ({ currentUser }: SidebarClientProps) => {
                 <p className="title-medium-primary">
                   {currentUser?.ref_id ?? "-"}
                 </p>
-                <p className="title-medium-primary">{englishName}</p>
               </section>
             </div>
           </PopoverContent>

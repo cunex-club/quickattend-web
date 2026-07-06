@@ -158,10 +158,6 @@ const EditEventSection1 = ({
     return time;
   };
 
-  const lastAgendaEndTime =
-    eventForm.agenda[eventForm.agenda.length - 1]?.endTime ??
-    eventForm.startTime;
-
   const handleAddAgenda = () => {
     if (!eventForm.startTime || !eventForm.endTime) return;
 
@@ -170,7 +166,7 @@ const EditEventSection1 = ({
     const start = buildAgendaDate(eventForm.startTime, agendaStart);
     const end = buildAgendaDate(eventForm.startTime, agendaEnd);
 
-    if (start < lastAgendaEndTime || end > eventForm.endTime) return;
+    if (start < eventForm.startTime || end > eventForm.endTime) return;
 
     if (end < start) return;
 
@@ -407,13 +403,13 @@ const EditEventSection1 = ({
                   type="time"
                   step="60"
                   value={agendaStart}
-                  min={formatTime(lastAgendaEndTime) ?? undefined}
+                  min={formatTime(eventForm.startTime) ?? undefined}
                   max={formatTime(eventForm.endTime) ?? undefined}
                   disabled={!eventForm.startTime || !eventForm.endTime}
                   onChange={(e) => {
                     const value = clampTime(
                       e.target.value,
-                      lastAgendaEndTime,
+                      eventForm.startTime,
                       eventForm.endTime,
                     );
 
@@ -540,7 +536,9 @@ const EditEventSection1 = ({
               {/* Start Time */}
               <EditableTime
                 value={item.startTime}
-                min={eventForm.agenda[index - 1]?.endTime ?? eventForm.startTime}
+                min={
+                  eventForm.agenda[index - 1]?.endTime ?? eventForm.startTime
+                }
                 max={item.endTime}
                 onChange={(time) => updateAgendaTime(index, "startTime", time)}
               />
@@ -549,7 +547,9 @@ const EditEventSection1 = ({
               <EditableTime
                 value={item.endTime}
                 min={item.startTime}
-                max={eventForm.agenda[index + 1]?.startTime ?? eventForm.endTime}
+                max={
+                  eventForm.agenda[index + 1]?.startTime ?? eventForm.endTime
+                }
                 onChange={(time) => updateAgendaTime(index, "endTime", time)}
               />
             </div>

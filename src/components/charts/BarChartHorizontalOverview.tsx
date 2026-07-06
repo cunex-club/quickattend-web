@@ -51,7 +51,10 @@ export function BarChartHorizontalOverview({
   maxValue,
 }: BarChartHorizontalOverviewProps) {
   const chartWidth = data.length * CHART_CONSTANTS.WIDTH_PER_BAR;
-  const domainY = maxValue ?? data.reduce((max, item) => Math.max(max, item.total), 0);
+  const realMax =
+    maxValue ?? data.reduce((max, item) => Math.max(max, item.total), 0);
+  const isAllZero = realMax === 0;
+  const domainY = isAllZero ? 1 : realMax;
 
   return (
     <Card className="py-0 px-0 h-full relative border-none shadow-none">
@@ -68,6 +71,7 @@ export function BarChartHorizontalOverview({
               accessibilityLayer
               data={data}
               barCategoryGap={CHART_CONSTANTS.BAR_CATEGORY_GAP}
+              margin={{ left: 12, right: 12, top: 12, bottom: 0 }}
             >
               <CartesianGrid
                 vertical={false}
@@ -84,13 +88,11 @@ export function BarChartHorizontalOverview({
               <YAxis
                 type="number"
                 dataKey="total"
+                tick={false}
                 tickLine={false}
-                tickMargin={10}
                 axisLine={true}
                 stroke={"var(--color-YAxis)"}
                 domain={[0, domainY * CHART_CONSTANTS.DOMAIN_MULTIPLIER]}
-                tickCount={7}
-                tickFormatter={(value) => value.toFixed(0)}
               />
               <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
               <Bar

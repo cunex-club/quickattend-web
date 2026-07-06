@@ -54,10 +54,10 @@
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: #f46176;
-  --chart-2: #CC71AD;
-  --chart-3: #66C5CC;
-  --chart-4: #A1CC29;
-  --chart-5: #F29D30;
+  --chart-2: #cc71ad;
+  --chart-3: #66c5cc;
+  --chart-4: #a1cc29;
+  --chart-5: #f29d30;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -102,12 +102,12 @@
   --color-chart-neutral-200: #ededed;
   --color-chart-neutral-100: #f5f5f5;
   --color-chart-neutral-white: #ffffff;
-  
+
   --color-chart-1: #f46176;
-  --color-chart-2: #CC71AD;
-  --color-chart-3: #66C5CC;
-  --color-chart-4: #A1CC29;
-  --color-chart-5: #F29D30;
+  --color-chart-2: #cc71ad;
+  --color-chart-3: #66c5cc;
+  --color-chart-4: #a1cc29;
+  --color-chart-5: #f29d30;
 
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);

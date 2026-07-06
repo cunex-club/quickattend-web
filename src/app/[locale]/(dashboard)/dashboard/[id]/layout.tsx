@@ -1,37 +1,32 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import DashboardNav from "@components/dashboard/DashboardNav";
 import { useRole } from "@context/RoleContext";
 import { useTranslations } from "next-intl";
 import { DashboardApolloProvider } from "@graphql/provider";
-interface DashboardGroupLayoutProps {
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
-}
 
 export default function DashboardGroupLayout({
   children,
-  params,
-}: DashboardGroupLayoutProps) {
+}: {
+  children: React.ReactNode;
+}) {
   const { role } = useRole();
   const t = useTranslations("Dashboard.navbar");
-  const [locale, setLocale] = useState<string>("");
-
-  useEffect(() => {
-    params.then(({ locale }) => setLocale(locale));
-  }, [params]);
-
-  if (!locale) return null;
+  const { locale, id } = useParams<{ locale: string; id: string }>();
 
   const tabs = [
-    { id: "overview", label: t("overview"), href: "/dashboard" },
-    { id: "insights", label: t("insights"), href: "/dashboard/insights" },
+    { id: "overview", label: t("overview"), href: `/dashboard/${id}` },
+    {
+      id: "compare",
+      label: t("compare"),
+      href: `/dashboard/${id}/compare`,
+    },
   ];
 
   return (
     <DashboardApolloProvider>
-      <div className="flex flex-col items-center w-full min-h-screen py-6 px-5 bg-neutral-white">
+      <div className="flex flex-col items-center w-full min-h-screen pt-10 pb-6 px-6 lg:px-16 bg-neutral-white">
         <div className="container space-y-6 h-full flex flex-col">
           <DashboardNav locale={locale} role={role} tabs={tabs} />
           <main className="w-full flex-1">{children}</main>

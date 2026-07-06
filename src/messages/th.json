@@ -8,6 +8,23 @@
   "profile": "โปรไฟล์",
   "help": "ช่วยเหลือ",
   "contactSupport": "ติดต่อฝ่ายสนับสนุน",
+  "Login": {
+    "featureCreateEvent": "สร้างกิจกรรมสำหรับแอพ CU NEX",
+    "featureScanDigitalId": "สแกนเข้าร่วมกิจกรรมด้วย Digital ID",
+    "featureShareLink": "แชร์ลิงก์ให้คนอื่นมาช่วยได้ง่ายๆ",
+    "continueWithCunex": "ดำเนินการต่อด้วย CU NEX"
+  },
+  "ErrorPage": {
+    "title": "เกิดข้อผิดพลาดบางอย่าง",
+    "description": "ขออภัย ระบบไม่สามารถโหลดหน้านี้ได้ในขณะนี้",
+    "retry": "ลองอีกครั้ง",
+    "backToEvents": "กลับไปหน้ากิจกรรม"
+  },
+  "NotFoundPage": {
+    "title": "ไม่พบหน้านี้",
+    "description": "ขออภัย ไม่พบหน้าที่คุณต้องการ",
+    "back": "ย้อนกลับ"
+  },
   "Sidebar": {
     "addevent": "สร้างกิจกรรม",
     "activities": "กิจกรรม",
@@ -15,78 +32,62 @@
     "search": "ค้นหา"
   },
   "Dashboard": {
-    "sidebar": {
-      "compare": "เปรียบเทียบ"
-    },
     "navbar": {
       "overview": "ภาพรวม",
-      "insights": "ข้อมูลเชิงลึก"
+      "compare": "เปรียบเทียบ"
     },
     "overview": {
+      "back": "ย้อนกลับ",
       "eventDetails": "รายละเอียดกิจกรรม",
       "totalAttendees": "จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด",
       "unit": "คน",
-      "top3Title": "3 อันดับแรกของคณะ/หน่วยงานที่ลงทะเบียน",
       "timeStatsTitle": "สถิติการลงทะเบียนแยกตามช่วงเวลา",
-      "facultyStatsTitle": "สถิติการลงทะเบียนแยกตามคณะ/หน่วยงาน",
-      "compareData": "เปรียบเทียบข้อมูล",
-      "viewAll": "ดูทั้งหมด",
+      "facultyStatsTitle": "สถิติการลงทะเบียนแยกตามคณะ",
       "viewFullscreen": "ดูเต็มหน้าจอ",
       "copyLink": "คัดลอกลิงก์",
       "linkCopied": "คัดลอกลิงก์กิจกรรมเรียบร้อยแล้ว",
       "linkCopyFailed": "ไม่สามารถคัดลอกลิงก์ได้",
       "student": "นิสิต",
-      "staff": "บุคลากร"
-    },
-    "insights": {
-      "all": "ทั้งหมด",
-      "student": "นิสิต",
       "staff": "บุคลากร",
-      "filter": "ตัวกรอง",
-      "filterDataTitle": "ตัวกรองข้อมูล",
-      "faculty": "คณะ/หน่วยงาน",
-      "timePeriod": "ช่วงเวลา",
-      "clearFilter": "ล้างตัวกรอง",
-      "applyFilter": "กรองข้อมูล",
-      "applyFilterWarning": "กรุณาเลือกอย่างน้อยหนึ่งตัวเลือกเพื่อกรองข้อมูล",
-      "totalAttendees": "จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด",
-      "unit": "คน",
-      "students": "นิสิต",
-      "staffs": "บุคลากร",
-      "totalEligible": "จำนวนผู้มีสิทธิลงทะเบียนเข้าร่วมกิจกรรม",
-      "totalEligibleShort": "จำนวนผู้มีสิทธิลงทะเบียน",
-      "totalUnregistered": "จำนวนผู้ที่ยังไม่ได้ลงทะเบียนเข้าร่วมกิจกรรม",
-      "totalUnregisteredShort": "จำนวนผู้ที่ยังไม่ลงทะเบียน",
-      "facultyStatsTitle": "สถิติการลงทะเบียนแยกตามคณะ/หน่วยงาน",
-      "timeStatsTitle": "สถิติการลงทะเบียนแยกตามช่วงเวลา",
-      "sortNewest": "วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด",
-      "sortOldest": "วันที่จัดกิจกรรม : เก่าสุด - ใหม่สุด",
-      "compareButton": "เปรียบเทียบสถิติการลงทะเบียนเข้าร่วมกิจกรรม"
+      "eligible": "มีสิทธิ์เข้าร่วม",
+      "noScanResultsYet": "ยังไม่มีผลลัพธ์การสแกนสำหรับกิจกรรมนี้"
     },
     "compare": {
       "title": "เปรียบเทียบข้อมูล",
-      "faculty": "คณะ/หน่วยงาน",
+      "faculty": "คณะ",
       "back": "ย้อนกลับ",
       "timePeriod": "ช่วงเวลา",
       "clearData": "ล้างข้อมูล",
       "compareData": "เปรียบเทียบข้อมูล",
       "maxSelectionError": "คุณสามารถเลือกได้สูงสุด 5 ตัวเลือก",
-      "minSelectionError": "กรุณาเลือกอย่างน้อยหนึ่งตัวเลือกเพื่อเปรียบเทียบข้อมูล",
-      "noFacultyAndTimeError": "กรุณาเลือกอย่างน้อยหนึ่งคณะและหนึ่งช่วงเวลา",
       "noTimeError": "กรุณาเลือกอย่างน้อยหนึ่งช่วงเวลา",
       "noFacultyError": "กรุณาเลือกอย่างน้อยหนึ่งคณะ",
-      "bothAllError": "ไม่สามารถเลือก \"ทุกคณะ/หน่วยงาน\" และ \"ทุกช่วงเวลา\" พร้อมกันได้",
       "comparingData": "กำลังเปรียบเทียบข้อมูล...",
       "totalAttendees": "จำนวนผู้เข้าร่วมกิจกรรม",
-      "outOfTotal": "จากจำนวนทั้งหมด",
       "unit": "คน",
-      "facultyStatsTitle": "สถิติการลงทะเบียนแยกตามคณะ/หน่วยงาน",
-      "timeStatsTitle": "สถิติการลงทะเบียนแยกตามช่วงเวลา"
+      "student": "นิสิต",
+      "staff": "บุคลากร",
+      "other": "อื่นๆ",
+      "facultyStatsTitle": "สถิติการลงทะเบียนแยกตามคณะ",
+      "timeStatsTitle": "สถิติการลงทะเบียนแยกตามช่วงเวลา",
+      "noScanResultsYet": "ยังไม่มีผลลัพธ์การสแกนสำหรับกิจกรรมนี้"
     }
+  },
+  "Charts": {
+    "unit": "คน",
+    "totalParticipants": "จำนวนผู้เข้าร่วม",
+    "registered": "ลงทะเบียนแล้ว",
+    "notRegistered": "ยังไม่ลงทะเบียน"
   },
   "Events": {
     "myEvents": "กิจกรรมของฉัน",
     "pastEvents": "กิจกรรมที่ผ่านมา",
+    "sortNewest": "วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด",
+    "sortOldest": "วันที่จัดกิจกรรม : เก่าสุด - ใหม่สุด",
+    "noJoinedEventsTitle": "ยังไม่มีกิจกรรมที่เข้าร่วม",
+    "noJoinedEventsDescription": "เริ่มเข้าร่วมกิจกรรม เพื่อสร้างประวัติและประสบการณ์ของคุณ",
+    "noPastEventsTitle": "ยังไม่มีกิจกรรมที่ผ่านมา",
+    "noPastEventsDescription": "เมื่อคุณเข้าร่วมและทำกิจกรรมสำเร็จ ประวัติและประสบการณ์ทั้งหมดของคุณจะแสดงที่นี่",
     "EventCard": {
       "shareQr": "แชร์ตัวสแกน QR",
       "shareStatistics": "แชร์สถิติ",
@@ -96,10 +97,23 @@
       "activityStatistics": "สถิติกิจกรรม",
       "eventDetails": "รายละเอียดกิจกรรม",
       "downloadStatistics": "ดาวน์โหลดสถิติ",
-      "ended": "สิ้นสุดกิจกรรมแล้ว"
+      "ended": "สิ้นสุดกิจกรรมแล้ว",
+      "evaluationForm": "แบบประเมิน"
+    },
+    "FilterMenu": {
+      "openFilterMenu": "เปิดเมนูตัวกรอง",
+      "accessRights": "สิทธิ์การเข้าถึง",
+      "clearFilter": "ล้างตัวกรอง",
+      "dateLabel": "วัน เดือน ปี",
+      "accessRightsOptions": {
+        "owner": "เจ้าของกิจกรรม",
+        "manager": "ผู้จัดการกิจกรรม",
+        "staff": "ผู้ดูแลงาน"
+      }
     },
     "Search": {
       "back": "ย้อนกลับ",
+      "placeholder": "ค้นหากิจกรรม...",
       "searching": "กำลังค้นหากิจกรรมที่ต้องการ",
       "notFound": "ไม่เจอผลการค้นหา"
     }
@@ -113,16 +127,15 @@
     },
     "cameraPanel": {
       "goToEvents": "ไปหน้ากิจกรรม",
-      "copyEventLink": "คัดลอกลิงก์กิจกรรม",
-      "turnOnFlash": "เปิดแฟลช",
-      "turnOffFlash": "ปิดแฟลช"
+      "copyLink": "คัดลอกลิงก์",
+      "linkCopied": "คัดลอกลิงก์เรียบร้อยแล้ว",
+      "linkCopyFailed": "ไม่สามารถคัดลอกลิงก์ได้"
     },
     "infoPanel": {
       "selectEvent": "เลือกกิจกรรม",
       "barcodeAlt": "สแกนบาร์โค้ด",
       "description": "สแกนนิสิต CU NEX เพื่อลงทะเบียนเข้าร่วมกิจกรรม",
-      "adminLabel": "ผู้ดูแลกิจกรรม",
-      "timeSuffix": "น."
+      "adminLabel": "ผู้ดูแลกิจกรรม"
     },
     "participantsPanel": {
       "totalAttendees": "จำนวนผู้เข้าร่วมกิจกรรมทั้งหมด",
@@ -150,7 +163,7 @@
       "resultDetails": "รายละเอียดผู้ลงทะเบียนเข้างาน",
       "name": "ชื่อ",
       "refId": "รหัสประจำตัว",
-      "organization": "คณะ / หน่วยงาน",
+      "organization": "คณะ",
       "registeredAt": "ลงทะเบียนสำเร็จ :",
       "notes": "หมายเหตุ",
       "notesPlaceholder": "กรอกหมายเหตุ (ถ้ามี)",
@@ -202,10 +215,10 @@
     "setting": "การตั้งค่ากิจกรรมและการแสดงผลกิจกรรม",
     "permission": "สิทธิ์การเข้าร่วมกิจกรรม",
     "all": "สาธารณะ",
-    "faculties": "เฉพาะคณะ/หน่วยงาน",
-    "facultiesPlaceholder": "คณะ/หน่วยงาน",
+    "faculties": "เฉพาะคณะ",
+    "facultiesPlaceholder": "คณะ",
     "facultiesNotFound": "ไม่พบคณะดังกล่าว",
-    "facultiesAdd": "เพิ่มคณะ/หน่วยงาน",
+    "facultiesAdd": "เพิ่มคณะ",
     "whitelist": "เฉพาะรายชื่อที่กำหนด",
     "whitelistPlaceholder": "รหัสประจำตัว",
     "whitelistAdd": "เพิ่มรายชื่อ",
@@ -213,7 +226,7 @@
     "scanSettingImages": "รูปภาพ",
     "scanSettingName": "ชื่อ-นามสกุล",
     "scanSettingId": "รหัสประจำตัว",
-    "scanSettingFaculty": "คณะ/หน่วยงาน",
+    "scanSettingFaculty": "คณะ",
     "access": "การกำหนดสิทธิการเข้าถึง",
     "addEventManager": "เพิ่มผู้ดูแลกิจกรรม",
     "addEventManagerIdPlaceholder": "รหัสประจำตัว",
@@ -261,10 +274,10 @@
     "setting": "การตั้งค่ากิจกรรมและการแสดงผลกิจกรรม",
     "permission": "สิทธิ์การเข้าร่วมกิจกรรม",
     "all": "สาธารณะ",
-    "faculties": "เฉพาะคณะ/หน่วยงาน",
-    "facultiesPlaceholder": "คณะ/หน่วยงาน",
+    "faculties": "เฉพาะคณะ",
+    "facultiesPlaceholder": "คณะ",
     "facultiesNotFound": "ไม่พบคณะดังกล่าว",
-    "facultiesAdd": "เพิ่มคณะ/หน่วยงาน",
+    "facultiesAdd": "เพิ่มคณะ",
     "whitelist": "เฉพาะรายชื่อที่กำหนด",
     "whitelistPlaceholder": "รหัสประจำตัว",
     "whitelistAdd": "เพิ่มรายชื่อ",
@@ -272,7 +285,7 @@
     "scanSettingImages": "รูปภาพ",
     "scanSettingName": "ชื่อ-นามสกุล",
     "scanSettingId": "รหัสประจำตัว",
-    "scanSettingFaculty": "คณะ/หน่วยงาน",
+    "scanSettingFaculty": "คณะ",
     "access": "การกำหนดสิทธิการเข้าถึง",
     "addEventManager": "เพิ่มผู้ดูแลกิจกรรม",
     "addEventManagerIdPlaceholder": "รหัสประจำตัว",
@@ -302,6 +315,7 @@
   },
   "EventDetail": {
     "back": "ย้อนกลับ",
+    "notFound": "ไม่พบกิจกรรม",
     "edit": "แก้ไขกิจกรรม",
     "registeredCount": "จำนวนผู้ลงทะเบียน",
     "eventDetails": "รายละเอียดกิจกรรม",
@@ -312,6 +326,7 @@
     "organizedBy": "กิจกรรมโดย",
     "scanParticipant": "สแกนผู้เข้าร่วมกิจกรรม",
     "activityStats": "สถิติกิจกรรม",
+    "evaluationForm": "แบบประเมิน",
     "duplicateEvent": "ทำซ้ำกิจกรรม",
     "copyQr": "คัดลอก QR scanner",
     "copyDashboard": "คัดลอก Dashboard",
@@ -347,7 +362,6 @@
     "addSchedule": "เพิ่มตารางกิจกรรม",
     "evaluationFormLink": "ลิงก์แบบฟอร์มประเมินกิจกรรม",
     "evaluationFormLinkPlaceholder": "วางลิงก์แบบฟอร์มประเมินกิจกรรม",
-    "back": "ย้อนกลับ",
     "submitDuplicate": "ยืนยันสร้างกิจกรรม",
     "Roles": {
       "owner": "Owner",
@@ -369,7 +383,7 @@
       "image": "รูปภาพ",
       "name": "ชื่อ-นามสกุล",
       "refid": "รหัสประจำตัว",
-      "organization": "คณะ/หน่วยงาน"
+      "organization": "คณะ"
     }
   }
 }

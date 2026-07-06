@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@assets/lib/utils";
 import IonIcon from "@shared/IonIcon";
 import Icon from "@shared/Icon";
@@ -10,6 +10,7 @@ import { fetchEventById } from "@services/events";
 import EventDetailSkeleton from "@modules/events/event-id/components/event-detail-skeleton";
 import type { GetOneEventRes } from "@customTypes/events";
 import { useRouter } from "@i18n/navigation";
+import { formatEventDate, formatEventTimeRange } from "@utils/eventDateTime";
 
 interface EventIdPageTemplateProps {
   eventId: string;
@@ -17,6 +18,7 @@ interface EventIdPageTemplateProps {
 
 const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   const t = useTranslations("EventDetail");
+  const locale = useLocale();
   const router = useRouter();
 
   const [eventData, setEventData] = useState<GetOneEventRes | null>(null);
@@ -45,13 +47,14 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   if (!eventData) {
     return (
       <div className="w-full flex justify-center items-center py-20">
-        <div className="body-large-primary">Event not found.</div>
+        <div className="body-large-primary">{t("notFound")}</div>
       </div>
     );
   }
 
   const canEdit = eventData.role === "OWNER" || eventData.role === "MANAGER";
   const isEnd = new Date(eventData.end_time) < new Date();
+  const showEvaluationForm = isEnd && !!eventData.evaluation_form;
 
   const roleLabel =
     eventData.role === "OWNER"
@@ -62,48 +65,15 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           ? t("staff")
           : null;
 
-  // Format date from ISO string to "3 สิงหาคม 2568"
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const thaiMonths = [
-      "มกราคม",
-      "กุมภาพันธ์",
-      "มีนาคม",
-      "เมษายน",
-      "พฤษภาคม",
-      "มิถุนายน",
-      "กรกฎาคม",
-      "สิงหาคม",
-      "กันยายน",
-      "ตุลาคม",
-      "พฤศจิกายน",
-      "ธันวาคม",
-    ];
-    const day = date.getDate();
-    const month = thaiMonths[date.getMonth()];
-    const year = date.getFullYear() + 543;
-    return `${day} ${month} ${year}`;
-  };
-
-  // Format time from ISO string to "HH:MM น."
-  const formatTime = (isoStr: string) => {
-    const date = new Date(isoStr);
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    return `${hours}:${minutes}`;
-  };
-
-  // Format agenda time range
-  const formatAgendaTime = (startTime: string, endTime: string) => {
-    return `${formatTime(startTime)} - ${formatTime(endTime)} น.`;
-  };
+  const formatAgendaTime = (startTime: string, endTime: string) =>
+    formatEventTimeRange(startTime, endTime, locale);
 
   return (
-    <div className="w-full flex flex-col justify-center items-center px-6 md:px-10 lg:px-25 py-10 lg:pt-35 gap-6 lg:gap-7.5 pb-24">
+    <div className="w-full flex flex-col justify-center items-center px-6 md:px-10 lg:px-25 py-10 gap-6 lg:gap-7.5 pb-24">
       <button
         type="button"
-        onClick={() => router.back()}
-        aria-label="Go back"
+        onClick={() => router.push("/events")}
+        aria-label={t("back")}
         className="w-full text-primary font-semibold cursor-pointer flex items-center gap-1"
       >
         <IonIcon name="ChevronBack" size="16px" />
@@ -128,14 +98,17 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             <div className="flex gap-2 items-center">
               <IonIcon name="Calendar" size="16px" className="text-secondary" />
               <div className="body-large-primary">
-                {formatDate(eventData.start_time)}
+                {formatEventDate(eventData.start_time, locale)}
               </div>
             </div>
             <div className="flex gap-2 items-center">
               <IonIcon name="Time" size="16px" className="text-secondary" />
               <div className="body-large-primary">
-                {formatTime(eventData.start_time)} -{" "}
-                {formatTime(eventData.end_time)} น.
+                {formatEventTimeRange(
+                  eventData.start_time,
+                  eventData.end_time,
+                  locale,
+                )}
               </div>
             </div>
             <div className="flex gap-2 items-center">
@@ -158,15 +131,21 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           <div>
             <div className="headline-small-emphasized">{t("agenda")}</div>
             <div className="body-large-primary">
-              {eventData.agenda.map((item) => (
-                <div
-                  key={item.start_time}
-                  className="flex w-full justify-between"
-                >
-                  <div>{item.activity_name}</div>
-                  <div>{formatAgendaTime(item.start_time, item.end_time)}</div>
-                </div>
-              ))}
+              {eventData.agenda.length === 0 ? (
+                <div>-</div>
+              ) : (
+                eventData.agenda.map((item) => (
+                  <div
+                    key={item.start_time}
+                    className="flex w-full justify-between"
+                  >
+                    <div>{item.activity_name}</div>
+                    <div>
+                      {formatAgendaTime(item.start_time, item.end_time)}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -232,7 +211,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           bordered="round"
           expanded={true}
           className="hidden md:block flex-1"
-          onClick={() => router.push("/dashboard")}
+          onClick={() => router.push(`/dashboard/${eventId}`)}
         >
           <div className="flex justify-center text-primary items-center gap-2">
             <IonIcon name="TrendingUp" className="w-6 h-6 md:w-9 md:h-9" />
@@ -241,19 +220,61 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             </div>
           </div>
         </Button>
+        {showEvaluationForm && (
+          <Button
+            mode="outline"
+            bordered="round"
+            expanded={true}
+            className="hidden md:block flex-1"
+            onClick={() =>
+              window.open(
+                eventData.evaluation_form!,
+                "_blank",
+                "noopener,noreferrer",
+              )
+            }
+          >
+            <div className="flex justify-center text-primary items-center gap-2">
+              <IonIcon name="DocumentText" className="w-6 h-6 md:w-9 md:h-9" />
+              <div className="title-large-primary whitespace-nowrap">
+                {t("evaluationForm")}
+              </div>
+            </div>
+          </Button>
+        )}
         <div className="flex gap-2 justify-center md:justify-start">
           <Button
             mode="outline"
             bordered="round"
             expanded={false}
             className="md:hidden"
-            onClick={() => router.push("/dashboard/insights")}
+            onClick={() => router.push(`/dashboard/${eventId}`)}
           >
             <IonIcon
               name="TrendingUp"
               className="w-6 h-6 md:w-9 md:h-9 text-primary"
             />
           </Button>
+          {showEvaluationForm && (
+            <Button
+              mode="outline"
+              bordered="round"
+              expanded={false}
+              className="md:hidden"
+              onClick={() =>
+                window.open(
+                  eventData.evaluation_form!,
+                  "_blank",
+                  "noopener,noreferrer",
+                )
+              }
+            >
+              <IonIcon
+                name="DocumentText"
+                className="w-6 h-6 md:w-9 md:h-9 text-primary"
+              />
+            </Button>
+          )}
         </div>
       </div>
     </div>

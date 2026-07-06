@@ -1,3 +1,16 @@
+const MINOR_WORDS = new Set(["of"]);
+
+export function toTitleCase(str: string): string {
+  return str
+    .split(" ")
+    .map((word) =>
+      MINOR_WORDS.has(word.toLowerCase())
+        ? word.toLowerCase()
+        : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+    )
+    .join(" ");
+}
+
 export function deepEqual(a: unknown, b: unknown): boolean {
   if (a === b) return true;
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Avatar,
   AvatarFallback,
@@ -51,6 +52,11 @@ const Header = ({ currentUser = null }: HeaderProps) => {
   const displayName = formatFullName(currentUser);
   const englishName = formatEnglishName(currentUser);
   const avatarFallback = getAvatarFallback(currentUser);
+  const [avatarError, setAvatarError] = useState(false);
+  const avatarSrc =
+    !avatarError && currentUser?.profile_image_url
+      ? currentUser.profile_image_url
+      : "/logo/cu-nex.png";
 
   return (
     <div className="flex justify-between items-center bg-neutral-200 px-5 py-4 w-full">
@@ -82,8 +88,14 @@ const Header = ({ currentUser = null }: HeaderProps) => {
             aria-label="Open profile menu"
           >
             <Avatar className="w-12 h-12">
-              <AvatarImage src="/logo/cu-nex.png" alt={displayName} />
-              <AvatarFallback>{avatarFallback}</AvatarFallback>
+              <AvatarImage
+                src={avatarSrc}
+                alt={displayName}
+                onError={() => setAvatarError(true)}
+              />
+              <AvatarFallback className="text-primary">
+                {avatarFallback}
+              </AvatarFallback>
             </Avatar>
           </button>
         </PopoverTrigger>
@@ -91,8 +103,14 @@ const Header = ({ currentUser = null }: HeaderProps) => {
           <div className="flex flex-col space-y-6">
             <section className="flex flex-row justify-between items-center">
               <Avatar className="w-15 h-15 border-2 border-neutral-300">
-                <AvatarImage src="/logo/cu-nex.png" alt={displayName} />
-                <AvatarFallback>{avatarFallback}</AvatarFallback>
+                <AvatarImage
+                  src={avatarSrc}
+                  alt={displayName}
+                  onError={() => setAvatarError(true)}
+                />
+                <AvatarFallback className="text-primary">
+                  {avatarFallback}
+                </AvatarFallback>
               </Avatar>
               <button onClick={handleLogOut} aria-label="Log out">
                 <IonIcon

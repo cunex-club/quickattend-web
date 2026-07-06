@@ -44,14 +44,20 @@ const ScanResultPanel: StyleableFC<ScanResultPanelProps> = ({
 }) => {
   const t = useTranslations("Scan");
   const [note, setNote] = useState("");
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     setNote("");
+    setImageError(false);
   }, [result?.refId, result?.checkInTime]);
 
   const resultTheme = SCAN_RESULT_THEME[result?.status ?? "success"];
   const isFailed = result?.status === "failed";
   const message = result?.message || t("resultPanel.permissionError");
+  const profileImageSrc =
+    !imageError && result?.profileImageUrl
+      ? result.profileImageUrl
+      : scanResultMockupImage;
 
   return (
     <section
@@ -84,12 +90,15 @@ const ScanResultPanel: StyleableFC<ScanResultPanelProps> = ({
           </div>
         ) : (
           <div className="flex flex-1 items-stretch gap-6">
-            <div className="w-2/5 shrink-0 overflow-hidden rounded-2xl bg-neutral-200">
+            <div className="relative w-2/5 shrink-0 overflow-hidden rounded-2xl bg-neutral-200">
               <Image
-                src={scanResultMockupImage}
+                src={profileImageSrc}
                 alt="Scan result participant"
-                className="h-full w-full object-cover"
+                fill
+                unoptimized={!imageError && !!result?.profileImageUrl}
+                className="object-cover"
                 priority
+                onError={() => setImageError(true)}
               />
             </div>
 

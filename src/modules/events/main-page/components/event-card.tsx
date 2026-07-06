@@ -16,8 +16,10 @@ type EventCardProps = {
   time: string;
   location: string;
   role: string;
+  organizer?: string;
   isEnd: boolean;
   hideRole?: boolean;
+  evaluationForm?: string | null;
 };
 
 const EventCard: StyleableFC<EventCardProps> = ({
@@ -28,13 +30,22 @@ const EventCard: StyleableFC<EventCardProps> = ({
   time,
   location,
   role,
+  organizer,
   isEnd,
   hideRole = false,
+  evaluationForm,
   className,
   ...props
 }) => {
   const t = useTranslations("Events.EventCard");
   const router = useRouter();
+  const showEvaluationForm = isEnd && !!evaluationForm;
+
+  const handleEvaluationFormClick = (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    window.open(evaluationForm!, "_blank", "noopener,noreferrer");
+  };
 
   const handleCardClick = () => {
     router.push(`/events/${eventId}`);
@@ -60,7 +71,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
   const handleStatsClick = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    router.push("/dashboard");
+    router.push(`/dashboard/${eventId}`);
   };
 
   return (
@@ -80,25 +91,23 @@ const EventCard: StyleableFC<EventCardProps> = ({
       </div>
       <div className="flex flex-col sm:flex-row sm:items-start gap-y-4 sm:gap-x-6 md:gap-x-12.5">
         <div className="flex flex-col order-1 sm:order-2 sm:flex-1 space-y-2">
-          <div className="flex justify-start space-x-4 pl-0">
-            <div className="flex items-center gap-1">
-              <IonIcon
-                name="Calendar"
-                size="16px"
-                className="text-primary"
-                noPadding
-              />
-              <span className="body-large-primary">{date}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <IonIcon
-                name="Time"
-                size="16px"
-                className="text-primary"
-                noPadding
-              />
-              <span className="body-large-primary">{time}</span>
-            </div>
+          <div className="flex items-center gap-2">
+            <IonIcon
+              name="Calendar"
+              size="16px"
+              className="text-primary"
+              noPadding
+            />
+            <span className="body-large-primary">{date}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <IonIcon
+              name="Time"
+              size="16px"
+              className="text-primary"
+              noPadding
+            />
+            <span className="body-large-primary">{time}</span>
           </div>
           <div className="flex items-center gap-2">
             <IonIcon
@@ -110,8 +119,11 @@ const EventCard: StyleableFC<EventCardProps> = ({
             <span className="body-large-primary">{location}</span>
           </div>
           <div className="order-2 sm:order-1 sm:flex-2 mt-3">
+            <div className="headline-small-emphasized mb-1">
+              {t("eventDetails")}
+            </div>
             <div className="body-large-primary line-clamp-3 sm:line-clamp-none mb-4 sm:mb-0">
-              {description}
+              {description || "-"}
             </div>
           </div>
           {!hideRole && (
@@ -122,7 +134,9 @@ const EventCard: StyleableFC<EventCardProps> = ({
                 className="text-primary"
                 noPadding
               />
-              <span className="body-large-primary">{role || "-"}</span>
+              <span className="body-large-primary">
+                {organizer ? `${organizer}` : "-"}
+              </span>
             </div>
           )}
         </div>
@@ -172,6 +186,26 @@ const EventCard: StyleableFC<EventCardProps> = ({
             </div>
           </div>
         </Button>
+        {showEvaluationForm && (
+          <Button
+            mode="outline"
+            bordered="round"
+            expanded
+            onClick={handleEvaluationFormClick}
+          >
+            <div className="flex justify-center items-center gap-2">
+              <IonIcon
+                name="DocumentText"
+                size="36px"
+                className="text-primary"
+                noPadding
+              />
+              <div className="title-medium-emphasized text-primary hidden sm:block">
+                {t("evaluationForm")}
+              </div>
+            </div>
+          </Button>
+        )}
       </div>
 
       {/* Mobile View */}
@@ -218,6 +252,24 @@ const EventCard: StyleableFC<EventCardProps> = ({
             />
           </div>
         </Button>
+        {showEvaluationForm && (
+          <Button
+            mode="outline"
+            bordered="round"
+            expanded={false}
+            className="!px-4 !py-2"
+            onClick={handleEvaluationFormClick}
+          >
+            <div className="flex justify-center items-center gap-2">
+              <IonIcon
+                name="DocumentText"
+                size="20px"
+                className="text-primary"
+                noPadding
+              />
+            </div>
+          </Button>
+        )}
       </div>
     </div>
   );

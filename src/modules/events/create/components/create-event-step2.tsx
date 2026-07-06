@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   AttendanceType,
   EventFormInterface,
@@ -7,7 +7,7 @@ import {
   ParticipantFieldType,
   ScanPermissionType,
   Student,
-} from "../template";
+} from "../types";
 import { RadioGroup, RadioGroupItem } from "@assets/components/ui/radio-group";
 import {
   Command,
@@ -29,58 +29,38 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@assets/components/ui/select";
-import {
-  fetchUserByRefId,
-  type UserByRefIdRes,
-} from "@services/users";
+import { fetchUserByRefId, type UserByRefIdRes } from "@services/users";
 import { APIRequestError } from "@services/events";
+import {
+  FacultyList,
+  FacultyEnByTh,
+  filterFacultyOptions,
+} from "@utils/faculty";
 
-const formatUserName = (user: UserByRefIdRes) =>
-  [user.title_th, user.firstname_th, user.surname_th]
+const formatUserName = (user: UserByRefIdRes, locale: string) => {
+  const thName = [user.title_th, user.firstname_th, user.surname_th]
     .filter(Boolean)
-    .join(" ") ||
-  [user.title_en, user.firstname_en, user.surname_en]
+    .join(" ");
+  const enName = [user.title_en, user.firstname_en, user.surname_en]
     .filter(Boolean)
-    .join(" ") ||
-  user.ref_id;
+    .join(" ");
+
+  return locale === "en"
+    ? enName || thName || user.ref_id
+    : thName || enName || user.ref_id;
+};
 
 interface CreateEventStep2Props {
   eventForm: EventFormInterface;
   setEventForm: (formdata: EventFormInterface) => void;
 }
 
-export const FacultyCodeMap: Record<string, number> = {
-  คณะวิศวกรรมศาสตร์: 21,
-  คณะอักษรศาสตร์: 22,
-  คณะวิทยาศาสตร์: 23,
-  คณะรัฐศาสตร์: 24,
-  คณะสถาปัตยกรรมศาสตร์: 25,
-  คณะพาณิชยศาสตร์และการบัญชี: 26,
-  คณะครุศาสตร์: 27,
-  คณะนิเทศศาสตร์: 28,
-  คณะเศรษฐศาสตร์: 29,
-  คณะแพทยศาสตร์: 30,
-  คณะสัตวแพทยศาสตร์: 31,
-  คณะทันตแพทยศาสตร์: 32,
-  คณะเภสัชศาสตร์: 33,
-  คณะนิติศาสตร์: 34,
-  คณะศิลปกรรมศาสตร์: 35,
-  คณะพยาบาลศาสตร์: 36,
-  คณะสหเวชศาสตร์: 37,
-  คณะจิตวิทยา: 38,
-  คณะวิทยาศาสตร์การกีฬา: 39,
-  สำนักวิชาทรัพยากรการเกษตร: 40,
-};
-
-export const FacultyList: string[] = Object.keys(FacultyCodeMap).sort((a, b) =>
-  a.localeCompare(b, "th"),
-);
-
 const CreateEventStep2 = ({
   eventForm,
   setEventForm,
 }: CreateEventStep2Props) => {
   const tCreateEvent = useTranslations("CreateEvent");
+  const locale = useLocale();
 
   const [facultyQuery, setFacultyQuery] = useState("");
   const [studentIdPermissionQuery, setStudentIdPermissionQuery] = useState("");
@@ -109,7 +89,7 @@ const CreateEventStep2 = ({
       setOpenFacultyFilter(false);
       return;
     }
-    const filtered = FacultyList.filter((org) => org.includes(facultyQuery));
+    const filtered = filterFacultyOptions(facultyQuery);
     setFilteredOrganization(filtered);
     setOpenFacultyFilter(true);
   }, [facultyQuery]);
@@ -178,7 +158,7 @@ const CreateEventStep2 = ({
                   onChange={(e) => {
                     const value = e.target.value;
 
-                    if (/^[\u0E00-\u0E7F]*$/.test(value)) {
+                    if (/^[\u0E00-\u0E7Fa-zA-Z\s]*$/.test(value)) {
                       setFacultyQuery(value);
                       setOpenFacultyFilter(true);
                     }
@@ -210,7 +190,7 @@ const CreateEventStep2 = ({
                               }}
                               className="body-large-primary"
                             >
-                              {f}
+                              {locale === "en" ? FacultyEnByTh[f] ?? f : f}
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -290,7 +270,11 @@ const CreateEventStep2 = ({
                   <IonIcon name="RemoveCircleOutline" size="18px" />
                 </button>
 
-                <p className="body-large-primary">{faculty}</p>
+                <p className="body-large-primary">
+                  {locale === "en"
+                    ? FacultyEnByTh[faculty] ?? faculty
+                    : faculty}
+                </p>
               </div>
             ))}
           </div>
@@ -376,7 +360,7 @@ const CreateEventStep2 = ({
 
                     const student: Student = {
                       id: studentIdPermissionQuery,
-                      name: formatUserName(res.data),
+                      name: formatUserName(res.data, locale),
                     };
 
                     setEventForm({
@@ -702,7 +686,7 @@ const CreateEventStep2 = ({
 
                     const manager: EventManager = {
                       id: studentIdAccessibilityQuery,
-                      name: formatUserName(res.data),
+                      name: formatUserName(res.data, locale),
                       role: roleAccessibilityQuery,
                     };
 

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import {
   Bar,
   BarChart,
@@ -55,7 +56,7 @@ const getBarSize = (isMobile: boolean, isTablet: boolean): number => {
 
 const calculateXDomain = (data: BarChartVerticalData[]): number => {
   const maxValue = Math.max(...data.map((d) => d.total));
-  return (maxValue || 0) * BAR_CONSTANTS.DOMAIN_MULTIPLIER;
+  return (maxValue || 1) * BAR_CONSTANTS.DOMAIN_MULTIPLIER;
 };
 
 const addPercentageMetadata = (data: BarChartVerticalData[]) => {
@@ -71,6 +72,7 @@ const addPercentageMetadata = (data: BarChartVerticalData[]) => {
 export function BarChartVerticalOverview({
   data,
 }: BarChartVerticalOverviewProps) {
+  const t = useTranslations("Charts");
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
 
@@ -91,7 +93,7 @@ export function BarChartVerticalOverview({
                   {item.faculty}
                 </p>
                 <p className="body-medium-primary md:body-large-primary text-[var(--color-label)]">
-                  {item.total} คน ({item.percentage}%)
+                  {item.total} {t("unit")} ({item.percentage}%)
                 </p>
               </div>
               <ChartContainer
@@ -111,6 +113,7 @@ export function BarChartVerticalOverview({
                     type="category"
                     tickLine={false}
                     axisLine={false}
+                    width={0}
                     hide
                   />
                   <XAxis
