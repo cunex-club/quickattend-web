@@ -97,7 +97,8 @@
       "activityStatistics": "Activity statistics",
       "eventDetails": "Event details",
       "downloadStatistics": "Download statistics",
-      "ended": "Ended"
+      "ended": "Ended",
+      "evaluationForm": "Evaluation form"
     },
     "FilterMenu": {
       "openFilterMenu": "Open filter menu",

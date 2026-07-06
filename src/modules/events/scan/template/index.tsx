@@ -247,6 +247,7 @@ const ScanTemplate = () => {
         organization,
         checkInTime: scannedAt,
         status: res.data.status === "duplicate" ? "duplicate" : "success",
+        profileImageUrl: res.data.profile_image_url || undefined,
       };
 
       if (res.data.status !== "duplicate") {

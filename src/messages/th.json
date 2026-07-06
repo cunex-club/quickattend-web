@@ -97,7 +97,8 @@
       "activityStatistics": "สถิติกิจกรรม",
       "eventDetails": "รายละเอียดกิจกรรม",
       "downloadStatistics": "ดาวน์โหลดสถิติ",
-      "ended": "สิ้นสุดกิจกรรมแล้ว"
+      "ended": "สิ้นสุดกิจกรรมแล้ว",
+      "evaluationForm": "แบบประเมิน"
     },
     "FilterMenu": {
       "openFilterMenu": "เปิดเมนูตัวกรอง",

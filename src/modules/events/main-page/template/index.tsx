@@ -253,6 +253,7 @@ const EventPageTemplate = () => {
                   location={event.location}
                   role={event.role ?? ""}
                   isEnd={isEnd}
+                  evaluationForm={event.evaluation_form}
                 />
               );
             })}
@@ -320,6 +321,7 @@ const EventPageTemplate = () => {
                   location={event.location}
                   role={event.role ?? ""}
                   isEnd={isEnd}
+                  evaluationForm={event.evaluation_form}
                 />
               );
             })}

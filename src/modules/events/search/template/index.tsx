@@ -121,6 +121,7 @@ const EventSearchTemplate = () => {
                       role=""
                       hideRole
                       isEnd={isEnd}
+                      evaluationForm={event.evaluation_form}
                     />
                   );
                 })}

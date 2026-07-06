@@ -18,6 +18,7 @@ type EventCardProps = {
   role: string;
   isEnd: boolean;
   hideRole?: boolean;
+  evaluationForm?: string | null;
 };
 
 const EventCard: StyleableFC<EventCardProps> = ({
@@ -30,11 +31,19 @@ const EventCard: StyleableFC<EventCardProps> = ({
   role,
   isEnd,
   hideRole = false,
+  evaluationForm,
   className,
   ...props
 }) => {
   const t = useTranslations("Events.EventCard");
   const router = useRouter();
+  const showEvaluationForm = isEnd && !!evaluationForm;
+
+  const handleEvaluationFormClick = (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    window.open(evaluationForm!, "_blank", "noopener,noreferrer");
+  };
 
   const handleCardClick = () => {
     router.push(`/events/${eventId}`);
@@ -173,6 +182,26 @@ const EventCard: StyleableFC<EventCardProps> = ({
             </div>
           </div>
         </Button>
+        {showEvaluationForm && (
+          <Button
+            mode="outline"
+            bordered="round"
+            expanded
+            onClick={handleEvaluationFormClick}
+          >
+            <div className="flex justify-center items-center gap-2">
+              <IonIcon
+                name="DocumentText"
+                size="36px"
+                className="text-primary"
+                noPadding
+              />
+              <div className="title-medium-emphasized text-primary hidden sm:block">
+                {t("evaluationForm")}
+              </div>
+            </div>
+          </Button>
+        )}
       </div>
 
       {/* Mobile View */}
@@ -219,6 +248,24 @@ const EventCard: StyleableFC<EventCardProps> = ({
             />
           </div>
         </Button>
+        {showEvaluationForm && (
+          <Button
+            mode="outline"
+            bordered="round"
+            expanded={false}
+            className="!px-4 !py-2"
+            onClick={handleEvaluationFormClick}
+          >
+            <div className="flex justify-center items-center gap-2">
+              <IonIcon
+                name="DocumentText"
+                size="20px"
+                className="text-primary"
+                noPadding
+              />
+            </div>
+          </Button>
+        )}
       </div>
     </div>
   );

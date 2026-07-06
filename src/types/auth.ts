@@ -7,4 +7,5 @@ export type CurrentUser = {
   firstname_en: string;
   surname_en: string;
   title_en: string;
+  profile_image_url?: string | null;
 };
