@@ -1,33 +1,8 @@
 "use client";
 
 import { useQuery } from "@apollo/client/react";
-import { GET_EVENT_DATA, EVENT_DASHBOARD_DATA } from "../queries";
-import type {
-  GetEventDataResponse,
-  GetEventDashboardDataResponse,
-  GQLEventData,
-  GQLEventDashboard,
-} from "../types";
-
-// For the /dashboard overview page
-interface UseEventDataReturn {
-  eventData: GQLEventData | null;
-  loading: boolean;
-  error: string | null;
-  refetch: () => void;
-}
-
-export function useEventData(): UseEventDataReturn {
-  const { data, loading, error, refetch } =
-    useQuery<GetEventDataResponse>(GET_EVENT_DATA);
-
-  return {
-    eventData: data?.eventData ?? null,
-    loading,
-    error: error?.message ?? null,
-    refetch,
-  };
-}
+import { EVENT_DASHBOARD_DATA } from "../queries";
+import type { GetEventDashboardDataResponse, GQLEventDashboard } from "../types";
 
 // Real per-event attendance stats, used by the /dashboard/:id overview page
 interface UseEventDashboardDataReturn {

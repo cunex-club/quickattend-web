@@ -75,6 +75,9 @@ export function CompareView({ eventId }: CompareViewProps) {
   const [mode, setMode] = useState<CompareMode>("faculty");
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [applied, setApplied] = useState<Record<string, boolean>>({});
+  const [metricFilter, setMetricFilter] = useState<
+    "student" | "staff" | null
+  >(null);
 
   const facultyStats: CompareStat[] = useMemo(
     () =>
@@ -119,6 +122,7 @@ export function CompareView({ eventId }: CompareViewProps) {
     setMode(nextMode);
     setSelected({});
     setApplied({});
+    setMetricFilter(null);
   };
 
   const handleCheckedChange = (itemId: string, checked: boolean) => {
@@ -183,8 +187,16 @@ export function CompareView({ eventId }: CompareViewProps) {
     () =>
       activeStats
         .filter((s) => selectedIds.includes(s.id))
-        .map((s) => ({ faculty: s.label, total: s.total })),
-    [activeStats, selectedIds],
+        .map((s) => ({
+          faculty: s.label,
+          total:
+            metricFilter === "student"
+              ? s.studentCount
+              : metricFilter === "staff"
+                ? s.staffCount
+                : s.total,
+        })),
+    [activeStats, selectedIds, metricFilter],
   );
 
   const maxChartValue = useMemo(
@@ -311,18 +323,50 @@ export function CompareView({ eventId }: CompareViewProps) {
                     ? t("facultyStatsTitle")
                     : t("timeStatsTitle")}
                 </p>
-                <div className="h-auto">
-                  {mode === "faculty" ? (
-                    <BarChartVerticalOverview data={chartData} />
-                  ) : (
-                    <BarChartHorizontalOverview
-                      data={chartData.map((d) => ({
-                        time: d.faculty,
-                        total: d.total,
-                      }))}
-                      maxValue={maxChartValue}
-                    />
-                  )}
+                <div className="w-full relative bg-neutral-100 rounded-[28px] p-4 md:p-6">
+                  <div className="h-auto pt-14">
+                    {mode === "faculty" ? (
+                      <BarChartVerticalOverview data={chartData} />
+                    ) : (
+                      <BarChartHorizontalOverview
+                        data={chartData.map((d) => ({
+                          time: d.faculty,
+                          total: d.total,
+                        }))}
+                        maxValue={maxChartValue}
+                      />
+                    )}
+                  </div>
+                  <div className="absolute z-10 right-4 top-4">
+                    <div className="space-x-4 bg-transparent">
+                      <Button
+                        mode={metricFilter === "student" ? "filled" : "outline"}
+                        bordered="square"
+                        expanded={false}
+                        onClick={() =>
+                          setMetricFilter(
+                            metricFilter === "student" ? null : "student",
+                          )
+                        }
+                      >
+                        <p className="label-large-emphasized">
+                          {t("student")}
+                        </p>
+                      </Button>
+                      <Button
+                        mode={metricFilter === "staff" ? "filled" : "outline"}
+                        bordered="square"
+                        expanded={false}
+                        onClick={() =>
+                          setMetricFilter(
+                            metricFilter === "staff" ? null : "staff",
+                          )
+                        }
+                      >
+                        <p className="label-large-emphasized">{t("staff")}</p>
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </section>
             )}

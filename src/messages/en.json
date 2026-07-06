@@ -49,6 +49,7 @@
       "linkCopyFailed": "Failed to copy link",
       "student": "Students",
       "staff": "Staff",
+      "eligible": "Eligible",
       "noScanResultsYet": "No scan results yet for this event"
     },
     "compare": {

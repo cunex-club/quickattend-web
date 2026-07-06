@@ -56,7 +56,7 @@ const getBarSize = (isMobile: boolean, isTablet: boolean): number => {
 
 const calculateXDomain = (data: BarChartVerticalData[]): number => {
   const maxValue = Math.max(...data.map((d) => d.total));
-  return (maxValue || 0) * BAR_CONSTANTS.DOMAIN_MULTIPLIER;
+  return (maxValue || 1) * BAR_CONSTANTS.DOMAIN_MULTIPLIER;
 };
 
 const addPercentageMetadata = (data: BarChartVerticalData[]) => {
@@ -113,6 +113,7 @@ export function BarChartVerticalOverview({
                     type="category"
                     tickLine={false}
                     axisLine={false}
+                    width={0}
                     hide
                   />
                   <XAxis

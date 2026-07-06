@@ -25,21 +25,3 @@ export const EVENT_DASHBOARD_DATA = gql`
     }
   }
 `;
-
-// Fetches overview data for the /dashboard page
-// (event metadata + attendee counts)
-export const GET_EVENT_DATA = gql`
-  query GetEventData {
-    eventData {
-      id
-      title
-      date
-      time
-      location
-      description
-      totalAttendees
-      studentCount
-      staffCount
-    }
-  }
-`;

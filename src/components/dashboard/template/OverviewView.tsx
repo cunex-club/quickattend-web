@@ -68,6 +68,9 @@ export function OverviewView({ eventId }: OverviewViewProps) {
   const [selectedFilter, setSelectedFilter] = useState<
     "student" | "staff" | null
   >(null);
+  const [selectedFacultyFilter, setSelectedFacultyFilter] = useState<
+    "student" | "staff" | null
+  >(null);
   const [eventDetail, setEventDetail] = useState<GetOneEventRes | null>(null);
   const [eventDetailLoading, setEventDetailLoading] = useState(true);
 
@@ -102,25 +105,48 @@ export function OverviewView({ eventId }: OverviewViewProps) {
 
   const loading = eventDetailLoading || dashboardLoading;
 
-  const facultyStats = useMemo(() => {
+  const facultyStatsRaw = useMemo(() => {
     const stats = dashboardData?.organizationStats ?? [];
 
-    const baseline = new Map<string, number>();
+    const baseline = new Map<
+      string,
+      { student: number; staff: number; total: number }
+    >();
     for (const { faculty_no } of eventDetail?.allowed_faculties ?? []) {
       const name = FacultyNameEnByCode[faculty_no];
-      if (name) baseline.set(toTitleCase(name), 0);
+      if (name) baseline.set(toTitleCase(name), { student: 0, staff: 0, total: 0 });
     }
     for (const item of stats) {
       const name = toTitleCase(item.organization);
-      baseline.set(name, (baseline.get(name) ?? 0) + item.totalCount);
+      const prev = baseline.get(name) ?? { student: 0, staff: 0, total: 0 };
+      baseline.set(name, {
+        student: prev.student + item.studentCount,
+        staff: prev.staff + item.staffCount,
+        total: prev.total + item.totalCount,
+      });
     }
 
     return [...baseline.entries()]
-      .sort(([nameA, totalA], [nameB, totalB]) =>
-        totalB - totalA || nameA.localeCompare(nameB),
+      .sort(
+        ([nameA, a], [nameB, b]) =>
+          b.total - a.total || nameA.localeCompare(nameB),
       )
-      .map(([faculty, total]) => ({ faculty, total }));
+      .map(([faculty, v]) => ({ faculty, ...v }));
   }, [dashboardData, eventDetail]);
+
+  const facultyStats = useMemo(
+    () =>
+      facultyStatsRaw.map(({ faculty, student, staff, total }) => ({
+        faculty,
+        total:
+          selectedFacultyFilter === "student"
+            ? student
+            : selectedFacultyFilter === "staff"
+              ? staff
+              : total,
+      })),
+    [facultyStatsRaw, selectedFacultyFilter],
+  );
 
   const timeStats = useMemo(
     () =>
@@ -350,16 +376,24 @@ export function OverviewView({ eventId }: OverviewViewProps) {
                 variant="filled"
                 className="p-8 min-h-[230px]"
               >
-                <div className="flex space-x-2.5 title-medium-primary text-neutral-white whitespace-nowrap">
-                  <p>
-                    {t("student")}: {dashboardData?.summary.totalStudent ?? 0}{" "}
-                    {t("unit")}
-                  </p>
-                  <p>|</p>
-                  <p>
-                    {t("staff")}: {dashboardData?.summary.totalStaff ?? 0}{" "}
-                    {t("unit")}
-                  </p>
+                <div className="flex flex-col items-center gap-1">
+                  <div className="flex space-x-2.5 title-medium-primary text-neutral-white whitespace-nowrap">
+                    <p>
+                      {t("student")}: {dashboardData?.summary.totalStudent ?? 0}{" "}
+                      {t("unit")}
+                    </p>
+                    <p>|</p>
+                    <p>
+                      {t("staff")}: {dashboardData?.summary.totalStaff ?? 0}{" "}
+                      {t("unit")}
+                    </p>
+                  </div>
+                  {dashboardData?.summary.totalEligible != null && (
+                    <p className="body-medium-primary text-neutral-white/80 whitespace-nowrap">
+                      {t("eligible")}: {dashboardData.summary.totalEligible}{" "}
+                      {t("unit")}
+                    </p>
+                  )}
                 </div>
               </StatCard>
             </div>
@@ -376,8 +410,50 @@ export function OverviewView({ eventId }: OverviewViewProps) {
                   {t("noScanResultsYet")}
                 </p>
               ) : (
-                <div className="h-[400px] md:h-[360px] lg:h-[350px] xl:max-h-[320px] overflow-auto">
-                  <BarChartVerticalOverview data={facultyStats} />
+                <div className="w-full relative bg-neutral-100 rounded-[28px] p-4 md:p-6">
+                  <div className="h-[400px] md:h-[360px] lg:h-[350px] xl:max-h-[320px] overflow-auto pt-14">
+                    <BarChartVerticalOverview data={facultyStats} />
+                  </div>
+                  <div className="absolute z-10 right-4 top-4">
+                    <div className="space-x-4 bg-transparent">
+                      <Button
+                        mode={
+                          selectedFacultyFilter === "student"
+                            ? "filled"
+                            : "outline"
+                        }
+                        bordered="square"
+                        expanded={false}
+                        onClick={() =>
+                          setSelectedFacultyFilter(
+                            selectedFacultyFilter === "student"
+                              ? null
+                              : "student",
+                          )
+                        }
+                      >
+                        <p className="label-large-emphasized">
+                          {t("student")}
+                        </p>
+                      </Button>
+                      <Button
+                        mode={
+                          selectedFacultyFilter === "staff"
+                            ? "filled"
+                            : "outline"
+                        }
+                        bordered="square"
+                        expanded={false}
+                        onClick={() =>
+                          setSelectedFacultyFilter(
+                            selectedFacultyFilter === "staff" ? null : "staff",
+                          )
+                        }
+                      >
+                        <p className="label-large-emphasized">{t("staff")}</p>
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -390,14 +466,14 @@ export function OverviewView({ eventId }: OverviewViewProps) {
                   {t("noScanResultsYet")}
                 </p>
               ) : (
-                <div className="w-full relative">
-                  <div className="h-[400px] md:h-[360px] lg:h-[350px] xl:max-h-[320px] overflow-auto">
+                <div className="w-full relative bg-neutral-100 rounded-[28px] p-4 md:p-6">
+                  <div className="h-[400px] md:h-[360px] lg:h-[350px] xl:max-h-[320px] overflow-auto pt-14">
                     <BarChartHorizontalOverview
                       data={filteredTime}
                       maxValue={maxTimeValue}
                     />
                   </div>
-                  <div className="absolute z-10 right-0 top-0">
+                  <div className="absolute z-10 right-4 top-4">
                     <div className="space-x-4 bg-transparent">
                       <Button
                         mode={
