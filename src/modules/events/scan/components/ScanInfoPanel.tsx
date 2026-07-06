@@ -49,12 +49,19 @@ const ScanInfoPanel: StyleableFC<ScanInfoPanelProps> = ({
   return (
     <section
       className={cn(
-        "flex flex-col items-center justify-center rounded-[32px] p-8",
+        "flex flex-col items-center rounded-[32px] p-8",
+        compact && "justify-center",
         !compact && "min-h-[720px] lg:h-full lg:min-h-0",
         className,
       )}
     >
-      <div className="flex flex-col items-center justify-center gap-8 text-center">
+      <div
+        className={cn(
+          compact
+            ? "flex flex-col items-center justify-center gap-8 text-center"
+            : "grid w-full grid-rows-[auto_1fr_auto] items-center justify-items-center gap-8 text-center lg:h-full",
+        )}
+      >
         <div className="flex flex-col items-center">
           {hasEvents ? (
             <DropdownMenu>
@@ -115,23 +122,26 @@ const ScanInfoPanel: StyleableFC<ScanInfoPanelProps> = ({
           )}
         </div>
 
-        {!compact &&
-          (cameraSlot ?? (
-            <>
-              <Image
-                src={barcodeReaderIcon}
-                alt={t("infoPanel.barcodeAlt")}
-                width={150}
-                height={210}
-                className="h-auto w-[130px] md:w-[150px]"
-                priority
-              />
+        {!compact && (
+          <div className="flex h-full min-h-0 w-full flex-col items-center justify-center gap-8">
+            {cameraSlot ?? (
+              <>
+                <Image
+                  src={barcodeReaderIcon}
+                  alt={t("infoPanel.barcodeAlt")}
+                  width={150}
+                  height={210}
+                  className="h-auto w-[130px] md:w-[150px]"
+                  priority
+                />
 
-              <p className="headline-medium-emphasized text-center">
-                {t("infoPanel.description")}
-              </p>
-            </>
-          ))}
+                <p className="headline-medium-emphasized text-center">
+                  {t("infoPanel.description")}
+                </p>
+              </>
+            )}
+          </div>
+        )}
 
         {/* Admin row — only shown in full (desktop) mode, and only if there's a real role to show */}
         {!compact && hasEvents && roleLabel && (
