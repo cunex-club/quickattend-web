@@ -3,6 +3,7 @@ export type ScanEvent = {
   name: string;
   startTime: string;
   endTime: string;
+  role?: string | null;
 };
 
 export type Participant = {

@@ -57,7 +57,7 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
           <ScrollArea
             className={cn(
               "h-72 sm:h-80 md:h-96 w-full rounded-md p-4",
-              variantClasses[filterVariant]
+              variantClasses[filterVariant],
             )}
           >
             <div className="space-y-2">
@@ -66,7 +66,7 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
                   key={item.id}
                   className={cn(
                     "flex items-center space-x-4 border-b border-neutral-200 p-2 md:p-4",
-                    filterVariant === "secondary" && "border-gray-300"
+                    filterVariant === "secondary" && "border-gray-300",
                   )}
                 >
                   <Checkbox

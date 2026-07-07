@@ -7,6 +7,7 @@ import type {
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 const TOKEN = process.env.NEXT_PUBLIC_LOG_IN_TOKEN;
+const OWNER_REF_ID = process.env.NEXT_PUBLIC_LOG_IN_REF_ID;
 
 const toApiPage = (page: number) => Math.max(page - 1, 0);
 
@@ -32,6 +33,56 @@ export class APIRequestError extends Error {
     this.status = status;
   }
 }
+
+export type CreateEventAttendanceType = "ALL" | "WHITELIST" | "FACULTIES";
+export type CreateEventParticipantField =
+  | "NAME"
+  | "ORGANIZATION"
+  | "REFID"
+  | "PHOTO";
+export type CreateEventManagerRole = "OWNER" | "STAFF" | "MANAGER";
+
+export interface CreateEventAgenda {
+  activity_name: string;
+  start_time: string;
+  end_time: string;
+}
+
+export interface CreateEventManager {
+  ref_id: number;
+  role: CreateEventManagerRole;
+}
+
+export interface CreateEventReq {
+  name: string;
+  description?: string;
+  organizer: string;
+  start_time: string;
+  end_time: string;
+  timezone: string;
+  location: string;
+  location_lat?: number;
+  location_long?: number;
+  agenda: CreateEventAgenda[];
+  attendance_type: CreateEventAttendanceType;
+  attendee: number[];
+  revealed_fields: CreateEventParticipantField[];
+  managers_and_staff: CreateEventManager[];
+  allow_all_to_scan: boolean;
+  evaluation_form?: string;
+}
+
+export interface CreateEventRes {
+  id: string;
+}
+
+export type CreateEventAPIResponse = APIResponse<CreateEventRes>;
+
+export interface UpdateEventRes {
+  id: string;
+}
+
+export type UpdateEventAPIResponse = APIResponse<UpdateEventRes>;
 
 export interface ScanParticipantRes {
   firstname_th: string | null;
@@ -129,6 +180,99 @@ export async function fetchDiscoveryEvents(
 
   if (!res.ok) {
     throw new Error(`Failed to fetch discovery events: ${res.status}`);
+  }
+
+  return res.json();
+}
+
+export async function createEvent(
+  req: CreateEventReq,
+): Promise<CreateEventAPIResponse> {
+  const managersAndStaff = req.managers_and_staff;
+  const isOwnerIncluded = managersAndStaff.some(
+    (manager) => manager.role === "OWNER",
+  );
+
+  if (!isOwnerIncluded && OWNER_REF_ID) {
+    managersAndStaff.push({
+      ref_id: Number(OWNER_REF_ID),
+      role: "OWNER",
+    });
+  }
+
+  const res = await fetch(`${API_HOST}/events`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ ...req, managers_and_staff: managersAndStaff }),
+  });
+
+  if (!res.ok) {
+    let parsedError: APIErrorData | null = null;
+
+    try {
+      const body = (await res.json()) as APIResponse<null>;
+      parsedError = body.error;
+    } catch {
+      parsedError = null;
+    }
+
+    if (parsedError) {
+      throw new APIRequestError(
+        parsedError.message,
+        parsedError.code,
+        parsedError.status,
+      );
+    }
+
+    throw new APIRequestError(
+      `Failed to create event: ${res.status}`,
+      "CREATE_EVENT_FAILED",
+      res.status,
+    );
+  }
+
+  return res.json();
+}
+
+export async function updateEvent(
+  eventId: string,
+  req: CreateEventReq,
+): Promise<UpdateEventAPIResponse> {
+  const res = await fetch(`${API_HOST}/events/${eventId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(req),
+  });
+
+  if (!res.ok) {
+    let parsedError: APIErrorData | null = null;
+
+    try {
+      const body = (await res.json()) as APIResponse<null>;
+      parsedError = body.error;
+    } catch {
+      parsedError = null;
+    }
+
+    if (parsedError) {
+      throw new APIRequestError(
+        parsedError.message,
+        parsedError.code,
+        parsedError.status,
+      );
+    }
+
+    throw new APIRequestError(
+      `Failed to update event ${eventId}: ${res.status}`,
+      "UPDATE_EVENT_FAILED",
+      res.status,
+    );
   }
 
   return res.json();

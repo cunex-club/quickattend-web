@@ -6,19 +6,17 @@ import { cn } from "@assets/lib/utils";
 import { StyleableFC } from "@utils/misc";
 import { ZXingScanner } from "@utils/scanner";
 import IonIcon from "@shared/IonIcon";
-import { useRouter } from "@i18n/navigation";
+import { toast } from "sonner";
 
 type ScanCameraPanelProps = {
   deviceId?: string;
   onScan?: (text: string) => void;
-  onCopyLink?: () => void;
   paused?: boolean;
 };
 
 const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
   deviceId,
   onScan,
-  onCopyLink,
   paused = false,
   className,
 }) => {
@@ -28,8 +26,7 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
   const lastScannedTextRef = useRef<string | null>(null);
   onScanRef.current = onScan;
 
-  const router = useRouter();
-  const [flashOn, setFlashOn] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -52,28 +49,43 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
     return () => scanner.stop();
   }, [deviceId, paused]);
 
-  const toggleFlash = useCallback(async () => {
-    const video = videoRef.current;
-    if (!video) return;
-    const track = (video.srcObject as MediaStream | null)
-      ?.getVideoTracks()
-      .at(0);
-    if (!track) return;
-    const next = !flashOn;
+  const copyLink = useCallback(async () => {
     try {
-      await track.applyConstraints({
-        advanced: [{ torch: next } as MediaTrackConstraintSet],
-      });
-      setFlashOn(next);
+      await navigator.clipboard.writeText(window.location.href);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 1500);
+      toast.success(
+        <p className="title-medium-primary text-neutral-white">
+          {t("cameraPanel.linkCopied")}
+        </p>,
+        {
+          style: {
+            background: "var(--success)",
+            color: "var(--neutral-white)",
+          },
+          duration: 1500,
+        },
+      );
     } catch {
-      // torch not supported on this device — silently ignore
+      toast.error(
+        <p className="title-medium-primary text-neutral-white">
+          {t("cameraPanel.linkCopyFailed")}
+        </p>,
+        {
+          style: {
+            background: "var(--error)",
+            color: "var(--neutral-white)",
+          },
+          duration: 1500,
+        },
+      );
     }
-  }, [flashOn]);
+  }, [t]);
 
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-[32px] bg-white",
+        "relative overflow-hidden rounded-[40px] bg-white",
         className,
       )}
     >
@@ -84,61 +96,17 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
         muted
       />
 
-      {/* Viewfinder brackets only */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <div className="relative h-56 w-56">
-          <span className="absolute left-0 top-0 h-10 w-10 rounded-tl-lg border-l-[3px] border-t-[3px] border-primary" />
-          <span className="absolute right-0 top-0 h-10 w-10 rounded-tr-lg border-r-[3px] border-t-[3px] border-primary" />
-          <span className="absolute bottom-0 left-0 h-10 w-10 rounded-bl-lg border-b-[3px] border-l-[3px] border-primary" />
-          <span className="absolute bottom-0 right-0 h-10 w-10 rounded-br-lg border-b-[3px] border-r-[3px] border-primary" />
-        </div>
-      </div>
-
       {/* Bottom action bar */}
-      <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between">
-        {/* Home + Copy link */}
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => router.push("/events")}
-            className="flex h-10 items-center justify-center rounded-full bg-white/90 px-3 shadow-md"
-            aria-label={t("cameraPanel.goToEvents")}
-          >
-            <IonIcon
-              name="HomeOutline"
-              size="20px"
-              className="text-primary"
-              noPadding
-            />
-          </button>
-          <button
-            type="button"
-            onClick={onCopyLink}
-            className="flex h-10 items-center justify-center rounded-full bg-white/90 px-3 shadow-md"
-            aria-label={t("cameraPanel.copyEventLink")}
-          >
-            <IonIcon
-              name="LinkOutline"
-              size="20px"
-              className="text-primary"
-              noPadding
-            />
-          </button>
-        </div>
-
-        {/* Flash toggle */}
+      <div className="absolute bottom-5 right-5 flex items-center justify-end">
+        {/* Copy link */}
         <button
           type="button"
-          onClick={toggleFlash}
+          onClick={copyLink}
           className="flex h-10 items-center justify-center rounded-full bg-white/90 px-3 shadow-md"
-          aria-label={
-            flashOn
-              ? t("cameraPanel.turnOffFlash")
-              : t("cameraPanel.turnOnFlash")
-          }
+          aria-label={t("cameraPanel.copyLink")}
         >
           <IonIcon
-            name={flashOn ? "Flash" : "FlashOffOutline"}
+            name={linkCopied ? "Checkmark" : "LinkOutline"}
             size="20px"
             className="text-primary"
             noPadding

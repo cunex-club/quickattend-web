@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@i18n/navigation";
 import { cn } from "@assets/lib/utils";
 import LoginLogo from "@assets/images/logo/login-logo.png";
@@ -14,6 +14,7 @@ type LoginDesktopPageProps = {
 };
 
 const LoginDesktopPage = ({ authUrl }: LoginDesktopPageProps) => {
+  const t = useTranslations("Login");
   const locale = useLocale();
   const languageLinkClass = (isActive: boolean) =>
     cn(
@@ -50,7 +51,7 @@ const LoginDesktopPage = ({ authUrl }: LoginDesktopPageProps) => {
                 />
               </div>
               <div className="body-medium-primary">
-                สร้างกิจกรรมสำหรับแอพ CU NEX
+                {t("featureCreateEvent")}
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -63,7 +64,7 @@ const LoginDesktopPage = ({ authUrl }: LoginDesktopPageProps) => {
                 />
               </div>
               <div className="body-medium-primary">
-                สแกนเข้าร่วมกิจกรรมด้วย Digital ID
+                {t("featureScanDigitalId")}
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -76,7 +77,7 @@ const LoginDesktopPage = ({ authUrl }: LoginDesktopPageProps) => {
                 />
               </div>
               <div className="body-medium-primary">
-                แชร์ลิงก์ให้คนอื่นมาช่วยได้ง่ายๆ
+                {t("featureShareLink")}
               </div>
             </div>
           </div>
@@ -98,7 +99,7 @@ const LoginDesktopPage = ({ authUrl }: LoginDesktopPageProps) => {
                 noPadding
               />
               <div className="title-large-emphasized whitespace-nowrap text-neutral-white">
-                ดำเนินการต่อด้วย CU NEX
+                {t("continueWithCunex")}
               </div>
             </Button>
           </div>

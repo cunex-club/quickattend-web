@@ -13,7 +13,7 @@ export default async function EventsGroupLayout({
   return (
     <EventsLayoutClient
       sidebar={<Sidebar currentUser={currentUser} />}
-      header={<Header />}
+      header={<Header currentUser={currentUser} />}
     >
       {children}
     </EventsLayoutClient>

@@ -1,19 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { cn } from "@assets/lib/utils";
 import IonIcon from "@shared/IonIcon";
 import Icon from "@shared/Icon";
 import Button from "@shared/Button";
-import ShareModal from "@modules/events/event-id/components/shareModal";
-import DuplicateModal from "@modules/events/event-id/components/duplicateModal";
-import MobileManageModal from "@modules/events/event-id/components/mobileManageModal";
-import MobileDuplicateSheet from "@modules/events/event-id/components/mobileDuplicateSheet";
-import { MOCK_SHARE_MODAL_DATA } from "@modules/events/event-id/constants/mock-up";
 import { fetchEventById } from "@services/events";
 import EventDetailSkeleton from "@modules/events/event-id/components/event-detail-skeleton";
-import type { GetOneEventRes, EventInfo } from "@customTypes/events";
+import type { GetOneEventRes } from "@customTypes/events";
 import { useRouter } from "@i18n/navigation";
+import { formatEventDate, formatEventTimeRange } from "@utils/eventDateTime";
 
 interface EventIdPageTemplateProps {
   eventId: string;
@@ -21,12 +18,8 @@ interface EventIdPageTemplateProps {
 
 const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   const t = useTranslations("EventDetail");
+  const locale = useLocale();
   const router = useRouter();
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false);
-  const [isMobileManageModalOpen, setIsMobileManageModalOpen] = useState(false);
-  const [isMobileDuplicateSheetOpen, setIsMobileDuplicateSheetOpen] =
-    useState(false);
 
   const [eventData, setEventData] = useState<GetOneEventRes | null>(null);
   const [loading, setLoading] = useState(true);
@@ -36,7 +29,6 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
       setLoading(true);
       try {
         const res = await fetchEventById(eventId);
-        console.log("Event by ID:", res.data);
         setEventData(res.data);
       } catch (err) {
         console.error("Failed to fetch event:", err);
@@ -55,98 +47,105 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   if (!eventData) {
     return (
       <div className="w-full flex justify-center items-center py-20">
-        <div className="body-large-primary">Event not found.</div>
+        <div className="body-large-primary">{t("notFound")}</div>
       </div>
     );
   }
 
-  // Format date from ISO string to "3 สิงหาคม 2568"
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const thaiMonths = [
-      "มกราคม",
-      "กุมภาพันธ์",
-      "มีนาคม",
-      "เมษายน",
-      "พฤษภาคม",
-      "มิถุนายน",
-      "กรกฎาคม",
-      "สิงหาคม",
-      "กันยายน",
-      "ตุลาคม",
-      "พฤศจิกายน",
-      "ธันวาคม",
-    ];
-    const day = date.getDate();
-    const month = thaiMonths[date.getMonth()];
-    const year = date.getFullYear() + 543;
-    return `${day} ${month} ${year}`;
-  };
+  const canEdit = eventData.role === "OWNER" || eventData.role === "MANAGER";
+  const isEnd = new Date(eventData.end_time) < new Date();
+  const showEvaluationForm = isEnd && !!eventData.evaluation_form;
 
-  // Format time from ISO string to "HH:MM น."
-  const formatTime = (isoStr: string) => {
-    const date = new Date(isoStr);
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    return `${hours}:${minutes}`;
-  };
+  const roleLabel =
+    eventData.role === "OWNER"
+      ? t("owner")
+      : eventData.role === "MANAGER"
+        ? t("manager")
+        : eventData.role === "STAFF"
+          ? t("staff")
+          : null;
 
-  // Format agenda time range
-  const formatAgendaTime = (startTime: string, endTime: string) => {
-    return `${formatTime(startTime)} - ${formatTime(endTime)} น.`;
-  };
+  const formatAgendaTime = (startTime: string, endTime: string) =>
+    formatEventTimeRange(startTime, endTime, locale);
 
   return (
-    <div className="w-full flex flex-col justify-center items-center px-6 md:px-10 lg:px-25 py-10 lg:pt-35 gap-6 lg:gap-7.5 pb-24">
+    <div className="w-full flex flex-col justify-center items-center px-6 md:px-10 lg:px-25 py-10 gap-6 lg:gap-7.5 pb-24">
+      <button
+        type="button"
+        onClick={() => router.push("/events")}
+        aria-label={t("back")}
+        className="w-full text-primary font-semibold cursor-pointer flex items-center gap-1"
+      >
+        <IonIcon name="ChevronBack" size="16px" />
+        <p className="label-large-emphasized">{t("back")}</p>
+      </button>
       <div className="w-full flex flex-col lg:flex-row gap-6 lg:gap-10">
         <div className="lg:flex-[4] bg-neutral-100 p-6 lg:p-10 space-y-5 rounded-3xl shadow-xs">
           <div className="flex w-full items-center justify-between">
             <div className="display-medium-emphasized ">{eventData.name}</div>
-            <div>
-              <Icon name="edit" size={32} className="text-primary" />
-            </div>
+            {canEdit && (
+              <button
+                type="button"
+                aria-label={t("edit")}
+                onClick={() => router.push(`/events/${eventId}/edit`)}
+                className="cursor-pointer"
+              >
+                <Icon name="edit" size={32} className="text-primary" />
+              </button>
+            )}
           </div>
           <div>
             <div className="flex gap-2 items-center">
               <IonIcon name="Calendar" size="16px" className="text-secondary" />
               <div className="body-large-primary">
-                {formatDate(eventData.start_time)}
+                {formatEventDate(eventData.start_time, locale)}
               </div>
             </div>
             <div className="flex gap-2 items-center">
               <IonIcon name="Time" size="16px" className="text-secondary" />
               <div className="body-large-primary">
-                {formatTime(eventData.start_time)} -{" "}
-                {formatTime(eventData.end_time)} น.
+                {formatEventTimeRange(
+                  eventData.start_time,
+                  eventData.end_time,
+                  locale,
+                )}
               </div>
             </div>
             <div className="flex gap-2 items-center">
               <IonIcon name="Location" size="16px" className="text-secondary" />
               <div className="body-large-primary">{eventData.location}</div>
             </div>
-            <div className="flex gap-2 items-center">
-              <IonIcon name="Person" size="16px" className="text-secondary" />
-              <div className="body-large-primary">{t("owner")}</div>
-            </div>
+            {roleLabel && (
+              <div className="flex gap-2 items-center">
+                <IonIcon name="Person" size="16px" className="text-secondary" />
+                <div className="body-large-primary">{roleLabel}</div>
+              </div>
+            )}
           </div>
           <div className="flex flex-col gap-y-2">
             <div className="headline-small-emphasized">{t("eventDetails")}</div>
             <div className="body-large-primary">
-              {eventData.description ?? ""}
+              {eventData.description || "-"}
             </div>
           </div>
           <div>
             <div className="headline-small-emphasized">{t("agenda")}</div>
             <div className="body-large-primary">
-              {eventData.agenda.map((item) => (
-                <div
-                  key={item.start_time}
-                  className="flex w-full justify-between"
-                >
-                  <div>{item.activity_name}</div>
-                  <div>{formatAgendaTime(item.start_time, item.end_time)}</div>
-                </div>
-              ))}
+              {eventData.agenda.length === 0 ? (
+                <div>-</div>
+              ) : (
+                eventData.agenda.map((item) => (
+                  <div
+                    key={item.start_time}
+                    className="flex w-full justify-between"
+                  >
+                    <div>{item.activity_name}</div>
+                    <div>
+                      {formatAgendaTime(item.start_time, item.end_time)}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -169,15 +168,6 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
                 {t("people")}
               </div>
             </div>
-            <div className="flex space-x-2.5 title-medium-primary lg:title-small-primary whitespace-nowrap">
-              <div>
-                {t("student")} : 1090 {t("people")}
-              </div>
-              <div>|</div>
-              <div>
-                {t("staff")} : 6 {t("people")}
-              </div>
-            </div>
           </div>
           <div className="flex-1 lg:flex-none flex flex-col justify-center items-start gap-2.5 bg-neutral-100 px-8 py-6 rounded-3xl shadow-xs text-center">
             <div className="headline-small-emphasized">{t("organizedBy")}</div>
@@ -185,26 +175,34 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-row w-full gap-4 lg:gap-6">
-        <Button
-          mode="filled"
-          bordered="round"
-          expanded={true}
-          className="flex-1"
-          onClick={() => router.push("/scan")}
-        >
-          <div className="flex justify-center items-center gap-2 text-neutral-white">
-            <IonIcon name="Scan" className="w-6 h-6 md:w-9 md:h-9" />
-            <div className="label-large-primary md:title-large-primary whitespace-nowrap">
-              {t("scanParticipant")}
+      <div
+        className={cn(
+          "flex flex-row w-full gap-4 lg:gap-6",
+          isEnd && "justify-end",
+        )}
+      >
+        {!isEnd && (
+          <Button
+            mode="filled"
+            bordered="round"
+            expanded={true}
+            className="flex-1"
+            onClick={() => router.push("/scan")}
+          >
+            <div className="flex justify-center items-center gap-2 text-neutral-white">
+              <IonIcon name="Scan" className="w-6 h-6 md:w-9 md:h-9" />
+              <div className="label-large-primary md:title-large-primary whitespace-nowrap">
+                {t("scanParticipant")}
+              </div>
             </div>
-          </div>
-        </Button>
+          </Button>
+        )}
         <Button
           mode="outline"
           bordered="round"
           expanded={true}
           className="hidden md:block flex-1"
+          onClick={() => router.push(`/dashboard/${eventId}`)}
         >
           <div className="flex justify-center text-primary items-center gap-2">
             <IonIcon name="TrendingUp" className="w-6 h-6 md:w-9 md:h-9" />
@@ -213,98 +211,63 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             </div>
           </div>
         </Button>
+        {showEvaluationForm && (
+          <Button
+            mode="outline"
+            bordered="round"
+            expanded={true}
+            className="hidden md:block flex-1"
+            onClick={() =>
+              window.open(
+                eventData.evaluation_form!,
+                "_blank",
+                "noopener,noreferrer",
+              )
+            }
+          >
+            <div className="flex justify-center text-primary items-center gap-2">
+              <IonIcon name="DocumentText" className="w-6 h-6 md:w-9 md:h-9" />
+              <div className="title-large-primary whitespace-nowrap">
+                {t("evaluationForm")}
+              </div>
+            </div>
+          </Button>
+        )}
         <div className="flex gap-2 justify-center md:justify-start">
           <Button
             mode="outline"
             bordered="round"
             expanded={false}
             className="md:hidden"
+            onClick={() => router.push(`/dashboard/${eventId}`)}
           >
             <IonIcon
               name="TrendingUp"
               className="w-6 h-6 md:w-9 md:h-9 text-primary"
             />
           </Button>
-          <Button
-            mode="outline"
-            bordered="round"
-            expanded={false}
-            className="hidden md:block"
-            onClick={() => setIsDuplicateModalOpen(true)}
-          >
-            <IonIcon
-              name="DuplicateOutline"
-              className="w-6 h-6 md:w-9 md:h-9 text-primary"
-            />
-          </Button>
-          <Button
-            mode="outline"
-            bordered="round"
-            expanded={false}
-            className="md:hidden"
-            onClick={() => setIsMobileManageModalOpen(true)}
-          >
-            <IonIcon
-              name="ArrowRedoOutline"
-              className="w-6 h-6 md:w-9 md:h-9 text-primary"
-            />
-          </Button>
-          <Button
-            mode="outline"
-            bordered="round"
-            expanded={false}
-            className="hidden md:block"
-            onClick={() => setIsShareModalOpen(true)}
-          >
-            <IonIcon
-              name="ArrowRedoOutline"
-              className="w-6 h-6 md:w-9 md:h-9 text-primary"
-            />
-          </Button>
+          {showEvaluationForm && (
+            <Button
+              mode="outline"
+              bordered="round"
+              expanded={false}
+              className="md:hidden"
+              onClick={() =>
+                window.open(
+                  eventData.evaluation_form!,
+                  "_blank",
+                  "noopener,noreferrer",
+                )
+              }
+            >
+              <IonIcon
+                name="DocumentText"
+                className="w-6 h-6 md:w-9 md:h-9 text-primary"
+              />
+            </Button>
+          )}
         </div>
       </div>
-
-      <ShareModal
-        open={isShareModalOpen}
-        onOpenChange={setIsShareModalOpen}
-        eventData={MOCK_SHARE_MODAL_DATA}
-      />
-
-      <DuplicateModal
-        open={isDuplicateModalOpen}
-        onOpenChange={setIsDuplicateModalOpen}
-        eventData={
-          {
-            ...eventData,
-            description: eventData.description ?? "",
-            evaluation_form: eventData.evaluation_form ?? "",
-            date: eventData.start_time,
-          } as EventInfo
-        }
-      />
-
-      <MobileManageModal
-        open={isMobileManageModalOpen}
-        onOpenChange={setIsMobileManageModalOpen}
-        eventData={MOCK_SHARE_MODAL_DATA}
-        onDuplicate={() => {
-          setIsMobileManageModalOpen(false);
-          setIsMobileDuplicateSheetOpen(true);
-        }}
-      />
-
-      <MobileDuplicateSheet
-        open={isMobileDuplicateSheetOpen}
-        onOpenChange={setIsMobileDuplicateSheetOpen}
-        eventData={
-          {
-            ...eventData,
-            description: eventData.description ?? "",
-            evaluation_form: eventData.evaluation_form ?? "",
-            date: eventData.start_time,
-          } as EventInfo
-        }
-      />
     </div>
   );
 };

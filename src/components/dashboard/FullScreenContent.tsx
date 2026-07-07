@@ -12,11 +12,15 @@ interface FullscreenContentProps {
     location: string;
     description: string;
     totalAttendees: number;
+    studentCount: number;
+    staffCount: number;
   };
   translations: {
     eventDetails: string;
     totalAttendees: string;
     unit: string;
+    student: string;
+    staff: string;
   };
 }
 
@@ -108,6 +112,15 @@ const FullscreenContent: React.FC<FullscreenContentProps> = ({
           <div className="text-center max-w-3xl">
             <p className="title-large-primary md:headline-medium-primary lg:display-medium-primary text-neutral-800">
               {t("totalAttendees")}
+            </p>
+          </div>
+          <div className="flex space-x-4 title-medium-primary md:title-large-primary text-neutral-700 mt-4">
+            <p>
+              {translations.student}: {data.studentCount} {translations.unit}
+            </p>
+            <p>|</p>
+            <p>
+              {translations.staff}: {data.staffCount} {translations.unit}
             </p>
           </div>
         </div>

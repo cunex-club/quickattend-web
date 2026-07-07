@@ -107,9 +107,9 @@ const Interactive: StyleableFC<
   return (
     <Element
       href={href!}
-      {...(Element === "button" && { type })}
+      {...(Element === "button" && { type, disabled })}
       tabIndex={disabled ? -1 : 0}
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       onTouchStart={(event: React.TouchEvent) => {
         setTouched(true);
         const touch = event.touches[0];
@@ -135,6 +135,7 @@ const Interactive: StyleableFC<
       }}
       className={cn(
         `before:rounded-inherit relative block cursor-pointer touch-manipulation overflow-hidden before:pointer-events-none before:absolute before:inset-0 before:bg-current before:opacity-0 before:transition-opacity before:content-[''] hover:before:opacity-8 focus-visible:before:opacity-10 active:before:opacity-10`,
+        disabled && "cursor-not-allowed opacity-50 hover:before:opacity-0",
         className,
       )}
       {...(props as object)}

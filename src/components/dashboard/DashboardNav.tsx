@@ -14,7 +14,7 @@ export default function DashboardNav({
   tabs: { id: string; label: string; href: string }[];
 }) {
   const pathname = usePathname();
-  const canViewInsights = (role: UserRole) => {
+  const canViewCompare = (role: UserRole) => {
     return role === "manager" || role === "owner";
   };
   return (
@@ -24,7 +24,7 @@ export default function DashboardNav({
         const isActive =
           normalizedPathname === tab.href ||
           (tab.href === "/dashboard" && normalizedPathname === "/dashboard");
-        const isTabDisabled = tab.id === "insights" && !canViewInsights(role);
+        const isTabDisabled = tab.id === "compare" && !canViewCompare(role);
 
         return (
           <Link
@@ -32,7 +32,7 @@ export default function DashboardNav({
             href={isTabDisabled ? "#" : `/${locale}${tab.href}`}
             aria-disabled={isTabDisabled}
             className={cn(
-              "w-28 transition-colors duration-200 border-b-2",
+              "w-28 flex justify-center transition-colors duration-200 border-b-2",
               isActive
                 ? "border-primary text-primary"
                 : "border-transparent text-neutral-600 hover:text-primary",
@@ -41,9 +41,7 @@ export default function DashboardNav({
                 : "",
             )}
           >
-            <span className="headline-small-emphasized">
-              {tab.label}
-            </span>
+            <span className="headline-small-emphasized">{tab.label}</span>
           </Link>
         );
       })}

@@ -1,6 +1,7 @@
 "use client";
 
 import IonIcon from "@shared/IonIcon";
+import { cn } from "@assets/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,11 +16,12 @@ export type SortOption = {
 
 interface SortMenuProps {
   options: SortOption[];
+  value?: string;
   onSelect: (value: string) => void;
   menuId?: string;
 }
 
-const SortMenu = ({ options, onSelect, menuId }: SortMenuProps) => {
+const SortMenu = ({ options, value, onSelect, menuId }: SortMenuProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -40,14 +42,33 @@ const SortMenu = ({ options, onSelect, menuId }: SortMenuProps) => {
         align="end"
         className="py-2"
       >
-        {options.map((option) => (
-          <DropdownMenuItem
-            key={option.value}
-            onClick={() => onSelect(option.value)}
-          >
-            <div className="body-small-primary">{option.label}</div>
-          </DropdownMenuItem>
-        ))}
+        {options.map((option) => {
+          const isSelected = option.value === value;
+          return (
+            <DropdownMenuItem
+              key={option.value}
+              onClick={() => onSelect(option.value)}
+              className="flex items-center gap-2"
+            >
+              <IonIcon
+                name="Checkmark"
+                size="16px"
+                className={cn(
+                  "text-primary",
+                  isSelected ? "opacity-100" : "opacity-0",
+                )}
+              />
+              <div
+                className={cn(
+                  "body-small-primary",
+                  isSelected && "text-primary font-semibold",
+                )}
+              >
+                {option.label}
+              </div>
+            </DropdownMenuItem>
+          );
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   );

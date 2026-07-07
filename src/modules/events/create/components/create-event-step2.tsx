@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   AttendanceType,
   EventFormInterface,
@@ -7,7 +7,7 @@ import {
   ParticipantFieldType,
   ScanPermissionType,
   Student,
-} from "../template";
+} from "../types";
 import { RadioGroup, RadioGroupItem } from "@assets/components/ui/radio-group";
 import {
   Command,
@@ -29,105 +29,38 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@assets/components/ui/select";
+import { fetchUserByRefId, type UserByRefIdRes } from "@services/users";
+import { APIRequestError } from "@services/events";
+import {
+  FacultyList,
+  FacultyEnByTh,
+  filterFacultyOptions,
+} from "@utils/faculty";
 
-const MOCK_STUDENTNAME = "นางสาวปริณ ไกรภพ";
+const formatUserName = (user: UserByRefIdRes, locale: string) => {
+  const thName = [user.title_th, user.firstname_th, user.surname_th]
+    .filter(Boolean)
+    .join(" ");
+  const enName = [user.title_en, user.firstname_en, user.surname_en]
+    .filter(Boolean)
+    .join(" ");
+
+  return locale === "en"
+    ? enName || thName || user.ref_id
+    : thName || enName || user.ref_id;
+};
+
 interface CreateEventStep2Props {
   eventForm: EventFormInterface;
   setEventForm: (formdata: EventFormInterface) => void;
 }
-
-export const FacultyList: string[] = [
-  "คณะครุศาสตร์",
-  "คณะจิตวิทยา",
-  "คณะทันตแพทยศาสตร์",
-  "คณะนิติศาสตร์",
-  "คณะนิเทศศาสตร์",
-  "คณะพยาบาลศาสตร์",
-  "คณะพาณิชยศาสตร์และการบัญชี",
-  "คณะแพทยศาสตร์",
-  "คณะเภสัชศาสตร์",
-  "คณะรัฐศาสตร์",
-  "คณะวิทยาศาสตร์",
-  "คณะวิทยาศาสตร์การกีฬา",
-  "คณะวิศวกรรมศาสตร์",
-  "คณะศิลปกรรมศาสตร์",
-  "คณะสถาปัตยกรรมศาสตร์",
-  "คณะสหเวชศาสตร์",
-  "คณะสัตวแพทยศาสตร์",
-  "คณะอักษรศาสตร์",
-  "คณะเศรษฐศาสตร์",
-  "จุฬาลงกรณ์มหาวิทยาลัย",
-  "บัณฑิตวิทยาลัย",
-  "วิทยาลัยประชากรศาสตร์",
-  "วิทยาลัยปิโตรเลียมและปิโตรเคมี",
-  "วิทยาลัยวิทยาศาสตร์สาธารณสุข",
-  "ศูนย์การจัดการทรัพยากรของมหาวิทยาลัย",
-  "ศูนย์การศึกษาทั่วไป",
-  "ศูนย์กีฬาแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์ความเป็นเลิศด้านเทคโนโลยีปิโตรเคมีและวัสดุ",
-  "ศูนย์ความปลอดภัย อาชีวอนามัยและสิ่งแวดล้อม จุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์จุฬาฯ-ชนบท",
-  "ศูนย์เชี่ยวชาญไฟฟ้ากำลัง",
-  "ศูนย์ทดสอบทางวิชาการแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์นวัตกรรมการเรียนรู้",
-  "ศูนย์บริหารกลาง",
-  "ศูนย์บริหารความเสี่ยง",
-  "ศูนย์บริการสุขภาพแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์บริการวิชาการแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์พัฒนกิจและนิสิตเก่าสัมพันธ์",
-  "ศูนย์รักษาความปลอดภัยและจัดการจราจรแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์ระดับภูมิภาคทางวิศวกรรม",
-  "ศูนย์วิทยาศาสตร์ฮาลาล จุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์วิเคราะห์รายได้และปฏิบัติการลงทุน",
-  "ศูนย์สัตว์ทดลอง จุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์สื่อสารองค์กร",
-  "ศูนย์หนังสือแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์เครือข่ายการเรียนรู้เพื่อภูมิภาค จุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์เครื่องมือวิจัยวิทยาศาสตร์และเทคโนโลยี จุฬาลงกรณ์มหาวิทยาลัย",
-  "ศูนย์กลางนวัตกรรมแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "สถาบันการขนส่ง",
-  "สถาบันขงจื่อแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "สถาบันนวัตกรรมบูรณาการแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "สถาบันบัณฑิตบริหารธุรกิจ ศศินทร์ แห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "สถาบันภาษา",
-  "สถาบันภาษาไทยสิรินธรแห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "สถาบันวิจัยทรัพยากรทางน้ำ",
-  "สถาบันวิจัยพลังงาน",
-  "สถาบันวิจัยสังคม",
-  "สถาบันวิจัยสิ่งแวดล้อมเพื่อความยั่งยืน",
-  "สถาบันวิจัยเทคโนโลยีชีวภาพและวิศวกรรมพันธุศาสตร์",
-  "สถาบันวิจัยโลหะและวัสดุ",
-  "สถาบันเอเชียศึกษา",
-  "สถาบันไทยศึกษา",
-  "สภาคณาจารย์",
-  "สำนักกฎหมายและนิติการ",
-  "สำนักกิจการวุฒยาจารย์",
-  "สำนักตรวจสอบ",
-  "สำนักบริหารกิจการนิสิต",
-  "สำนักบริหารการเงิน การบัญชี และการพัสดุ",
-  "สำนักบริหารทรัพยากรมนุษย์",
-  "สำนักบริหารระบบกายภาพ",
-  "สำนักบริหารวิชาการ",
-  "สำนักบริหารวิจัย",
-  "สำนักบริหารวิรัชกิจและเครือข่ายนานาชาติ",
-  "สำนักบริหารศิลปวัฒนธรรม",
-  "สำนักบริหารเทคโนโลยีสารสนเทศ",
-  "สำนักบริหารแผนและการงบประมาณ",
-  "สำนักพิมพ์แห่งจุฬาลงกรณ์มหาวิทยาลัย",
-  "สำนักยุทธศาสตร์และการขับเคลื่อน",
-  "สำนักวิชาทรัพยากรการเกษตร",
-  "สำนักงานการทะเบียน",
-  "สำนักงานจัดการทรัพย์สิน",
-  "สำนักงานมหาวิทยาลัย",
-  "สำนักงานวิทยทรัพยากร",
-  "สำนักงานสภามหาวิทยาลัย",
-];
 
 const CreateEventStep2 = ({
   eventForm,
   setEventForm,
 }: CreateEventStep2Props) => {
   const tCreateEvent = useTranslations("CreateEvent");
+  const locale = useLocale();
 
   const [facultyQuery, setFacultyQuery] = useState("");
   const [studentIdPermissionQuery, setStudentIdPermissionQuery] = useState("");
@@ -147,13 +80,16 @@ const CreateEventStep2 = ({
 
   const [openFacultyFilter, setOpenFacultyFilter] = useState(false);
 
+  const [isLookingUpStudent, setIsLookingUpStudent] = useState(false);
+  const [isLookingUpManager, setIsLookingUpManager] = useState(false);
+
   useEffect(() => {
     if (!facultyQuery) {
       setFilteredOrganization([]);
       setOpenFacultyFilter(false);
       return;
     }
-    const filtered = FacultyList.filter((org) => org.includes(facultyQuery));
+    const filtered = filterFacultyOptions(facultyQuery);
     setFilteredOrganization(filtered);
     setOpenFacultyFilter(true);
   }, [facultyQuery]);
@@ -222,7 +158,7 @@ const CreateEventStep2 = ({
                   onChange={(e) => {
                     const value = e.target.value;
 
-                    if (/^[\u0E00-\u0E7F]*$/.test(value)) {
+                    if (/^[\u0E00-\u0E7Fa-zA-Z\s]*$/.test(value)) {
                       setFacultyQuery(value);
                       setOpenFacultyFilter(true);
                     }
@@ -254,7 +190,7 @@ const CreateEventStep2 = ({
                               }}
                               className="body-large-primary"
                             >
-                              {f}
+                              {locale === "en" ? FacultyEnByTh[f] ?? f : f}
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -334,7 +270,11 @@ const CreateEventStep2 = ({
                   <IonIcon name="RemoveCircleOutline" size="18px" />
                 </button>
 
-                <p className="body-large-primary">{faculty}</p>
+                <p className="body-large-primary">
+                  {locale === "en"
+                    ? FacultyEnByTh[faculty] ?? faculty
+                    : faculty}
+                </p>
               </div>
             ))}
           </div>
@@ -383,7 +323,8 @@ const CreateEventStep2 = ({
                     studentIdPermissionQuery?.length != 8) ||
                   selectedStudentIdsPermission?.includes(
                     studentIdPermissionQuery,
-                  )
+                  ) ||
+                  isLookingUpStudent
                 }
                 className={`w-fit h-9 shrink-0 ${
                   eventForm.attendance_type == AttendanceType.WHITELIST &&
@@ -395,7 +336,7 @@ const CreateEventStep2 = ({
                     ? "cursor-pointer"
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
                 }`}
-                onClick={() => {
+                onClick={async () => {
                   if (eventForm.attendance_type != AttendanceType.WHITELIST)
                     return;
 
@@ -411,30 +352,41 @@ const CreateEventStep2 = ({
                   )
                     return;
 
-                  // =====
-                  // TODO: Fetch Student Name from Student Id
-                  // =====
+                  setIsLookingUpStudent(true);
+                  try {
+                    const res = await fetchUserByRefId(
+                      studentIdPermissionQuery,
+                    );
 
-                  const student: Student = {
-                    id: studentIdPermissionQuery,
-                    name: MOCK_STUDENTNAME,
-                  };
+                    const student: Student = {
+                      id: studentIdPermissionQuery,
+                      name: formatUserName(res.data, locale),
+                    };
 
-                  setEventForm({
-                    ...eventForm,
-                    selectedStudents: [
-                      ...eventForm.selectedStudents,
-                      student,
-                    ].sort((a, b) => {
-                      return Number(a.id) - Number(b.id);
-                    }),
-                  });
+                    setEventForm({
+                      ...eventForm,
+                      selectedStudents: [
+                        ...eventForm.selectedStudents,
+                        student,
+                      ].sort((a, b) => {
+                        return Number(a.id) - Number(b.id);
+                      }),
+                    });
 
-                  setSelectedStudentIdsPermission((prev) => [
-                    ...prev,
-                    studentIdPermissionQuery,
-                  ]);
-                  setStudentIdPermissionQuery("");
+                    setSelectedStudentIdsPermission((prev) => [
+                      ...prev,
+                      studentIdPermissionQuery,
+                    ]);
+                    setStudentIdPermissionQuery("");
+                  } catch (err) {
+                    const message =
+                      err instanceof APIRequestError
+                        ? err.message
+                        : "Failed to fetch student";
+                    alert(message);
+                  } finally {
+                    setIsLookingUpStudent(false);
+                  }
                 }}
               >
                 <p className="label-large-primary -translate-y-1">
@@ -698,7 +650,8 @@ const CreateEventStep2 = ({
                   selectedStudentIdsAccessibility?.includes(
                     studentIdAccessibilityQuery,
                   ) ||
-                  roleAccessibilityQuery == ""
+                  roleAccessibilityQuery == "" ||
+                  isLookingUpManager
                 }
                 expanded={false}
                 className={`w-fit h-9 shrink-0 ${
@@ -711,7 +664,7 @@ const CreateEventStep2 = ({
                     ? "cursor-pointer"
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
                 }`}
-                onClick={() => {
+                onClick={async () => {
                   if (
                     studentIdAccessibilityQuery.length != 8 &&
                     studentIdAccessibilityQuery.length != 10
@@ -725,33 +678,44 @@ const CreateEventStep2 = ({
                     return;
                   if (roleAccessibilityQuery == "") return;
 
-                  // =====
-                  // TODO: Fetch Student Name from Student Id
-                  // =====
+                  setIsLookingUpManager(true);
+                  try {
+                    const res = await fetchUserByRefId(
+                      studentIdAccessibilityQuery,
+                    );
 
-                  const manager: EventManager = {
-                    id: studentIdAccessibilityQuery,
-                    name: MOCK_STUDENTNAME,
-                    role: roleAccessibilityQuery ?? "",
-                  };
+                    const manager: EventManager = {
+                      id: studentIdAccessibilityQuery,
+                      name: formatUserName(res.data, locale),
+                      role: roleAccessibilityQuery,
+                    };
 
-                  setEventForm({
-                    ...eventForm,
-                    managers_and_staff: [
-                      ...eventForm.managers_and_staff,
-                      manager,
-                    ].sort((a, b) => {
-                      return Number(a.id) - Number(b.id);
-                    }),
-                  });
+                    setEventForm({
+                      ...eventForm,
+                      managers_and_staff: [
+                        ...eventForm.managers_and_staff,
+                        manager,
+                      ].sort((a, b) => {
+                        return Number(a.id) - Number(b.id);
+                      }),
+                    });
 
-                  setSelectedStudentIdsAccessibility((prev) => [
-                    ...prev,
-                    studentIdAccessibilityQuery,
-                  ]);
+                    setSelectedStudentIdsAccessibility((prev) => [
+                      ...prev,
+                      studentIdAccessibilityQuery,
+                    ]);
 
-                  setRoleAccessibilityQuery("");
-                  setStudentIdAccessibilityQuery("");
+                    setRoleAccessibilityQuery("");
+                    setStudentIdAccessibilityQuery("");
+                  } catch (err) {
+                    const message =
+                      err instanceof APIRequestError
+                        ? err.message
+                        : "Failed to fetch manager";
+                    alert(message);
+                  } finally {
+                    setIsLookingUpManager(false);
+                  }
                 }}
               >
                 <p className="label-large-primary -translate-y-1">

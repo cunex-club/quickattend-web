@@ -11,6 +11,11 @@ import {
   CardPreviewType,
   EventFormInterface,
 } from "@modules/events/create/template";
+import {
+  buildCreateEventReq,
+  mapEventResToForm,
+} from "@modules/events/create/mappers";
+import { fetchEventById, updateEvent, APIRequestError } from "@services/events";
 import EditEventSection1 from "../components/edit-event-section1";
 import EditEventSection2 from "../components/edit-event-section2";
 import EditEventSection3 from "../components/edit-event-section3";
@@ -34,10 +39,9 @@ import {
   DialogContent,
   DialogTitle,
 } from "@assets/components/ui/dialog";
-import EditEventDuplicate from "../components/edit-event-duplicate";
 import EditEventDelete from "../components/edit-event-delete";
-import { deepEqual } from "@utils/function";
 import { DEFAULT_CENTER } from "@modules/events/create/components/map-selection";
+import EventDetailSkeleton from "@modules/events/event-id/components/event-detail-skeleton";
 
 export const SideTabType = {
   NAVIGATE: "navigate",
@@ -48,9 +52,6 @@ export type SideTabType = (typeof SideTabType)[keyof typeof SideTabType];
 
 const EventEditTemplate = () => {
   const { id: eventId } = useParams();
-  console.log("Event ID: ", eventId);
-
-  // TODO: Check for validation (id มีอยู่จริงหรือไม่, คนนี้มีสิทธิ์เข้าถึง event นี้หรือไม่)
 
   const { setShowSidebar } = useSidebar();
   const router = useRouter();
@@ -58,7 +59,6 @@ const EventEditTemplate = () => {
 
   const [width, setWidth] = useState(0);
   const [sidetabMode, setSidetabMode] = useState<SideTabType | null>(null);
-  const [openDuplicate, setOpenDuplicate] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [cardMode, setCardMode] = useState<CardPreviewType>(
     CardPreviewType.CARD_PREVIEW,
@@ -66,59 +66,70 @@ const EventEditTemplate = () => {
 
   const [valid, setValid] = useState(false);
 
-  // NOTE: MOCK VERSION
-  const fetchedEventForm: EventFormInterface = {
-    name: "Sample Event",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    date: new Date("2026-02-10"),
+  const EMPTY_EVENT_FORM: EventFormInterface = {
+    name: "",
+    description: "",
+    date: undefined,
+    startTime: undefined,
+    endTime: undefined,
+    location: "",
     lat: DEFAULT_CENTER.lat,
     lng: DEFAULT_CENTER.lng,
-    startTime: new Date("2026-02-10T09:00:00"),
-    endTime: new Date("2026-02-10T16:00:00"),
-    location: "Main Auditorium, Building A",
-    agenda: [
-      {
-        id: "1",
-        activity_name: "Opening Ceremony",
-        startTime: new Date("2026-02-10T09:00:00"),
-        endTime: new Date("2026-02-10T09:30:00"),
-      },
-      {
-        id: "2",
-        activity_name: "Keynote Speech",
-        startTime: new Date("2026-02-10T09:30:00"),
-        endTime: new Date("2026-02-10T10:30:00"),
-      },
-    ],
-    organizer: "Student Affairs Office",
-    attendance_type: "faculties",
-    selectedFaculties: ["คณะวิศวกรรมศาสตร์"],
+    agenda: [],
+    organizer: "",
+    attendance_type: "all",
+    selectedFaculties: [],
     selectedStudents: [],
-    revealed_fields: ["name"],
-    managers_and_staff: [
-      {
-        id: "6631333321",
-        name: "บลา บาล",
-        role: "manager",
-      },
-    ],
+    revealed_fields: [],
+    managers_and_staff: [],
     allow_all_to_scan: true,
-    evaluation_form: "https://forms.google.com/sample-evaluation-form",
+    evaluation_form: "",
   };
 
-  const [lastSavedEventForm, setLastSavedEventForm] =
-    useState<EventFormInterface>(fetchedEventForm);
   const [eventForm, setEventForm] =
-    useState<EventFormInterface>(fetchedEventForm);
-  const [canSave, setCanSave] = useState(false);
+    useState<EventFormInterface>(EMPTY_EVENT_FORM);
+  const [ownerRefId, setOwnerRefId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [unauthorized, setUnauthorized] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const section1Ref = useRef<HTMLDivElement>(null);
   const section2Ref = useRef<HTMLDivElement>(null);
   const section3Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // TODO: Fetch event information using eventID
-  }, []);
+    const loadEvent = async () => {
+      setLoading(true);
+      try {
+        const res = await fetchEventById(String(eventId));
+        const canEdit =
+          res.data.role === "OWNER" || res.data.role === "MANAGER";
+        const hasEnded = new Date(res.data.end_time) < new Date();
+        if (!canEdit || hasEnded) {
+          setUnauthorized(true);
+          return;
+        }
+
+        const { form, ownerRefId: fetchedOwnerRefId } = mapEventResToForm(
+          res.data,
+        );
+        setEventForm(form);
+        setOwnerRefId(fetchedOwnerRefId);
+      } catch (err) {
+        console.error("Failed to fetch event:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadEvent();
+  }, [eventId]);
+
+  useEffect(() => {
+    if (unauthorized) {
+      router.replace(`/events/${eventId}`);
+    }
+  }, [unauthorized, eventId, router]);
 
   const isValidUrl = (value: string) => {
     try {
@@ -128,10 +139,6 @@ const EventEditTemplate = () => {
       return false;
     }
   };
-
-  useEffect(() => {
-    setCanSave(!deepEqual(lastSavedEventForm, eventForm));
-  }, [eventForm, lastSavedEventForm]);
 
   useEffect(() => {
     if (
@@ -172,67 +179,46 @@ const EventEditTemplate = () => {
   }, [setShowSidebar]);
 
   useEffect(() => {
-    if ((openDelete || openDuplicate) && width < 768) {
+    if (openDelete && width < 768) {
       setSidetabMode(null);
     }
-  }, [openDelete, openDuplicate, width]);
+  }, [openDelete, width]);
 
-  const saveEvent = () => {
-    const agendaText = eventForm.agenda
-      .map((item, index) => {
-        return `${index + 1}. ${item.activity_name} 
-                        - Start: ${item.startTime}
-                        - End: ${item.endTime}`;
-      })
-      .join("\n");
+  const saveEvent = async () => {
+    if (!eventForm.date || !eventForm.startTime || !eventForm.endTime) return;
 
-    let attendeeText = "-";
-    if (eventForm.attendance_type == AttendanceType.FACULTIES) {
-      attendeeText = eventForm.selectedFaculties
-        .map((item, index) => {
-          return `${index + 1} ${item}`;
-        })
-        .join("\n");
-    } else if (eventForm.attendance_type == AttendanceType.WHITELIST) {
-      attendeeText = eventForm.selectedStudents
-        .map((item, index) => {
-          return `${index + 1} ${item.id} ${item.name}`;
-        })
-        .join("\n");
+    const body = buildCreateEventReq(eventForm);
+    if (ownerRefId) {
+      body.managers_and_staff.push({
+        ref_id: Number(ownerRefId),
+        role: "OWNER",
+      });
     }
 
-    const revealedFieldText = eventForm.revealed_fields.join(", ");
-
-    const managerAndStaffText = eventForm.managers_and_staff
-      .map((item, index) => {
-        return `${index + 1} ${item.id} ${item.name} ${item.role}`;
-      })
-      .join("\n");
-
-    alert(`Name: ${eventForm.name}
-    Description: ${eventForm.description}
-    Date: ${eventForm.date}
-    Start Time: ${eventForm.startTime}
-    End Date: ${eventForm.endTime}
-    Location: ${eventForm.location}
-    Lat: ${eventForm.lat}
-    Lng: ${eventForm.lng}
-    Agenda: ${agendaText}
-    Organizer: ${eventForm.organizer}
-    Attendance Type: ${eventForm.attendance_type}
-    Attendee: ${attendeeText}
-    Revealed Fields: ${revealedFieldText}
-    Manager and Staff: ${managerAndStaffText}
-    Allow All to Scan: ${eventForm.allow_all_to_scan}
-    Evaluation Form: ${eventForm.evaluation_form}`);
-
-    setLastSavedEventForm(eventForm);
+    setIsSaving(true);
+    try {
+      await updateEvent(String(eventId), body);
+      return true;
+    } catch (err) {
+      const message =
+        err instanceof APIRequestError ? err.message : "Failed to update event";
+      alert(message);
+      return false;
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  const saveAndExit = () => {
-    saveEvent();
-    window.location.href = "/events";
+  const saveAndExit = async () => {
+    const saved = await saveEvent();
+    if (saved) {
+      window.location.href = "/events";
+    }
   };
+
+  if (loading || unauthorized) {
+    return <EventDetailSkeleton />;
+  }
 
   return (
     <>
@@ -254,34 +240,12 @@ const EventEditTemplate = () => {
 
           <div className="flex gap-2 items-center">
             <Button
-              mode="outline"
-              bordered="round"
-              expanded={false}
-              disabled={!canSave}
-              onClick={() => {
-                if (canSave) {
-                  saveEvent();
-                }
-              }}
-              className={`${
-                canSave
-                  ? "cursor-pointer border-primary text-primary"
-                  : "cursor-default border-neutral-400 bg-transparent text-neutral-400"
-              } w-fit h-9 px-1 pr-2 flex items-center`}
-            >
-              <IonIcon
-                name="SaveOutline"
-                size="16px"
-                className="font-semibold"
-              />
-            </Button>
-            <Button
               mode="filled"
               bordered="square"
               expanded={false}
-              disabled={!valid}
+              disabled={!valid || isSaving}
               onClick={() => {
-                if (valid) {
+                if (valid && !isSaving) {
                   saveAndExit();
                 }
               }}
@@ -320,15 +284,7 @@ const EventEditTemplate = () => {
                 setSidetabMode(SideTabType.PREVIEW);
               }}
             />
-            <hr className="border-neutral-300 border w-[60%]" />
-            <IonIcon
-              name="DuplicateOutline"
-              size="18px"
-              className="text-primary cursor-pointer"
-              onClick={() => {
-                setOpenDuplicate(true);
-              }}
-            />
+
             <IonIcon
               name="TrashOutline"
               size="18px"
@@ -482,7 +438,7 @@ const EventEditTemplate = () => {
           </div>
         </main>
 
-        <footer className="md:hidden fixed bottom-0 left-0 w-full h-16 px-4 bg-neutral-200 rounded-t-4xl z-50 grid grid-cols-4 gap-2 place-items-center">
+        <footer className="md:hidden fixed bottom-0 left-0 w-full h-16 px-4 bg-neutral-200 rounded-t-4xl z-50 grid grid-cols-3 gap-2 place-items-center">
           <IonIcon
             name="List"
             size="18px"
@@ -497,14 +453,6 @@ const EventEditTemplate = () => {
             className="text-primary cursor-pointer"
             onClick={() => {
               setSidetabMode(SideTabType.PREVIEW);
-            }}
-          />
-          <IonIcon
-            name="DuplicateOutline"
-            size="18px"
-            className="text-primary cursor-pointer"
-            onClick={() => {
-              setOpenDuplicate(true);
             }}
           />
           <IonIcon
@@ -642,27 +590,6 @@ const EventEditTemplate = () => {
                 className={`max-w-full h-fit max-h-[60vh] ${cardMode == CardPreviewType.CARD_PREVIEW && "bg-neutral-100"} rounded-4xl p-4 mb-6 overflow-y-auto break-all`}
               >
                 <EditEventPreview eventForm={eventForm} cardMode={cardMode} />
-              </div>
-            </DrawerContent>
-          </Drawer>
-
-          {/* Duplicate */}
-          <Drawer open={openDuplicate} onOpenChange={setOpenDuplicate}>
-            <DrawerContent className="px-4 py-2 bg-neutral-white h-fit max-h-[80vh]">
-              <DrawerHeader>
-                <DrawerTitle className="title-large-emphasized text-primary">
-                  {tEditEvent("eventDuplicate")}
-                </DrawerTitle>
-              </DrawerHeader>
-
-              <div
-                className={`max-w-full h-fit max-h-[60vh] rounded-4xl p-4 mb-6 overflow-y-auto break-all`}
-              >
-                <EditEventDuplicate
-                  eventForm={lastSavedEventForm}
-                  setOpenDuplicate={setOpenDuplicate}
-                  width={width}
-                />
               </div>
             </DrawerContent>
           </Drawer>
@@ -819,25 +746,6 @@ const EventEditTemplate = () => {
             </DialogContent>
           </Dialog>
 
-          {/* Duplicate */}
-          <Dialog open={openDuplicate} onOpenChange={setOpenDuplicate}>
-            <DialogContent className="[&>button]:hidden min-w-[60vw] overflow-auto max-w-[80vw] h-[80vh] bg-neutral-white flex flex-col gap-4">
-              {/* Header */}
-              <DialogTitle className="headline-large-emphasized text-primary">
-                {tEditEvent("eventDuplicate")}
-              </DialogTitle>
-
-              {/* Content */}
-              <>
-                <EditEventDuplicate
-                  eventForm={lastSavedEventForm}
-                  setOpenDuplicate={setOpenDuplicate}
-                  width={width}
-                />
-              </>
-            </DialogContent>
-          </Dialog>
-
           {/* Delete */}
           <Dialog open={openDelete} onOpenChange={setOpenDelete}>
             <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">
@@ -859,25 +767,6 @@ const EventEditTemplate = () => {
       {/* For PC */}
       {width >= 768 && (
         <>
-          {/* Duplicate */}
-          <Dialog open={openDuplicate} onOpenChange={setOpenDuplicate}>
-            <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4 overflow-auto">
-              {/* Header */}
-              <DialogTitle className="headline-large-emphasized text-primary">
-                {tEditEvent("eventDuplicate")}
-              </DialogTitle>
-
-              {/* Content */}
-              <>
-                <EditEventDuplicate
-                  eventForm={lastSavedEventForm}
-                  setOpenDuplicate={setOpenDuplicate}
-                  width={width}
-                />
-              </>
-            </DialogContent>
-          </Dialog>
-
           {/* Delete */}
           <Dialog open={openDelete} onOpenChange={setOpenDelete}>
             <DialogContent className="[&>button]:hidden min-w-[60vw] max-w-[80vw] h-fit max-h-[80vh] bg-neutral-white flex flex-col gap-4">

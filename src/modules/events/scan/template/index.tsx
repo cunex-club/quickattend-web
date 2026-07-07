@@ -11,7 +11,7 @@ import ScanResultModal, {
   type ScanResultModalData,
 } from "@modules/events/scan/components/ScanResultModal";
 import type { Participant, ScanEvent } from "@modules/events/scan/constants";
-import { useIsMobile } from "@assets/hooks/use-mobile";
+import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
 import { useRouter } from "@i18n/navigation";
 import {
   APIRequestError,
@@ -36,9 +36,46 @@ const buildFailedScanResult = (message: string): ScanResultModalData => ({
   message,
 });
 
+const RECENT_PARTICIPANTS_STORAGE_PREFIX = "cunex_scan_recent_participants_";
+
+const loadStoredRecentParticipants = (eventId: string): Participant[] => {
+  if (typeof window === "undefined" || !eventId) return [];
+  try {
+    const raw = localStorage.getItem(
+      `${RECENT_PARTICIPANTS_STORAGE_PREFIX}${eventId}`,
+    );
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+};
+
+const saveStoredRecentParticipants = (
+  eventId: string,
+  participants: Participant[],
+) => {
+  if (typeof window === "undefined" || !eventId) return;
+  try {
+    localStorage.setItem(
+      `${RECENT_PARTICIPANTS_STORAGE_PREFIX}${eventId}`,
+      JSON.stringify(participants),
+    );
+  } catch {
+    // storage quota/serialization errors — non-critical, ignore
+  }
+};
+
 const ScanTemplate = () => {
   const t = useTranslations("Scan");
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+  // The "mobile" CSS layout (camera-only, no inline result panel) is shown
+  // below the `lg` breakpoint (1024px), which spans both the isMobile
+  // (<768px) and isTablet (768-1023px) hook ranges. Gating the result modal
+  // on isMobile alone left a dead zone (768-1023px) where a scan result
+  // never appeared anywhere — no inline panel (CSS says mobile layout) and
+  // no modal (JS said not mobile).
+  const isCompactLayout = isMobile || isTablet;
   const router = useRouter();
   const [events, setEvents] = useState<ScanEvent[]>([]);
   const [selectedEventId, setSelectedEventId] = useState("");
@@ -46,8 +83,6 @@ const ScanTemplate = () => {
     [],
   );
   const [totalParticipants, setTotalParticipants] = useState(0);
-  const [loadingEvents, setLoadingEvents] = useState(true);
-  const [loadingDetail, setLoadingDetail] = useState(false);
   const [isSubmittingScan, setIsSubmittingScan] = useState(false);
   const [isResultModalOpen, setIsResultModalOpen] = useState(false);
   const [isNoEventsModalOpen, setIsNoEventsModalOpen] = useState(false);
@@ -99,8 +134,6 @@ const ScanTemplate = () => {
 
   useEffect(() => {
     const loadEvents = async () => {
-      setLoadingEvents(true);
-
       try {
         const res = await fetchManagedEvents();
         const mappedEvents: ScanEvent[] = res.data.map((event) => ({
@@ -108,6 +141,7 @@ const ScanTemplate = () => {
           name: event.name,
           startTime: formatTime(event.start_time),
           endTime: formatTime(event.end_time),
+          role: event.role,
         }));
 
         setEvents(mappedEvents);
@@ -118,8 +152,6 @@ const ScanTemplate = () => {
         setEvents([]);
         setSelectedEventId("");
         setIsNoEventsModalOpen(false);
-      } finally {
-        setLoadingEvents(false);
       }
     };
 
@@ -133,14 +165,11 @@ const ScanTemplate = () => {
         return;
       }
 
-      setLoadingDetail(true);
       try {
         const res = await fetchEventById(selectedEventId);
         setTotalParticipants(res.data.total_registered);
       } catch (error) {
         console.error(t("errors.failedToFetchEventDetail"), error);
-      } finally {
-        setLoadingDetail(false);
       }
     };
 
@@ -150,6 +179,7 @@ const ScanTemplate = () => {
   useEffect(() => {
     setScanResult(null);
     setIsResultModalOpen(false);
+    setRecentParticipants(loadStoredRecentParticipants(selectedEventId));
   }, [selectedEventId]);
 
   const selectedEvent = useMemo(
@@ -166,7 +196,7 @@ const ScanTemplate = () => {
       isScanLockedRef.current ||
       isSubmittingScan ||
       isScanCooldown ||
-      (isMobile && isResultModalOpen)
+      (isCompactLayout && isResultModalOpen)
     ) {
       return;
     }
@@ -179,7 +209,7 @@ const ScanTemplate = () => {
 
       if (!res.data) {
         setScanResult(buildFailedScanResult(t("resultPanel.defaultError")));
-        if (isMobile) {
+        if (isCompactLayout) {
           setIsResultModalOpen(true);
         }
         console.error(t("errors.missingParticipantData"));
@@ -196,7 +226,7 @@ const ScanTemplate = () => {
         t("resultPanel.unknownParticipant");
 
       const scannedAt = res.data.check_in_time
-        ? `${formatTime(res.data.check_in_time)} ${t("infoPanel.timeSuffix")}`
+        ? formatTime(res.data.check_in_time)
         : "-";
 
       const organization =
@@ -208,39 +238,42 @@ const ScanTemplate = () => {
         organization,
         checkInTime: scannedAt,
         status: res.data.status === "duplicate" ? "duplicate" : "success",
+        profileImageUrl: res.data.profile_image_url || undefined,
       };
 
       if (res.data.status !== "duplicate") {
-        setRecentParticipants((prev) =>
-          [
+        setRecentParticipants((prev) => {
+          const next = [
             {
               id: res.data.ref_id || "-",
               name: participantName,
               time: scannedAt,
             },
             ...prev,
-          ].slice(0, 8),
-        );
+          ].slice(0, 8);
+          saveStoredRecentParticipants(selectedEventId, next);
+          return next;
+        });
       }
 
       const selectedEventRes = await fetchEventById(selectedEventId);
       setTotalParticipants(selectedEventRes.data.total_registered);
 
       setScanResult(modalData);
-      if (isMobile) {
+      if (isCompactLayout) {
         setIsResultModalOpen(true);
       }
     } catch (error) {
       if (error instanceof APIRequestError) {
         console.error(`Scan failed [${error.code}]: ${error.message}`);
         setScanResult(buildFailedScanResult(getFailedScanMessage(error)));
-        if (isMobile) {
+        if (isCompactLayout) {
           setIsResultModalOpen(true);
         }
       } else {
         console.error(t("errors.unexpectedScanError"));
         setScanResult(buildFailedScanResult(t("resultPanel.defaultError")));
-        if (isMobile) {
+        if (isCompactLayout) {
           setIsResultModalOpen(true);
         }
       }
@@ -254,17 +287,24 @@ const ScanTemplate = () => {
 
   return (
     <div className="min-h-screen w-full lg:bg-neutral-200">
-      {/* ── Desktop / laptop (2xl+, ≥1536px): Info panel + Participants stats, no camera ── */}
+      {/* ── Desktop / laptop (2xl+, ≥1536px): Info panel (with live camera) + Participants stats ── */}
       <div className="hidden 2xl:grid 2xl:grid-cols-[0.8fr_1.2fr] 2xl:gap-6 2xl:p-8 2xl:min-h-screen">
         <ScanInfoPanel
           events={events}
           selectedEvent={selectedEvent}
           onEventChange={setSelectedEventId}
+          cameraSlot={
+            <ScanCameraPanel
+              key={selectedEventId}
+              paused={isSubmittingScan || isResultModalOpen || isScanCooldown}
+              onScan={handleScan}
+              className="h-full w-full min-h-[420px] rounded-[40px] bg-transparent"
+            />
+          }
         />
         {scanResult ? (
           <ScanResultPanel
             result={scanResult}
-            totalCount={totalParticipants}
             onBackToScan={() => setScanResult(null)}
             className="2xl:min-h-0"
           />
@@ -287,7 +327,6 @@ const ScanTemplate = () => {
         {scanResult ? (
           <ScanResultPanel
             result={scanResult}
-            totalCount={totalParticipants}
             onBackToScan={() => setScanResult(null)}
             className="min-h-0"
           />
@@ -317,22 +356,9 @@ const ScanTemplate = () => {
         />
       </div>
 
-      {(loadingEvents || loadingDetail || isSubmittingScan) && (
-        <div className="fixed bottom-4 right-4 rounded-full bg-white/95 px-4 py-2 shadow-elevation-2">
-          <span className="label-medium-primary text-neutral-600">
-            {isSubmittingScan ? t("page.scanning") : t("page.loading")}
-          </span>
-        </div>
-      )}
-
       <ScanResultModal
-        open={isMobile && isResultModalOpen}
-        onOpenChange={(open) => {
-          setIsResultModalOpen(open);
-          if (!open) {
-            setScanResult(null);
-          }
-        }}
+        open={isCompactLayout && isResultModalOpen}
+        onOpenChange={setIsResultModalOpen}
         result={scanResult}
       />
 

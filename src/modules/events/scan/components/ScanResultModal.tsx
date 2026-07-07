@@ -23,6 +23,7 @@ export type ScanResultModalData = {
   organization?: string;
   checkInTime?: string;
   message?: string;
+  profileImageUrl?: string;
 };
 
 const SCAN_RESULT_THEME = {
@@ -59,17 +60,25 @@ const ScanResultModal = ({
 }: ScanResultModalProps) => {
   const t = useTranslations("Scan");
   const [note, setNote] = useState("");
+  const [imageError, setImageError] = useState(false);
 
   const resultTheme = SCAN_RESULT_THEME[result?.status ?? "success"];
   const isFailed = result?.status === "failed";
   const message = result?.message || t("resultModal.permissionError");
+  const profileImageSrc =
+    !imageError && result?.profileImageUrl
+      ? result.profileImageUrl
+      : scanResultMockupImage;
 
   return (
     <Dialog
       open={open}
       onOpenChange={(nextOpen) => {
         onOpenChange(nextOpen);
-        if (!nextOpen) setNote("");
+        if (!nextOpen) {
+          setNote("");
+          setImageError(false);
+        }
       }}
     >
       <DialogContent
@@ -108,12 +117,15 @@ const ScanResultModal = ({
             </div>
           ) : (
             <div className="space-y-8">
-              <div className="mx-auto h-[120px] w-[120px] overflow-hidden rounded-2xl bg-neutral-200 md:h-[128px] md:w-[128px]">
+              <div className="relative mx-auto h-[120px] w-[120px] overflow-hidden rounded-2xl bg-neutral-200 md:h-[128px] md:w-[128px]">
                 <Image
-                  src={scanResultMockupImage}
+                  src={profileImageSrc}
                   alt="Scan result participant"
-                  className="h-full w-full object-cover"
+                  fill
+                  unoptimized={!imageError && !!result?.profileImageUrl}
+                  className="object-cover"
                   priority
+                  onError={() => setImageError(true)}
                 />
               </div>
 
@@ -131,7 +143,8 @@ const ScanResultModal = ({
                     />
                     <div>
                       <p className="body-medium-primary">
-                        {t("resultModal.name")}
+                        {result?.participantName ||
+                          t("resultPanel.unknownParticipant")}
                       </p>
                       <p className="body-medium-primary">
                         {t("resultModal.refId")} {result?.refId || "-"}
