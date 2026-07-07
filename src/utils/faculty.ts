@@ -33,6 +33,7 @@ export function filterFacultyOptions(query: string): string[] {
 
   return FacultyOptions.filter(
     ({ th, en }) =>
-      th.includes(query) || en.toLowerCase().includes(normalizedQuery),
+      th.includes(normalizedQuery) ||
+      en.toLowerCase().includes(normalizedQuery),
   ).map(({ th }) => th);
 }
