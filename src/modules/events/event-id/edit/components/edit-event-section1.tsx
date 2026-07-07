@@ -177,9 +177,13 @@ const EditEventSection1 = ({
       endTime: end,
     };
 
+    const sortedAgenda = [...eventForm.agenda, newAgenda].sort(
+      (a, b) => a.startTime.getTime() - b.startTime.getTime(),
+    );
+
     setEventForm({
       ...eventForm,
-      agenda: [...eventForm.agenda, newAgenda],
+      agenda: sortedAgenda,
     });
 
     setAgendaStart(format(end, "HH:mm"));
