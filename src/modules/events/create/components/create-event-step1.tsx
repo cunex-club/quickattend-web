@@ -178,7 +178,9 @@ const CreateEventStep1 = ({
     };
 
     const sortedAgenda = [...eventForm.agenda, newAgenda].sort(
-      (a, b) => a.startTime.getTime() - b.startTime.getTime(),
+      (a, b) =>
+        a.startTime.getTime() - b.startTime.getTime() ||
+        a.endTime.getTime() - b.endTime.getTime(),
     );
 
     setEventForm({
