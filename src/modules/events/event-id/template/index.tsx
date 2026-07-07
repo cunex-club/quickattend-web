@@ -168,15 +168,6 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
                 {t("people")}
               </div>
             </div>
-            <div className="flex space-x-2.5 title-medium-primary lg:title-small-primary whitespace-nowrap">
-              <div>
-                {t("student")} : {eventData.total_registered} {t("people")}
-              </div>
-              <div>|</div>
-              <div>
-                {t("staff")} : {eventData.users.length} {t("people")}
-              </div>
-            </div>
           </div>
           <div className="flex-1 lg:flex-none flex flex-col justify-center items-start gap-2.5 bg-neutral-100 px-8 py-6 rounded-3xl shadow-xs text-center">
             <div className="headline-small-emphasized">{t("organizedBy")}</div>
