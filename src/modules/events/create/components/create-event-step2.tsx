@@ -29,7 +29,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@assets/components/ui/select";
-import { fetchUserByRefId, type UserByRefIdRes } from "@services/users";
+import type { UserByRefIdRes } from "@services/users";
+import { fetchUserByRefId } from "@services/users.actions";
 import { APIRequestError } from "@services/events";
 import {
   FacultyList,

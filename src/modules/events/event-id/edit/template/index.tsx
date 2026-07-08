@@ -15,7 +15,8 @@ import {
   buildCreateEventReq,
   mapEventResToForm,
 } from "@modules/events/create/mappers";
-import { fetchEventById, updateEvent, APIRequestError } from "@services/events";
+import { APIRequestError } from "@services/events";
+import { fetchEventById, updateEvent } from "@services/events.actions";
 import EditEventSection1 from "../components/edit-event-section1";
 import EditEventSection2 from "../components/edit-event-section2";
 import EditEventSection3 from "../components/edit-event-section3";

@@ -13,7 +13,7 @@ import {
 } from "@assets/components/ui/popover";
 import IonIcon from "@shared/IonIcon";
 import { usePathname, useRouter } from "@i18n/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { CurrentUser } from "@customTypes/auth";
 import { formatFullName, getAvatarFallback } from "@modules/layout/utils";
 
@@ -25,18 +25,6 @@ const handleLogOut = () => {
   window.location.href = "/api/auth/logout";
 };
 
-function formatEnglishName(user: CurrentUser | null): string {
-  if (!user) {
-    return "Guest";
-  }
-
-  return (
-    [user.title_en, user.firstname_en, user.surname_en]
-      .filter(Boolean)
-      .join(" ") || user.ref_id
-  );
-}
-
 type HeaderProps = {
   currentUser?: CurrentUser | null;
 };
@@ -45,12 +33,12 @@ const Header = ({ currentUser = null }: HeaderProps) => {
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations();
+  const locale = useLocale();
 
   // strip locale prefix if present — usePathname from next-intl already strips it
   const titleKey = PAGE_TITLES[pathname];
   const isSubPage = Boolean(titleKey);
-  const displayName = formatFullName(currentUser);
-  const englishName = formatEnglishName(currentUser);
+  const displayName = formatFullName(currentUser, locale);
   const avatarFallback = getAvatarFallback(currentUser);
   const [avatarError, setAvatarError] = useState(false);
   const avatarSrc =
@@ -125,7 +113,6 @@ const Header = ({ currentUser = null }: HeaderProps) => {
               <p className="title-medium-primary">
                 {currentUser?.ref_id ?? "-"}
               </p>
-              <p className="title-medium-primary">{englishName}</p>
             </section>
           </div>
         </PopoverContent>

@@ -13,12 +13,12 @@ import ScanResultModal, {
 import type { Participant, ScanEvent } from "@modules/events/scan/constants";
 import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
 import { useRouter } from "@i18n/navigation";
+import { APIRequestError } from "@services/events";
 import {
-  APIRequestError,
   fetchEventById,
   fetchManagedEvents,
   postParticipantScan,
-} from "@services/events";
+} from "@services/events.actions";
 
 const formatTime = (isoTime: string) => {
   const date = new Date(isoTime);

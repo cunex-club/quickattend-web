@@ -30,7 +30,8 @@ import {
   DialogTitle,
 } from "@assets/components/ui/dialog";
 import { DEFAULT_CENTER } from "../components/map-selection";
-import { createEvent, APIRequestError } from "@services/events";
+import { APIRequestError } from "@services/events";
+import { createEvent } from "@services/events.actions";
 import { buildCreateEventReq } from "../mappers";
 import {
   AttendanceType,

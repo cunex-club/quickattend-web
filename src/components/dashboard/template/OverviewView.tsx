@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { Skeleton } from "@assets/components/ui/skeleton";
 import { useTranslations, useLocale } from "next-intl";
 import { useEventDashboardData } from "@graphql/hooks/useDashboardQueries";
-import { fetchEventById } from "@services/events";
+import { fetchEventById } from "@services/events.actions";
 import type { GetOneEventRes } from "@customTypes/events";
 import { FacultyNameEnByCode } from "@utils/faculty";
 import {

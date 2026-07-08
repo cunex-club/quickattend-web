@@ -6,7 +6,7 @@ import IonIcon from "@shared/IonIcon";
 import EventCard from "@modules/events/main-page/components/event-card";
 import EventCardSkeleton from "@modules/events/main-page/components/event-card-skeleton";
 import { useLocale, useTranslations } from "next-intl";
-import { fetchDiscoveryEvents } from "@services/events";
+import { fetchDiscoveryEvents } from "@services/events.actions";
 import type { GetEventsRes } from "@customTypes/events";
 import {
   formatEventDate,

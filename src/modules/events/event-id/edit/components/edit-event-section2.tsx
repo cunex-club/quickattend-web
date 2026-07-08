@@ -34,7 +34,8 @@ import Button from "@shared/Button";
 import IonIcon from "@shared/IonIcon";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { fetchUserByRefId, type UserByRefIdRes } from "@services/users";
+import type { UserByRefIdRes } from "@services/users";
+import { fetchUserByRefId } from "@services/users.actions";
 import { APIRequestError } from "@services/events";
 
 interface EditEventSection1Props {

@@ -12,7 +12,10 @@ import FilterMenu, {
 import Pagination from "@shared/Pagination";
 import { useLocale, useTranslations } from "next-intl";
 
-import { fetchManagedEvents, fetchAttendedEvents } from "@services/events";
+import {
+  fetchManagedEvents,
+  fetchAttendedEvents,
+} from "@services/events.actions";
 import type { GetEventsRes, APIPagination } from "@customTypes/events";
 import { formatEventDate, formatEventTimeRange } from "@utils/eventDateTime";
 

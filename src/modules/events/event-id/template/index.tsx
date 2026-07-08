@@ -6,7 +6,7 @@ import { cn } from "@assets/lib/utils";
 import IonIcon from "@shared/IonIcon";
 import Icon from "@shared/Icon";
 import Button from "@shared/Button";
-import { fetchEventById } from "@services/events";
+import { fetchEventById } from "@services/events.actions";
 import EventDetailSkeleton from "@modules/events/event-id/components/event-detail-skeleton";
 import type { GetOneEventRes } from "@customTypes/events";
 import { useRouter } from "@i18n/navigation";
