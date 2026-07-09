@@ -29,27 +29,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@assets/components/ui/select";
-import type { UserByRefIdRes } from "@services/users";
-import { fetchUserByRefId } from "@services/users.actions";
-import { APIRequestError } from "@services/events";
 import {
   FacultyList,
   FacultyEnByTh,
   filterFacultyOptions,
 } from "@utils/faculty";
-
-const formatUserName = (user: UserByRefIdRes, locale: string) => {
-  const thName = [user.title_th, user.firstname_th, user.surname_th]
-    .filter(Boolean)
-    .join(" ");
-  const enName = [user.title_en, user.firstname_en, user.surname_en]
-    .filter(Boolean)
-    .join(" ");
-
-  return locale === "en"
-    ? enName || thName || user.ref_id
-    : thName || enName || user.ref_id;
-};
 
 interface CreateEventStep2Props {
   eventForm: EventFormInterface;
@@ -80,9 +64,6 @@ const CreateEventStep2 = ({
     useState<string[]>([]);
 
   const [openFacultyFilter, setOpenFacultyFilter] = useState(false);
-
-  const [isLookingUpStudent, setIsLookingUpStudent] = useState(false);
-  const [isLookingUpManager, setIsLookingUpManager] = useState(false);
 
   useEffect(() => {
     if (!facultyQuery) {
@@ -191,7 +172,7 @@ const CreateEventStep2 = ({
                               }}
                               className="body-large-primary"
                             >
-                              {locale === "en" ? FacultyEnByTh[f] ?? f : f}
+                              {locale === "en" ? (FacultyEnByTh[f] ?? f) : f}
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -273,7 +254,7 @@ const CreateEventStep2 = ({
 
                 <p className="body-large-primary">
                   {locale === "en"
-                    ? FacultyEnByTh[faculty] ?? faculty
+                    ? (FacultyEnByTh[faculty] ?? faculty)
                     : faculty}
                 </p>
               </div>
@@ -324,8 +305,7 @@ const CreateEventStep2 = ({
                     studentIdPermissionQuery?.length != 8) ||
                   selectedStudentIdsPermission?.includes(
                     studentIdPermissionQuery,
-                  ) ||
-                  isLookingUpStudent
+                  )
                 }
                 className={`w-fit h-9 shrink-0 ${
                   eventForm.attendance_type == AttendanceType.WHITELIST &&
@@ -337,7 +317,7 @@ const CreateEventStep2 = ({
                     ? "cursor-pointer"
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
                 }`}
-                onClick={async () => {
+                onClick={() => {
                   if (eventForm.attendance_type != AttendanceType.WHITELIST)
                     return;
 
@@ -353,41 +333,26 @@ const CreateEventStep2 = ({
                   )
                     return;
 
-                  setIsLookingUpStudent(true);
-                  try {
-                    const res = await fetchUserByRefId(
-                      studentIdPermissionQuery,
-                    );
+                  const student: Student = {
+                    id: studentIdPermissionQuery,
+                    // name: "",
+                  };
 
-                    const student: Student = {
-                      id: studentIdPermissionQuery,
-                      name: formatUserName(res.data, locale),
-                    };
+                  setEventForm({
+                    ...eventForm,
+                    selectedStudents: [
+                      ...eventForm.selectedStudents,
+                      student,
+                    ].sort((a, b) => {
+                      return Number(a.id) - Number(b.id);
+                    }),
+                  });
 
-                    setEventForm({
-                      ...eventForm,
-                      selectedStudents: [
-                        ...eventForm.selectedStudents,
-                        student,
-                      ].sort((a, b) => {
-                        return Number(a.id) - Number(b.id);
-                      }),
-                    });
-
-                    setSelectedStudentIdsPermission((prev) => [
-                      ...prev,
-                      studentIdPermissionQuery,
-                    ]);
-                    setStudentIdPermissionQuery("");
-                  } catch (err) {
-                    const message =
-                      err instanceof APIRequestError
-                        ? err.message
-                        : "Failed to fetch student";
-                    alert(message);
-                  } finally {
-                    setIsLookingUpStudent(false);
-                  }
+                  setSelectedStudentIdsPermission((prev) => [
+                    ...prev,
+                    studentIdPermissionQuery,
+                  ]);
+                  setStudentIdPermissionQuery("");
                 }}
               >
                 <p className="label-large-primary -translate-y-1">
@@ -432,9 +397,7 @@ const CreateEventStep2 = ({
                   <IonIcon name="RemoveCircleOutline" size="18px" />
                 </button>
 
-                <p className="body-large-primary">
-                  {student.id} {student.name}
-                </p>
+                <p className="body-large-primary">{student.id}</p>
               </div>
             ))}
           </div>
@@ -651,8 +614,7 @@ const CreateEventStep2 = ({
                   selectedStudentIdsAccessibility?.includes(
                     studentIdAccessibilityQuery,
                   ) ||
-                  roleAccessibilityQuery == "" ||
-                  isLookingUpManager
+                  roleAccessibilityQuery == ""
                 }
                 expanded={false}
                 className={`w-fit h-9 shrink-0 ${
@@ -665,7 +627,7 @@ const CreateEventStep2 = ({
                     ? "cursor-pointer"
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
                 }`}
-                onClick={async () => {
+                onClick={() => {
                   if (
                     studentIdAccessibilityQuery.length != 8 &&
                     studentIdAccessibilityQuery.length != 10
@@ -679,44 +641,32 @@ const CreateEventStep2 = ({
                     return;
                   if (roleAccessibilityQuery == "") return;
 
-                  setIsLookingUpManager(true);
-                  try {
-                    const res = await fetchUserByRefId(
-                      studentIdAccessibilityQuery,
-                    );
+                  // Not looking up the name via fetchUserByRefId: backend only
+                  // checks its local `users` table, so a valid ref_id can still
+                  // 404 if that person has never logged in / been scanned before.
+                  const manager: EventManager = {
+                    id: studentIdAccessibilityQuery,
+                    name: "",
+                    role: roleAccessibilityQuery,
+                  };
 
-                    const manager: EventManager = {
-                      id: studentIdAccessibilityQuery,
-                      name: formatUserName(res.data, locale),
-                      role: roleAccessibilityQuery,
-                    };
+                  setEventForm({
+                    ...eventForm,
+                    managers_and_staff: [
+                      ...eventForm.managers_and_staff,
+                      manager,
+                    ].sort((a, b) => {
+                      return Number(a.id) - Number(b.id);
+                    }),
+                  });
 
-                    setEventForm({
-                      ...eventForm,
-                      managers_and_staff: [
-                        ...eventForm.managers_and_staff,
-                        manager,
-                      ].sort((a, b) => {
-                        return Number(a.id) - Number(b.id);
-                      }),
-                    });
+                  setSelectedStudentIdsAccessibility((prev) => [
+                    ...prev,
+                    studentIdAccessibilityQuery,
+                  ]);
 
-                    setSelectedStudentIdsAccessibility((prev) => [
-                      ...prev,
-                      studentIdAccessibilityQuery,
-                    ]);
-
-                    setRoleAccessibilityQuery("");
-                    setStudentIdAccessibilityQuery("");
-                  } catch (err) {
-                    const message =
-                      err instanceof APIRequestError
-                        ? err.message
-                        : "Failed to fetch manager";
-                    alert(message);
-                  } finally {
-                    setIsLookingUpManager(false);
-                  }
+                  setRoleAccessibilityQuery("");
+                  setStudentIdAccessibilityQuery("");
                 }}
               >
                 <p className="label-large-primary -translate-y-1">
@@ -760,7 +710,6 @@ const CreateEventStep2 = ({
 
                 <div className="w-fit flex flex-col">
                   <p className="body-large-primary">{student.id}</p>
-                  <p className="body-large-primary">{student.name}</p>
                 </div>
 
                 <Select

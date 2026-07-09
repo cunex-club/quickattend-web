@@ -167,7 +167,6 @@ const EventPageTemplate = () => {
         setAttendedEvents(attendedRes.data);
         if (attendedRes.meta?.pagination) {
           setAttendedPagination(attendedRes.meta.pagination);
-          setCurrentPage(attendedRes.meta.pagination.page);
         }
       } catch (err) {
         console.error("Failed to fetch events:", err);

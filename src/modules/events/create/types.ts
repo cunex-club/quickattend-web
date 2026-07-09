@@ -34,7 +34,7 @@ export type ScanPermissionType =
 
 export interface Student {
   id: string;
-  name: string;
+  // name: string;
 }
 
 export const EventManagerType = {
