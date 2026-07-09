@@ -1,3 +1,10 @@
+# [1.0.0-dev.5](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2026-07-08)
+
+
+### Bug Fixes
+
+* auth ([7d9009d](https://github.com/cunex-club/quickattend-web/commit/7d9009d9fd662aea816954a64bc56cd8124c4fe8))
+
 # [1.0.0-dev.4](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2026-07-07)
 
 
