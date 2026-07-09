@@ -1,3 +1,12 @@
+# [1.0.0-dev.6](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.5...v1.0.0-dev.6) (2026-07-09)
+
+
+### Bug Fixes
+
+* fetchUserByRefId ([63a645b](https://github.com/cunex-club/quickattend-web/commit/63a645b43923ef008b7adb118a6b94eb18f0ecbf))
+* logout ([185ff47](https://github.com/cunex-club/quickattend-web/commit/185ff472fac2b5302a92560d3adf0a627649c030))
+* student type ([90ade68](https://github.com/cunex-club/quickattend-web/commit/90ade68d198f5f70cb8e1e4c798c8892bdd6213d))
+
 # [1.0.0-dev.5](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2026-07-08)
 
 
