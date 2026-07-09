@@ -335,7 +335,7 @@ const EditEventSection2 = ({
 
                   const student: Student = {
                     id: studentIdPermissionQuery,
-                    // name: "",
+                    name: "",
                   };
 
                   setEventForm({
