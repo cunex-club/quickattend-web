@@ -50,9 +50,7 @@ const LoginTabletPage = ({ authUrl }: LoginTabletPageProps) => {
                 noPadding
               />
             </div>
-            <div className="title-large-primary">
-              {t("featureCreateEvent")}
-            </div>
+            <div className="title-large-primary">{t("featureCreateEvent")}</div>
           </div>
           <div className="flex items-center gap-2">
             <div className="py-0.5">
@@ -76,9 +74,7 @@ const LoginTabletPage = ({ authUrl }: LoginTabletPageProps) => {
                 noPadding
               />
             </div>
-            <div className="title-large-primary">
-              {t("featureShareLink")}
-            </div>
+            <div className="title-large-primary">{t("featureShareLink")}</div>
           </div>
         </div>
 

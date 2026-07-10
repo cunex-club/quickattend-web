@@ -75,9 +75,9 @@ export function CompareView({ eventId }: CompareViewProps) {
   const [mode, setMode] = useState<CompareMode>("faculty");
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [applied, setApplied] = useState<Record<string, boolean>>({});
-  const [metricFilter, setMetricFilter] = useState<
-    "student" | "staff" | null
-  >(null);
+  const [metricFilter, setMetricFilter] = useState<"student" | "staff" | null>(
+    null,
+  );
 
   const facultyStats: CompareStat[] = useMemo(
     () =>
@@ -153,7 +153,10 @@ export function CompareView({ eventId }: CompareViewProps) {
           {mode === "faculty" ? t("noFacultyError") : t("noTimeError")}
         </p>,
         {
-          style: { background: "var(--warning)", color: "var(--neutral-white)" },
+          style: {
+            background: "var(--warning)",
+            color: "var(--neutral-white)",
+          },
           duration: 2500,
         },
       );
@@ -285,9 +288,7 @@ export function CompareView({ eventId }: CompareViewProps) {
                     expanded={false}
                     onClick={handleSubmitComparison}
                   >
-                    <p className="label-large-emphasized">
-                      {t("compareData")}
-                    </p>
+                    <p className="label-large-emphasized">{t("compareData")}</p>
                   </Button>
                 </div>
               </div>
@@ -305,8 +306,8 @@ export function CompareView({ eventId }: CompareViewProps) {
                 >
                   <div className="flex flex-col justify-center items-center gap-4 mt-2">
                     <p className="title-medium-emphasized lg:title-large-emphasized text-center">
-                      {t("student")}: {summaryStats.studentCount} {t("unit")}{" "}
-                      | {t("staff")}: {summaryStats.staffCount} {t("unit")}
+                      {t("student")}: {summaryStats.studentCount} {t("unit")} |{" "}
+                      {t("staff")}: {summaryStats.staffCount} {t("unit")}
                     </p>
                   </div>
                 </StatCard>
@@ -349,9 +350,7 @@ export function CompareView({ eventId }: CompareViewProps) {
                           )
                         }
                       >
-                        <p className="label-large-emphasized">
-                          {t("student")}
-                        </p>
+                        <p className="label-large-emphasized">{t("student")}</p>
                       </Button>
                       <Button
                         mode={metricFilter === "staff" ? "filled" : "outline"}

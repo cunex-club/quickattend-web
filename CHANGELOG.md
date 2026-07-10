@@ -1,21 +1,19 @@
 # [1.0.0-dev.5](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2026-07-08)
 
-
 ### Bug Fixes
 
-* auth ([7d9009d](https://github.com/cunex-club/quickattend-web/commit/7d9009d9fd662aea816954a64bc56cd8124c4fe8))
+- auth ([7d9009d](https://github.com/cunex-club/quickattend-web/commit/7d9009d9fd662aea816954a64bc56cd8124c4fe8))
 
 # [1.0.0-dev.4](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2026-07-07)
 
-
 ### Bug Fixes
 
-* eventDateTime ([da60cae](https://github.com/cunex-club/quickattend-web/commit/da60caec38a3fd42437ca73fef011fa62dc59db0))
-* filterFaculty ([0b4f9d6](https://github.com/cunex-club/quickattend-web/commit/0b4f9d600a1b369194edd0e3e19bc0358c26be3b))
-* sort agenda ([d733f16](https://github.com/cunex-club/quickattend-web/commit/d733f163cd99b5511d3e039360e5e0f61c7fa662))
-* sort agenda in edit event ([dab3841](https://github.com/cunex-club/quickattend-web/commit/dab3841446163d38c2f524fc3bb74a7ebf20b48a))
-* sort with endtime also ([0783456](https://github.com/cunex-club/quickattend-web/commit/0783456a46bda94b20812a860fb6475b52fcc4b5))
-* total_registered ([3c4acd2](https://github.com/cunex-club/quickattend-web/commit/3c4acd2356267808a4021f124be6d2de13633b08))
+- eventDateTime ([da60cae](https://github.com/cunex-club/quickattend-web/commit/da60caec38a3fd42437ca73fef011fa62dc59db0))
+- filterFaculty ([0b4f9d6](https://github.com/cunex-club/quickattend-web/commit/0b4f9d600a1b369194edd0e3e19bc0358c26be3b))
+- sort agenda ([d733f16](https://github.com/cunex-club/quickattend-web/commit/d733f163cd99b5511d3e039360e5e0f61c7fa662))
+- sort agenda in edit event ([dab3841](https://github.com/cunex-club/quickattend-web/commit/dab3841446163d38c2f524fc3bb74a7ebf20b48a))
+- sort with endtime also ([0783456](https://github.com/cunex-club/quickattend-web/commit/0783456a46bda94b20812a860fb6475b52fcc4b5))
+- total_registered ([3c4acd2](https://github.com/cunex-club/quickattend-web/commit/3c4acd2356267808a4021f124be6d2de13633b08))
 
 # [1.0.0-dev.3](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2026-03-29)
 

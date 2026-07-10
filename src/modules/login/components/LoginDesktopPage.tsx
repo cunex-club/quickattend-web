@@ -76,9 +76,7 @@ const LoginDesktopPage = ({ authUrl }: LoginDesktopPageProps) => {
                   noPadding
                 />
               </div>
-              <div className="body-medium-primary">
-                {t("featureShareLink")}
-              </div>
+              <div className="body-medium-primary">{t("featureShareLink")}</div>
             </div>
           </div>
 

@@ -3,8 +3,7 @@ import { Input } from "@assets/components/ui/input";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 
-export const DEFAULT_CENTER = { lat: 13.7386, lng: 100.5321 };
-export const GoogleMapContainerStyle = { width: "100%", height: "180px" };
+export const DEFAULT_CENTER = { lat: 13.738817, lng: 100.532215 };
 
 const MapPreview = dynamic(() => import("./map-preview"), {
   ssr: false,
