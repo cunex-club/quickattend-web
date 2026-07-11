@@ -1,3 +1,10 @@
+# [1.0.0-dev.8](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.7...v1.0.0-dev.8) (2026-07-11)
+
+
+### Bug Fixes
+
+* switch camera ([d99e3d3](https://github.com/cunex-club/quickattend-web/commit/d99e3d30c936969c274070b499053180666da0a7))
+
 # [1.0.0-dev.7](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.6...v1.0.0-dev.7) (2026-07-11)
 
 
