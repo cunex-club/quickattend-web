@@ -54,9 +54,7 @@ const LoginMobilePage = ({ authUrl }: LoginMobilePageProps) => {
                 noPadding
               />
             </div>
-            <div className="body-large-primary">
-              {t("featureCreateEvent")}
-            </div>
+            <div className="body-large-primary">{t("featureCreateEvent")}</div>
           </div>
           <div className="flex items-center gap-2">
             <div className="py-0.5">
@@ -80,9 +78,7 @@ const LoginMobilePage = ({ authUrl }: LoginMobilePageProps) => {
                 noPadding
               />
             </div>
-            <div className="body-large-primary">
-              {t("featureShareLink")}
-            </div>
+            <div className="body-large-primary">{t("featureShareLink")}</div>
           </div>
         </div>
 

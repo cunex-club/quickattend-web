@@ -27,6 +27,26 @@ const formatTime = (isoTime: string) => {
   return `${hours}:${minutes}`;
 };
 
+const getScanLocation = (): Promise<{ lat: number; long: number }> => {
+  return new Promise((resolve) => {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+      resolve({ lat: 0, long: 0 });
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        resolve({
+          lat: position.coords.latitude,
+          long: position.coords.longitude,
+        });
+      },
+      () => resolve({ lat: 0, long: 0 }),
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 30000 },
+    );
+  });
+};
+
 const buildFailedScanResult = (message: string): ScanResultModalData => ({
   status: "failed",
   participantName: "",
@@ -205,7 +225,8 @@ const ScanTemplate = () => {
     setIsSubmittingScan(true);
 
     try {
-      const res = await postParticipantScan(text, selectedEventId);
+      const { lat, long } = await getScanLocation();
+      const res = await postParticipantScan(text, selectedEventId, long, lat);
 
       if (!res.data) {
         setScanResult(buildFailedScanResult(t("resultPanel.defaultError")));

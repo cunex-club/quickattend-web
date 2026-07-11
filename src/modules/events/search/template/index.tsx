@@ -8,10 +8,7 @@ import EventCardSkeleton from "@modules/events/main-page/components/event-card-s
 import { useLocale, useTranslations } from "next-intl";
 import { fetchDiscoveryEvents } from "@services/events.actions";
 import type { GetEventsRes } from "@customTypes/events";
-import {
-  formatEventDate,
-  formatEventTimeRange,
-} from "@utils/eventDateTime";
+import { formatEventDate, formatEventTimeRange } from "@utils/eventDateTime";
 
 const SEARCH_STORAGE_KEY = "cunex_events_search_query_v1";
 

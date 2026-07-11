@@ -1,5 +1,5 @@
-import { GoogleMap, Marker } from "@react-google-maps/api";
-import { GoogleMapContainerStyle } from "./map-selection";
+import { Map, MapMarker, MarkerContent } from "@assets/components/ui/map";
+import { MapPin } from "lucide-react";
 
 interface MapPreviewProps {
   lat: number;
@@ -15,45 +15,31 @@ const MapPreviewComponent = ({
   onChangeLocation,
 }: MapPreviewProps) => {
   return (
-    <GoogleMap
-      mapContainerStyle={GoogleMapContainerStyle}
-      center={{ lat, lng }}
-      zoom={15}
-      onClick={
-        !isPreview
-          ? (e) => {
-              if (!e.latLng || !onChangeLocation) return;
-              onChangeLocation(e.latLng.lat(), e.latLng.lng());
-            }
-          : undefined
-      }
-      options={
-        isPreview
-          ? {
-              disableDefaultUI: true,
-              draggable: false,
-              scrollwheel: false,
-              zoomControl: false,
-              keyboardShortcuts: false,
-              clickableIcons: false,
-              gestureHandling: "none",
-            }
-          : undefined
-      }
-    >
-      <Marker
-        position={{ lat, lng }}
-        draggable={!isPreview}
-        onDragEnd={
-          !isPreview
-            ? (e) => {
-                if (!e.latLng || !onChangeLocation) return;
-                onChangeLocation(e.latLng.lat(), e.latLng.lng());
+    <div className="h-[180px] w-full overflow-hidden rounded-md">
+      <Map center={[lng, lat]} zoom={15} interactive={!isPreview}>
+        <MapMarker
+          longitude={lng}
+          latitude={lat}
+          draggable={!isPreview}
+          onDragEnd={
+            !isPreview
+              ? (lngLat) => onChangeLocation?.(lngLat.lat, lngLat.lng)
+              : undefined
+          }
+        >
+          <MarkerContent>
+            <MapPin
+              className={
+                isPreview
+                  ? "fill-primary stroke-white"
+                  : "fill-primary cursor-move stroke-white"
               }
-            : undefined
-        }
-      />
-    </GoogleMap>
+              size={28}
+            />
+          </MarkerContent>
+        </MapMarker>
+      </Map>
+    </div>
   );
 };
 

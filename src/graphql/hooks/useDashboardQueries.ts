@@ -2,7 +2,10 @@
 
 import { useQuery } from "@apollo/client/react";
 import { EVENT_DASHBOARD_DATA } from "../queries";
-import type { GetEventDashboardDataResponse, GQLEventDashboard } from "../types";
+import type {
+  GetEventDashboardDataResponse,
+  GQLEventDashboard,
+} from "../types";
 
 // Real per-event attendance stats, used by the /dashboard/:id overview page
 interface UseEventDashboardDataReturn {
