@@ -129,7 +129,8 @@
       "goToEvents": "ไปหน้ากิจกรรม",
       "copyLink": "คัดลอกลิงก์",
       "linkCopied": "คัดลอกลิงก์เรียบร้อยแล้ว",
-      "linkCopyFailed": "ไม่สามารถคัดลอกลิงก์ได้"
+      "linkCopyFailed": "ไม่สามารถคัดลอกลิงก์ได้",
+      "switchCamera": "สลับกล้อง"
     },
     "infoPanel": {
       "selectEvent": "เลือกกิจกรรม",

@@ -126,7 +126,8 @@
       "goToEvents": "Go to events",
       "copyLink": "Copy Link",
       "linkCopied": "Link copied successfully",
-      "linkCopyFailed": "Failed to copy link"
+      "linkCopyFailed": "Failed to copy link",
+      "switchCamera": "Switch camera"
     },
     "infoPanel": {
       "selectEvent": "Select event",

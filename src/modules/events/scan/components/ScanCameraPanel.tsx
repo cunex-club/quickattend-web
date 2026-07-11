@@ -27,27 +27,54 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
   onScanRef.current = onScan;
 
   const [linkCopied, setLinkCopied] = useState(false);
+  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
+  const [selectedDeviceIndex, setSelectedDeviceIndex] = useState(-1);
+
+  const activeDeviceId =
+    deviceId ??
+    (selectedDeviceIndex >= 0
+      ? devices[selectedDeviceIndex]?.deviceId
+      : undefined);
+
+  const handleSwitchCamera = useCallback(() => {
+    if (devices.length < 2) return;
+    setSelectedDeviceIndex((prev) => (prev + 1) % devices.length);
+  }, [devices.length]);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video || paused) return;
 
+    let cancelled = false;
     const scanner = new ZXingScanner();
-    scanner.start({
-      videoElement: video,
-      deviceId,
-      onDecode: ({ text }) => {
-        if (lastScannedTextRef.current === text) {
-          return;
-        }
+    scanner
+      .start({
+        videoElement: video,
+        deviceId: activeDeviceId,
+        onDecode: ({ text }) => {
+          if (lastScannedTextRef.current === text) {
+            return;
+          }
 
-        lastScannedTextRef.current = text;
-        onScanRef.current?.(text);
-      },
-    });
+          lastScannedTextRef.current = text;
+          onScanRef.current?.(text);
+        },
+      })
+      .then(() => {
+        if (deviceId || cancelled) return;
+        return ZXingScanner.listVideoInputDevices().then((list) => {
+          if (!cancelled) setDevices(list);
+        });
+      })
+      .catch(() => {
+        if (!cancelled) setDevices([]);
+      });
 
-    return () => scanner.stop();
-  }, [deviceId, paused]);
+    return () => {
+      cancelled = true;
+      scanner.stop();
+    };
+  }, [activeDeviceId, paused, deviceId]);
 
   const copyLink = useCallback(async () => {
     try {
@@ -97,7 +124,23 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
       />
 
       {/* Bottom action bar */}
-      <div className="absolute bottom-5 right-5 flex items-center justify-end">
+      <div className="absolute bottom-5 right-5 flex items-center justify-end gap-2">
+        {!deviceId && devices.length > 1 && (
+          <button
+            type="button"
+            onClick={handleSwitchCamera}
+            className="flex h-10 items-center justify-center rounded-full bg-white/90 px-3 shadow-md"
+            aria-label={t("cameraPanel.switchCamera")}
+          >
+            <IonIcon
+              name="CameraReverseOutline"
+              size="20px"
+              className="text-primary"
+              noPadding
+            />
+          </button>
+        )}
+
         {/* Copy link */}
         <button
           type="button"
