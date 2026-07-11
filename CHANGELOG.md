@@ -1,3 +1,15 @@
+# [1.0.0-dev.7](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.6...v1.0.0-dev.7) (2026-07-11)
+
+
+### Bug Fixes
+
+* scan position ([893e36e](https://github.com/cunex-club/quickattend-web/commit/893e36e3d131700fc0a761d2c27fe66112edaec7))
+
+
+### Features
+
+* mapcn ([bf09af3](https://github.com/cunex-club/quickattend-web/commit/bf09af37de651b3bbf36404d1aab789b8d0fbc8e))
+
 # [1.0.0-dev.6](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.5...v1.0.0-dev.6) (2026-07-09)
 
 
