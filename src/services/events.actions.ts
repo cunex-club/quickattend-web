@@ -15,7 +15,6 @@ import {
 import type { APIResponse } from "@customTypes/events";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
-const OWNER_REF_ID = process.env.NEXT_PUBLIC_LOG_IN_REF_ID;
 const JWT_COOKIE_NAME = "jwt";
 
 const toApiPage = (page: number) => Math.max(page - 1, 0);
@@ -124,17 +123,6 @@ export async function createEvent(
   req: CreateEventReq,
 ): Promise<CreateEventAPIResponse> {
   const token = await getAuthToken();
-  const managersAndStaff = req.managers_and_staff;
-  const isOwnerIncluded = managersAndStaff.some(
-    (manager) => manager.role === "OWNER",
-  );
-
-  if (!isOwnerIncluded && OWNER_REF_ID) {
-    managersAndStaff.push({
-      ref_id: Number(OWNER_REF_ID),
-      role: "OWNER",
-    });
-  }
 
   const res = await fetch(`${API_HOST}/events`, {
     method: "POST",
@@ -142,7 +130,7 @@ export async function createEvent(
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ ...req, managers_and_staff: managersAndStaff }),
+    body: JSON.stringify(req),
   });
 
   if (!res.ok) {
