@@ -142,8 +142,9 @@ export function mapEventResToForm(res: GetOneEventRes): {
     startTime,
     endTime,
     location: res.location,
-    lat: res.location_lat,
-    lng: res.location_long,
+    // API's location_lat/location_long swapped
+    lat: res.location_long,
+    lng: res.location_lat,
     agenda: res.agenda.map((item) => ({
       id: crypto.randomUUID(),
       activity_name: item.activity_name,
