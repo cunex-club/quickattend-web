@@ -1,3 +1,10 @@
+# [1.0.0-dev.9](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.8...v1.0.0-dev.9) (2026-07-14)
+
+
+### Bug Fixes
+
+* lat lng swap ([b514511](https://github.com/cunex-club/quickattend-web/commit/b514511e545ca6a0aa3fbbdca88564ea2a132df2))
+
 # [1.0.0-dev.8](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.7...v1.0.0-dev.8) (2026-07-11)
 
 
