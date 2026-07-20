@@ -213,7 +213,7 @@ const EventEditTemplate = () => {
   const saveAndExit = async () => {
     const saved = await saveEvent();
     if (saved) {
-      window.location.href = "/events";
+      window.location.href = `/events/${eventId}`;
     }
   };
 

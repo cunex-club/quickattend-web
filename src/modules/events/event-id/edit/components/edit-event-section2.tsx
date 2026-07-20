@@ -136,7 +136,11 @@ const EditEventSection2 = ({
             <div className="flex gap-4 flex-col sm:flex-row w-full">
               <div className="flex flex-col gap-2 flex-1">
                 <Input
-                  value={facultyQuery}
+                  value={
+                    locale === "en"
+                      ? (FacultyEnByTh[facultyQuery] ?? facultyQuery)
+                      : facultyQuery
+                  }
                   onChange={(e) => {
                     const value = e.target.value;
 

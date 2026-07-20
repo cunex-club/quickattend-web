@@ -52,6 +52,15 @@ export interface GetOneEventWhitelist {
   profile_image_url: string;
 }
 
+export interface GetOneEventUserPending {
+  ref_id: string;
+  role: string;
+}
+
+export interface GetOneEventWhitelistPending {
+  ref_id: string;
+}
+
 export interface GetOneEventAllowedFaculty {
   faculty_no: number;
 }
@@ -73,8 +82,10 @@ export interface GetOneEventRes {
   role: string | null;
   agenda: AgendaItem[];
   users: GetOneEventUser[];
+  users_pending: GetOneEventUserPending[];
   allowed_faculties: GetOneEventAllowedFaculty[];
   whitelist: GetOneEventWhitelist[];
+  whitelist_pending: GetOneEventWhitelistPending[];
 }
 
 // ===========================

@@ -134,6 +134,11 @@ export function mapEventResToForm(res: GetOneEventRes): {
   const endTime = new Date(res.end_time);
 
   const owner = res.users.find((user) => user.role === "OWNER");
+  // Legacy events created before the owner-attribution fix may still have
+  // their owner stuck in users_pending instead of users.
+  const pendingOwnerRefId = res.users_pending.find(
+    (user) => user.role === "OWNER",
+  )?.ref_id;
 
   const form: EventFormInterface = {
     name: res.name,
@@ -156,24 +161,42 @@ export function mapEventResToForm(res: GetOneEventRes): {
     selectedFaculties: res.allowed_faculties
       .map((f) => FACULTY_NO_TO_NAME[f.faculty_no])
       .filter((name): name is string => name !== undefined),
-    selectedStudents: res.whitelist.map((w) => ({
-      id: w.ref_id,
-      name: formatPersonName(w),
-    })),
+    selectedStudents: [
+      ...res.whitelist.map((w) => ({
+        id: w.ref_id,
+        name: formatPersonName(w),
+      })),
+      // Pending entries: the ref_id was whitelisted before that person ever
+      // logged in, so there's no profile to format a name from yet.
+      ...res.whitelist_pending.map((w) => ({
+        id: w.ref_id,
+        name: w.ref_id,
+      })),
+    ],
     revealed_fields: res.revealed_fields
       .map((field) => API_TO_PARTICIPANT_FIELD[field])
       .filter((field): field is ParticipantFieldType => field !== undefined),
-    managers_and_staff: res.users
-      .filter((user) => user.role !== "OWNER")
-      .map((user) => ({
-        id: user.ref_id,
-        name: formatPersonName(user),
-        role: API_TO_MANAGER_ROLE[user.role],
-      }))
-      .filter((manager) => manager.role !== undefined),
+    managers_and_staff: [
+      ...res.users
+        .filter((user) => user.role !== "OWNER")
+        .map((user) => ({
+          id: user.ref_id,
+          name: formatPersonName(user),
+          role: API_TO_MANAGER_ROLE[user.role],
+        })),
+      // Pending entries: added as manager/staff before that person ever
+      // logged in, so there's no profile to format a name from yet.
+      ...res.users_pending
+        .filter((user) => user.role !== "OWNER")
+        .map((user) => ({
+          id: user.ref_id,
+          name: user.ref_id,
+          role: API_TO_MANAGER_ROLE[user.role],
+        })),
+    ].filter((manager) => manager.role !== undefined),
     allow_all_to_scan: res.allow_all_to_scan,
     evaluation_form: res.evaluation_form ?? "",
   };
 
-  return { form, ownerRefId: owner?.ref_id ?? null };
+  return { form, ownerRefId: owner?.ref_id ?? pendingOwnerRefId ?? null };
 }
