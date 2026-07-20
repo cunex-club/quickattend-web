@@ -415,6 +415,9 @@ const CreateEventStep2 = ({
           <Checkbox
             id="scanSettingImages"
             className="cursor-pointer"
+            checked={eventForm.revealed_fields.includes(
+              ParticipantFieldType.PHOTO,
+            )}
             onCheckedChange={() => {
               if (
                 eventForm.revealed_fields.includes(ParticipantFieldType.PHOTO)
@@ -449,6 +452,9 @@ const CreateEventStep2 = ({
           <Checkbox
             id="scanSettingName"
             className="cursor-pointer"
+            checked={eventForm.revealed_fields.includes(
+              ParticipantFieldType.NAME,
+            )}
             onCheckedChange={() => {
               if (
                 eventForm.revealed_fields.includes(ParticipantFieldType.NAME)
@@ -483,6 +489,9 @@ const CreateEventStep2 = ({
           <Checkbox
             id="scanSettingId"
             className="cursor-pointer"
+            checked={eventForm.revealed_fields.includes(
+              ParticipantFieldType.REFID,
+            )}
             onCheckedChange={() => {
               if (
                 eventForm.revealed_fields.includes(ParticipantFieldType.REFID)
@@ -517,6 +526,9 @@ const CreateEventStep2 = ({
           <Checkbox
             id="scanSettingFaculty"
             className="cursor-pointer"
+            checked={eventForm.revealed_fields.includes(
+              ParticipantFieldType.ORGANIZATION,
+            )}
             onCheckedChange={() => {
               if (
                 eventForm.revealed_fields.includes(
