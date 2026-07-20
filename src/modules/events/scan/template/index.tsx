@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import ScanInfoPanel from "@modules/events/scan/components/ScanInfoPanel";
 import ScanCameraPanel from "@modules/events/scan/components/ScanCameraPanel";
@@ -97,6 +98,8 @@ const ScanTemplate = () => {
   // no modal (JS said not mobile).
   const isCompactLayout = isMobile || isTablet;
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const requestedEventId = searchParams.get("eventId");
   const [events, setEvents] = useState<ScanEvent[]>([]);
   const [selectedEventId, setSelectedEventId] = useState("");
   const [recentParticipants, setRecentParticipants] = useState<Participant[]>(
@@ -181,7 +184,16 @@ const ScanTemplate = () => {
 
         setEvents(mappedEvents);
         setIsNoEventsModalOpen(mappedEvents.length === 0);
-        setSelectedEventId((prev) => prev || mappedEvents[0]?.id || "");
+        const requestedEventExists =
+          requestedEventId &&
+          mappedEvents.some((event) => event.id === requestedEventId);
+        setSelectedEventId(
+          (prev) =>
+            prev ||
+            (requestedEventExists ? requestedEventId : undefined) ||
+            mappedEvents[0]?.id ||
+            "",
+        );
       } catch (error) {
         console.error(t("errors.failedToFetchEvents"), error);
         setEvents([]);

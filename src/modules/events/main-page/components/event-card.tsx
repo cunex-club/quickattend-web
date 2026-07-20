@@ -63,7 +63,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
   const handleScanClick = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    router.push("/scan");
+    router.push(`/scan?eventId=${eventId}`);
   };
 
   const handleStatsClick = (event: MouseEvent) => {

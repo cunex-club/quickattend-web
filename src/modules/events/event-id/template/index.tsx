@@ -187,7 +187,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             bordered="round"
             expanded={true}
             className="flex-1"
-            onClick={() => router.push("/scan")}
+            onClick={() => router.push(`/scan?eventId=${eventId}`)}
           >
             <div className="flex justify-center items-center gap-2 text-neutral-white">
               <IonIcon name="Scan" className="w-6 h-6 md:w-9 md:h-9" />
