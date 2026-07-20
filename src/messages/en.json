@@ -154,6 +154,10 @@
       "save": "Save",
       "defaultError": "Registration could not be completed right now.",
       "permissionError": "You are not authorized to register for this event.",
+      "eventNotFoundError": "This event could not be found.",
+      "scannerNoPermissionError": "You don't have permission to scan for this event.",
+      "invalidQrError": "Invalid QR code.",
+      "serverErrorWithDetail": "Something went wrong: {message}",
       "unknownParticipant": "Unknown participant"
     },
     "resultModal": {

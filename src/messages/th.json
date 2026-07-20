@@ -157,6 +157,10 @@
       "save": "บันทึก",
       "defaultError": "ไม่สามารถลงทะเบียนได้ในขณะนี้",
       "permissionError": "ไม่อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม",
+      "eventNotFoundError": "ไม่พบกิจกรรมนี้",
+      "scannerNoPermissionError": "คุณไม่มีสิทธิ์สแกนสำหรับกิจกรรมนี้",
+      "invalidQrError": "QR โค้ดไม่ถูกต้อง",
+      "serverErrorWithDetail": "เกิดข้อผิดพลาด: {message}",
       "unknownParticipant": "ไม่พบข้อมูลผู้เข้าร่วม"
     },
     "resultModal": {

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "@i18n/navigation";
@@ -37,11 +36,7 @@ const SidebarClient = ({ currentUser }: SidebarClientProps) => {
   const isActivePath = (href: string) => pathname === href;
   const displayName = formatFullName(currentUser, locale);
   const avatarFallback = getAvatarFallback(currentUser);
-  const [avatarError, setAvatarError] = useState(false);
-  const avatarSrc =
-    !avatarError && currentUser?.profile_image_url
-      ? currentUser.profile_image_url
-      : "/logo/cu-nex.png";
+  const avatarSrc = "/logo/cu-nex.png";
 
   return (
     <div className="w-38.5 px-10 pt-8 pb-10 bg-neutral-100 h-screen justify-between flex flex-col">
@@ -119,11 +114,7 @@ const SidebarClient = ({ currentUser }: SidebarClientProps) => {
           <PopoverTrigger asChild>
             <button className="rounded-full overflow-hidden border-2 border-primary hover:border-secondary transition-colors cursor-pointer">
               <Avatar className="w-15 h-15">
-                <AvatarImage
-                  src={avatarSrc}
-                  alt={displayName}
-                  onError={() => setAvatarError(true)}
-                />
+                <AvatarImage src={avatarSrc} alt={displayName} />
                 <AvatarFallback className="text-primary">
                   {avatarFallback}
                 </AvatarFallback>
@@ -138,11 +129,7 @@ const SidebarClient = ({ currentUser }: SidebarClientProps) => {
             <div className="flex flex-col space-y-6">
               <section className="flex flex-row justify-between items-center">
                 <Avatar className="w-15 h-15 border-2 border-neutral-300">
-                  <AvatarImage
-                    src={avatarSrc}
-                    alt={displayName}
-                    onError={() => setAvatarError(true)}
-                  />
+                  <AvatarImage src={avatarSrc} alt={displayName} />
                   <AvatarFallback className="text-primary">
                     {avatarFallback}
                   </AvatarFallback>

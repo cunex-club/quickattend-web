@@ -125,11 +125,26 @@ const ScanTemplate = () => {
   );
 
   const getFailedScanMessage = (error: APIRequestError) => {
-    if (error.code === "PARTICIPANT_NO_PERMISSION" || error.status === 403) {
+    switch (error.code) {
+      case "PARTICIPANT_NO_PERMISSION":
+        return t("resultPanel.permissionError");
+      case "SCANNER_NO_PERMISSION":
+        return t("resultPanel.scannerNoPermissionError");
+      case "EVENT_NOT_FOUND":
+        return t("resultPanel.eventNotFoundError");
+      case "INVALID_QR":
+        return t("resultPanel.invalidQrError");
+    }
+
+    if (error.status === 403) {
       return t("resultPanel.permissionError");
     }
 
-    return error.message || t("resultPanel.defaultError");
+    if (error.message) {
+      return t("resultPanel.serverErrorWithDetail", { message: error.message });
+    }
+
+    return t("resultPanel.defaultError");
   };
 
   const startScanCooldown = () => {
