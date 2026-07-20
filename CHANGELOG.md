@@ -1,3 +1,10 @@
+# [1.0.0-dev.10](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.9...v1.0.0-dev.10) (2026-07-14)
+
+
+### Bug Fixes
+
+* remove dead code ([5bcfc82](https://github.com/cunex-club/quickattend-web/commit/5bcfc82554c3b426865303a0101b5524106c24ef))
+
 # [1.0.0-dev.9](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.8...v1.0.0-dev.9) (2026-07-14)
 
 
