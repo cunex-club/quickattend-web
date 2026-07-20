@@ -1,3 +1,13 @@
+# [1.0.0-dev.11](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.10...v1.0.0-dev.11) (2026-07-20)
+
+
+### Bug Fixes
+
+* checkbox ([59d0417](https://github.com/cunex-club/quickattend-web/commit/59d04175e815cea057c87b46ce5daaaf0cb96967))
+* event edit and create ([d1c2374](https://github.com/cunex-club/quickattend-web/commit/d1c2374e8c590794ccccc3be57d1f0a5c934ca2d))
+* scan redirect ([434d9c1](https://github.com/cunex-club/quickattend-web/commit/434d9c1a229ddc86820c03d500e6ef0f2e376d3a))
+* scan wording ([794b724](https://github.com/cunex-club/quickattend-web/commit/794b7247c91782504525b7f06a733301d166006f))
+
 # [1.0.0-dev.10](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.9...v1.0.0-dev.10) (2026-07-14)
 
 
