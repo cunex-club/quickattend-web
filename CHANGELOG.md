@@ -1,3 +1,10 @@
+# [1.0.0-dev.19](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.18...v1.0.0-dev.19) (2026-07-22)
+
+
+### Bug Fixes
+
+* modal not show ([b8c2841](https://github.com/cunex-club/quickattend-web/commit/b8c2841c4554c239977f862f7390eca4810fa37a))
+
 # [1.0.0-dev.18](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.17...v1.0.0-dev.18) (2026-07-22)
 
 
