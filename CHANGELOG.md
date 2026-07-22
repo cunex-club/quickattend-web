@@ -1,3 +1,10 @@
+# [1.0.0-dev.14](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.13...v1.0.0-dev.14) (2026-07-22)
+
+
+### Bug Fixes
+
+* disable scan and stats if not the time for events ([5a8c825](https://github.com/cunex-club/quickattend-web/commit/5a8c8251f42500259740f1bcfdd50a47f4a0fab0))
+
 # [1.0.0-dev.13](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.12...v1.0.0-dev.13) (2026-07-22)
 
 
