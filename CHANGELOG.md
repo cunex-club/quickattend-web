@@ -1,44 +1,38 @@
 # [1.0.0-dev.10](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.9...v1.0.0-dev.10) (2026-07-14)
 
-
 ### Bug Fixes
 
-* remove dead code ([5bcfc82](https://github.com/cunex-club/quickattend-web/commit/5bcfc82554c3b426865303a0101b5524106c24ef))
+- remove dead code ([5bcfc82](https://github.com/cunex-club/quickattend-web/commit/5bcfc82554c3b426865303a0101b5524106c24ef))
 
 # [1.0.0-dev.9](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.8...v1.0.0-dev.9) (2026-07-14)
 
-
 ### Bug Fixes
 
-* lat lng swap ([b514511](https://github.com/cunex-club/quickattend-web/commit/b514511e545ca6a0aa3fbbdca88564ea2a132df2))
+- lat lng swap ([b514511](https://github.com/cunex-club/quickattend-web/commit/b514511e545ca6a0aa3fbbdca88564ea2a132df2))
 
 # [1.0.0-dev.8](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.7...v1.0.0-dev.8) (2026-07-11)
 
-
 ### Bug Fixes
 
-* switch camera ([d99e3d3](https://github.com/cunex-club/quickattend-web/commit/d99e3d30c936969c274070b499053180666da0a7))
+- switch camera ([d99e3d3](https://github.com/cunex-club/quickattend-web/commit/d99e3d30c936969c274070b499053180666da0a7))
 
 # [1.0.0-dev.7](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.6...v1.0.0-dev.7) (2026-07-11)
 
-
 ### Bug Fixes
 
-* scan position ([893e36e](https://github.com/cunex-club/quickattend-web/commit/893e36e3d131700fc0a761d2c27fe66112edaec7))
-
+- scan position ([893e36e](https://github.com/cunex-club/quickattend-web/commit/893e36e3d131700fc0a761d2c27fe66112edaec7))
 
 ### Features
 
-* mapcn ([bf09af3](https://github.com/cunex-club/quickattend-web/commit/bf09af37de651b3bbf36404d1aab789b8d0fbc8e))
+- mapcn ([bf09af3](https://github.com/cunex-club/quickattend-web/commit/bf09af37de651b3bbf36404d1aab789b8d0fbc8e))
 
 # [1.0.0-dev.6](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.5...v1.0.0-dev.6) (2026-07-09)
 
-
 ### Bug Fixes
 
-* fetchUserByRefId ([63a645b](https://github.com/cunex-club/quickattend-web/commit/63a645b43923ef008b7adb118a6b94eb18f0ecbf))
-* logout ([185ff47](https://github.com/cunex-club/quickattend-web/commit/185ff472fac2b5302a92560d3adf0a627649c030))
-* student type ([90ade68](https://github.com/cunex-club/quickattend-web/commit/90ade68d198f5f70cb8e1e4c798c8892bdd6213d))
+- fetchUserByRefId ([63a645b](https://github.com/cunex-club/quickattend-web/commit/63a645b43923ef008b7adb118a6b94eb18f0ecbf))
+- logout ([185ff47](https://github.com/cunex-club/quickattend-web/commit/185ff472fac2b5302a92560d3adf0a627649c030))
+- student type ([90ade68](https://github.com/cunex-club/quickattend-web/commit/90ade68d198f5f70cb8e1e4c798c8892bdd6213d))
 
 # [1.0.0-dev.5](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2026-07-08)
 

@@ -3,6 +3,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
+import { cn } from "@assets/lib/utils";
+import { StyleableFC } from "@utils/misc";
 import ScanInfoPanel from "@modules/events/scan/components/ScanInfoPanel";
 import ScanCameraPanel from "@modules/events/scan/components/ScanCameraPanel";
 import ScanParticipantsPanel from "@modules/events/scan/components/ScanParticipantsPanel";
@@ -85,6 +88,17 @@ const saveStoredRecentParticipants = (
     // storage quota/serialization errors — non-critical, ignore
   }
 };
+
+const ScanCameraPlaceholder: StyleableFC = ({ className }) => (
+  <div
+    className={cn(
+      "flex items-center justify-center rounded-[40px] bg-white",
+      className,
+    )}
+  >
+    <Loader2 className="size-8 animate-spin text-primary" />
+  </div>
+);
 
 const ScanTemplate = () => {
   const t = useTranslations("Scan");
@@ -342,12 +356,16 @@ const ScanTemplate = () => {
           selectedEvent={selectedEvent}
           onEventChange={setSelectedEventId}
           cameraSlot={
-            <ScanCameraPanel
-              key={selectedEventId}
-              paused={isSubmittingScan || isResultModalOpen || isScanCooldown}
-              onScan={handleScan}
-              className="h-full w-full min-h-[420px] rounded-[40px] bg-transparent"
-            />
+            selectedEventId ? (
+              <ScanCameraPanel
+                key={selectedEventId}
+                paused={isSubmittingScan || isResultModalOpen || isScanCooldown}
+                onScan={handleScan}
+                className="h-full w-full min-h-[420px] rounded-[40px] bg-transparent"
+              />
+            ) : (
+              <ScanCameraPlaceholder className="h-full w-full min-h-[420px] bg-transparent" />
+            )
           }
         />
         {scanResult ? (
@@ -378,24 +396,30 @@ const ScanTemplate = () => {
             onBackToScan={() => setScanResult(null)}
             className="min-h-0"
           />
-        ) : (
+        ) : selectedEventId ? (
           <ScanCameraPanel
             key={selectedEventId}
             paused={isSubmittingScan || isResultModalOpen || isScanCooldown}
             onScan={handleScan}
             className="min-h-0"
           />
+        ) : (
+          <ScanCameraPlaceholder className="min-h-0" />
         )}
       </div>
 
       {/* ── Mobile / portrait (< lg): Camera + compact event info, no stats ── */}
       <div className="flex flex-col lg:hidden min-h-screen p-4 gap-4">
-        <ScanCameraPanel
-          key={selectedEventId}
-          paused={isSubmittingScan || isResultModalOpen || isScanCooldown}
-          onScan={handleScan}
-          className="flex-1 min-h-[60vh]"
-        />
+        {selectedEventId ? (
+          <ScanCameraPanel
+            key={selectedEventId}
+            paused={isSubmittingScan || isResultModalOpen || isScanCooldown}
+            onScan={handleScan}
+            className="flex-1 min-h-[60vh]"
+          />
+        ) : (
+          <ScanCameraPlaceholder className="flex-1 min-h-[60vh]" />
+        )}
         <ScanInfoPanel
           events={events}
           selectedEvent={selectedEvent}
