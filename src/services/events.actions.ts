@@ -16,6 +16,7 @@ import type { APIResponse } from "@customTypes/events";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 const JWT_COOKIE_NAME = "jwt";
+const API_TIMEOUT_MS = 10_000;
 
 const toApiPage = (page: number) => Math.max(page - 1, 0);
 
@@ -38,6 +39,7 @@ export async function fetchEventById(
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    signal: AbortSignal.timeout(API_TIMEOUT_MS),
   });
 
   if (!res.ok) {
@@ -60,6 +62,7 @@ export async function fetchManagedEvents(
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    signal: AbortSignal.timeout(API_TIMEOUT_MS),
   });
 
   if (!res.ok) {
@@ -85,6 +88,7 @@ export async function fetchAttendedEvents(
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    signal: AbortSignal.timeout(API_TIMEOUT_MS),
   });
 
   if (!res.ok) {
@@ -110,6 +114,7 @@ export async function fetchDiscoveryEvents(
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    signal: AbortSignal.timeout(API_TIMEOUT_MS),
   });
 
   if (!res.ok) {
@@ -131,6 +136,7 @@ export async function createEvent(
       "Content-Type": "application/json",
     },
     body: JSON.stringify(req),
+    signal: AbortSignal.timeout(API_TIMEOUT_MS),
   });
 
   if (!res.ok) {
@@ -173,6 +179,7 @@ export async function updateEvent(
       "Content-Type": "application/json",
     },
     body: JSON.stringify(req),
+    signal: AbortSignal.timeout(API_TIMEOUT_MS),
   });
 
   if (!res.ok) {
@@ -223,6 +230,7 @@ export async function postParticipantScan(
         scanned_location_long: scannedLocationLong,
         scanned_location_lat: scannedLocationLat,
       }),
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
     },
   );
 

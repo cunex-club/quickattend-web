@@ -10,6 +10,7 @@ const AUTH_USER_URL = process.env.BACKEND_PROXY_URL
     ? `${process.env.NEXT_PUBLIC_API_HOST}/auth/user`
     : null;
 const JWT_COOKIE_NAME = "jwt";
+const API_TIMEOUT_MS = 10_000;
 
 export async function getCurrentUser(): Promise<CurrentUser | null> {
   try {
@@ -36,6 +37,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
         Authorization: `Bearer ${token}`,
       },
       cache: "no-store",
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
     });
 
     if (!response.ok) {
