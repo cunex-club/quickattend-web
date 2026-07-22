@@ -1,3 +1,10 @@
+# [1.0.0-dev.15](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.14...v1.0.0-dev.15) (2026-07-22)
+
+
+### Bug Fixes
+
+* multiple cameras rendering at the same time + add error logs ([41a348e](https://github.com/cunex-club/quickattend-web/commit/41a348eae573ce97433c33b5e6c2c691222129e9))
+
 # [1.0.0-dev.14](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.13...v1.0.0-dev.14) (2026-07-22)
 
 
