@@ -188,7 +188,10 @@ const ScanTemplate = () => {
     const loadEvents = async () => {
       try {
         const res = await fetchManagedEvents();
-        const mappedEvents: ScanEvent[] = res.data.map((event) => ({
+        const startedEvents = res.data.filter(
+          (event) => new Date(event.start_time) <= new Date(),
+        );
+        const mappedEvents: ScanEvent[] = startedEvents.map((event) => ({
           id: event.id,
           name: event.name,
           startTime: formatTime(event.start_time),

@@ -1,10 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import DashboardNav from "@components/dashboard/DashboardNav";
 import { useRole } from "@context/RoleContext";
 import { useTranslations } from "next-intl";
 import { DashboardApolloProvider } from "@graphql/provider";
+import { useRouter } from "@i18n/navigation";
+import { fetchEventById } from "@services/events.actions";
 
 export default function DashboardGroupLayout({
   children,
@@ -13,7 +16,37 @@ export default function DashboardGroupLayout({
 }) {
   const { role } = useRole();
   const t = useTranslations("Dashboard.navbar");
+  const router = useRouter();
   const { locale, id } = useParams<{ locale: string; id: string }>();
+
+  const [checkingAccess, setCheckingAccess] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const checkEventStarted = async () => {
+      setCheckingAccess(true);
+      try {
+        const res = await fetchEventById(id);
+        const hasStarted = new Date(res.data.start_time) <= new Date();
+        if (!cancelled && !hasStarted) {
+          router.replace(`/events/${id}`);
+          return;
+        }
+      } catch (err) {
+        console.error("Failed to verify event before showing dashboard:", err);
+      } finally {
+        if (!cancelled) {
+          setCheckingAccess(false);
+        }
+      }
+    };
+
+    checkEventStarted();
+    return () => {
+      cancelled = true;
+    };
+  }, [id, router]);
 
   const tabs = [
     { id: "overview", label: t("overview"), href: `/dashboard/${id}` },
@@ -23,6 +56,10 @@ export default function DashboardGroupLayout({
       href: `/dashboard/${id}/compare`,
     },
   ];
+
+  if (checkingAccess) {
+    return null;
+  }
 
   return (
     <DashboardApolloProvider>

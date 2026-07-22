@@ -17,6 +17,7 @@ type EventCardProps = {
   location: string;
   organizer?: string;
   isEnd: boolean;
+  hasStarted?: boolean;
   hideRole?: boolean;
   evaluationForm?: string | null;
 };
@@ -30,6 +31,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
   location,
   organizer,
   isEnd,
+  hasStarted = true,
   hideRole = false,
   evaluationForm,
   className,
@@ -151,6 +153,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
             mode="filled"
             bordered="round"
             expanded
+            disabled={!hasStarted}
             onClick={handleScanClick}
           >
             <div className="flex justify-center items-center gap-2">
@@ -170,6 +173,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
           mode="outline"
           bordered="round"
           expanded
+          disabled={!hasStarted}
           onClick={handleStatsClick}
         >
           <div className="flex justify-center items-center gap-2">
@@ -218,6 +222,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
             mode="filled"
             bordered="round"
             expanded
+            disabled={!hasStarted}
             onClick={handleScanClick}
             className="!px-4 !py-2"
           >
@@ -239,6 +244,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
           bordered="round"
           expanded={false}
           className="!px-4 !py-2"
+          disabled={!hasStarted}
           onClick={handleStatsClick}
         >
           <div className="flex justify-center items-center gap-2">

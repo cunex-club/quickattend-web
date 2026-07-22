@@ -99,6 +99,8 @@ const EventSearchTemplate = () => {
               ? [1, 2].map((key) => <EventCardSkeleton key={key} />)
               : events.map((event) => {
                   const isEnd = new Date(event.end_time) < new Date();
+                  const hasStarted =
+                    new Date(event.start_time) <= new Date();
                   const dateStr = formatEventDate(event.start_time, locale);
                   const timeStr = formatEventTimeRange(
                     event.start_time,
@@ -117,6 +119,7 @@ const EventSearchTemplate = () => {
                       location={event.location}
                       hideRole
                       isEnd={isEnd}
+                      hasStarted={hasStarted}
                       evaluationForm={event.evaluation_form}
                     />
                   );

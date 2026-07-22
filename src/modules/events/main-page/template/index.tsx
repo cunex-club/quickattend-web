@@ -243,6 +243,7 @@ const EventPageTemplate = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {filteredCurrentManagedEvents.map((event) => {
               const isEnd = new Date(event.end_time) < new Date();
+              const hasStarted = new Date(event.start_time) <= new Date();
               const dateStr = formatEventDate(event.start_time, locale);
               const timeStr = formatEventTimeRange(
                 event.start_time,
@@ -261,6 +262,7 @@ const EventPageTemplate = () => {
                   location={event.location}
                   organizer={event.organizer}
                   isEnd={isEnd}
+                  hasStarted={hasStarted}
                   evaluationForm={event.evaluation_form}
                 />
               );

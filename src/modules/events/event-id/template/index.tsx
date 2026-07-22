@@ -54,6 +54,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
 
   const canEdit = eventData.role === "OWNER" || eventData.role === "MANAGER";
   const isEnd = new Date(eventData.end_time) < new Date();
+  const hasStarted = new Date(eventData.start_time) <= new Date();
   const showEvaluationForm = isEnd && !!eventData.evaluation_form;
 
   const roleLabel =
@@ -187,6 +188,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             bordered="round"
             expanded={true}
             className="flex-1"
+            disabled={!hasStarted}
             onClick={() => router.push(`/scan?eventId=${eventId}`)}
           >
             <div className="flex justify-center items-center gap-2 text-neutral-white">
@@ -202,6 +204,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           bordered="round"
           expanded={true}
           className="hidden md:block flex-1"
+          disabled={!hasStarted}
           onClick={() => router.push(`/dashboard/${eventId}`)}
         >
           <div className="flex justify-center text-primary items-center gap-2">
@@ -239,6 +242,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             bordered="round"
             expanded={false}
             className="md:hidden"
+            disabled={!hasStarted}
             onClick={() => router.push(`/dashboard/${eventId}`)}
           >
             <IonIcon
