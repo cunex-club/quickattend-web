@@ -1,3 +1,10 @@
+# [1.0.0-dev.16](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.15...v1.0.0-dev.16) (2026-07-22)
+
+
+### Bug Fixes
+
+* lib ([44cdb8c](https://github.com/cunex-club/quickattend-web/commit/44cdb8c53417d8f5fbe0eea53ea3f0ab02d8b852))
+
 # [1.0.0-dev.15](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.14...v1.0.0-dev.15) (2026-07-22)
 
 
