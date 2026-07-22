@@ -29,6 +29,8 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
   const [linkCopied, setLinkCopied] = useState(false);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDeviceIndex, setSelectedDeviceIndex] = useState(-1);
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   const activeDeviceId =
     deviceId ??
@@ -46,6 +48,7 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
     if (!video || paused) return;
 
     let cancelled = false;
+    setCameraError(null);
     const scanner = new ZXingScanner();
     scanner
       .start({
@@ -59,6 +62,9 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
           lastScannedTextRef.current = text;
           onScanRef.current?.(text);
         },
+        onError: (error) => {
+          console.error("[camera:scan]", error.name, error.message);
+        },
       })
       .then(() => {
         if (deviceId || cancelled) return;
@@ -66,15 +72,23 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
           if (!cancelled) setDevices(list);
         });
       })
-      .catch(() => {
-        if (!cancelled) setDevices([]);
+      .catch((error) => {
+        console.error("[camera:start]", error?.name, error?.message);
+        if (!cancelled) {
+          setDevices([]);
+          setCameraError(error?.name ?? "UnknownError");
+        }
       });
 
     return () => {
       cancelled = true;
       scanner.stop();
     };
-  }, [activeDeviceId, paused, deviceId]);
+  }, [activeDeviceId, paused, deviceId, retryCount]);
+
+  const handleRetry = useCallback(() => {
+    setRetryCount((prev) => prev + 1);
+  }, []);
 
   const copyLink = useCallback(async () => {
     try {
@@ -122,6 +136,29 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
         playsInline
         muted
       />
+
+      {cameraError && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-white p-6 text-center">
+          <p className="title-medium-primary text-neutral-black">
+            {cameraError === "NotAllowedError"
+              ? t("cameraPanel.permissionDeniedError")
+              : cameraError === "NotReadableError"
+                ? t("cameraPanel.cameraInUseError")
+                : cameraError === "NotFoundError"
+                  ? t("cameraPanel.cameraNotFoundError")
+                  : cameraError === "OverconstrainedError"
+                    ? t("cameraPanel.cameraConstraintError")
+                    : t("cameraPanel.genericError")}
+          </p>
+          <button
+            type="button"
+            onClick={handleRetry}
+            className="rounded-full bg-primary px-4 py-2 text-neutral-white"
+          >
+            {t("cameraPanel.retry")}
+          </button>
+        </div>
+      )}
 
       {/* Bottom action bar */}
       <div className="absolute bottom-5 right-5 flex items-center justify-end gap-2">

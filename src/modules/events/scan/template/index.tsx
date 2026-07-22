@@ -15,7 +15,11 @@ import ScanResultModal, {
   type ScanResultModalData,
 } from "@modules/events/scan/components/ScanResultModal";
 import type { Participant, ScanEvent } from "@modules/events/scan/constants";
-import { useIsMobile, useIsTablet } from "@assets/hooks/use-mobile";
+import {
+  useIsMobile,
+  useIsTablet,
+  useIsDesktop2xl,
+} from "@assets/hooks/use-mobile";
 import { useRouter } from "@i18n/navigation";
 import { APIRequestError } from "@services/events";
 import {
@@ -104,6 +108,7 @@ const ScanTemplate = () => {
   const t = useTranslations("Scan");
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
+  const isDesktop2xl = useIsDesktop2xl();
   // The "mobile" CSS layout (camera-only, no inline result panel) is shown
   // below the `lg` breakpoint (1024px), which spans both the isMobile
   // (<768px) and isTablet (768-1023px) hook ranges. Gating the result modal
@@ -359,9 +364,8 @@ const ScanTemplate = () => {
           selectedEvent={selectedEvent}
           onEventChange={setSelectedEventId}
           cameraSlot={
-            selectedEventId ? (
+            selectedEventId && isDesktop2xl ? (
               <ScanCameraPanel
-                key={selectedEventId}
                 paused={isSubmittingScan || isResultModalOpen || isScanCooldown}
                 onScan={handleScan}
                 className="h-full w-full min-h-[420px] rounded-[40px] bg-transparent"
@@ -399,9 +403,8 @@ const ScanTemplate = () => {
             onBackToScan={() => setScanResult(null)}
             className="min-h-0"
           />
-        ) : selectedEventId ? (
+        ) : selectedEventId && !isCompactLayout && !isDesktop2xl ? (
           <ScanCameraPanel
-            key={selectedEventId}
             paused={isSubmittingScan || isResultModalOpen || isScanCooldown}
             onScan={handleScan}
             className="min-h-0"
@@ -413,9 +416,8 @@ const ScanTemplate = () => {
 
       {/* ── Mobile / portrait (< lg): Camera + compact event info, no stats ── */}
       <div className="flex flex-col lg:hidden min-h-screen p-4 gap-4">
-        {selectedEventId ? (
+        {selectedEventId && isCompactLayout ? (
           <ScanCameraPanel
-            key={selectedEventId}
             paused={isSubmittingScan || isResultModalOpen || isScanCooldown}
             onScan={handleScan}
             className="flex-1 min-h-[60vh]"

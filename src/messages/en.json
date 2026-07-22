@@ -127,7 +127,13 @@
       "copyLink": "Copy Link",
       "linkCopied": "Link copied successfully",
       "linkCopyFailed": "Failed to copy link",
-      "switchCamera": "Switch camera"
+      "switchCamera": "Switch camera",
+      "permissionDeniedError": "Please allow this site to use your camera",
+      "cameraInUseError": "Camera is in use by another app. Please close it and try again",
+      "cameraNotFoundError": "No camera found on this device",
+      "cameraConstraintError": "This camera doesn't support the required settings",
+      "genericError": "Unable to start the camera. Please try again",
+      "retry": "Retry"
     },
     "infoPanel": {
       "selectEvent": "Select event",

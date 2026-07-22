@@ -4,6 +4,7 @@ const BREAKPOINTS = {
   MD: 768,
   LG: 1024,
   XL: 1280,
+  XXL: 1536,
 } as const;
 
 // Hook to detect if viewport is mobile (< 768px / md breakpoint)
@@ -94,4 +95,23 @@ export function useIsDesktop() {
   }, []);
 
   return !!isDesktop;
+}
+
+// Hook to detect if viewport is 2xl desktop (>= 1536px / 2xl breakpoint)
+export function useIsDesktop2xl() {
+  const [isDesktop2xl, setIsDesktop2xl] = React.useState<boolean | undefined>(
+    undefined,
+  );
+
+  React.useEffect(() => {
+    const mql = window.matchMedia(`(min-width: ${BREAKPOINTS.XXL}px)`);
+    const onChange = () => {
+      setIsDesktop2xl(window.innerWidth >= BREAKPOINTS.XXL);
+    };
+    mql.addEventListener("change", onChange);
+    setIsDesktop2xl(window.innerWidth >= BREAKPOINTS.XXL);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  return !!isDesktop2xl;
 }

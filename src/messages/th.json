@@ -130,7 +130,13 @@
       "copyLink": "คัดลอกลิงก์",
       "linkCopied": "คัดลอกลิงก์เรียบร้อยแล้ว",
       "linkCopyFailed": "ไม่สามารถคัดลอกลิงก์ได้",
-      "switchCamera": "สลับกล้อง"
+      "switchCamera": "สลับกล้อง",
+      "permissionDeniedError": "กรุณาอนุญาตให้เว็บไซต์ใช้กล้อง",
+      "cameraInUseError": "กล้องกำลังถูกใช้งานอยู่ กรุณาปิดแอปอื่นแล้วลองใหม่",
+      "cameraNotFoundError": "ไม่พบกล้องในอุปกรณ์นี้",
+      "cameraConstraintError": "การตั้งค่ากล้องไม่รองรับอุปกรณ์นี้",
+      "genericError": "ไม่สามารถเปิดกล้องได้ กรุณาลองใหม่",
+      "retry": "ลองอีกครั้ง"
     },
     "infoPanel": {
       "selectEvent": "เลือกกิจกรรม",
