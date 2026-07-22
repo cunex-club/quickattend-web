@@ -7,6 +7,7 @@ import type {
 type ZXingDecodeError = {
   name?: string;
   message?: string;
+  getKind?: () => string;
 };
 
 type ZXingDecodePayload = {
@@ -34,11 +35,16 @@ const SCAN_LOOP_ERRORS = new Set([
 ]);
 
 const isScanLoopError = (error: ZXingDecodeError): boolean => {
-  if (!error.name) {
+  // error.name comes from the (possibly minified) exception class name and
+  // isn't reliable in production builds — getKind() returns the class's
+  // static `kind` string, which survives minification.
+  const kind = error.getKind?.() ?? error.name;
+
+  if (!kind) {
     return false;
   }
 
-  return SCAN_LOOP_ERRORS.has(error.name);
+  return SCAN_LOOP_ERRORS.has(kind);
 };
 
 export class ZXingScanner {
