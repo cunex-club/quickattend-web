@@ -49,6 +49,8 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
 
     let cancelled = false;
     setCameraError(null);
+
+    lastScannedTextRef.current = null;
     const scanner = new ZXingScanner();
     scanner
       .start({

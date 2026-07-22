@@ -21,7 +21,7 @@ import {
   useIsDesktop2xl,
 } from "@assets/hooks/use-mobile";
 import { useRouter } from "@i18n/navigation";
-import { APIRequestError } from "@services/events";
+import type { APIErrorData } from "@services/events";
 import {
   fetchEventById,
   fetchManagedEvents,
@@ -146,7 +146,7 @@ const ScanTemplate = () => {
     [t],
   );
 
-  const getFailedScanMessage = (error: APIRequestError) => {
+  const getFailedScanMessage = (error: APIErrorData) => {
     switch (error.code) {
       case "PARTICIPANT_NO_PERMISSION":
         return t("resultPanel.permissionError");
@@ -275,7 +275,20 @@ const ScanTemplate = () => {
 
     try {
       const { lat, long } = await getScanLocation();
-      const res = await postParticipantScan(text, selectedEventId, long, lat);
+      const result = await postParticipantScan(text, selectedEventId, long, lat);
+
+      if (!result.ok) {
+        console.error(
+          `Scan failed [${result.error.code}]: ${result.error.message}`,
+        );
+        setScanResult(buildFailedScanResult(getFailedScanMessage(result.error)));
+        if (isCompactLayout) {
+          setIsResultModalOpen(true);
+        }
+        return;
+      }
+
+      const res = result.data;
 
       if (!res.data) {
         setScanResult(buildFailedScanResult(t("resultPanel.defaultError")));
@@ -334,18 +347,10 @@ const ScanTemplate = () => {
         setIsResultModalOpen(true);
       }
     } catch (error) {
-      if (error instanceof APIRequestError) {
-        console.error(`Scan failed [${error.code}]: ${error.message}`);
-        setScanResult(buildFailedScanResult(getFailedScanMessage(error)));
-        if (isCompactLayout) {
-          setIsResultModalOpen(true);
-        }
-      } else {
-        console.error(t("errors.unexpectedScanError"));
-        setScanResult(buildFailedScanResult(t("resultPanel.defaultError")));
-        if (isCompactLayout) {
-          setIsResultModalOpen(true);
-        }
+      console.error(t("errors.unexpectedScanError"));
+      setScanResult(buildFailedScanResult(t("resultPanel.defaultError")));
+      if (isCompactLayout) {
+        setIsResultModalOpen(true);
       }
       console.error(t("errors.failedToSubmitScan"), error);
     } finally {
