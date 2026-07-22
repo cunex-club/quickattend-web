@@ -275,13 +275,20 @@ const ScanTemplate = () => {
 
     try {
       const { lat, long } = await getScanLocation();
-      const result = await postParticipantScan(text, selectedEventId, long, lat);
+      const result = await postParticipantScan(
+        text,
+        selectedEventId,
+        long,
+        lat,
+      );
 
       if (!result.ok) {
         console.error(
           `Scan failed [${result.error.code}]: ${result.error.message}`,
         );
-        setScanResult(buildFailedScanResult(getFailedScanMessage(result.error)));
+        setScanResult(
+          buildFailedScanResult(getFailedScanMessage(result.error)),
+        );
         if (isCompactLayout) {
           setIsResultModalOpen(true);
         }
@@ -339,12 +346,16 @@ const ScanTemplate = () => {
         });
       }
 
-      const selectedEventRes = await fetchEventById(selectedEventId);
-      setTotalParticipants(selectedEventRes.data.total_registered);
-
       setScanResult(modalData);
       if (isCompactLayout) {
         setIsResultModalOpen(true);
+      }
+
+      try {
+        const selectedEventRes = await fetchEventById(selectedEventId);
+        setTotalParticipants(selectedEventRes.data.total_registered);
+      } catch (refreshError) {
+        console.error(t("errors.failedToFetchEventDetail"), refreshError);
       }
     } catch (error) {
       console.error(t("errors.unexpectedScanError"));
