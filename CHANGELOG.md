@@ -1,3 +1,10 @@
+# [1.0.0-dev.17](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.16...v1.0.0-dev.17) (2026-07-22)
+
+
+### Bug Fixes
+
+* logout ([16c75ec](https://github.com/cunex-club/quickattend-web/commit/16c75ecb62dce07c638d85614469ac94b75ee7f1))
+
 # [1.0.0-dev.16](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.15...v1.0.0-dev.16) (2026-07-22)
 
 
