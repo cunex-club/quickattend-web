@@ -15,13 +15,14 @@ import { usePathname, useRouter } from "@i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import type { CurrentUser } from "@customTypes/auth";
 import { formatFullName, getAvatarFallback } from "@modules/layout/utils";
+import { logout } from "@services/auth.actions";
 
 const PAGE_TITLES: Record<string, string> = {
   "/scan": "Events.EventCard.scanParticipant",
 };
 
 const handleLogOut = () => {
-  window.location.href = "/api/auth/logout";
+  logout();
 };
 
 type HeaderProps = {

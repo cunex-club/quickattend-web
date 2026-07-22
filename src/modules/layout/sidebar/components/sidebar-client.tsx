@@ -19,13 +19,14 @@ import { formatFullName, getAvatarFallback } from "@modules/layout/utils";
 import SidebarNavigation from "@modules/layout/sidebar/components/sidebar-navigation";
 import Button from "@shared/Button";
 import IonIcon from "@shared/IonIcon";
+import { logout } from "@services/auth.actions";
 
 type SidebarClientProps = {
   currentUser: CurrentUser | null;
 };
 
 const handleLogOut = () => {
-  window.location.href = "/api/auth/logout";
+  logout();
 };
 
 const SidebarClient = ({ currentUser }: SidebarClientProps) => {
