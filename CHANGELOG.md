@@ -1,3 +1,10 @@
+# [1.0.0-dev.13](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.12...v1.0.0-dev.13) (2026-07-22)
+
+
+### Bug Fixes
+
+* request timeout ([3f4f49a](https://github.com/cunex-club/quickattend-web/commit/3f4f49afd66f83155ab2b53b4c448c69b7dd82d3))
+
 # [1.0.0-dev.12](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.11...v1.0.0-dev.12) (2026-07-22)
 
 
