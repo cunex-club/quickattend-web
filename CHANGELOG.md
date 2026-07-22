@@ -1,3 +1,10 @@
+# [1.0.0-dev.12](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.11...v1.0.0-dev.12) (2026-07-22)
+
+
+### Bug Fixes
+
+* camera not shown ([38dfcb7](https://github.com/cunex-club/quickattend-web/commit/38dfcb7a0ecf9a4e79aa5867e08237f94e64e259))
+
 # [1.0.0-dev.11](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.10...v1.0.0-dev.11) (2026-07-20)
 
 
