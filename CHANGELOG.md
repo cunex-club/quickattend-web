@@ -1,3 +1,10 @@
+# [1.0.0-dev.18](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.17...v1.0.0-dev.18) (2026-07-22)
+
+
+### Bug Fixes
+
+* scan error ([41af5ff](https://github.com/cunex-club/quickattend-web/commit/41af5ffd5a1216afb7dd86e1e3aac32d4cc49955))
+
 # [1.0.0-dev.17](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.16...v1.0.0-dev.17) (2026-07-22)
 
 
