@@ -12,12 +12,20 @@ type NoActiveEventsModalProps = {
   open: boolean;
   onCancel: () => void;
   onConfirm: () => void;
+  // Overrides the default "no active events" copy — used when this modal is
+  // repurposed to surface a load failure instead, so the message actually
+  // matches what happened (a fetch failure isn't the same situation as
+  // legitimately having zero active events, and shouldn't look identical).
+  title?: string;
+  message?: string;
 };
 
 const NoActiveEventsModal = ({
   open,
   onCancel,
   onConfirm,
+  title,
+  message,
 }: NoActiveEventsModalProps) => {
   const t = useTranslations("Scan");
 
@@ -28,11 +36,11 @@ const NoActiveEventsModal = ({
         className="w-[min(94vw,640px)] rounded-[32px] border-0 bg-neutral-white p-6 md:p-8"
       >
         <DialogTitle className="text-center headline-large-emphasized text-neutral-600">
-          {t("noActiveEventsModal.title")}
+          {title ?? t("noActiveEventsModal.title")}
         </DialogTitle>
 
         <div className="text-center title-large-primary text-neutral-600 pt-2 pb-4">
-          {t("noActiveEventsModal.message")}
+          {message ?? t("noActiveEventsModal.message")}
         </div>
 
         <div className="grid grid-cols-2 gap-3 md:gap-4">

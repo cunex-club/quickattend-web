@@ -8,7 +8,7 @@ import React, {
   useMemo,
 } from "react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@i18n/navigation";
 import Button from "@components/Button";
 import { StatCard } from "@components/StatCard";
 import IonIcon from "@shared/IonIcon";
@@ -80,18 +80,19 @@ export function OverviewView({ eventId }: OverviewViewProps) {
     let cancelled = false;
     const loadEvent = async () => {
       setEventDetailLoading(true);
-      try {
-        const res = await fetchEventById(eventId);
-        if (!cancelled) {
-          setEventDetail(res.data);
-        }
-      } catch (err) {
-        console.error("Failed to fetch event:", err);
-      } finally {
-        if (!cancelled) {
-          setEventDetailLoading(false);
-        }
+      const result = await fetchEventById(eventId);
+      if (cancelled) return;
+
+      if (!result.ok) {
+        console.error(
+          `Failed to fetch event [${result.error.code}]: ${result.error.message}`,
+        );
+        setEventDetailLoading(false);
+        return;
       }
+
+      setEventDetail(result.data.data);
+      setEventDetailLoading(false);
     };
 
     loadEvent();

@@ -12,7 +12,10 @@
     "featureCreateEvent": "สร้างกิจกรรมสำหรับแอพ CU NEX",
     "featureScanDigitalId": "สแกนเข้าร่วมกิจกรรมด้วย Digital ID",
     "featureShareLink": "แชร์ลิงก์ให้คนอื่นมาช่วยได้ง่ายๆ",
-    "continueWithCunex": "ดำเนินการต่อด้วย CU NEX"
+    "continueWithCunex": "ดำเนินการต่อด้วย CU NEX",
+    "errorExpired": "ลิงก์เข้าสู่ระบบหมดอายุแล้ว กรุณาเข้าสู่ระบบด้วย CU NEX อีกครั้ง",
+    "errorConfig": "ระบบขัดข้องชั่วคราว กรุณาลองใหม่อีกครั้ง",
+    "errorUnreachable": "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาตรวจสอบการเชื่อมต่อแล้วลองใหม่"
   },
   "ErrorPage": {
     "title": "เกิดข้อผิดพลาดบางอย่าง",
@@ -161,6 +164,8 @@
       "notesPlaceholder": "กรอกหมายเหตุ (ถ้ามี)",
       "addNote": "เพิ่มหมายเหตุ",
       "save": "บันทึก",
+      "saving": "กำลังบันทึก...",
+      "saveFailed": "บันทึกหมายเหตุไม่สำเร็จ กรุณาลองใหม่",
       "defaultError": "ไม่สามารถลงทะเบียนได้ในขณะนี้",
       "permissionError": "ไม่อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม",
       "eventNotFoundError": "ไม่พบกิจกรรมนี้",
@@ -179,12 +184,15 @@
       "notes": "หมายเหตุ",
       "notesPlaceholder": "กรอกหมายเหตุ (ถ้ามี)",
       "done": "เสร็จสิ้น",
+      "saving": "กำลังบันทึก...",
+      "saveFailed": "บันทึกหมายเหตุไม่สำเร็จ กรุณาลองใหม่",
       "defaultError": "ไม่สามารถลงทะเบียนได้ในขณะนี้",
       "permissionError": "ไม่อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม"
     },
     "noActiveEventsModal": {
       "title": "แจ้งเตือน",
       "message": "ท่านไม่มีกิจกรรมที่กำลังจัดอยู่ในเวลานี้",
+      "loadEventsFailedMessage": "ไม่สามารถโหลดกิจกรรมของคุณได้ในขณะนี้ กรุณาลองใหม่",
       "cancel": "ยกเลิก",
       "confirm": "ตกลง"
     },
@@ -203,6 +211,7 @@
     "next": "ถัดไป",
     "create": "สร้างกิจกรรม",
     "creating": "กำลังสร้าง...",
+    "createFailed": "สร้างกิจกรรมไม่สำเร็จ กรุณาลองใหม่",
     "eventDetail": "รายละเอียดกิจกรรม",
     "name": "ชื่อกิจกรรม",
     "namePlaceholder": "ชื่อกิจกรรม",
@@ -261,6 +270,7 @@
   "EditEvent": {
     "editEvent": "แก้ไขกิจกรรม",
     "save": "เสร็จสิ้น",
+    "updateFailed": "อัปเดตกิจกรรมไม่สำเร็จ กรุณาลองใหม่",
     "back": "ย้อนกลับ",
     "next": "ถัดไป",
     "eventDetail": "รายละเอียดกิจกรรม",
@@ -322,7 +332,9 @@
     "eventDelete": "ยืนยันการลบกิจกรรม",
     "eventDeleteDescription": "การลบกิจกรรมนี้จะเป็นการลบแบบถาวร และไม่สามารถกู้คืนข้อมูลได้",
     "cancelDelete": "ยกเลิก",
-    "submitDelete": "ลบกิจกรรม"
+    "submitDelete": "ลบกิจกรรม",
+    "deleting": "กำลังลบ...",
+    "deleteFailed": "ลบกิจกรรมไม่สำเร็จ กรุณาลองใหม่"
   },
   "EventDetail": {
     "back": "ย้อนกลับ",
@@ -339,6 +351,7 @@
     "exportParticipants": "ส่งออกรายชื่อผู้เข้าร่วม (.xlsx)",
     "exportingParticipants": "กำลังเตรียมไฟล์...",
     "exportFailed": "ส่งออกรายชื่อไม่สำเร็จ กรุณาลองใหม่",
+    "exportSessionExpired": "เซสชันของคุณหมดอายุแล้ว กรุณาเข้าสู่ระบบใหม่เพื่อส่งออกรายชื่อ",
     "activityStats": "สถิติกิจกรรม",
     "evaluationForm": "แบบประเมิน",
     "duplicateEvent": "ทำซ้ำกิจกรรม",
@@ -359,9 +372,9 @@
     "specifyIdPlaceholder": "ระบุรหัสประจำตัว",
     "accessRights": "สิทธิ์การเข้าถึง",
     "confirmAddAccess": "ยืนยันเพิ่มผู้เข้าถึงกิจกรรม",
-    "owner": "Owner",
-    "manager": "Manager",
-    "viewer": "Viewer",
+    "owner": "เจ้าของกิจกรรม",
+    "manager": "ผู้จัดการกิจกรรม",
+    "viewer": "ผู้เข้าชม",
     "remove": "ลบรายชื่อ",
     "date": "วันที่",
     "time": "เวลา",
@@ -378,9 +391,9 @@
     "evaluationFormLinkPlaceholder": "วางลิงก์แบบฟอร์มประเมินกิจกรรม",
     "submitDuplicate": "ยืนยันสร้างกิจกรรม",
     "Roles": {
-      "owner": "Owner",
-      "manager": "Manager",
-      "viewer": "Viewer",
+      "owner": "เจ้าของกิจกรรม",
+      "manager": "ผู้จัดการกิจกรรม",
+      "viewer": "ผู้เข้าชม",
       "staff": "ผู้ดูแลกิจกรรม",
       "worker": "ผู้ดูแลงาน",
       "remove": "ลบรายชื่อ",
@@ -388,9 +401,9 @@
     },
     "ScanPermissions": {
       "all": "ทุกคน",
-      "manager": "Manager",
-      "owner": "Owner",
-      "viewer": "Viewer"
+      "manager": "ผู้จัดการกิจกรรม",
+      "owner": "เจ้าของกิจกรรม",
+      "viewer": "ผู้เข้าชม"
     },
     "RevealedFields": {
       "all": "แสดงทั้งหมด",

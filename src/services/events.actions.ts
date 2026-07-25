@@ -20,9 +20,11 @@ const API_TIMEOUT_MS = 10_000;
 
 const SCAN_API_TIMEOUT_MS = 40_000;
 
-export type ScanParticipantResult =
-  | { ok: true; data: ScanParticipantAPIResponse }
+export type ActionResult<T> =
+  | { ok: true; data: T }
   | { ok: false; error: APIErrorData };
+
+export type ScanParticipantResult = ActionResult<ScanParticipantAPIResponse>;
 
 const toApiPage = (page: number) => Math.max(page - 1, 0);
 
@@ -37,183 +39,350 @@ export async function getAuthToken(): Promise<string> {
   return token;
 }
 
-export async function fetchEventById(
-  eventId: string,
-): Promise<EventByIdAPIResponse> {
-  const token = await getAuthToken();
-  const res = await fetch(`${API_HOST}/events/${eventId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    signal: AbortSignal.timeout(API_TIMEOUT_MS),
-  });
+// Reads the backend's {data, error, meta} envelope off a non-ok response,
+// falling back to a synthesized error if the body isn't JSON or has no
+// `error` field (e.g. a proxy/timeout response).
+async function parseErrorBody(
+  res: Response,
+  fallbackCode: string,
+  fallbackMessage: string,
+): Promise<APIErrorData> {
+  try {
+    const body = (await res.json()) as APIResponse<null>;
+    if (body.error) return body.error;
+  } catch {
+    // not JSON — fall through to the synthesized error below
+  }
+  return { code: fallbackCode, message: fallbackMessage, status: res.status };
+}
 
-  if (!res.ok) {
-    throw new Error(`Failed to fetch event ${eventId}: ${res.status}`);
+// Normalizes a thrown error (auth failure, network error, timeout) into the
+// same APIErrorData shape used for non-ok HTTP responses, so callers only
+// ever have to handle one error shape.
+function toCaughtErrorResult(
+  err: unknown,
+  timeoutCode: string,
+  unexpectedCode: string,
+): { ok: false; error: APIErrorData } {
+  if (err instanceof APIRequestError) {
+    return {
+      ok: false,
+      error: { code: err.code, message: err.message, status: err.status },
+    };
   }
 
-  return res.json();
+  const isTimeout = err instanceof Error && err.name === "TimeoutError";
+  return {
+    ok: false,
+    error: {
+      code: isTimeout ? timeoutCode : unexpectedCode,
+      message: isTimeout
+        ? "Request timed out"
+        : err instanceof Error
+          ? err.message
+          : "Unknown error",
+      status: 0,
+    },
+  };
+}
+
+export async function fetchEventById(
+  eventId: string,
+): Promise<ActionResult<EventByIdAPIResponse>> {
+  try {
+    const token = await getAuthToken();
+    const res = await fetch(`${API_HOST}/events/${eventId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+    });
+
+    if (!res.ok) {
+      return {
+        ok: false,
+        error: await parseErrorBody(
+          res,
+          "FETCH_EVENT_FAILED",
+          `Failed to fetch event ${eventId}: ${res.status}`,
+        ),
+      };
+    }
+
+    return { ok: true, data: await res.json() };
+  } catch (err) {
+    return toCaughtErrorResult(
+      err,
+      "FETCH_EVENT_TIMEOUT",
+      "FETCH_EVENT_UNEXPECTED_ERROR",
+    );
+  }
 }
 
 export async function fetchManagedEvents(
   search?: string,
-): Promise<EventsAPIResponse> {
-  const token = await getAuthToken();
-  const params = new URLSearchParams({
-    myevents: "true",
-  });
-  if (search) params.set("search", search);
+): Promise<ActionResult<EventsAPIResponse>> {
+  try {
+    const token = await getAuthToken();
+    const params = new URLSearchParams({
+      myevents: "true",
+    });
+    if (search) params.set("search", search);
 
-  const res = await fetch(`${API_HOST}/events?${params.toString()}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    signal: AbortSignal.timeout(API_TIMEOUT_MS),
-  });
+    const res = await fetch(`${API_HOST}/events?${params.toString()}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+    });
 
-  if (!res.ok) {
-    throw new Error(`Failed to fetch managed events: ${res.status}`);
+    if (!res.ok) {
+      return {
+        ok: false,
+        error: await parseErrorBody(
+          res,
+          "FETCH_MANAGED_EVENTS_FAILED",
+          `Failed to fetch managed events: ${res.status}`,
+        ),
+      };
+    }
+
+    return { ok: true, data: await res.json() };
+  } catch (err) {
+    return toCaughtErrorResult(
+      err,
+      "FETCH_MANAGED_EVENTS_TIMEOUT",
+      "FETCH_MANAGED_EVENTS_UNEXPECTED_ERROR",
+    );
   }
-  return res.json();
 }
 
 export async function fetchAttendedEvents(
   page: number = 1,
   pageSize: number = 8,
   search?: string,
-): Promise<EventsAPIResponse> {
-  const token = await getAuthToken();
-  const params = new URLSearchParams({
-    myevents: "false",
-    page: toApiPage(page).toString(),
-    pageSize: pageSize.toString(),
-  });
-  if (search) params.set("search", search);
+): Promise<ActionResult<EventsAPIResponse>> {
+  try {
+    const token = await getAuthToken();
+    const params = new URLSearchParams({
+      myevents: "false",
+      page: toApiPage(page).toString(),
+      pageSize: pageSize.toString(),
+    });
+    if (search) params.set("search", search);
 
-  const res = await fetch(`${API_HOST}/events?${params.toString()}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    signal: AbortSignal.timeout(API_TIMEOUT_MS),
-  });
+    const res = await fetch(`${API_HOST}/events?${params.toString()}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+    });
 
-  if (!res.ok) {
-    throw new Error(`Failed to fetch attended events: ${res.status}`);
+    if (!res.ok) {
+      return {
+        ok: false,
+        error: await parseErrorBody(
+          res,
+          "FETCH_ATTENDED_EVENTS_FAILED",
+          `Failed to fetch attended events: ${res.status}`,
+        ),
+      };
+    }
+
+    return { ok: true, data: await res.json() };
+  } catch (err) {
+    return toCaughtErrorResult(
+      err,
+      "FETCH_ATTENDED_EVENTS_TIMEOUT",
+      "FETCH_ATTENDED_EVENTS_UNEXPECTED_ERROR",
+    );
   }
-
-  return res.json();
 }
 
 export async function fetchDiscoveryEvents(
   page: number = 1,
   pageSize: number = 8,
   search?: string,
-): Promise<EventsAPIResponse> {
-  const token = await getAuthToken();
-  const params = new URLSearchParams({
-    page: toApiPage(page).toString(),
-    pageSize: pageSize.toString(),
-  });
-  if (search) params.set("search", search);
+): Promise<ActionResult<EventsAPIResponse>> {
+  try {
+    const token = await getAuthToken();
+    const params = new URLSearchParams({
+      page: toApiPage(page).toString(),
+      pageSize: pageSize.toString(),
+    });
+    if (search) params.set("search", search);
 
-  const res = await fetch(`${API_HOST}/events?${params.toString()}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    signal: AbortSignal.timeout(API_TIMEOUT_MS),
-  });
+    const res = await fetch(`${API_HOST}/events?${params.toString()}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+    });
 
-  if (!res.ok) {
-    throw new Error(`Failed to fetch discovery events: ${res.status}`);
+    if (!res.ok) {
+      return {
+        ok: false,
+        error: await parseErrorBody(
+          res,
+          "FETCH_DISCOVERY_EVENTS_FAILED",
+          `Failed to fetch discovery events: ${res.status}`,
+        ),
+      };
+    }
+
+    return { ok: true, data: await res.json() };
+  } catch (err) {
+    return toCaughtErrorResult(
+      err,
+      "FETCH_DISCOVERY_EVENTS_TIMEOUT",
+      "FETCH_DISCOVERY_EVENTS_UNEXPECTED_ERROR",
+    );
   }
-
-  return res.json();
 }
 
 export async function createEvent(
   req: CreateEventReq,
-): Promise<CreateEventAPIResponse> {
-  const token = await getAuthToken();
+): Promise<ActionResult<CreateEventAPIResponse>> {
+  try {
+    const token = await getAuthToken();
 
-  const res = await fetch(`${API_HOST}/events`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(req),
-    signal: AbortSignal.timeout(API_TIMEOUT_MS),
-  });
+    const res = await fetch(`${API_HOST}/events`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(req),
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+    });
 
-  if (!res.ok) {
-    let parsedError: APIErrorData | null = null;
-
-    try {
-      const body = (await res.json()) as APIResponse<null>;
-      parsedError = body.error;
-    } catch {
-      parsedError = null;
+    if (!res.ok) {
+      return {
+        ok: false,
+        error: await parseErrorBody(
+          res,
+          "CREATE_EVENT_FAILED",
+          `Failed to create event: ${res.status}`,
+        ),
+      };
     }
 
-    if (parsedError) {
-      throw new APIRequestError(
-        parsedError.message,
-        parsedError.code,
-        parsedError.status,
-      );
-    }
-
-    throw new APIRequestError(
-      `Failed to create event: ${res.status}`,
-      "CREATE_EVENT_FAILED",
-      res.status,
+    return { ok: true, data: await res.json() };
+  } catch (err) {
+    return toCaughtErrorResult(
+      err,
+      "CREATE_EVENT_TIMEOUT",
+      "CREATE_EVENT_UNEXPECTED_ERROR",
     );
   }
-
-  return res.json();
 }
 
 export async function updateEvent(
   eventId: string,
   req: CreateEventReq,
-): Promise<UpdateEventAPIResponse> {
-  const token = await getAuthToken();
-  const res = await fetch(`${API_HOST}/events/${eventId}`, {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(req),
-    signal: AbortSignal.timeout(API_TIMEOUT_MS),
-  });
+): Promise<ActionResult<UpdateEventAPIResponse>> {
+  try {
+    const token = await getAuthToken();
+    const res = await fetch(`${API_HOST}/events/${eventId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(req),
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+    });
 
-  if (!res.ok) {
-    let parsedError: APIErrorData | null = null;
-
-    try {
-      const body = (await res.json()) as APIResponse<null>;
-      parsedError = body.error;
-    } catch {
-      parsedError = null;
+    if (!res.ok) {
+      return {
+        ok: false,
+        error: await parseErrorBody(
+          res,
+          "UPDATE_EVENT_FAILED",
+          `Failed to update event ${eventId}: ${res.status}`,
+        ),
+      };
     }
 
-    if (parsedError) {
-      throw new APIRequestError(
-        parsedError.message,
-        parsedError.code,
-        parsedError.status,
-      );
-    }
-
-    throw new APIRequestError(
-      `Failed to update event ${eventId}: ${res.status}`,
-      "UPDATE_EVENT_FAILED",
-      res.status,
+    return { ok: true, data: await res.json() };
+  } catch (err) {
+    return toCaughtErrorResult(
+      err,
+      "UPDATE_EVENT_TIMEOUT",
+      "UPDATE_EVENT_UNEXPECTED_ERROR",
     );
   }
+}
 
-  return res.json();
+export async function deleteEvent(
+  eventId: string,
+): Promise<ActionResult<null>> {
+  try {
+    const token = await getAuthToken();
+    const res = await fetch(`${API_HOST}/events/${eventId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+    });
+
+    if (!res.ok) {
+      return {
+        ok: false,
+        error: await parseErrorBody(
+          res,
+          "DELETE_EVENT_FAILED",
+          `Failed to delete event ${eventId}: ${res.status}`,
+        ),
+      };
+    }
+
+    return { ok: true, data: null };
+  } catch (err) {
+    return toCaughtErrorResult(
+      err,
+      "DELETE_EVENT_TIMEOUT",
+      "DELETE_EVENT_UNEXPECTED_ERROR",
+    );
+  }
+}
+
+export async function commentOnParticipant(
+  oneTimeCode: string,
+  comment: string,
+): Promise<ActionResult<null>> {
+  try {
+    const token = await getAuthToken();
+    const res = await fetch(`${API_HOST}/participant/comment`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ one_time_code: oneTimeCode, comment }),
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+    });
+
+    if (!res.ok) {
+      return {
+        ok: false,
+        error: await parseErrorBody(
+          res,
+          "COMMENT_REQUEST_FAILED",
+          `Failed to save comment: ${res.status}`,
+        ),
+      };
+    }
+
+    return { ok: true, data: null };
+  } catch (err) {
+    return toCaughtErrorResult(
+      err,
+      "COMMENT_REQUEST_TIMEOUT",
+      "COMMENT_UNEXPECTED_ERROR",
+    );
+  }
 }
 
 export async function postParticipantScan(
@@ -242,46 +411,22 @@ export async function postParticipantScan(
     );
 
     if (!res.ok) {
-      let parsedError: APIErrorData | null = null;
-
-      try {
-        const body = (await res.json()) as APIResponse<null>;
-        parsedError = body.error;
-      } catch {
-        parsedError = null;
-      }
-
       return {
         ok: false,
-        error: parsedError ?? {
-          code: "SCAN_REQUEST_FAILED",
-          message: `Failed to submit participant scan: ${res.status}`,
-          status: res.status,
-        },
+        error: await parseErrorBody(
+          res,
+          "SCAN_REQUEST_FAILED",
+          `Failed to submit participant scan: ${res.status}`,
+        ),
       };
     }
 
     return { ok: true, data: await res.json() };
   } catch (err) {
-    if (err instanceof APIRequestError) {
-      return {
-        ok: false,
-        error: { code: err.code, message: err.message, status: err.status },
-      };
-    }
-
-    const isTimeout = err instanceof Error && err.name === "TimeoutError";
-    return {
-      ok: false,
-      error: {
-        code: isTimeout ? "SCAN_REQUEST_TIMEOUT" : "SCAN_UNEXPECTED_ERROR",
-        message: isTimeout
-          ? "Request timed out"
-          : err instanceof Error
-            ? err.message
-            : "Unknown error",
-        status: 0,
-      },
-    };
+    return toCaughtErrorResult(
+      err,
+      "SCAN_REQUEST_TIMEOUT",
+      "SCAN_UNEXPECTED_ERROR",
+    );
   }
 }

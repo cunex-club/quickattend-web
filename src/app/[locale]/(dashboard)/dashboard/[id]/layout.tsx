@@ -26,25 +26,31 @@ export default function DashboardGroupLayout({
 
     const checkEventStarted = async () => {
       setCheckingAccess(true);
-      try {
-        const res = await fetchEventById(id);
-        const role = res.data.role?.toLowerCase();
-        setEventRole(
-          role === "owner" || role === "manager" || role === "staff"
-            ? role
-            : "attendee",
+      const result = await fetchEventById(id);
+      if (!result.ok) {
+        console.error(
+          `Failed to verify event before showing dashboard [${result.error.code}]: ${result.error.message}`,
         );
-        const hasStarted = new Date(res.data.start_time) <= new Date();
-        if (!cancelled && !hasStarted) {
-          router.replace(`/events/${id}`);
-          return;
-        }
-      } catch (err) {
-        console.error("Failed to verify event before showing dashboard:", err);
-      } finally {
         if (!cancelled) {
           setCheckingAccess(false);
         }
+        return;
+      }
+
+      const eventData = result.data.data;
+      const role = eventData.role?.toLowerCase();
+      setEventRole(
+        role === "owner" || role === "manager" || role === "staff"
+          ? role
+          : "attendee",
+      );
+      const hasStarted = new Date(eventData.start_time) <= new Date();
+      if (!cancelled && !hasStarted) {
+        router.replace(`/events/${id}`);
+        return;
+      }
+      if (!cancelled) {
+        setCheckingAccess(false);
       }
     };
 

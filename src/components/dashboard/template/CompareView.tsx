@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@i18n/navigation";
 import { StatCard } from "@components/StatCard";
 import Button from "@components/Button";
 import { FilterableList } from "@components/dashboard/FilterableList";

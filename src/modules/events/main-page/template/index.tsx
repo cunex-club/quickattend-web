@@ -157,22 +157,31 @@ const EventPageTemplate = () => {
   useEffect(() => {
     const loadEvents = async () => {
       setLoading(true);
-      try {
-        const [managedRes, attendedRes] = await Promise.all([
-          fetchManagedEvents(),
-          fetchAttendedEvents(currentPage),
-        ]);
+      const [managedResult, attendedResult] = await Promise.all([
+        fetchManagedEvents(),
+        fetchAttendedEvents(currentPage),
+      ]);
 
-        setManagedEvents(managedRes.data);
-        setAttendedEvents(attendedRes.data);
-        if (attendedRes.meta?.pagination) {
-          setAttendedPagination(attendedRes.meta.pagination);
-        }
-      } catch (err) {
-        console.error("Failed to fetch events:", err);
-      } finally {
-        setLoading(false);
+      if (!managedResult.ok) {
+        console.error(
+          `Failed to fetch managed events [${managedResult.error.code}]: ${managedResult.error.message}`,
+        );
+      } else {
+        setManagedEvents(managedResult.data.data);
       }
+
+      if (!attendedResult.ok) {
+        console.error(
+          `Failed to fetch attended events [${attendedResult.error.code}]: ${attendedResult.error.message}`,
+        );
+      } else {
+        setAttendedEvents(attendedResult.data.data);
+        if (attendedResult.data.meta?.pagination) {
+          setAttendedPagination(attendedResult.data.meta.pagination);
+        }
+      }
+
+      setLoading(false);
     };
 
     loadEvents();

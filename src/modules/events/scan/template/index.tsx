@@ -128,6 +128,7 @@ const ScanTemplate = () => {
   const [isSubmittingScan, setIsSubmittingScan] = useState(false);
   const [isResultModalOpen, setIsResultModalOpen] = useState(false);
   const [isNoEventsModalOpen, setIsNoEventsModalOpen] = useState(false);
+  const [loadEventsFailed, setLoadEventsFailed] = useState(false);
   const [isScanCooldown, setIsScanCooldown] = useState(false);
   const [scanResult, setScanResult] = useState<ScanResultModalData | null>(
     null,
@@ -191,37 +192,48 @@ const ScanTemplate = () => {
 
   useEffect(() => {
     const loadEvents = async () => {
-      try {
-        const res = await fetchManagedEvents();
-        const startedEvents = res.data.filter(
-          (event) => new Date(event.start_time) <= new Date(),
-        );
-        const mappedEvents: ScanEvent[] = startedEvents.map((event) => ({
-          id: event.id,
-          name: event.name,
-          startTime: formatTime(event.start_time),
-          endTime: formatTime(event.end_time),
-          role: event.role,
-        }));
+      setLoadEventsFailed(false);
+      const result = await fetchManagedEvents();
 
-        setEvents(mappedEvents);
-        setIsNoEventsModalOpen(mappedEvents.length === 0);
-        const requestedEventExists =
-          requestedEventId &&
-          mappedEvents.some((event) => event.id === requestedEventId);
-        setSelectedEventId(
-          (prev) =>
-            prev ||
-            (requestedEventExists ? requestedEventId : undefined) ||
-            mappedEvents[0]?.id ||
-            "",
+      if (!result.ok) {
+        console.error(
+          `${t("errors.failedToFetchEvents")} [${result.error.code}]: ${result.error.message}`,
         );
-      } catch (error) {
-        console.error(t("errors.failedToFetchEvents"), error);
         setEvents([]);
         setSelectedEventId("");
-        setIsNoEventsModalOpen(false);
+        // Surface the failure through the same modal used for "no active
+        // events" — with distinct copy, since it's a different situation the
+        // user can retry, not an empty state. Silently doing nothing here
+        // leaves the scan page spinning forever with no way to tell what's
+        // wrong.
+        setLoadEventsFailed(true);
+        setIsNoEventsModalOpen(true);
+        return;
       }
+
+      const startedEvents = result.data.data.filter(
+        (event) => new Date(event.start_time) <= new Date(),
+      );
+      const mappedEvents: ScanEvent[] = startedEvents.map((event) => ({
+        id: event.id,
+        name: event.name,
+        startTime: formatTime(event.start_time),
+        endTime: formatTime(event.end_time),
+        role: event.role,
+      }));
+
+      setEvents(mappedEvents);
+      setIsNoEventsModalOpen(mappedEvents.length === 0);
+      const requestedEventExists =
+        requestedEventId &&
+        mappedEvents.some((event) => event.id === requestedEventId);
+      setSelectedEventId(
+        (prev) =>
+          prev ||
+          (requestedEventExists ? requestedEventId : undefined) ||
+          mappedEvents[0]?.id ||
+          "",
+      );
     };
 
     loadEvents();
@@ -234,12 +246,15 @@ const ScanTemplate = () => {
         return;
       }
 
-      try {
-        const res = await fetchEventById(selectedEventId);
-        setTotalParticipants(res.data.total_registered);
-      } catch (error) {
-        console.error(t("errors.failedToFetchEventDetail"), error);
+      const result = await fetchEventById(selectedEventId);
+      if (!result.ok) {
+        console.error(
+          `${t("errors.failedToFetchEventDetail")} [${result.error.code}]: ${result.error.message}`,
+        );
+        return;
       }
+
+      setTotalParticipants(result.data.data.total_registered);
     };
 
     loadSelectedEventDetail();
@@ -329,6 +344,7 @@ const ScanTemplate = () => {
         checkInTime: scannedAt,
         status: res.data.status === "duplicate" ? "duplicate" : "success",
         profileImageUrl: res.data.profile_image_url || undefined,
+        code: res.data.code,
       };
 
       if (res.data.status !== "duplicate") {
@@ -351,11 +367,14 @@ const ScanTemplate = () => {
         setIsResultModalOpen(true);
       }
 
-      try {
-        const selectedEventRes = await fetchEventById(selectedEventId);
-        setTotalParticipants(selectedEventRes.data.total_registered);
-      } catch (refreshError) {
-        console.error(t("errors.failedToFetchEventDetail"), refreshError);
+      const selectedEventResult = await fetchEventById(selectedEventId);
+      if (selectedEventResult.ok) {
+        setTotalParticipants(selectedEventResult.data.data.total_registered);
+      } else {
+        console.error(
+          t("errors.failedToFetchEventDetail"),
+          selectedEventResult.error,
+        );
       }
     } catch (error) {
       console.error(t("errors.unexpectedScanError"));
@@ -457,6 +476,11 @@ const ScanTemplate = () => {
 
       <NoActiveEventsModal
         open={isNoEventsModalOpen}
+        message={
+          loadEventsFailed
+            ? t("noActiveEventsModal.loadEventsFailedMessage")
+            : undefined
+        }
         onCancel={() => setIsNoEventsModalOpen(false)}
         onConfirm={() => {
           setIsNoEventsModalOpen(false);

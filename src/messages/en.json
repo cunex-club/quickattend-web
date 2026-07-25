@@ -12,7 +12,10 @@
     "featureCreateEvent": "Create events for the CU NEX app",
     "featureScanDigitalId": "Scan attendees with Digital ID",
     "featureShareLink": "Easily share the link with others",
-    "continueWithCunex": "Continue with CU NEX"
+    "continueWithCunex": "Continue with CU NEX",
+    "errorExpired": "Your login link has expired. Please log in with CU NEX again.",
+    "errorConfig": "Something's wrong on our end. Please try again in a moment.",
+    "errorUnreachable": "We couldn't reach the server. Please check your connection and try again."
   },
   "ErrorPage": {
     "title": "Something went wrong",
@@ -158,6 +161,8 @@
       "notesPlaceholder": "Add a note (optional)",
       "addNote": "Add note",
       "save": "Save",
+      "saving": "Saving...",
+      "saveFailed": "Couldn't save the note. Please try again.",
       "defaultError": "Registration could not be completed right now.",
       "permissionError": "You are not authorized to register for this event.",
       "eventNotFoundError": "This event could not be found.",
@@ -176,12 +181,15 @@
       "notes": "Notes",
       "notesPlaceholder": "Add a note (optional)",
       "done": "Done",
+      "saving": "Saving...",
+      "saveFailed": "Couldn't save the note. Please try again.",
       "defaultError": "Registration could not be completed right now.",
       "permissionError": "You are not authorized to register for this event."
     },
     "noActiveEventsModal": {
       "title": "Alert",
       "message": "You don't have any active events right now.",
+      "loadEventsFailedMessage": "Unable to load your events right now. Please try again.",
       "cancel": "Cancel",
       "confirm": "OK"
     },
@@ -200,6 +208,7 @@
     "next": "Next",
     "create": "Create an event",
     "creating": "Creating...",
+    "createFailed": "Failed to create event. Please try again.",
     "eventDetail": "Event Detail",
     "name": "Event name",
     "namePlaceholder": "Event name",
@@ -258,6 +267,7 @@
   "EditEvent": {
     "editEvent": "Edit an event",
     "save": "Save",
+    "updateFailed": "Failed to update event. Please try again.",
     "back": "Back",
     "next": "Next",
     "eventDetail": "Event Detail",
@@ -319,7 +329,9 @@
     "eventDelete": "Delete this event",
     "eventDeleteDescription": "This action will permanently delete this event and cannot be undone.",
     "cancelDelete": "Cancel",
-    "submitDelete": "Delete"
+    "submitDelete": "Delete",
+    "deleting": "Deleting...",
+    "deleteFailed": "Failed to delete event. Please try again."
   },
   "EventDetail": {
     "back": "Back",
@@ -336,6 +348,7 @@
     "exportParticipants": "Export participants (.xlsx)",
     "exportingParticipants": "Preparing file...",
     "exportFailed": "Unable to export participants. Please try again.",
+    "exportSessionExpired": "Your session has expired. Please log in again to export participants.",
     "activityStats": "Activity statistics",
     "evaluationForm": "Evaluation form",
     "duplicateEvent": "Duplicate event",

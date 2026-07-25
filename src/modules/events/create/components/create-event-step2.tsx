@@ -58,12 +58,6 @@ const CreateEventStep2 = ({
 
   const [filteredFaculties, setFilteredOrganization] = useState<string[]>([]);
 
-  const [selectedStudentIdsPermission, setSelectedStudentIdsPermission] =
-    useState<string[]>([]);
-
-  const [selectedStudentIdsAccessibility, setSelectedStudentIdsAccessibility] =
-    useState<string[]>([]);
-
   const [openFacultyFilter, setOpenFacultyFilter] = useState(false);
 
   useEffect(() => {
@@ -76,6 +70,13 @@ const CreateEventStep2 = ({
     setFilteredOrganization(filtered);
     setOpenFacultyFilter(true);
   }, [facultyQuery]);
+
+  // Dedupe against eventForm directly (not separate local state) — keeps
+  // this in sync with eventForm by construction instead of by convention.
+  const isAlreadySelectedStudent = (id: string) =>
+    eventForm.selectedStudents.some((s) => s.id === id);
+  const isAlreadySelectedManager = (id: string) =>
+    eventForm.managers_and_staff.some((s) => s.id === id);
 
   return (
     <div className="flex flex-col gap-4">
@@ -307,16 +308,12 @@ const CreateEventStep2 = ({
                 disabled={
                   eventForm.attendance_type != AttendanceType.WHITELIST ||
                   !isValidPersonRefId(studentIdPermissionQuery) ||
-                  selectedStudentIdsPermission?.includes(
-                    studentIdPermissionQuery,
-                  )
+                  isAlreadySelectedStudent(studentIdPermissionQuery)
                 }
                 className={`w-fit h-9 shrink-0 ${
                   eventForm.attendance_type == AttendanceType.WHITELIST &&
                   isValidPersonRefId(studentIdPermissionQuery) &&
-                  !selectedStudentIdsPermission?.includes(
-                    studentIdPermissionQuery,
-                  )
+                  !isAlreadySelectedStudent(studentIdPermissionQuery)
                     ? "cursor-pointer"
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
                 }`}
@@ -325,12 +322,7 @@ const CreateEventStep2 = ({
                     return;
 
                   if (!isValidPersonRefId(studentIdPermissionQuery)) return;
-                  if (
-                    selectedStudentIdsPermission?.includes(
-                      studentIdPermissionQuery,
-                    )
-                  )
-                    return;
+                  if (isAlreadySelectedStudent(studentIdPermissionQuery)) return;
 
                   const student: Student = {
                     id: studentIdPermissionQuery,
@@ -346,11 +338,6 @@ const CreateEventStep2 = ({
                       return Number(a.id) - Number(b.id);
                     }),
                   });
-
-                  setSelectedStudentIdsPermission((prev) => [
-                    ...prev,
-                    studentIdPermissionQuery,
-                  ]);
                   setStudentIdPermissionQuery("");
                 }}
               >
@@ -385,10 +372,6 @@ const CreateEventStep2 = ({
                     setEventForm({
                       ...eventForm,
                       selectedStudents: newStudents,
-                    });
-
-                    setSelectedStudentIdsPermission((prev) => {
-                      return prev.filter((id) => id != student.id);
                     });
                   }}
                   className={`${eventForm.attendance_type == AttendanceType.WHITELIST ? "text-primary cursor-pointer" : "text-neutral-500"}`}
@@ -621,29 +604,20 @@ const CreateEventStep2 = ({
                 bordered="square"
                 disabled={
                   !isValidPersonRefId(studentIdAccessibilityQuery) ||
-                  selectedStudentIdsAccessibility?.includes(
-                    studentIdAccessibilityQuery,
-                  ) ||
+                  isAlreadySelectedManager(studentIdAccessibilityQuery) ||
                   roleAccessibilityQuery == ""
                 }
                 expanded={false}
                 className={`w-fit h-9 shrink-0 ${
                   isValidPersonRefId(studentIdAccessibilityQuery) &&
-                  !selectedStudentIdsAccessibility?.includes(
-                    studentIdAccessibilityQuery,
-                  ) &&
+                  !isAlreadySelectedManager(studentIdAccessibilityQuery) &&
                   roleAccessibilityQuery != ""
                     ? "cursor-pointer"
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
                 }`}
                 onClick={() => {
                   if (!isValidPersonRefId(studentIdAccessibilityQuery)) return;
-                  if (
-                    selectedStudentIdsAccessibility?.includes(
-                      studentIdAccessibilityQuery,
-                    )
-                  )
-                    return;
+                  if (isAlreadySelectedManager(studentIdAccessibilityQuery)) return;
                   if (roleAccessibilityQuery == "") return;
 
                   // Not looking up the name via fetchUserByRefId: backend only
@@ -664,11 +638,6 @@ const CreateEventStep2 = ({
                       return Number(a.id) - Number(b.id);
                     }),
                   });
-
-                  setSelectedStudentIdsAccessibility((prev) => [
-                    ...prev,
-                    studentIdAccessibilityQuery,
-                  ]);
 
                   setRoleAccessibilityQuery("");
                   setStudentIdAccessibilityQuery("");
@@ -702,10 +671,6 @@ const CreateEventStep2 = ({
                     setEventForm({
                       ...eventForm,
                       managers_and_staff: newStudents,
-                    });
-
-                    setSelectedStudentIdsAccessibility((prev) => {
-                      return prev.filter((id) => id != student.id);
                     });
                   }}
                   className={`text-primary cursor-pointer`}

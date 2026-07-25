@@ -6,7 +6,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@assets/components/ui/popover";
-import { format, startOfDay } from "date-fns";
+import { format, isSameDay, startOfDay } from "date-fns";
 import IonIcon from "@shared/IonIcon";
 import { useEffect, useState } from "react";
 import { cn } from "@assets/lib/utils";
@@ -72,8 +72,23 @@ const CreateEventStep1 = ({
     return end.getTime() > start.getTime();
   };
 
+  const shiftDateKeepingTime = (time: Date, newDate: Date): Date => {
+    const shifted = new Date(newDate);
+    shifted.setHours(
+      time.getHours(),
+      time.getMinutes(),
+      time.getSeconds(),
+      0,
+    );
+    return shifted;
+  };
+
   const handleSelectDate = (date?: Date) => {
     if (!date) return;
+    // The calendar fires onSelect even when clicking the already-selected
+    // day — without this guard, that silently reset start/end time to
+    // 00:00-00:01 on an event the user had already configured.
+    if (eventForm.date && isSameDay(date, eventForm.date)) return;
 
     const start = new Date(date);
     start.setHours(0, 0, 0, 0);
@@ -81,11 +96,20 @@ const CreateEventStep1 = ({
     const end = new Date(date);
     end.setHours(0, 1, 0, 0);
 
+    // Keep agenda items on the event's date instead of leaving them stranded
+    // on the previously-selected day.
+    const shiftedAgenda = eventForm.agenda.map((item) => ({
+      ...item,
+      startTime: shiftDateKeepingTime(item.startTime, date),
+      endTime: shiftDateKeepingTime(item.endTime, date),
+    }));
+
     setEventForm({
       ...eventForm,
       date,
       startTime: start,
       endTime: end,
+      agenda: shiftedAgenda,
     });
   };
 
