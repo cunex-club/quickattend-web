@@ -68,6 +68,18 @@ export default function middleware(request: NextRequest) {
   const localizedPath = stripLocale(pathname);
   const locale = getLocale(pathname);
   const hasToken = hasUsableToken(request);
+  const incomingToken = request.nextUrl.searchParams.get("token")?.trim();
+
+  // A freshly presented CU NEX token always wins, even if a session cookie is
+  // still around: it may belong to a different person on a shared device.
+  if (incomingToken) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/api/auth/cunex";
+    url.search = "";
+    url.searchParams.set("token", incomingToken);
+    url.searchParams.set("locale", locale);
+    return NextResponse.redirect(url);
+  }
 
   if (localizedPath === "/") {
     return redirectToEvents(request, locale);

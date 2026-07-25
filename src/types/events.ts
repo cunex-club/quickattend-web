@@ -27,29 +27,29 @@ export interface GetEventsRes {
 // ===========================
 export interface GetOneEventUser {
   ref_id: string;
-  firstname_th: string;
-  surname_th: string;
-  title_th: string;
-  faculty_name_th: string;
-  firstname_en: string;
-  surname_en: string;
-  title_en: string;
-  faculty_name_en: string;
-  profile_image_url: string;
+  user_type: "student" | "staff";
+  firstname_th: string | null;
+  surname_th: string | null;
+  title_th: string | null;
+  faculty_name_th: string | null;
+  firstname_en: string | null;
+  surname_en: string | null;
+  title_en: string | null;
+  faculty_name_en: string | null;
   role: string;
 }
 
 export interface GetOneEventWhitelist {
   ref_id: string;
-  firstname_th: string;
-  surname_th: string;
-  title_th: string;
-  faculty_name_th: string;
-  firstname_en: string;
-  surname_en: string;
-  title_en: string;
-  faculty_name_en: string;
-  profile_image_url: string;
+  user_type: "student" | "staff";
+  firstname_th: string | null;
+  surname_th: string | null;
+  title_th: string | null;
+  faculty_name_th: string | null;
+  firstname_en: string | null;
+  surname_en: string | null;
+  title_en: string | null;
+  faculty_name_en: string | null;
 }
 
 export interface GetOneEventUserPending {

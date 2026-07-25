@@ -21,6 +21,7 @@ import {
   FacultyList,
   filterFacultyOptions,
 } from "@utils/faculty";
+import { isValidPersonRefId } from "@utils/refId";
 import {
   AttendanceType,
   EventFormInterface,
@@ -305,16 +306,14 @@ const EditEventSection2 = ({
                 expanded={false}
                 disabled={
                   eventForm.attendance_type != AttendanceType.WHITELIST ||
-                  (studentIdPermissionQuery?.length != 10 &&
-                    studentIdPermissionQuery?.length != 8) ||
+                  !isValidPersonRefId(studentIdPermissionQuery) ||
                   selectedStudentIdsPermission?.includes(
                     studentIdPermissionQuery,
                   )
                 }
                 className={`w-fit h-9 shrink-0 ${
                   eventForm.attendance_type == AttendanceType.WHITELIST &&
-                  (studentIdPermissionQuery?.length == 10 ||
-                    studentIdPermissionQuery?.length == 8) &&
+                  isValidPersonRefId(studentIdPermissionQuery) &&
                   !selectedStudentIdsPermission?.includes(
                     studentIdPermissionQuery,
                   )
@@ -325,11 +324,7 @@ const EditEventSection2 = ({
                   if (eventForm.attendance_type != AttendanceType.WHITELIST)
                     return;
 
-                  if (
-                    studentIdPermissionQuery.length != 10 &&
-                    studentIdPermissionQuery.length != 8
-                  )
-                    return;
+                  if (!isValidPersonRefId(studentIdPermissionQuery)) return;
                   if (
                     selectedStudentIdsPermission?.includes(
                       studentIdPermissionQuery,
@@ -626,16 +621,14 @@ const EditEventSection2 = ({
                 bordered="square"
                 expanded={false}
                 disabled={
-                  (studentIdAccessibilityQuery?.length != 10 &&
-                    studentIdAccessibilityQuery?.length != 8) ||
+                  !isValidPersonRefId(studentIdAccessibilityQuery) ||
                   selectedStudentIdsAccessibility?.includes(
                     studentIdAccessibilityQuery,
                   ) ||
                   roleAccessibilityQuery == ""
                 }
                 className={`w-fit h-9 shrink-0 ${
-                  (studentIdAccessibilityQuery?.length == 10 ||
-                    studentIdAccessibilityQuery?.length == 8) &&
+                  isValidPersonRefId(studentIdAccessibilityQuery) &&
                   !selectedStudentIdsAccessibility?.includes(
                     studentIdAccessibilityQuery,
                   ) &&
@@ -644,11 +637,7 @@ const EditEventSection2 = ({
                     : "cursor-default border-neutral-400 text-neutral-400 bg-transparent"
                 }`}
                 onClick={() => {
-                  if (
-                    studentIdAccessibilityQuery.length != 10 &&
-                    studentIdAccessibilityQuery.length != 8
-                  )
-                    return;
+                  if (!isValidPersonRefId(studentIdAccessibilityQuery)) return;
                   if (
                     selectedStudentIdsAccessibility?.includes(
                       studentIdAccessibilityQuery,
