@@ -91,7 +91,7 @@ export async function fetchEventById(
 ): Promise<ActionResult<EventByIdAPIResponse>> {
   try {
     const token = await getAuthToken();
-    const res = await fetch(`${API_HOST}/events/${eventId}`, {
+    const res = await fetch(`${API_HOST}/events/${encodeURIComponent(eventId)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -283,7 +283,7 @@ export async function updateEvent(
 ): Promise<ActionResult<UpdateEventAPIResponse>> {
   try {
     const token = await getAuthToken();
-    const res = await fetch(`${API_HOST}/events/${eventId}`, {
+    const res = await fetch(`${API_HOST}/events/${encodeURIComponent(eventId)}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -319,7 +319,7 @@ export async function deleteEvent(
 ): Promise<ActionResult<null>> {
   try {
     const token = await getAuthToken();
-    const res = await fetch(`${API_HOST}/events/${eventId}`, {
+    const res = await fetch(`${API_HOST}/events/${encodeURIComponent(eventId)}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
