@@ -13,6 +13,7 @@ import IonIcon from "@shared/IonIcon";
 import Button from "@shared/Button";
 import TextField from "@shared/TextField";
 import scanResultMockupImage from "@assets/images/logo/scan-result-mockup-image.png";
+import { commentOnParticipant } from "@services/events.actions";
 
 export type ScanResultStatus = "success" | "duplicate" | "failed";
 
@@ -24,6 +25,10 @@ export type ScanResultModalData = {
   checkInTime?: string;
   message?: string;
   profileImageUrl?: string;
+  // The one-time code identifying this check-in row, for PUT
+  // /participant/comment. Absent for failed scans — there's no row to
+  // attach a comment to, so the notes field is hidden in that case.
+  code?: string;
 };
 
 const SCAN_RESULT_THEME = {
@@ -61,10 +66,38 @@ const ScanResultModal = ({
   const t = useTranslations("Scan");
   const [note, setNote] = useState("");
   const [imageError, setImageError] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const resultTheme = SCAN_RESULT_THEME[result?.status ?? "success"];
   const isFailed = result?.status === "failed";
   const message = result?.message || t("resultModal.permissionError");
+  // Failed scans never created a check-in row, so there's nothing for a
+  // comment to attach to — the notes field is hidden rather than accepting
+  // input it can't actually save.
+  const canComment = !!result?.code;
+
+  const handleSave = async () => {
+    if (!result?.code || !note.trim()) {
+      onOpenChange(false);
+      return;
+    }
+
+    setIsSaving(true);
+    setSaveError(null);
+    const saveResult = await commentOnParticipant(result.code, note.trim());
+    setIsSaving(false);
+
+    if (!saveResult.ok) {
+      console.error(
+        `Failed to save comment [${saveResult.error.code}]: ${saveResult.error.message}`,
+      );
+      setSaveError(t("resultModal.saveFailed"));
+      return;
+    }
+
+    onOpenChange(false);
+  };
   const profileImageSrc =
     !imageError && result?.profileImageUrl
       ? result.profileImageUrl
@@ -78,6 +111,7 @@ const ScanResultModal = ({
         if (!nextOpen) {
           setNote("");
           setImageError(false);
+          setSaveError(null);
         }
       }}
     >
@@ -186,26 +220,35 @@ const ScanResultModal = ({
             </div>
           )}
 
-          <div className="space-y-2">
-            <p className="title-small-emphasized text-neutral-700">
-              {t("resultModal.notes")}
-            </p>
-            <TextField
-              value={note}
-              onChange={(event) => setNote(event.target.value)}
-              placeholder={t("resultModal.notesPlaceholder")}
-              inputClassName="body-small-primary"
-            />
-          </div>
+          {canComment && (
+            <div className="space-y-2">
+              <p className="title-small-emphasized text-neutral-700">
+                {t("resultModal.notes")}
+              </p>
+              <TextField
+                value={note}
+                onChange={(event) => setNote(event.target.value)}
+                placeholder={t("resultModal.notesPlaceholder")}
+                inputClassName="body-small-primary"
+                disabled={isSaving}
+              />
+              {saveError && (
+                <p role="alert" className="text-sm text-red-600">
+                  {saveError}
+                </p>
+              )}
+            </div>
+          )}
 
           <Button
             mode="filled"
             bordered="round"
             expanded
-            onClick={() => onOpenChange(false)}
+            disabled={isSaving}
+            onClick={handleSave}
             className="title-medium-emphasized"
           >
-            {t("resultModal.done")}
+            {isSaving ? t("resultModal.saving") : t("resultModal.done")}
           </Button>
         </div>
       </DialogContent>

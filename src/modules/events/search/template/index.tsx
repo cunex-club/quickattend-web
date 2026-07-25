@@ -44,21 +44,20 @@ const EventSearchTemplate = () => {
     let cancelled = false;
     const timeout = setTimeout(async () => {
       setLoading(true);
-      try {
-        const res = await fetchDiscoveryEvents(1, 10, searchQuery);
-        if (!cancelled) {
-          setEvents(res.data);
-        }
-      } catch (err) {
-        console.error("Failed to fetch discovery events:", err);
-        if (!cancelled) {
-          setEvents([]);
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+      const result = await fetchDiscoveryEvents(1, 10, searchQuery);
+      if (cancelled) return;
+
+      if (!result.ok) {
+        console.error(
+          `Failed to fetch discovery events [${result.error.code}]: ${result.error.message}`,
+        );
+        setEvents([]);
+        setLoading(false);
+        return;
       }
+
+      setEvents(result.data.data);
+      setLoading(false);
     }, 300);
 
     return () => {

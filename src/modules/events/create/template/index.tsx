@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSidebar } from "../../../../context/SidebarContext";
 import { useTranslations } from "next-intl";
 import IonIcon from "@shared/IonIcon";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@i18n/navigation";
 import CreateEventStep1 from "../components/create-event-step1";
 import CreateEventStep2 from "../components/create-event-step2";
 import CreateEventStep3 from "../components/create-event-step3";
@@ -30,9 +30,9 @@ import {
   DialogTitle,
 } from "@assets/components/ui/dialog";
 import { DEFAULT_CENTER } from "../components/map-selection";
-import { APIRequestError } from "@services/events";
 import { createEvent } from "@services/events.actions";
 import { buildCreateEventReq } from "../mappers";
+import { isSafeExternalUrl } from "@utils/url";
 import {
   AttendanceType,
   CardPreviewType,
@@ -108,7 +108,7 @@ const EventCreateTemplate = () => {
 
     if (
       !eventForm.evaluation_form.trim() ||
-      isValidUrl(eventForm.evaluation_form.trim())
+      isSafeExternalUrl(eventForm.evaluation_form.trim())
     ) {
       setValidStep3(true);
     } else {
@@ -137,31 +137,21 @@ const EventCreateTemplate = () => {
     });
   };
 
-  const isValidUrl = (value: string) => {
-    try {
-      new URL(value);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
   const handleCreateEvent = async () => {
     if (!eventForm.date || !eventForm.startTime || !eventForm.endTime) return;
 
     const body = buildCreateEventReq(eventForm);
 
     setIsSubmitting(true);
-    try {
-      const res = await createEvent(body);
-      router.push(`/events/${res.data.id}`);
-    } catch (err) {
-      const message =
-        err instanceof APIRequestError ? err.message : "Failed to create event";
-      alert(message);
-    } finally {
-      setIsSubmitting(false);
+    const result = await createEvent(body);
+    setIsSubmitting(false);
+
+    if (!result.ok) {
+      alert(result.error.message || tCreateEvent("createFailed"));
+      return;
     }
+
+    router.push(`/events/${result.data.data.id}`);
   };
 
   return (

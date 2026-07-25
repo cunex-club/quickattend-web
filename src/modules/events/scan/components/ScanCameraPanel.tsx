@@ -24,6 +24,7 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const onScanRef = useRef(onScan);
   const lastScannedTextRef = useRef<string | null>(null);
+  const pausedRef = useRef(paused);
   onScanRef.current = onScan;
 
   const [linkCopied, setLinkCopied] = useState(false);
@@ -43,20 +44,41 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
     setSelectedDeviceIndex((prev) => (prev + 1) % devices.length);
   }, [devices.length]);
 
+  // `paused` toggles on every scan (submitting -> cooldown -> ready again).
+  // It intentionally is NOT a dependency of the effect below: that effect
+  // tears down and re-acquires the camera stream, and doing that every scan
+  // cycle both flickers the video and — critically — reset lastScannedTextRef,
+  // wiping the only guard against re-submitting the same QR on consecutive
+  // frames. On screens where the camera stays mounted behind the result panel
+  // (2xl layout), a badge left in frame during the ~1.2s cooldown would then
+  // get re-decoded and re-submitted in a loop.
+  //
+  // So `pausedRef` gates decoding without touching the stream, and the dedupe
+  // guard deliberately PERSISTS across pause/resume — it only resets when the
+  // stream itself is re-acquired (camera switch / retry). CU NEX QR codes are
+  // dynamic and single-use, so a legitimate re-scan of the same person carries
+  // a different code and passes the guard on its own.
+  useEffect(() => {
+    pausedRef.current = paused;
+  }, [paused]);
+
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || paused) return;
+    if (!video) return;
 
     let cancelled = false;
     setCameraError(null);
-
     lastScannedTextRef.current = null;
+
     const scanner = new ZXingScanner();
     scanner
       .start({
         videoElement: video,
         deviceId: activeDeviceId,
         onDecode: ({ text }) => {
+          if (pausedRef.current) {
+            return;
+          }
           if (lastScannedTextRef.current === text) {
             return;
           }
@@ -86,7 +108,7 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
       cancelled = true;
       scanner.stop();
     };
-  }, [activeDeviceId, paused, deviceId, retryCount]);
+  }, [activeDeviceId, deviceId, retryCount]);
 
   const handleRetry = useCallback(() => {
     setRetryCount((prev) => prev + 1);

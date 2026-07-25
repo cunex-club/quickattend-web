@@ -10,6 +10,7 @@ import TextField from "@shared/TextField";
 import Button from "@shared/Button";
 import scanResultMockupImage from "@assets/images/logo/scan-result-mockup-image.png";
 import type { ScanResultModalData } from "@modules/events/scan/components/ScanResultModal";
+import { commentOnParticipant } from "@services/events.actions";
 
 const SCAN_RESULT_THEME = {
   success: {
@@ -45,15 +46,44 @@ const ScanResultPanel: StyleableFC<ScanResultPanelProps> = ({
   const t = useTranslations("Scan");
   const [note, setNote] = useState("");
   const [imageError, setImageError] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     setNote("");
     setImageError(false);
+    setSaveError(null);
   }, [result?.refId, result?.checkInTime]);
 
   const resultTheme = SCAN_RESULT_THEME[result?.status ?? "success"];
   const isFailed = result?.status === "failed";
   const message = result?.message || t("resultPanel.permissionError");
+  // Failed scans never created a check-in row, so there's nothing for a
+  // comment to attach to — the notes field is hidden rather than accepting
+  // input it can't actually save.
+  const canComment = !!result?.code;
+
+  const handleSave = async () => {
+    if (!result?.code || !note.trim()) {
+      onBackToScan();
+      return;
+    }
+
+    setIsSaving(true);
+    setSaveError(null);
+    const saveResult = await commentOnParticipant(result.code, note.trim());
+    setIsSaving(false);
+
+    if (!saveResult.ok) {
+      console.error(
+        `Failed to save comment [${saveResult.error.code}]: ${saveResult.error.message}`,
+      );
+      setSaveError(t("resultPanel.saveFailed"));
+      return;
+    }
+
+    onBackToScan();
+  };
   const profileImageSrc =
     !imageError && result?.profileImageUrl
       ? result.profileImageUrl
@@ -127,23 +157,34 @@ const ScanResultPanel: StyleableFC<ScanResultPanelProps> = ({
         )}
 
         <div className="mt-8 space-y-2">
-          <p className="title-small-emphasized text-neutral-600">
-            {t("resultPanel.notes")}
-          </p>
-          <TextField
-            value={note}
-            onChange={(event) => setNote(event.target.value)}
-            placeholder={t("resultPanel.notesPlaceholder")}
-            inputClassName="body-large-primary text-neutral-400"
-          />
+          {canComment && (
+            <>
+              <p className="title-small-emphasized text-neutral-600">
+                {t("resultPanel.notes")}
+              </p>
+              <TextField
+                value={note}
+                onChange={(event) => setNote(event.target.value)}
+                placeholder={t("resultPanel.notesPlaceholder")}
+                inputClassName="body-large-primary text-neutral-400"
+                disabled={isSaving}
+              />
+              {saveError && (
+                <p role="alert" className="text-sm text-red-600">
+                  {saveError}
+                </p>
+              )}
+            </>
+          )}
           <Button
             mode="filled"
             bordered="round"
             expanded
+            disabled={isSaving}
             className="title-large-primary mt-2"
-            onClick={onBackToScan}
+            onClick={handleSave}
           >
-            {t("resultPanel.save")}
+            {isSaving ? t("resultPanel.saving") : t("resultPanel.save")}
           </Button>
         </div>
       </div>

@@ -2,8 +2,9 @@
 
 import { useTranslations } from "next-intl";
 import { useSidebar } from "../../../../../context/SidebarContext";
-import { useEffect, useRef, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useParams } from "next/navigation";
+import { useRouter } from "@i18n/navigation";
 import IonIcon from "@shared/IonIcon";
 import Button from "@shared/Button";
 import {
@@ -15,7 +16,6 @@ import {
   buildCreateEventReq,
   mapEventResToForm,
 } from "@modules/events/create/mappers";
-import { APIRequestError } from "@services/events";
 import { fetchEventById, updateEvent } from "@services/events.actions";
 import EditEventSection1 from "../components/edit-event-section1";
 import EditEventSection2 from "../components/edit-event-section2";
@@ -43,6 +43,7 @@ import {
 import EditEventDelete from "../components/edit-event-delete";
 import { DEFAULT_CENTER } from "@modules/events/create/components/map-selection";
 import EventDetailSkeleton from "@modules/events/event-id/components/event-detail-skeleton";
+import { isSafeExternalUrl } from "@utils/url";
 
 export const SideTabType = {
   NAVIGATE: "navigate",
@@ -57,6 +58,7 @@ const EventEditTemplate = () => {
   const { setShowSidebar } = useSidebar();
   const router = useRouter();
   const tEditEvent = useTranslations("EditEvent");
+  const tError = useTranslations("ErrorPage");
 
   const [width, setWidth] = useState(0);
   const [sidetabMode, setSidetabMode] = useState<SideTabType | null>(null);
@@ -92,54 +94,58 @@ const EventEditTemplate = () => {
   const [ownerRefId, setOwnerRefId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [unauthorized, setUnauthorized] = useState(false);
+  // Distinct from `unauthorized`: this means the fetch itself failed
+  // (expired session, network error, timeout, 5xx) — leaving eventForm at
+  // EMPTY_EVENT_FORM with no indication was indistinguishable from a blank
+  // event, and silently saving it would wipe the real event.
+  const [loadError, setLoadError] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const section1Ref = useRef<HTMLDivElement>(null);
   const section2Ref = useRef<HTMLDivElement>(null);
   const section3Ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const loadEvent = async () => {
-      setLoading(true);
-      try {
-        const res = await fetchEventById(String(eventId));
-        const canEdit =
-          res.data.role === "OWNER" || res.data.role === "MANAGER";
-        const hasEnded = new Date(res.data.end_time) < new Date();
-        if (!canEdit || hasEnded) {
-          setUnauthorized(true);
-          return;
-        }
+  const loadEvent = useCallback(async () => {
+    setLoading(true);
+    setLoadError(false);
+    setUnauthorized(false);
 
-        const { form, ownerRefId: fetchedOwnerRefId } = mapEventResToForm(
-          res.data,
-        );
-        setEventForm(form);
-        setOwnerRefId(fetchedOwnerRefId);
-      } catch (err) {
-        console.error("Failed to fetch event:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    const result = await fetchEventById(String(eventId));
+    if (!result.ok) {
+      console.error(
+        `Failed to fetch event [${result.error.code}]: ${result.error.message}`,
+      );
+      setLoadError(true);
+      setLoading(false);
+      return;
+    }
 
-    loadEvent();
+    const eventData = result.data.data;
+    const canEdit =
+      eventData.role === "OWNER" || eventData.role === "MANAGER";
+    const hasEnded = new Date(eventData.end_time) < new Date();
+    if (!canEdit || hasEnded) {
+      setUnauthorized(true);
+      setLoading(false);
+      return;
+    }
+
+    const { form, ownerRefId: fetchedOwnerRefId } =
+      mapEventResToForm(eventData);
+    setEventForm(form);
+    setOwnerRefId(fetchedOwnerRefId);
+    setLoading(false);
   }, [eventId]);
+
+  useEffect(() => {
+    loadEvent();
+  }, [loadEvent]);
 
   useEffect(() => {
     if (unauthorized) {
       router.replace(`/events/${eventId}`);
     }
   }, [unauthorized, eventId, router]);
-
-  const isValidUrl = (value: string) => {
-    try {
-      new URL(value);
-      return true;
-    } catch {
-      return false;
-    }
-  };
 
   useEffect(() => {
     if (
@@ -159,7 +165,7 @@ const EventEditTemplate = () => {
       eventForm.revealed_fields.length > 0 &&
       // Section 3
       (!eventForm.evaluation_form.trim() ||
-        isValidUrl(eventForm.evaluation_form.trim()))
+        isSafeExternalUrl(eventForm.evaluation_form.trim()))
     ) {
       setValid(true);
     } else {
@@ -197,28 +203,42 @@ const EventEditTemplate = () => {
     }
 
     setIsSaving(true);
-    try {
-      await updateEvent(String(eventId), body);
-      return true;
-    } catch (err) {
-      const message =
-        err instanceof APIRequestError ? err.message : "Failed to update event";
-      alert(message);
+    const result = await updateEvent(String(eventId), body);
+    setIsSaving(false);
+
+    if (!result.ok) {
+      alert(result.error.message || tEditEvent("updateFailed"));
       return false;
-    } finally {
-      setIsSaving(false);
     }
+
+    return true;
   };
 
   const saveAndExit = async () => {
     const saved = await saveEvent();
     if (saved) {
-      window.location.href = `/events/${eventId}`;
+      router.push(`/events/${eventId}`);
     }
   };
 
   if (loading || unauthorized) {
     return <EventDetailSkeleton />;
+  }
+
+  if (loadError) {
+    return (
+      <div className="w-full flex flex-col justify-center items-center py-20 gap-4">
+        <div className="body-large-primary">{tError("description")}</div>
+        <Button
+          mode="outline"
+          bordered="round"
+          expanded={false}
+          onClick={loadEvent}
+        >
+          {tError("retry")}
+        </Button>
+      </div>
+    );
   }
 
   return (
@@ -606,7 +626,10 @@ const EventEditTemplate = () => {
 
               {/* Content */}
               <>
-                <EditEventDelete setOpenDelete={setOpenDelete} />
+                <EditEventDelete
+                  eventId={String(eventId)}
+                  setOpenDelete={setOpenDelete}
+                />
               </>
             </DialogContent>
           </Dialog>
@@ -758,7 +781,10 @@ const EventEditTemplate = () => {
 
               {/* Content */}
               <>
-                <EditEventDelete setOpenDelete={setOpenDelete} />
+                <EditEventDelete
+                  eventId={String(eventId)}
+                  setOpenDelete={setOpenDelete}
+                />
               </>
             </DialogContent>
           </Dialog>
@@ -779,7 +805,10 @@ const EventEditTemplate = () => {
 
               {/* Content */}
               <>
-                <EditEventDelete setOpenDelete={setOpenDelete} />
+                <EditEventDelete
+                  eventId={String(eventId)}
+                  setOpenDelete={setOpenDelete}
+                />
               </>
             </DialogContent>
           </Dialog>

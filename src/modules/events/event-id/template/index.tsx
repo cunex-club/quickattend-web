@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@assets/lib/utils";
 import IonIcon from "@shared/IonIcon";
@@ -11,6 +11,7 @@ import EventDetailSkeleton from "@modules/events/event-id/components/event-detai
 import type { GetOneEventRes } from "@customTypes/events";
 import { useRouter } from "@i18n/navigation";
 import { formatEventDate, formatEventTimeRange } from "@utils/eventDateTime";
+import { isSafeExternalUrl, parseContentDispositionFilename } from "@utils/url";
 
 interface EventIdPageTemplateProps {
   eventId: string;
@@ -18,35 +19,69 @@ interface EventIdPageTemplateProps {
 
 const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   const t = useTranslations("EventDetail");
+  const tError = useTranslations("ErrorPage");
   const locale = useLocale();
   const router = useRouter();
 
   const [eventData, setEventData] = useState<GetOneEventRes | null>(null);
   const [loading, setLoading] = useState(true);
+  // A 404 means the event genuinely doesn't exist; anything else (expired
+  // session, network error, timeout, 5xx) is a real failure that deserves a
+  // retry, not "Event not found" — those are different situations for the
+  // user and shouldn't look the same.
+  const [loadFailedNotFound, setLoadFailedNotFound] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
-  const [exportError, setExportError] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
+
+  const loadEvent = useCallback(async () => {
+    setLoading(true);
+    setLoadError(false);
+    setLoadFailedNotFound(false);
+
+    const result = await fetchEventById(eventId);
+    if (!result.ok) {
+      console.error(
+        `Failed to fetch event [${result.error.code}]: ${result.error.message}`,
+      );
+      if (result.error.status === 404) {
+        setLoadFailedNotFound(true);
+      } else {
+        setLoadError(true);
+      }
+      setLoading(false);
+      return;
+    }
+
+    setEventData(result.data.data);
+    setLoading(false);
+  }, [eventId]);
 
   useEffect(() => {
-    const loadEvent = async () => {
-      setLoading(true);
-      try {
-        const res = await fetchEventById(eventId);
-        setEventData(res.data);
-      } catch (err) {
-        console.error("Failed to fetch event:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadEvent();
-  }, [eventId]);
+  }, [loadEvent]);
 
   if (loading) {
     return <EventDetailSkeleton />;
   }
 
-  if (!eventData) {
+  if (loadError) {
+    return (
+      <div className="w-full flex flex-col justify-center items-center py-20 gap-4">
+        <div className="body-large-primary">{tError("description")}</div>
+        <Button
+          mode="outline"
+          bordered="round"
+          expanded={false}
+          onClick={loadEvent}
+        >
+          {tError("retry")}
+        </Button>
+      </div>
+    );
+  }
+
+  if (loadFailedNotFound || !eventData) {
     return (
       <div className="w-full flex justify-center items-center py-20">
         <div className="body-large-primary">{t("notFound")}</div>
@@ -57,7 +92,10 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   const canEdit = eventData.role === "OWNER" || eventData.role === "MANAGER";
   const isEnd = new Date(eventData.end_time) < new Date();
   const hasStarted = new Date(eventData.start_time) <= new Date();
-  const showEvaluationForm = isEnd && !!eventData.evaluation_form;
+  const showEvaluationForm =
+    isEnd &&
+    !!eventData.evaluation_form &&
+    isSafeExternalUrl(eventData.evaluation_form);
 
   const roleLabel =
     eventData.role === "OWNER"
@@ -73,18 +111,27 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
 
   const exportParticipants = async () => {
     setIsExporting(true);
-    setExportError(false);
+    setExportError(null);
 
     try {
       const response = await fetch(`/api/events/${eventId}/export`);
-      if (!response.ok) throw new Error("Export failed");
+      if (!response.ok) {
+        // 401: the session cookie expired or was rejected — retrying the
+        // same request can never succeed, the user needs to log in again.
+        // Anything else (504 timeout, 5xx) is worth a plain retry prompt.
+        setExportError(
+          response.status === 401
+            ? t("exportSessionExpired")
+            : t("exportFailed"),
+        );
+        return;
+      }
 
       const blob = await response.blob();
       const filename =
-        response.headers
-          .get("content-disposition")
-          ?.match(/filename="?([^"]+)"?/)?.[1] ??
-        `participants-${eventId}.xlsx`;
+        parseContentDispositionFilename(
+          response.headers.get("content-disposition"),
+        ) ?? `participants-${eventId}.xlsx`;
       const file = new File([blob], filename, {
         type:
           blob.type ||
@@ -119,7 +166,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
 
       downloadBlob();
     } catch {
-      setExportError(true);
+      setExportError(t("exportFailed"));
     } finally {
       setIsExporting(false);
     }
@@ -352,7 +399,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
       </div>
       {exportError && (
         <p role="alert" className="w-full text-sm text-red-600">
-          {t("exportFailed")}
+          {exportError}
         </p>
       )}
     </div>
