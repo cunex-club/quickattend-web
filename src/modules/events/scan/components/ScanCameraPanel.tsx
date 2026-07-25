@@ -47,19 +47,19 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
   // `paused` toggles on every scan (submitting -> cooldown -> ready again).
   // It intentionally is NOT a dependency of the effect below: that effect
   // tears down and re-acquires the camera stream, and doing that every scan
-  // cycle both flickers the video and — critically — used to reset
-  // lastScannedTextRef, wiping the only guard against re-submitting the same
-  // QR on consecutive frames. On screens where the camera stays mounted
-  // behind the result panel (2xl layout), a badge left in frame during the
-  // ~1.2s cooldown would get re-decoded and re-submitted in a loop. Instead,
-  // `pausedRef` gates decoding without touching the stream, and the dedupe
-  // guard only resets when scanning genuinely resumes after a pause.
+  // cycle both flickers the video and — critically — reset lastScannedTextRef,
+  // wiping the only guard against re-submitting the same QR on consecutive
+  // frames. On screens where the camera stays mounted behind the result panel
+  // (2xl layout), a badge left in frame during the ~1.2s cooldown would then
+  // get re-decoded and re-submitted in a loop.
+  //
+  // So `pausedRef` gates decoding without touching the stream, and the dedupe
+  // guard deliberately PERSISTS across pause/resume — it only resets when the
+  // stream itself is re-acquired (camera switch / retry). CU NEX QR codes are
+  // dynamic and single-use, so a legitimate re-scan of the same person carries
+  // a different code and passes the guard on its own.
   useEffect(() => {
-    const wasPaused = pausedRef.current;
     pausedRef.current = paused;
-    if (wasPaused && !paused) {
-      lastScannedTextRef.current = null;
-    }
   }, [paused]);
 
   useEffect(() => {
