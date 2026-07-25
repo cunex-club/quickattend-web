@@ -1,3 +1,12 @@
+# [1.0.0-dev.20](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.19...v1.0.0-dev.20) (2026-07-25)
+
+
+### Bug Fixes
+
+* critical bugs from production review + default to Thai ([a217601](https://github.com/cunex-club/quickattend-web/commit/a2176012311866b71d519cbaef3ac7f85160fad0))
+* encode eventId in outbound API URLs (SSRF) ([732c337](https://github.com/cunex-club/quickattend-web/commit/732c337b681a6a4962895374b0973cae964e743a))
+* keep the scan dedupe guard across pause/resume ([80b4dd9](https://github.com/cunex-club/quickattend-web/commit/80b4dd9702bb5df504e20c84e8ec8e614da0f30f))
+
 # [1.0.0-dev.19](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.18...v1.0.0-dev.19) (2026-07-22)
 
 
