@@ -23,6 +23,8 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
 
   const [eventData, setEventData] = useState<GetOneEventRes | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportError, setExportError] = useState(false);
 
   useEffect(() => {
     const loadEvent = async () => {
@@ -68,6 +70,60 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
 
   const formatAgendaTime = (startTime: string, endTime: string) =>
     formatEventTimeRange(startTime, endTime, locale);
+
+  const exportParticipants = async () => {
+    setIsExporting(true);
+    setExportError(false);
+
+    try {
+      const response = await fetch(`/api/events/${eventId}/export`);
+      if (!response.ok) throw new Error("Export failed");
+
+      const blob = await response.blob();
+      const filename =
+        response.headers
+          .get("content-disposition")
+          ?.match(/filename="?([^"]+)"?/)?.[1] ??
+        `participants-${eventId}.xlsx`;
+      const file = new File([blob], filename, {
+        type:
+          blob.type ||
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const downloadBlob = () => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        // Firefox only honours programmatic clicks on anchors that are in the
+        // document, and the object URL has to outlive the click.
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 0);
+      };
+
+      if (navigator.canShare?.({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: filename });
+          return;
+        } catch (error) {
+          // Dismissing the share sheet is not a failure; anything else means
+          // sharing is unavailable, so fall through to a plain download.
+          if (error instanceof DOMException && error.name === "AbortError") {
+            return;
+          }
+        }
+      }
+
+      downloadBlob();
+    } catch {
+      setExportError(true);
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   return (
     <div className="w-full flex flex-col justify-center items-center px-6 md:px-10 lg:px-25 py-10 gap-6 lg:gap-7.5 pb-24">
@@ -199,6 +255,28 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             </div>
           </Button>
         )}
+        {canEdit && (
+          <Button
+            mode="outline"
+            bordered="round"
+            expanded={true}
+            className="flex-1"
+            disabled={isExporting || eventData.total_registered === 0}
+            onClick={exportParticipants}
+          >
+            <div className="flex justify-center text-primary items-center gap-2">
+              <IonIcon
+                name="DownloadOutline"
+                className="w-6 h-6 md:w-9 md:h-9"
+              />
+              <div className="label-large-primary md:title-large-primary whitespace-nowrap">
+                {isExporting
+                  ? t("exportingParticipants")
+                  : t("exportParticipants")}
+              </div>
+            </div>
+          </Button>
+        )}
         <Button
           mode="outline"
           bordered="round"
@@ -272,6 +350,11 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           )}
         </div>
       </div>
+      {exportError && (
+        <p role="alert" className="w-full text-sm text-red-600">
+          {t("exportFailed")}
+        </p>
+      )}
     </div>
   );
 };

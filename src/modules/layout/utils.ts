@@ -26,7 +26,7 @@ export function getAvatarFallback(user: CurrentUser | null): string {
   }
 
   const initials = [user.firstname_th, user.surname_th]
-    .map((part) => part.trim().charAt(0))
+    .map((part) => part?.trim().charAt(0) ?? "")
     .filter(Boolean)
     .join("");
 

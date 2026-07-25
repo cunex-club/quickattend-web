@@ -18,7 +18,7 @@ const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 const JWT_COOKIE_NAME = "jwt";
 const API_TIMEOUT_MS = 10_000;
 
-const SCAN_API_TIMEOUT_MS = 30_000;
+const SCAN_API_TIMEOUT_MS = 40_000;
 
 export type ScanParticipantResult =
   | { ok: true; data: ScanParticipantAPIResponse }

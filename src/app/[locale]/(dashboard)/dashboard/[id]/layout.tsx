@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import DashboardNav from "@components/dashboard/DashboardNav";
-import { useRole } from "@context/RoleContext";
+import { RoleProvider, type UserRole } from "@context/RoleContext";
 import { useTranslations } from "next-intl";
 import { DashboardApolloProvider } from "@graphql/provider";
 import { useRouter } from "@i18n/navigation";
@@ -14,12 +14,12 @@ export default function DashboardGroupLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { role } = useRole();
   const t = useTranslations("Dashboard.navbar");
   const router = useRouter();
   const { locale, id } = useParams<{ locale: string; id: string }>();
 
   const [checkingAccess, setCheckingAccess] = useState(true);
+  const [eventRole, setEventRole] = useState<UserRole>("attendee");
 
   useEffect(() => {
     let cancelled = false;
@@ -28,6 +28,12 @@ export default function DashboardGroupLayout({
       setCheckingAccess(true);
       try {
         const res = await fetchEventById(id);
+        const role = res.data.role?.toLowerCase();
+        setEventRole(
+          role === "owner" || role === "manager" || role === "staff"
+            ? role
+            : "attendee",
+        );
         const hasStarted = new Date(res.data.start_time) <= new Date();
         if (!cancelled && !hasStarted) {
           router.replace(`/events/${id}`);
@@ -62,13 +68,15 @@ export default function DashboardGroupLayout({
   }
 
   return (
-    <DashboardApolloProvider>
-      <div className="flex flex-col items-center w-full min-h-screen pt-10 pb-6 px-6 lg:px-16 bg-neutral-white">
-        <div className="container space-y-6 h-full flex flex-col">
-          <DashboardNav locale={locale} role={role} tabs={tabs} />
-          <main className="w-full flex-1">{children}</main>
+    <RoleProvider initialRole={eventRole}>
+      <DashboardApolloProvider>
+        <div className="flex flex-col items-center w-full min-h-screen pt-10 pb-6 px-6 lg:px-16 bg-neutral-white">
+          <div className="container space-y-6 h-full flex flex-col">
+            <DashboardNav locale={locale} role={eventRole} tabs={tabs} />
+            <main className="w-full flex-1">{children}</main>
+          </div>
         </div>
-      </div>
-    </DashboardApolloProvider>
+      </DashboardApolloProvider>
+    </RoleProvider>
   );
 }

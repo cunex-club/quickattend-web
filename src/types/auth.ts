@@ -1,11 +1,11 @@
 export type CurrentUser = {
   id: string;
   ref_id: string;
-  firstname_th: string;
-  surname_th: string;
-  title_th: string;
-  firstname_en: string;
-  surname_en: string;
-  title_en: string;
-  profile_image_url?: string | null;
+  user_type: "student" | "staff";
+  firstname_th: string | null;
+  surname_th: string | null;
+  title_th: string | null;
+  firstname_en: string | null;
+  surname_en: string | null;
+  title_en: string | null;
 };

@@ -63,12 +63,12 @@ const FACULTY_NO_TO_NAME: Record<number, string> = Object.fromEntries(
 );
 
 function formatPersonName(person: {
-  title_th: string;
-  firstname_th: string;
-  surname_th: string;
-  title_en: string;
-  firstname_en: string;
-  surname_en: string;
+  title_th: string | null;
+  firstname_th: string | null;
+  surname_th: string | null;
+  title_en: string | null;
+  firstname_en: string | null;
+  surname_en: string | null;
   ref_id: string;
 }) {
   return (
