@@ -53,7 +53,9 @@
       "student": "Students",
       "staff": "Staff",
       "eligible": "Eligible",
-      "noScanResultsYet": "No scan results yet for this event"
+      "noScanResultsYet": "No scan results yet for this event",
+      "loadFailed": "Unable to load attendance statistics.",
+      "retry": "Try again"
     },
     "compare": {
       "title": "Compare Data",
@@ -73,7 +75,9 @@
       "other": "Other",
       "facultyStatsTitle": "Registration Statistics by Faculty",
       "timeStatsTitle": "Registration Statistics by Time Period",
-      "noScanResultsYet": "No scan results yet for this event"
+      "noScanResultsYet": "No scan results yet for this event",
+      "loadFailed": "Unable to load attendance statistics.",
+      "retry": "Try again"
     }
   },
   "Charts": {

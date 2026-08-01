@@ -101,8 +101,12 @@ export function OverviewView({ eventId }: OverviewViewProps) {
     };
   }, [eventId]);
 
-  const { dashboardData, loading: dashboardLoading } =
-    useEventDashboardData(eventId);
+  const {
+    dashboardData,
+    loading: dashboardLoading,
+    error: dashboardError,
+    refetch: refetchDashboard,
+  } = useEventDashboardData(eventId);
 
   const loading = eventDetailLoading || dashboardLoading;
 
@@ -280,6 +284,22 @@ export function OverviewView({ eventId }: OverviewViewProps) {
             <Skeleton className="h-[300px] w-full rounded-lg" />
           </div>
         </section>
+      </div>
+    );
+  }
+
+  if (dashboardError) {
+    return (
+      <div role="alert" className="flex flex-col items-center gap-4 py-16">
+        <p className="body-large-primary text-error">{t("loadFailed")}</p>
+        <Button
+          mode="outline"
+          bordered="round"
+          expanded={false}
+          onClick={refetchDashboard}
+        >
+          <p className="label-large-emphasized">{t("retry")}</p>
+        </Button>
       </div>
     );
   }

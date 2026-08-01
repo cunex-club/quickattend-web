@@ -74,7 +74,7 @@ export default function middleware(request: NextRequest) {
   // still around: it may belong to a different person on a shared device.
   if (incomingToken) {
     const url = request.nextUrl.clone();
-    url.pathname = "/api/auth/cunex";
+    url.pathname = "/web-api/auth/cunex";
     url.search = "";
     url.searchParams.set("token", incomingToken);
     url.searchParams.set("locale", locale);
@@ -102,7 +102,7 @@ export default function middleware(request: NextRequest) {
 
 export const config = {
   // Match all pathnames except for
-  // - … if they start with `/api`, `/trpc`, `/_next` or `/_vercel`
+  // - … if they start with `/api`, `/web-api`, `/trpc`, `/_next` or `/_vercel`
   // - … the ones containing a dot (e.g. `favicon.ico`)
-  matcher: "/((?!api|trpc|_next|_vercel|.*\\..*).*)",
+  matcher: "/((?!api|web-api|trpc|_next|_vercel|.*\\..*).*)",
 };

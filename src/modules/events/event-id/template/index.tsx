@@ -114,7 +114,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
     setExportError(null);
 
     try {
-      const response = await fetch(`/api/events/${eventId}/export`);
+      const response = await fetch(`/web-api/events/${eventId}/export`);
       if (!response.ok) {
         // 401: the session cookie expired or was rejected — retrying the
         // same request can never succeed, the user needs to log in again.
