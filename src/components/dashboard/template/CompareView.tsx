@@ -70,7 +70,8 @@ export function CompareView({ eventId }: CompareViewProps) {
   const { role } = useRole();
   const router = useRouter();
 
-  const { dashboardData, loading } = useEventDashboardData(eventId);
+  const { dashboardData, loading, error, refetch } =
+    useEventDashboardData(eventId);
 
   const [mode, setMode] = useState<CompareMode>("faculty");
   const [selected, setSelected] = useState<Record<string, boolean>>({});
@@ -217,6 +218,22 @@ export function CompareView({ eventId }: CompareViewProps) {
       <div className="flex flex-col space-y-8 w-full">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-[300px] w-full rounded-lg" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div role="alert" className="flex flex-col items-center gap-4 py-16">
+        <p className="body-large-primary text-error">{t("loadFailed")}</p>
+        <Button
+          mode="outline"
+          bordered="round"
+          expanded={false}
+          onClick={refetch}
+        >
+          <p className="label-large-emphasized">{t("retry")}</p>
+        </Button>
       </div>
     );
   }

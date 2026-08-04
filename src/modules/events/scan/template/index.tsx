@@ -237,7 +237,7 @@ const ScanTemplate = () => {
     };
 
     loadEvents();
-  }, []);
+  }, [requestedEventId, t]);
 
   useEffect(() => {
     const loadSelectedEventDetail = async () => {
@@ -258,7 +258,7 @@ const ScanTemplate = () => {
     };
 
     loadSelectedEventDetail();
-  }, [selectedEventId]);
+  }, [selectedEventId, t]);
 
   useEffect(() => {
     setScanResult(null);

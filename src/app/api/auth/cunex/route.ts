@@ -22,18 +22,17 @@ export async function GET(request: NextRequest) {
   const token = request.nextUrl.searchParams.get("token")?.trim();
   const locale =
     request.nextUrl.searchParams.get("locale") === "th" ? "th" : "en";
-  const backendBase = process.env.BACKEND_PROXY_URL;
+  const backendApiBase = process.env.BACKEND_PROXY_URL
+    ? `${process.env.BACKEND_PROXY_URL.replace(/\/$/, "")}/api`
+    : (process.env.NEXT_PUBLIC_API_HOST ??
+      new URL("/api", request.url).toString());
 
   if (!token) {
     return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
   }
-  if (!backendBase) {
-    return redirectToLoginWithError(request, locale, "config");
-  }
-
   let response: Response;
   try {
-    response = await fetch(`${backendBase.replace(/\/$/, "")}/api/auth/cunex`, {
+    response = await fetch(`${backendApiBase.replace(/\/$/, "")}/auth/cunex`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token }),
@@ -48,7 +47,9 @@ export async function GET(request: NextRequest) {
   // Per the LLE API reference, 204 specifically means the token couldn't be
   // resolved (expired / invalid / issued to a different project) — a normal
   // "log in again" situation, distinct from a real backend/config problem.
-  if (response.status === 204) {
+  // The CU NEX API returns 204, while the current backend normalizes the same
+  // invalid/expired-token case to 401.
+  if (response.status === 204 || response.status === 401) {
     return redirectToLoginWithError(request, locale, "expired");
   }
 
