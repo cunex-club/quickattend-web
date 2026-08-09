@@ -1,3 +1,11 @@
+# [1.0.0-dev.22](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.21...v1.0.0-dev.22) (2026-08-09)
+
+
+### Bug Fixes
+
+* event card button ([2e67aa9](https://github.com/cunex-club/quickattend-web/commit/2e67aa9dede5e01fa1019c4d6e5d2207a0db2535))
+* event search ([042e89f](https://github.com/cunex-club/quickattend-web/commit/042e89f0133ffc98a47ed18e8c3f8bcccced8592))
+
 # [1.0.0-dev.21](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.20...v1.0.0-dev.21) (2026-08-09)
 
 
