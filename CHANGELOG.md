@@ -1,3 +1,10 @@
+# [1.0.0-dev.21](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.20...v1.0.0-dev.21) (2026-08-09)
+
+
+### Bug Fixes
+
+* role and date filter events ([01d01c4](https://github.com/cunex-club/quickattend-web/commit/01d01c42a9f8bb91b0cc629d4df5f43156ca60c2))
+
 # [1.0.0-dev.20](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.19...v1.0.0-dev.20) (2026-07-25)
 
 
