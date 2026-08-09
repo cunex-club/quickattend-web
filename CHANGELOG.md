@@ -1,3 +1,10 @@
+# [1.0.0-dev.23](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.22...v1.0.0-dev.23) (2026-08-09)
+
+
+### Bug Fixes
+
+* event search placeholder ([6125109](https://github.com/cunex-club/quickattend-web/commit/61251095e8aa9dfe0247342bdb418fb5500c13ef))
+
 # [1.0.0-dev.22](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.21...v1.0.0-dev.22) (2026-08-09)
 
 
