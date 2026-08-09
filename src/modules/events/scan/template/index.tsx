@@ -211,8 +211,9 @@ const ScanTemplate = () => {
         return;
       }
 
+      const now = new Date();
       const startedEvents = result.data.data.filter(
-        (event) => new Date(event.start_time) <= new Date(),
+        (event) => new Date(event.start_time) <= now,
       );
       const mappedEvents: ScanEvent[] = startedEvents.map((event) => ({
         id: event.id,
@@ -222,16 +223,43 @@ const ScanTemplate = () => {
         role: event.role,
       }));
 
-      setEvents(mappedEvents);
-      setIsNoEventsModalOpen(mappedEvents.length === 0);
+      let allEvents = mappedEvents;
+      if (
+        requestedEventId &&
+        !mappedEvents.some((event) => event.id === requestedEventId)
+      ) {
+        const requestedResult = await fetchEventById(requestedEventId);
+        if (requestedResult.ok) {
+          const event = requestedResult.data.data;
+          const isEnd = new Date(event.end_time) < now;
+          const hasStarted = new Date(event.start_time) <= now;
+          const canScanRequested = !!event.role || event.allow_all_to_scan;
+
+          if (!isEnd && hasStarted && canScanRequested) {
+            allEvents = [
+              ...mappedEvents,
+              {
+                id: requestedEventId,
+                name: event.name,
+                startTime: formatTime(event.start_time),
+                endTime: formatTime(event.end_time),
+                role: event.role,
+              },
+            ];
+          }
+        }
+      }
+
+      setEvents(allEvents);
+      setIsNoEventsModalOpen(allEvents.length === 0);
       const requestedEventExists =
         requestedEventId &&
-        mappedEvents.some((event) => event.id === requestedEventId);
+        allEvents.some((event) => event.id === requestedEventId);
       setSelectedEventId(
         (prev) =>
           prev ||
           (requestedEventExists ? requestedEventId : undefined) ||
-          mappedEvents[0]?.id ||
+          allEvents[0]?.id ||
           "",
       );
     };

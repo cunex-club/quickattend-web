@@ -20,6 +20,7 @@ type EventCardProps = {
   hasStarted?: boolean;
   hideRole?: boolean;
   canScan?: boolean;
+  canViewStats?: boolean;
   evaluationForm?: string | null;
 };
 
@@ -35,6 +36,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
   hasStarted = true,
   hideRole = false,
   canScan = true,
+  canViewStats = true,
   evaluationForm,
   className,
   ...props
@@ -171,25 +173,27 @@ const EventCard: StyleableFC<EventCardProps> = ({
             </div>
           </Button>
         )}
-        <Button
-          mode="outline"
-          bordered="round"
-          expanded
-          disabled={!hasStarted}
-          onClick={handleStatsClick}
-        >
-          <div className="flex justify-center items-center gap-2">
-            <IonIcon
-              name="TrendingUpOutline"
-              size="36px"
-              className="text-primary"
-              noPadding
-            />
-            <div className="title-medium-emphasized text-primary hidden sm:block">
-              {t("activityStatistics")}
+        {canViewStats && (
+          <Button
+            mode="outline"
+            bordered="round"
+            expanded
+            disabled={!hasStarted}
+            onClick={handleStatsClick}
+          >
+            <div className="flex justify-center items-center gap-2">
+              <IonIcon
+                name="TrendingUpOutline"
+                size="36px"
+                className="text-primary"
+                noPadding
+              />
+              <div className="title-medium-emphasized text-primary hidden sm:block">
+                {t("activityStatistics")}
+              </div>
             </div>
-          </div>
-        </Button>
+          </Button>
+        )}
         {showEvaluationForm && (
           <Button
             mode="outline"

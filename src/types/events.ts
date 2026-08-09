@@ -20,6 +20,7 @@ export interface GetEventsRes {
   location: string;
   role?: string | null;
   evaluation_form: string | null;
+  allow_all_to_scan?: boolean;
 }
 
 // ===========================
