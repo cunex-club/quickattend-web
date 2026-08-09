@@ -19,6 +19,7 @@ type EventCardProps = {
   isEnd: boolean;
   hasStarted?: boolean;
   hideRole?: boolean;
+  canScan?: boolean;
   evaluationForm?: string | null;
 };
 
@@ -33,6 +34,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
   isEnd,
   hasStarted = true,
   hideRole = false,
+  canScan = true,
   evaluationForm,
   className,
   ...props
@@ -148,7 +150,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
           isEnd && "justify-end",
         )}
       >
-        {!isEnd && (
+        {!isEnd && canScan && (
           <Button
             mode="filled"
             bordered="round"
@@ -217,7 +219,7 @@ const EventCard: StyleableFC<EventCardProps> = ({
           isEnd && "justify-end",
         )}
       >
-        {!isEnd && (
+        {!isEnd && canScan && (
           <Button
             mode="filled"
             bordered="round"

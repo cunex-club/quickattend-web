@@ -90,6 +90,11 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   }
 
   const canEdit = eventData.role === "OWNER" || eventData.role === "MANAGER";
+  const canScan = !!eventData.role || eventData.allow_all_to_scan;
+  // Mirrors the backend's GetEventDashboardData check (dashboard.go): the
+  // caller must hold a role in this event — there's no allow-all exception
+  // for stats like there is for scanning.
+  const canViewStats = !!eventData.role;
   const isEnd = new Date(eventData.end_time) < new Date();
   const hasStarted = new Date(eventData.start_time) <= new Date();
   const showEvaluationForm =
@@ -285,7 +290,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           isEnd && "justify-end",
         )}
       >
-        {!isEnd && (
+        {!isEnd && canScan && (
           <Button
             mode="filled"
             bordered="round"
@@ -324,21 +329,23 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             </div>
           </Button>
         )}
-        <Button
-          mode="outline"
-          bordered="round"
-          expanded={true}
-          className="hidden md:block flex-1"
-          disabled={!hasStarted}
-          onClick={() => router.push(`/dashboard/${eventId}`)}
-        >
-          <div className="flex justify-center text-primary items-center gap-2">
-            <IonIcon name="TrendingUp" className="w-6 h-6 md:w-9 md:h-9" />
-            <div className="title-large-primary whitespace-nowrap">
-              {t("activityStats")}
+        {canViewStats && (
+          <Button
+            mode="outline"
+            bordered="round"
+            expanded={true}
+            className="hidden md:block flex-1"
+            disabled={!hasStarted}
+            onClick={() => router.push(`/dashboard/${eventId}`)}
+          >
+            <div className="flex justify-center text-primary items-center gap-2">
+              <IonIcon name="TrendingUp" className="w-6 h-6 md:w-9 md:h-9" />
+              <div className="title-large-primary whitespace-nowrap">
+                {t("activityStats")}
+              </div>
             </div>
-          </div>
-        </Button>
+          </Button>
+        )}
         {showEvaluationForm && (
           <Button
             mode="outline"
@@ -362,19 +369,21 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           </Button>
         )}
         <div className="flex gap-2 justify-center md:justify-start">
-          <Button
-            mode="outline"
-            bordered="round"
-            expanded={false}
-            className="md:hidden"
-            disabled={!hasStarted}
-            onClick={() => router.push(`/dashboard/${eventId}`)}
-          >
-            <IonIcon
-              name="TrendingUp"
-              className="w-6 h-6 md:w-9 md:h-9 text-primary"
-            />
-          </Button>
+          {canViewStats && (
+            <Button
+              mode="outline"
+              bordered="round"
+              expanded={false}
+              className="md:hidden"
+              disabled={!hasStarted}
+              onClick={() => router.push(`/dashboard/${eventId}`)}
+            >
+              <IonIcon
+                name="TrendingUp"
+                className="w-6 h-6 md:w-9 md:h-9 text-primary"
+              />
+            </Button>
+          )}
           {showEvaluationForm && (
             <Button
               mode="outline"

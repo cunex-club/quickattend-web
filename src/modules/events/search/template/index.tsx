@@ -117,6 +117,7 @@ const EventSearchTemplate = () => {
                       time={timeStr}
                       location={event.location}
                       hideRole
+                      canScan={false}
                       isEnd={isEnd}
                       hasStarted={hasStarted}
                       evaluationForm={event.evaluation_form}
