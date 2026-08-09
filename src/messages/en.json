@@ -121,7 +121,7 @@
     "Search": {
       "back": "Back",
       "placeholder": "Search events...",
-      "searching": "Searching for events",
+      "searching": "Search for the event you want",
       "notFound": "No results found"
     }
   },
