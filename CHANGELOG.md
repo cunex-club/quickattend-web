@@ -1,3 +1,11 @@
+# [1.0.0-dev.25](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.24...v1.0.0-dev.25) (2026-08-09)
+
+
+### Bug Fixes
+
+* can't edit event after end time ([36640ad](https://github.com/cunex-club/quickattend-web/commit/36640adc6462aa344aeff4620866048d5df002a2))
+* layout ([9073447](https://github.com/cunex-club/quickattend-web/commit/9073447873f092f9f4557cd0b1e74c35faf281ef))
+
 # [1.0.0-dev.24](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.23...v1.0.0-dev.24) (2026-08-09)
 
 
