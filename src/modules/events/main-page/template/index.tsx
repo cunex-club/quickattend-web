@@ -76,17 +76,13 @@ const applyFilterAndSort = (
   filter: FilterValues,
   sortOrder: string,
 ) => {
-  let result = events;
-
-  if (filter.accessRights.length > 0) {
-    result = result.filter(
-      (event) =>
-        !event.role ||
-        filter.accessRights.some(
-          (right) => event.role?.toLowerCase() === right.toLowerCase(),
-        ),
-    );
-  }
+  let result = events.filter(
+    (event) =>
+      !event.role ||
+      filter.accessRights.some(
+        (right) => event.role?.toLowerCase() === right.toLowerCase(),
+      ),
+  );
 
   if (filter.date) {
     result = result.filter((event) =>

@@ -181,7 +181,7 @@ export async function fetchAttendedEvents(
       pageSize: pageSize.toString(),
     });
     if (search) params.set("search", search);
-    if (roles && roles.length > 0) params.set("role", roles.join(","));
+    if (roles !== undefined) params.set("role", roles.join(","));
     if (date) params.set("date", date);
     if (sort) params.set("sort", sort);
 
