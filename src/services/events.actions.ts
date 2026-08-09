@@ -91,12 +91,15 @@ export async function fetchEventById(
 ): Promise<ActionResult<EventByIdAPIResponse>> {
   try {
     const token = await getAuthToken();
-    const res = await fetch(`${API_HOST}/events/${encodeURIComponent(eventId)}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const res = await fetch(
+      `${API_HOST}/events/${encodeURIComponent(eventId)}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        signal: AbortSignal.timeout(API_TIMEOUT_MS),
       },
-      signal: AbortSignal.timeout(API_TIMEOUT_MS),
-    });
+    );
 
     if (!res.ok) {
       return {
@@ -157,11 +160,19 @@ export async function fetchManagedEvents(
   }
 }
 
+export interface FetchAttendedEventsOptions {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  roles?: string[];
+  date?: string;
+  sort?: "newest" | "oldest";
+}
+
 export async function fetchAttendedEvents(
-  page: number = 1,
-  pageSize: number = 8,
-  search?: string,
+  options: FetchAttendedEventsOptions = {},
 ): Promise<ActionResult<EventsAPIResponse>> {
+  const { page = 1, pageSize = 8, search, roles, date, sort } = options;
   try {
     const token = await getAuthToken();
     const params = new URLSearchParams({
@@ -170,6 +181,9 @@ export async function fetchAttendedEvents(
       pageSize: pageSize.toString(),
     });
     if (search) params.set("search", search);
+    if (roles && roles.length > 0) params.set("role", roles.join(","));
+    if (date) params.set("date", date);
+    if (sort) params.set("sort", sort);
 
     const res = await fetch(`${API_HOST}/events?${params.toString()}`, {
       headers: {
@@ -283,15 +297,18 @@ export async function updateEvent(
 ): Promise<ActionResult<UpdateEventAPIResponse>> {
   try {
     const token = await getAuthToken();
-    const res = await fetch(`${API_HOST}/events/${encodeURIComponent(eventId)}`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+    const res = await fetch(
+      `${API_HOST}/events/${encodeURIComponent(eventId)}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(req),
+        signal: AbortSignal.timeout(API_TIMEOUT_MS),
       },
-      body: JSON.stringify(req),
-      signal: AbortSignal.timeout(API_TIMEOUT_MS),
-    });
+    );
 
     if (!res.ok) {
       return {
@@ -319,13 +336,16 @@ export async function deleteEvent(
 ): Promise<ActionResult<null>> {
   try {
     const token = await getAuthToken();
-    const res = await fetch(`${API_HOST}/events/${encodeURIComponent(eventId)}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const res = await fetch(
+      `${API_HOST}/events/${encodeURIComponent(eventId)}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        signal: AbortSignal.timeout(API_TIMEOUT_MS),
       },
-      signal: AbortSignal.timeout(API_TIMEOUT_MS),
-    });
+    );
 
     if (!res.ok) {
       return {

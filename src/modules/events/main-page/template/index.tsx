@@ -24,6 +24,13 @@ const isSameDay = (a: Date, b: Date) =>
   a.getMonth() === b.getMonth() &&
   a.getDate() === b.getDate();
 
+const toDateParam = (d: Date) => {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+};
+
 const FILTERS_STORAGE_KEY = "cunex_events_filters_v1";
 
 interface StoredFiltersState {
@@ -72,10 +79,12 @@ const applyFilterAndSort = (
   let result = events;
 
   if (filter.accessRights.length > 0) {
-    result = result.filter((event) =>
-      filter.accessRights.some(
-        (right) => event.role?.toLowerCase() === right.toLowerCase(),
-      ),
+    result = result.filter(
+      (event) =>
+        !event.role ||
+        filter.accessRights.some(
+          (right) => event.role?.toLowerCase() === right.toLowerCase(),
+        ),
     );
   }
 
@@ -98,10 +107,12 @@ const EventPageTemplate = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [managedEvents, setManagedEvents] = useState<GetEventsRes[]>([]);
+  const [managedLoading, setManagedLoading] = useState(true);
+
   const [attendedEvents, setAttendedEvents] = useState<GetEventsRes[]>([]);
   const [attendedPagination, setAttendedPagination] =
     useState<APIPagination | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [pastLoading, setPastLoading] = useState(true);
 
   const [myEventsFilter, setMyEventsFilter] = useState<FilterValues>(
     () =>
@@ -135,12 +146,10 @@ const EventPageTemplate = () => {
     sessionStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(state));
   }, [myEventsFilter, myEventsSort, pastEventsFilter, pastEventsSort]);
 
-  // Separate current and past managed events
+  // GetMyEvents already excludes ended events server-side, so this is just a
+  // defensive re-check in case an event ends while the page stays open.
   const currentManagedEvents = managedEvents.filter(
     (event) => new Date(event.end_time) >= new Date(),
-  );
-  const pastManagedEvents = managedEvents.filter(
-    (event) => new Date(event.end_time) < new Date(),
   );
 
   const filteredCurrentManagedEvents = applyFilterAndSort(
@@ -148,48 +157,61 @@ const EventPageTemplate = () => {
     myEventsFilter,
     myEventsSort,
   );
-  const filteredPastEvents = applyFilterAndSort(
-    [...pastManagedEvents, ...attendedEvents],
-    pastEventsFilter,
-    pastEventsSort,
-  );
+
+  const totalPages = attendedPagination
+    ? Math.max(
+        1,
+        Math.ceil(attendedPagination.total / attendedPagination.pageSize),
+      )
+    : 1;
 
   useEffect(() => {
-    const loadEvents = async () => {
-      setLoading(true);
-      const [managedResult, attendedResult] = await Promise.all([
-        fetchManagedEvents(),
-        fetchAttendedEvents(currentPage),
-      ]);
+    const loadManagedEvents = async () => {
+      setManagedLoading(true);
+      const result = await fetchManagedEvents();
 
-      if (!managedResult.ok) {
+      if (!result.ok) {
         console.error(
-          `Failed to fetch managed events [${managedResult.error.code}]: ${managedResult.error.message}`,
+          `Failed to fetch managed events [${result.error.code}]: ${result.error.message}`,
         );
       } else {
-        setManagedEvents(managedResult.data.data);
+        setManagedEvents(result.data.data);
       }
 
-      if (!attendedResult.ok) {
+      setManagedLoading(false);
+    };
+
+    loadManagedEvents();
+  }, []);
+
+  useEffect(() => {
+    const loadPastEvents = async () => {
+      setPastLoading(true);
+      const result = await fetchAttendedEvents({
+        page: currentPage,
+        roles: pastEventsFilter.accessRights,
+        date: pastEventsFilter.date
+          ? toDateParam(pastEventsFilter.date)
+          : undefined,
+        sort: pastEventsSort === "oldest" ? "oldest" : "newest",
+      });
+
+      if (!result.ok) {
         console.error(
-          `Failed to fetch attended events [${attendedResult.error.code}]: ${attendedResult.error.message}`,
+          `Failed to fetch attended events [${result.error.code}]: ${result.error.message}`,
         );
       } else {
-        setAttendedEvents(attendedResult.data.data);
-        if (attendedResult.data.meta?.pagination) {
-          setAttendedPagination(attendedResult.data.meta.pagination);
+        setAttendedEvents(result.data.data);
+        if (result.data.meta?.pagination) {
+          setAttendedPagination(result.data.meta.pagination);
         }
       }
 
-      setLoading(false);
+      setPastLoading(false);
     };
 
-    loadEvents();
-  }, [currentPage]);
-
-  const totalPages = attendedPagination
-    ? Math.ceil(attendedPagination.total / attendedPagination.pageSize)
-    : 1;
+    loadPastEvents();
+  }, [currentPage, pastEventsFilter, pastEventsSort]);
 
   const handleMyEventsFilterChange = (values: FilterValues) => {
     setMyEventsFilter(values);
@@ -201,10 +223,12 @@ const EventPageTemplate = () => {
 
   const handlePastEventsFilterChange = (values: FilterValues) => {
     setPastEventsFilter(values);
+    setCurrentPage(1);
   };
 
   const handlePastEventsSortChange = (value: string) => {
     setPastEventsSort(value);
+    setCurrentPage(1);
   };
 
   return (
@@ -237,7 +261,7 @@ const EventPageTemplate = () => {
             />
           </div>
         </div>
-        {loading ? (
+        {managedLoading ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <EventCardSkeleton />
             <EventCardSkeleton />
@@ -307,12 +331,12 @@ const EventPageTemplate = () => {
             />
           </div>
         </div>
-        {loading ? (
+        {pastLoading ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <EventCardSkeleton isEnd />
             <EventCardSkeleton isEnd />
           </div>
-        ) : filteredPastEvents.length === 0 ? (
+        ) : attendedEvents.length === 0 ? (
           <EventEmptyState
             iconName="TimerOutline"
             title={t("noPastEventsTitle")}
@@ -320,7 +344,7 @@ const EventPageTemplate = () => {
           />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {filteredPastEvents.map((event) => {
+            {attendedEvents.map((event) => {
               const isEnd = new Date(event.end_time) < new Date();
               const dateStr = formatEventDate(event.start_time, locale);
               const timeStr = formatEventTimeRange(
