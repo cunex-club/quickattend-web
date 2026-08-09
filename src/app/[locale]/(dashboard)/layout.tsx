@@ -11,14 +11,16 @@ export default async function DashboardLayout({
   const currentUser = await getCurrentUser();
 
   return (
-    <div className="flex flex-col lg:flex-row w-full min-h-screen">
+    <div className="flex flex-col lg:flex-row w-full h-screen overflow-hidden">
       <div className="hidden lg:block">
         <Sidebar currentUser={currentUser} />
       </div>
       <div className="block lg:hidden">
         <Header currentUser={currentUser} />
       </div>
-      <main className="flex-1 w-full pb-16 lg:pb-0">{children}</main>
+      <main className="flex-1 w-full overflow-y-auto pb-16 lg:pb-0">
+        {children}
+      </main>
       <MobileNav />
     </div>
   );
