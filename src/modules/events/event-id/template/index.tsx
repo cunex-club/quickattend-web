@@ -89,14 +89,15 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
     );
   }
 
-  const canEdit = eventData.role === "OWNER" || eventData.role === "MANAGER";
+  const isEnd = new Date(eventData.end_time) < new Date();
+  const hasStarted = new Date(eventData.start_time) <= new Date();
+  const canEdit =
+    !isEnd && (eventData.role === "OWNER" || eventData.role === "MANAGER");
   const canScan = !!eventData.role || eventData.allow_all_to_scan;
   // Mirrors the backend's GetEventDashboardData check (dashboard.go): the
   // caller must hold a role in this event — there's no allow-all exception
   // for stats like there is for scanning.
   const canViewStats = !!eventData.role;
-  const isEnd = new Date(eventData.end_time) < new Date();
-  const hasStarted = new Date(eventData.start_time) <= new Date();
   const showEvaluationForm =
     isEnd &&
     !!eventData.evaluation_form &&
