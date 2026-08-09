@@ -1,3 +1,10 @@
+# [1.0.0-dev.24](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.23...v1.0.0-dev.24) (2026-08-09)
+
+
+### Bug Fixes
+
+* role filter ([962f516](https://github.com/cunex-club/quickattend-web/commit/962f51607ed4cd6b711244fe5bff5851ae686df1))
+
 # [1.0.0-dev.23](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.22...v1.0.0-dev.23) (2026-08-09)
 
 
