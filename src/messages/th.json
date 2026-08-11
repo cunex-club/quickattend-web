@@ -47,6 +47,7 @@
       "timeStatsTitle": "สถิติการลงทะเบียนแยกตามช่วงเวลา",
       "facultyStatsTitle": "สถิติการลงทะเบียนแยกตามคณะ",
       "viewFullscreen": "ดูเต็มหน้าจอ",
+      "exitFullscreen": "ออกจากเต็มหน้าจอ",
       "copyLink": "คัดลอกลิงก์",
       "linkCopied": "คัดลอกลิงก์กิจกรรมเรียบร้อยแล้ว",
       "linkCopyFailed": "ไม่สามารถคัดลอกลิงก์ได้",

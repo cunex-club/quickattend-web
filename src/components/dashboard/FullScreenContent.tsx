@@ -22,11 +22,13 @@ interface FullscreenContentProps {
     student: string;
     staff: string;
   };
+  onExit: () => void;
 }
 
 const FullscreenContent: React.FC<FullscreenContentProps> = ({
   data,
   translations,
+  onExit,
 }) => {
   const t = useTranslations("Dashboard.overview");
 
@@ -45,7 +47,15 @@ const FullscreenContent: React.FC<FullscreenContentProps> = ({
   return (
     <div className="w-full h-full flex flex-col justify-between">
       {/* Header */}
-      <nav className="w-full px-16 py-8 bg-primary flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 z-20 relative">
+      <nav className="relative w-full pl-16 pr-24 py-8 bg-primary flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 z-20">
+        <button
+          type="button"
+          onClick={onExit}
+          aria-label={t("exitFullscreen")}
+          className="absolute top-4 right-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/20 hover:bg-white/30 transition-colors cursor-pointer"
+        >
+          <IonIcon name="Close" size="24px" className="text-white" noPadding />
+        </button>
         <div className="mr-4 w-full md:max-w-[40%] lg:max-w-[60%] xl:max-w-[75%]">
           <MarqueeText
             text={data.title}
@@ -69,17 +79,9 @@ const FullscreenContent: React.FC<FullscreenContentProps> = ({
             className="absolute inset-0 rounded-full"
             style={gradientStyle1}
           ></div>
-          {/* <div
-            className="absolute inset-0 rounded-full scale-90"
-            style={gradientStyle2}
-          ></div> */}
         </div>
 
         <div className="absolute bottom-0 right-0 w-[358px] md:w-[538px] h-[457px] md:h-[666px] pointer-events-none translate-x-1/4 translate-y-1/4 mix-blend-multiply">
-          {/* <div
-            className="absolute inset-0 rounded-full"
-            style={gradientStyle1}
-          ></div> */}
           <div
             className="absolute inset-0 rounded-full scale-90"
             style={gradientStyle2}

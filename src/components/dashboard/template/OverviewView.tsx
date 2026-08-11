@@ -560,6 +560,7 @@ export function OverviewView({ eventId }: OverviewViewProps) {
               student: t("student"),
               staff: t("staff"),
             }}
+            onExit={handleToggleFullscreen}
           />
         )}
       </div>

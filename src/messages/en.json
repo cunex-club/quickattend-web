@@ -47,6 +47,7 @@
       "timeStatsTitle": "Registration Statistics by Time Period",
       "facultyStatsTitle": "Registration Statistics by Faculty",
       "viewFullscreen": "View Fullscreen",
+      "exitFullscreen": "Exit fullscreen",
       "copyLink": "Copy Link",
       "linkCopied": "Event link copied successfully",
       "linkCopyFailed": "Failed to copy link",
