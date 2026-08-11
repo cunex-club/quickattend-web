@@ -1,6 +1,5 @@
 import { format } from "date-fns";
 import IonIcon from "@shared/IonIcon";
-import { useTranslations } from "next-intl";
 
 interface EditableTimeProps {
   value?: Date;
@@ -19,9 +18,8 @@ const EditableTime = ({
   onChange,
   disabled = false,
 }: EditableTimeProps) => {
-  const tCreateEvent = useTranslations("CreateEvent");
   return (
-    <label className="flex relative w-full flex-1">
+    <label className="relative flex w-full flex-1">
       <input
         type="time"
         step="60"
@@ -30,16 +28,14 @@ const EditableTime = ({
         max={formatTime(max) || undefined}
         disabled={disabled}
         onChange={(e) => onChange(e.target.value)}
-        className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
+        className="w-full h-10 border rounded-md pl-3 pr-6 body-large-primary disabled:opacity-50 disabled:cursor-not-allowed [&::-webkit-calendar-picker-indicator]:opacity-0"
       />
-
-      <div
-        className={`w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary
-          ${disabled ? "opacity-50 pointer-events-none" : ""}`}
-      >
-        <span>{formatTime(value) || tCreateEvent("timePlaceholder")}</span>
-        <IonIcon name="Time" size="16px" className="text-primary" />
-      </div>
+      <IonIcon
+        name="Time"
+        size="16px"
+        noPadding
+        className="text-primary pointer-events-none absolute right-3 top-1/2 -translate-y-1/2"
+      />
     </label>
   );
 };
