@@ -1,3 +1,20 @@
+# [1.0.0-dev.26](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.25...v1.0.0-dev.26) (2026-08-11)
+
+
+### Bug Fixes
+
+* button in event detail ([399ffe3](https://github.com/cunex-club/quickattend-web/commit/399ffe34059a5f0e9d57f93445a6167731714bc2))
+* can't go to login page while having session ([a81f503](https://github.com/cunex-club/quickattend-web/commit/a81f5036590986b787f5965929041a8306447148))
+* different date of start time and end time (not happen...) ([bb31b24](https://github.com/cunex-club/quickattend-web/commit/bb31b244e9f4ae4df25c65f77d77f4ae465b9022))
+* editable time integration ([7af4d83](https://github.com/cunex-club/quickattend-web/commit/7af4d8335b27758af23fa51bad6f4dda289e2813))
+* editable-time firefox ([9b6609f](https://github.com/cunex-club/quickattend-web/commit/9b6609f174b0840ec4e2f9e775f6b44b572c2f8a))
+* evaluation form link ([46101bc](https://github.com/cunex-club/quickattend-web/commit/46101bc2d3dbcdf2e049ac55815931c38eccaeaa))
+* event create and edit layout ([fe05192](https://github.com/cunex-club/quickattend-web/commit/fe051926494429c696a5a41d1cbef07585d710bf))
+* exit fullscreen ([c2b3946](https://github.com/cunex-club/quickattend-web/commit/c2b3946c042f80444723dcab22e0f95603789543))
+* local logout ([f402739](https://github.com/cunex-club/quickattend-web/commit/f40273915d09f888da8ea73c3e5b054d2c6d6e83))
+* pie chart ([736afb5](https://github.com/cunex-club/quickattend-web/commit/736afb5493ab57f8b495dac5ca6423d391714006))
+* search bar ([317c3d3](https://github.com/cunex-club/quickattend-web/commit/317c3d3c5cf957bca9ef84f5c220c4a6a5a6cfa5))
+
 # [1.0.0-dev.25](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.24...v1.0.0-dev.25) (2026-08-09)
 
 
