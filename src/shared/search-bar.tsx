@@ -20,6 +20,11 @@ const SearchBar = ({
     onsearch(query);
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+    onsearch(e.target.value);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSearch();
@@ -31,7 +36,7 @@ const SearchBar = ({
       <input
         type="text"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={handleChange}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         className="min-w-0 flex-1 bg-transparent outline-none body-large placeholder:text-neutral-400 text-black title-large-primary"
