@@ -26,7 +26,9 @@ function EventsLayoutContent({
           <div className="block lg:hidden">{header}</div>
         </>
       )}
-      <main className="flex-1 overflow-y-auto bg-white pb-16 lg:pb-0">
+      <main
+        className={`flex-1 overflow-y-auto bg-white ${showSidebar ? "pb-16 lg:pb-0" : ""}`}
+      >
         {children}
       </main>
       {showSidebar && <MobileNav />}

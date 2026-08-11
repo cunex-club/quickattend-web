@@ -314,7 +314,7 @@ const EventCreateTemplate = () => {
             </div>
 
             {/* Buttons */}
-            <div className="w-full flex px-4 py-8 justify-between gap-4 flex-wrap items-center">
+            <div className="w-full flex px-4 py-8 justify-center xs:justify-between gap-4 flex-wrap items-center">
               <Button
                 mode="outline"
                 bordered="square"
