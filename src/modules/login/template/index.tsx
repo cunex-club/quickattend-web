@@ -1,10 +1,13 @@
 "use client";
 
+import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useRouter } from "@i18n/navigation";
 import LoginDesktopPage from "@modules/login/components/LoginDesktopPage";
 import LoginMobilePage from "@modules/login/components/LoginMobilePage";
 import LoginTabletPage from "@modules/login/components/LoginTabletPage";
+import { hasActiveSession } from "@services/auth.actions";
 
 const ERROR_MESSAGE_KEYS = {
   expired: "errorExpired",
@@ -15,12 +18,25 @@ const ERROR_MESSAGE_KEYS = {
 const LoginTemplate = () => {
   const authUrl = process.env.NEXT_PUBLIC_AUTH_URL;
   const t = useTranslations("Login");
+  const router = useRouter();
   const searchParams = useSearchParams();
   const errorParam = searchParams.get("error");
   const errorMessageKey =
     errorParam && errorParam in ERROR_MESSAGE_KEYS
       ? ERROR_MESSAGE_KEYS[errorParam as keyof typeof ERROR_MESSAGE_KEYS]
       : null;
+
+  useEffect(() => {
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      hasActiveSession().then((active) => {
+        if (active) router.replace("/events");
+      });
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, [router]);
 
   if (!authUrl) {
     throw new Error("NEXT_PUBLIC_AUTH_URL is not defined");
