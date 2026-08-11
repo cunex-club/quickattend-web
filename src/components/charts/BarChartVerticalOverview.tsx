@@ -80,7 +80,7 @@ export function BarChartVerticalOverview({
   const xDomainMax = calculateXDomain(data);
   const chartDataWithMeta = addPercentageMetadata(data);
   return (
-    <Card className="bg-neutral-white lg:bg-neutral-100 shadow-none p-0 md:p-8 xl:p-5 border-none rounded-[28px] w-full h-auto">
+    <Card className="bg-neutral-white lg:bg-neutral-100 shadow-none p-4 md:p-8 xl:p-5 border-none rounded-[28px] w-full h-auto">
       <CardContent className="shadow-none border-none">
         <div className="chart-list-group flex flex-col space-y-4">
           {chartDataWithMeta.map((item, idx) => (

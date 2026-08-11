@@ -57,12 +57,12 @@ export function BarChartHorizontalOverview({
   const domainY = isAllZero ? 1 : realMax;
 
   return (
-    <Card className="py-0 px-0 h-full relative border-none shadow-none">
+    <Card
+      className="py-0 px-0 h-full w-full relative border-none shadow-none"
+      style={{ minWidth: `${chartWidth}px` }}
+    >
       <CardContent className="px-0 py-0 h-full">
-        <div
-          className="min-w-full h-full md:w-full"
-          style={{ width: `${chartWidth}px` }}
-        >
+        <div className="w-full h-full">
           <ChartContainer
             config={chartConfig}
             className="w-full h-full chart-hover-bar"
