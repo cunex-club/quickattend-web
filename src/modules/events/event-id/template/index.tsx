@@ -287,8 +287,8 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
       </div>
       <div
         className={cn(
-          "flex flex-row w-full gap-4 lg:gap-6",
-          isEnd && "justify-end",
+          "flex flex-col sm:flex-row flex-wrap w-full gap-4 lg:gap-6",
+          isEnd && "sm:justify-end",
         )}
       >
         {!isEnd && canScan && (
@@ -296,13 +296,13 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             mode="filled"
             bordered="round"
             expanded={true}
-            className="flex-1"
+            className="flex-1 min-w-0"
             disabled={!hasStarted}
             onClick={() => router.push(`/scan?eventId=${eventId}`)}
           >
-            <div className="flex justify-center items-center gap-2 text-neutral-white">
-              <IonIcon name="Scan" className="w-6 h-6 md:w-9 md:h-9" />
-              <div className="label-large-primary md:title-large-primary whitespace-nowrap">
+            <div className="flex justify-center items-center gap-2 text-neutral-white min-w-0">
+              <IonIcon name="Scan" className="w-6 h-6 md:w-9 md:h-9 shrink-0" />
+              <div className="label-large-primary md:title-large-primary truncate">
                 {t("scanParticipant")}
               </div>
             </div>
@@ -313,16 +313,16 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             mode="outline"
             bordered="round"
             expanded={true}
-            className="flex-1"
+            className="flex-1 min-w-0"
             disabled={isExporting || eventData.total_registered === 0}
             onClick={exportParticipants}
           >
-            <div className="flex justify-center text-primary items-center gap-2">
+            <div className="flex justify-center text-primary items-center gap-2 min-w-0">
               <IonIcon
                 name="DownloadOutline"
-                className="w-6 h-6 md:w-9 md:h-9"
+                className="w-6 h-6 md:w-9 md:h-9 shrink-0"
               />
-              <div className="label-large-primary md:title-large-primary whitespace-nowrap">
+              <div className="label-large-primary md:title-large-primary truncate">
                 {isExporting
                   ? t("exportingParticipants")
                   : t("exportParticipants")}
@@ -335,13 +335,13 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             mode="outline"
             bordered="round"
             expanded={true}
-            className="hidden md:block flex-1"
+            className="hidden md:block flex-1 min-w-0"
             disabled={!hasStarted}
             onClick={() => router.push(`/dashboard/${eventId}`)}
           >
-            <div className="flex justify-center text-primary items-center gap-2">
-              <IonIcon name="TrendingUp" className="w-6 h-6 md:w-9 md:h-9" />
-              <div className="title-large-primary whitespace-nowrap">
+            <div className="flex justify-center text-primary items-center gap-2 min-w-0">
+              <IonIcon name="TrendingUp" className="w-6 h-6 md:w-9 md:h-9 shrink-0" />
+              <div className="title-large-primary truncate">
                 {t("activityStats")}
               </div>
             </div>
@@ -352,7 +352,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             mode="outline"
             bordered="round"
             expanded={true}
-            className="hidden md:block flex-1"
+            className="hidden md:block flex-1 min-w-0"
             onClick={() =>
               window.open(
                 eventData.evaluation_form!,
@@ -361,9 +361,9 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
               )
             }
           >
-            <div className="flex justify-center text-primary items-center gap-2">
-              <IonIcon name="DocumentText" className="w-6 h-6 md:w-9 md:h-9" />
-              <div className="title-large-primary whitespace-nowrap">
+            <div className="flex justify-center text-primary items-center gap-2 min-w-0">
+              <IonIcon name="DocumentText" className="w-6 h-6 md:w-9 md:h-9 shrink-0" />
+              <div className="title-large-primary truncate">
                 {t("evaluationForm")}
               </div>
             </div>
