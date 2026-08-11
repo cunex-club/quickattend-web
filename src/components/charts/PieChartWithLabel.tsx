@@ -28,6 +28,12 @@ const CHART_COLORS = [
 
 const chartConfig = {} satisfies ChartConfig;
 
+const MAX_LABEL_LENGTH = 14;
+const truncateLabel = (name: string) =>
+  name.length > MAX_LABEL_LENGTH
+    ? `${name.slice(0, MAX_LABEL_LENGTH - 1)}…`
+    : name;
+
 type PieChartData = {
   name: string;
   value: number;
@@ -77,7 +83,7 @@ export function PieChartWithLabel({ data }: { data?: PieChartData[] }) {
 
   const customLabel = useCallback(
     (props: unknown) => {
-      const CUSTOM_DISTANCE: number = 1.25;
+      const CUSTOM_DISTANCE: number = 1.18;
       const RADIAN = Math.PI / 180;
       const { cx, cy, midAngle, innerRadius, outerRadius, payload } =
         (props as PieLabelProps) || {};
@@ -92,7 +98,7 @@ export function PieChartWithLabel({ data }: { data?: PieChartData[] }) {
       const x = centerX + radius * Math.cos(-m * RADIAN);
       const y = centerY + radius * Math.sin(-m * RADIAN);
 
-      const name = payload?.faculty ?? "";
+      const name = truncateLabel(payload?.faculty ?? "");
       const total = Number(payload?.total ?? 0);
       const percent = ((total / (chartTotal || 1)) * 100).toFixed(0);
       const anchor = x > Number(cx ?? 0) ? "start" : "end";
