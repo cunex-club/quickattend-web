@@ -18,7 +18,7 @@ export async function logout(): Promise<never> {
     path: "/",
     maxAge: 0,
     expires: new Date(0),
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
     httpOnly: true,
     sameSite: "lax",
   });
