@@ -19,9 +19,25 @@ export const formatEventTimeRange = (
     hour12: false,
   };
   const tag = localeToIntlTag(locale);
-  const start = new Date(startIso).toLocaleTimeString(tag, opts);
-  const end = new Date(endIso).toLocaleTimeString(tag, opts);
-  return `${start} - ${end}`;
+  const startDate = new Date(startIso);
+  const endDate = new Date(endIso);
+  const start = startDate.toLocaleTimeString(tag, opts);
+  const end = endDate.toLocaleTimeString(tag, opts);
+
+  const sameDay =
+    startDate.getFullYear() === endDate.getFullYear() &&
+    startDate.getMonth() === endDate.getMonth() &&
+    startDate.getDate() === endDate.getDate();
+
+  if (sameDay) {
+    return `${start} - ${end}`;
+  }
+
+  const endDateLabel = endDate.toLocaleDateString(tag, {
+    day: "numeric",
+    month: "short",
+  });
+  return `${start} - ${end} (${endDateLabel})`;
 };
 
 export const formatHourBucket = (isoStr: string, locale: string) => {
