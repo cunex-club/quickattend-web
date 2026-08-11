@@ -1,3 +1,10 @@
+# [1.0.0-dev.27](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.26...v1.0.0-dev.27) (2026-08-11)
+
+
+### Bug Fixes
+
+* barchart ui ([fb63606](https://github.com/cunex-club/quickattend-web/commit/fb63606a8da694ecc309ead70db23e748088b47a))
+
 # [1.0.0-dev.26](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.25...v1.0.0-dev.26) (2026-08-11)
 
 
