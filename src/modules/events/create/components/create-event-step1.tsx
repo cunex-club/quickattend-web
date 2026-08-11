@@ -9,7 +9,6 @@ import {
 import { format, isSameDay, startOfDay } from "date-fns";
 import IonIcon from "@shared/IonIcon";
 import { useEffect, useState } from "react";
-import { cn } from "@assets/lib/utils";
 import Button from "@shared/Button";
 import EditableTime from "./editable-time";
 import { Textarea } from "@assets/components/ui/textarea";
@@ -341,29 +340,11 @@ const CreateEventStep1 = ({
           <div className="flex gap-4">
             {/* Start Time */}
             <div className="flex flex-col gap-2 w-full">
-              <label className="relative">
-                <input
-                  type="time"
-                  step="60"
-                  disabled={!isDateSelected}
-                  className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
-                  value={formatTime(eventForm.startTime) ?? ""}
-                  onChange={(e) => handleStartTimeChange(e.target.value)}
-                />
-
-                <div
-                  className={cn(
-                    "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none",
-                  )}
-                >
-                  <span>
-                    {formatTime(eventForm.startTime) ??
-                      tCreateEvent("timePlaceholder")}
-                  </span>
-                  <IonIcon name="Time" size="16px" className="text-primary" />
-                </div>
-              </label>
+              <EditableTime
+                value={eventForm.startTime}
+                disabled={!isDateSelected}
+                onChange={handleStartTimeChange}
+              />
 
               <p className="pl-3 body-small-primary text-neutral-500">
                 {tCreateEvent("startTime")}
@@ -372,29 +353,11 @@ const CreateEventStep1 = ({
 
             {/* End Time */}
             <div className="flex flex-col gap-2 w-full">
-              <label className="relative">
-                <input
-                  type="time"
-                  step="60"
-                  disabled={!isDateSelected}
-                  className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
-                  value={formatTime(eventForm.endTime) ?? ""}
-                  onChange={(e) => handleEndTimeChange(e.target.value)}
-                />
-
-                <div
-                  className={cn(
-                    "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none",
-                  )}
-                >
-                  <span>
-                    {formatTime(eventForm.endTime) ??
-                      tCreateEvent("timePlaceholder")}
-                  </span>
-                  <IonIcon name="Time" size="16px" className="text-primary" />
-                </div>
-              </label>
+              <EditableTime
+                value={eventForm.endTime}
+                disabled={!isDateSelected}
+                onChange={handleEndTimeChange}
+              />
 
               <p className="pl-3 body-small-primary text-neutral-500">
                 {tCreateEvent("endTime")}
@@ -431,7 +394,7 @@ const CreateEventStep1 = ({
           <div className="flex gap-4 w-full">
             {/* Start Time */}
             <div className="flex flex-col gap-2 w-full">
-              <label className="relative">
+              <label className="relative flex">
                 <input
                   type="time"
                   step="60"
@@ -452,18 +415,14 @@ const CreateEventStep1 = ({
                       setAgendaEnd(value);
                     }
                   }}
-                  className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                  className="w-full h-10 border rounded-md pl-3 pr-6 body-large-primary disabled:opacity-50 disabled:cursor-not-allowed [&::-webkit-calendar-picker-indicator]:opacity-0"
                 />
-
-                <div
-                  className={cn(
-                    "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none",
-                  )}
-                >
-                  <span>{agendaStart || tCreateEvent("timePlaceholder")}</span>
-                  <IonIcon name="Time" size="16px" className="text-primary" />
-                </div>
+                <IonIcon
+                  name="Time"
+                  size="16px"
+                  noPadding
+                  className="text-primary pointer-events-none absolute right-3 top-1/2 -translate-y-1/2"
+                />
               </label>
 
               <p className="pl-3 body-small-primary text-neutral-500">
@@ -473,7 +432,7 @@ const CreateEventStep1 = ({
 
             {/* End Time */}
             <div className="flex flex-col gap-2 w-full">
-              <label className="relative">
+              <label className="relative flex">
                 <input
                   type="time"
                   step="60"
@@ -497,18 +456,14 @@ const CreateEventStep1 = ({
                       setAgendaEnd(value);
                     }
                   }}
-                  className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                  className="w-full h-10 border rounded-md pl-3 pr-6 body-large-primary disabled:opacity-50 disabled:cursor-not-allowed [&::-webkit-calendar-picker-indicator]:opacity-0"
                 />
-
-                <div
-                  className={cn(
-                    "w-full h-10 flex items-center justify-between border rounded-md pl-3 body-large-primary",
-                    !isDateSelected && "opacity-50 pointer-events-none",
-                  )}
-                >
-                  <span>{agendaEnd || tCreateEvent("timePlaceholder")}</span>
-                  <IonIcon name="Time" size="16px" className="text-primary" />
-                </div>
+                <IonIcon
+                  name="Time"
+                  size="16px"
+                  noPadding
+                  className="text-primary pointer-events-none absolute right-3 top-1/2 -translate-y-1/2"
+                />
               </label>
 
               <p className="pl-3 body-small-primary text-neutral-500">
