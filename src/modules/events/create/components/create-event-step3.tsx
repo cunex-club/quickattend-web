@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { EventFormInterface } from "../template";
 import { Input } from "@assets/components/ui/input";
+import { isSafeExternalUrl } from "@utils/url";
 
 interface CreateEventStep3Props {
   eventForm: EventFormInterface;
@@ -12,6 +13,9 @@ const CreateEventStep3 = ({
   setEventForm,
 }: CreateEventStep3Props) => {
   const tCreateEvent = useTranslations("CreateEvent");
+  const trimmed = eventForm.evaluation_form.trim();
+  const isInvalid = !!trimmed && !isSafeExternalUrl(trimmed);
+
   return (
     <div className="flex flex-col gap-4">
       <h1 className="title-large-emphasized mb-4 text-center">
@@ -27,7 +31,11 @@ const CreateEventStep3 = ({
           type="url"
           value={eventForm.evaluation_form}
           placeholder={tCreateEvent("evaluationFormLinkPlaceholder")}
-          className="body-large-primary focus:border-primary focus-visible:ring-0"
+          className={`body-large-primary focus-visible:ring-0 ${
+            isInvalid
+              ? "border-destructive focus:border-destructive"
+              : "focus:border-primary"
+          }`}
           onChange={(e) => {
             setEventForm({
               ...eventForm,
@@ -35,6 +43,11 @@ const CreateEventStep3 = ({
             });
           }}
         />
+        {isInvalid && (
+          <p className="body-small-primary text-destructive">
+            {tCreateEvent("evaluationFormLinkInvalid")}
+          </p>
+        )}
       </div>
     </div>
   );

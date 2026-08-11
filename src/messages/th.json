@@ -265,6 +265,7 @@
     "evaluationForm": "แบบฟอร์มประเมินกิจกรรม",
     "evaluationFormLink": "ลิงก์แบบฟอร์มประเมินกิจกรรม",
     "evaluationFormLinkPlaceholder": "ลิงก์แบบฟอร์มประเมินกิจกรรม",
+    "evaluationFormLinkInvalid": "กรุณากรอกลิงก์ที่ถูกต้อง ขึ้นต้นด้วย http:// หรือ https://",
 
     "eventPreview": "ดูตัวอย่างกิจกรรม",
     "cardPreview": "การ์ดกิจกรรม",
@@ -324,6 +325,7 @@
     "evaluationForm": "แบบฟอร์มประเมินกิจกรรม",
     "evaluationFormLink": "ลิงก์แบบฟอร์มประเมินกิจกรรม",
     "evaluationFormLinkPlaceholder": "ลิงก์แบบฟอร์มประเมินกิจกรรม",
+    "evaluationFormLinkInvalid": "กรุณากรอกลิงก์ที่ถูกต้อง ขึ้นต้นด้วย http:// หรือ https://",
 
     "eventPreview": "ดูตัวอย่างกิจกรรม",
     "cardPreview": "การ์ดกิจกรรม",
@@ -351,7 +353,7 @@
     "student": "นิสิต",
     "staff": "บุคลากร",
     "organizedBy": "กิจกรรมโดย",
-    "scanParticipant": "สแกนผู้เข้าร่วมกิจกรรม",
+    "scanParticipant": "สแกนผู้เข้าร่วม",
     "exportParticipants": "ส่งออกรายชื่อผู้เข้าร่วม (.xlsx)",
     "exportingParticipants": "กำลังเตรียมไฟล์...",
     "exportFailed": "ส่งออกรายชื่อไม่สำเร็จ กรุณาลองใหม่",

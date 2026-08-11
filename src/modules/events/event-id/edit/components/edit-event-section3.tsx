@@ -1,6 +1,7 @@
 import { Input } from "@assets/components/ui/input";
 import { EventFormInterface } from "@modules/events/create/template";
 import { useTranslations } from "next-intl";
+import { isSafeExternalUrl } from "@utils/url";
 
 interface EditEventSection1Props {
   eventForm: EventFormInterface;
@@ -12,6 +13,8 @@ const EditEventSection3 = ({
   setEventForm,
 }: EditEventSection1Props) => {
   const tEditEvent = useTranslations("EditEvent");
+  const trimmed = eventForm.evaluation_form.trim();
+  const isInvalid = !!trimmed && !isSafeExternalUrl(trimmed);
 
   return (
     <div className="flex flex-col gap-4">
@@ -28,7 +31,11 @@ const EditEventSection3 = ({
           type="url"
           value={eventForm.evaluation_form}
           placeholder={tEditEvent("evaluationFormLinkPlaceholder")}
-          className="body-large-primary focus:border-primary focus-visible:ring-0"
+          className={`body-large-primary focus-visible:ring-0 ${
+            isInvalid
+              ? "border-destructive focus:border-destructive"
+              : "focus:border-primary"
+          }`}
           onChange={(e) => {
             setEventForm({
               ...eventForm,
@@ -36,6 +43,11 @@ const EditEventSection3 = ({
             });
           }}
         />
+        {isInvalid && (
+          <p className="body-small-primary text-destructive">
+            {tEditEvent("evaluationFormLinkInvalid")}
+          </p>
+        )}
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import Button from "@shared/Button";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@i18n/navigation";
 import type { KeyboardEvent, MouseEvent } from "react";
+import { isSafeExternalUrl } from "@utils/url";
 
 type EventCardProps = {
   eventId: string;
@@ -43,7 +44,8 @@ const EventCard: StyleableFC<EventCardProps> = ({
 }) => {
   const t = useTranslations("Events.EventCard");
   const router = useRouter();
-  const showEvaluationForm = isEnd && !!evaluationForm;
+  const showEvaluationForm =
+    isEnd && !!evaluationForm && isSafeExternalUrl(evaluationForm);
 
   const handleEvaluationFormClick = (event: MouseEvent) => {
     event.preventDefault();
@@ -245,23 +247,25 @@ const EventCard: StyleableFC<EventCardProps> = ({
             </div>
           </Button>
         )}
-        <Button
-          mode="outline"
-          bordered="round"
-          expanded={false}
-          className="!px-4 !py-2"
-          disabled={!hasStarted}
-          onClick={handleStatsClick}
-        >
-          <div className="flex justify-center items-center gap-2">
-            <IonIcon
-              name="TrendingUpOutline"
-              size="20px"
-              className="text-primary"
-              noPadding
-            />
-          </div>
-        </Button>
+        {canViewStats && (
+          <Button
+            mode="outline"
+            bordered="round"
+            expanded={false}
+            className="!px-4 !py-2"
+            disabled={!hasStarted}
+            onClick={handleStatsClick}
+          >
+            <div className="flex justify-center items-center gap-2">
+              <IonIcon
+                name="TrendingUpOutline"
+                size="20px"
+                className="text-primary"
+                noPadding
+              />
+            </div>
+          </Button>
+        )}
         {showEvaluationForm && (
           <Button
             mode="outline"

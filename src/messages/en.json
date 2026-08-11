@@ -262,6 +262,7 @@
     "evaluationForm": "Evaluation Form",
     "evaluationFormLink": "Evaluation Form Link",
     "evaluationFormLinkPlaceholder": "Evaluation form link",
+    "evaluationFormLinkInvalid": "Please enter a valid link starting with http:// or https://",
 
     "eventPreview": "Preview",
     "cardPreview": "Event Card",
@@ -321,6 +322,7 @@
     "evaluationForm": "Evaluation Form",
     "evaluationFormLink": "Evaluation Form Link",
     "evaluationFormLinkPlaceholder": "Evaluation form link",
+    "evaluationFormLinkInvalid": "Please enter a valid link starting with http:// or https://",
 
     "eventPreview": "Preview",
     "cardPreview": "Event Card",
