@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 import { cn } from "@assets/lib/utils";
 import { StyleableFC } from "@utils/misc";
 import { ZXingScanner } from "@utils/scanner";
@@ -12,12 +13,14 @@ type ScanCameraPanelProps = {
   deviceId?: string;
   onScan?: (text: string) => void;
   paused?: boolean;
+  isSubmitting?: boolean;
 };
 
 const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
   deviceId,
   onScan,
   paused = false,
+  isSubmitting = false,
   className,
 }) => {
   const t = useTranslations("Scan");
@@ -44,20 +47,6 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
     setSelectedDeviceIndex((prev) => (prev + 1) % devices.length);
   }, [devices.length]);
 
-  // `paused` toggles on every scan (submitting -> cooldown -> ready again).
-  // It intentionally is NOT a dependency of the effect below: that effect
-  // tears down and re-acquires the camera stream, and doing that every scan
-  // cycle both flickers the video and — critically — reset lastScannedTextRef,
-  // wiping the only guard against re-submitting the same QR on consecutive
-  // frames. On screens where the camera stays mounted behind the result panel
-  // (2xl layout), a badge left in frame during the ~1.2s cooldown would then
-  // get re-decoded and re-submitted in a loop.
-  //
-  // So `pausedRef` gates decoding without touching the stream, and the dedupe
-  // guard deliberately PERSISTS across pause/resume — it only resets when the
-  // stream itself is re-acquired (camera switch / retry). CU NEX QR codes are
-  // dynamic and single-use, so a legitimate re-scan of the same person carries
-  // a different code and passes the guard on its own.
   useEffect(() => {
     pausedRef.current = paused;
   }, [paused]);
@@ -181,6 +170,15 @@ const ScanCameraPanel: StyleableFC<ScanCameraPanelProps> = ({
           >
             {t("cameraPanel.retry")}
           </button>
+        </div>
+      )}
+
+      {!cameraError && isSubmitting && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/50">
+          <Loader2 className="size-8 animate-spin text-neutral-white" />
+          <p className="title-medium-primary text-neutral-white">
+            {t("cameraPanel.processing")}
+          </p>
         </div>
       )}
 

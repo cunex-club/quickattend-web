@@ -144,7 +144,8 @@
       "cameraNotFoundError": "ไม่พบกล้องในอุปกรณ์นี้",
       "cameraConstraintError": "การตั้งค่ากล้องไม่รองรับอุปกรณ์นี้",
       "genericError": "ไม่สามารถเปิดกล้องได้ กรุณาลองใหม่",
-      "retry": "ลองอีกครั้ง"
+      "retry": "ลองอีกครั้ง",
+      "processing": "กำลังเช็คอิน..."
     },
     "infoPanel": {
       "selectEvent": "เลือกกิจกรรม",

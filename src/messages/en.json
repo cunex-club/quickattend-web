@@ -141,7 +141,8 @@
       "cameraNotFoundError": "No camera found on this device",
       "cameraConstraintError": "This camera doesn't support the required settings",
       "genericError": "Unable to start the camera. Please try again",
-      "retry": "Retry"
+      "retry": "Retry",
+      "processing": "Checking in..."
     },
     "infoPanel": {
       "selectEvent": "Select event",

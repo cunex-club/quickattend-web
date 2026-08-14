@@ -430,6 +430,7 @@ const ScanTemplate = () => {
             selectedEventId && isDesktop2xl ? (
               <ScanCameraPanel
                 paused={isSubmittingScan || isResultModalOpen || isScanCooldown}
+                isSubmitting={isSubmittingScan}
                 onScan={handleScan}
                 className="h-full w-full min-h-[420px] rounded-[40px] bg-transparent"
               />
@@ -469,6 +470,7 @@ const ScanTemplate = () => {
         ) : selectedEventId && !isCompactLayout && !isDesktop2xl ? (
           <ScanCameraPanel
             paused={isSubmittingScan || isResultModalOpen || isScanCooldown}
+            isSubmitting={isSubmittingScan}
             onScan={handleScan}
             className="min-h-0"
           />
@@ -482,6 +484,7 @@ const ScanTemplate = () => {
         {selectedEventId && isCompactLayout ? (
           <ScanCameraPanel
             paused={isSubmittingScan || isResultModalOpen || isScanCooldown}
+            isSubmitting={isSubmittingScan}
             onScan={handleScan}
             className="flex-1 min-h-[60vh]"
           />
