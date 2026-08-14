@@ -1,3 +1,10 @@
+# [1.0.0-dev.28](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.27...v1.0.0-dev.28) (2026-08-14)
+
+
+### Bug Fixes
+
+* scan loading and export button visibility ([e7ee9f1](https://github.com/cunex-club/quickattend-web/commit/e7ee9f1555437c89befeefb44a6c5773dcd916c6))
+
 # [1.0.0-dev.27](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.26...v1.0.0-dev.27) (2026-08-11)
 
 
