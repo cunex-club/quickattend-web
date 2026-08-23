@@ -1,3 +1,10 @@
+# [1.0.0-dev.30](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.29...v1.0.0-dev.30) (2026-08-23)
+
+
+### Bug Fixes
+
+* no access in dashboard page ([c4d4d44](https://github.com/cunex-club/quickattend-web/commit/c4d4d446a0793918cc09f375e3dfa1366b31939f))
+
 # [1.0.0-dev.29](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.28...v1.0.0-dev.29) (2026-08-23)
 
 
