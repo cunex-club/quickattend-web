@@ -93,6 +93,8 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   const hasStarted = new Date(eventData.start_time) <= new Date();
   const canEdit =
     !isEnd && (eventData.role === "OWNER" || eventData.role === "MANAGER");
+  const canExport =
+    eventData.role === "OWNER" || eventData.role === "MANAGER";
   const canScan = !!eventData.role || eventData.allow_all_to_scan;
   // Mirrors the backend's GetEventDashboardData check (dashboard.go): the
   // caller must hold a role in this event — there's no allow-all exception
@@ -308,7 +310,7 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             </div>
           </Button>
         )}
-        {canEdit && (
+        {canExport && (
           <Button
             mode="outline"
             bordered="round"
