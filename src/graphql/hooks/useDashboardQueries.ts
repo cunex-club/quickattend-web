@@ -7,6 +7,13 @@ import type {
   GQLEventDashboard,
 } from "../types";
 
+const DASHBOARD_FORBIDDEN_ERROR_MESSAGE =
+  "you do not have access to this event's dashboard";
+
+export function isDashboardForbiddenError(error: string | null): boolean {
+  return error === DASHBOARD_FORBIDDEN_ERROR_MESSAGE;
+}
+
 // Real per-event attendance stats, used by the /dashboard/:id overview page
 interface UseEventDashboardDataReturn {
   dashboardData: GQLEventDashboard | null;

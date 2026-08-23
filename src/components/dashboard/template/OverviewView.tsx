@@ -15,7 +15,10 @@ import IonIcon from "@shared/IonIcon";
 import { toast } from "sonner";
 import { Skeleton } from "@assets/components/ui/skeleton";
 import { useTranslations, useLocale } from "next-intl";
-import { useEventDashboardData } from "@graphql/hooks/useDashboardQueries";
+import {
+  useEventDashboardData,
+  isDashboardForbiddenError,
+} from "@graphql/hooks/useDashboardQueries";
 import { fetchEventById } from "@services/events.actions";
 import type { GetOneEventRes } from "@customTypes/events";
 import { FacultyNameEnByCode } from "@utils/faculty";
@@ -291,14 +294,26 @@ export function OverviewView({ eventId }: OverviewViewProps) {
   if (dashboardError) {
     return (
       <div role="alert" className="flex flex-col items-center gap-4 py-16">
-        <p className="body-large-primary text-error">{t("loadFailed")}</p>
+        <p className="body-large-primary text-error">
+          {isDashboardForbiddenError(dashboardError)
+            ? t("noAccess")
+            : t("loadFailed")}
+        </p>
         <Button
           mode="outline"
           bordered="round"
           expanded={false}
-          onClick={refetchDashboard}
+          onClick={
+            isDashboardForbiddenError(dashboardError)
+              ? () => router.push(`/events/${eventId}`)
+              : refetchDashboard
+          }
         >
-          <p className="label-large-emphasized">{t("retry")}</p>
+          <p className="label-large-emphasized">
+            {isDashboardForbiddenError(dashboardError)
+              ? t("backToEvent")
+              : t("retry")}
+          </p>
         </Button>
       </div>
     );

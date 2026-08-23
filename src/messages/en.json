@@ -56,6 +56,8 @@
       "eligible": "Eligible",
       "noScanResultsYet": "No scan results yet for this event",
       "loadFailed": "Unable to load attendance statistics.",
+      "noAccess": "You don't have access to this event's dashboard.",
+      "backToEvent": "Back to event",
       "retry": "Try again"
     },
     "compare": {
@@ -78,6 +80,8 @@
       "timeStatsTitle": "Registration Statistics by Time Period",
       "noScanResultsYet": "No scan results yet for this event",
       "loadFailed": "Unable to load attendance statistics.",
+      "noAccess": "You don't have access to this event's dashboard.",
+      "backToEvent": "Back to event",
       "retry": "Try again"
     }
   },
