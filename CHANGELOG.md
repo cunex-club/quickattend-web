@@ -1,3 +1,12 @@
+# [1.0.0-dev.29](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.28...v1.0.0-dev.29) (2026-08-23)
+
+
+### Bug Fixes
+
+* export ([fadeaad](https://github.com/cunex-club/quickattend-web/commit/fadeaad140eba91e9a73a1bcc389507cb1fb98b4))
+* re-render page ([bb403db](https://github.com/cunex-club/quickattend-web/commit/bb403db1d4027384f59d2def0cee6f076137b23b))
+* recent scan ([e38a78e](https://github.com/cunex-club/quickattend-web/commit/e38a78ecbfc03a4eef6943c0380fa52b395ea3b0))
+
 # [1.0.0-dev.28](https://github.com/cunex-club/quickattend-web/compare/v1.0.0-dev.27...v1.0.0-dev.28) (2026-08-14)
 
 
