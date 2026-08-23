@@ -11,6 +11,7 @@ import {
   type EventsAPIResponse,
   type EventByIdAPIResponse,
   type ScanParticipantAPIResponse,
+  type RecentParticipantsAPIResponse,
 } from "@services/events";
 import type { APIResponse } from "@customTypes/events";
 
@@ -118,6 +119,42 @@ export async function fetchEventById(
       err,
       "FETCH_EVENT_TIMEOUT",
       "FETCH_EVENT_UNEXPECTED_ERROR",
+    );
+  }
+}
+
+export async function fetchRecentParticipants(
+  eventId: string,
+): Promise<ActionResult<RecentParticipantsAPIResponse>> {
+  try {
+    const token = await getAuthToken();
+    const res = await fetch(
+      `${API_HOST}/events/${encodeURIComponent(eventId)}/participants/recent`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        signal: AbortSignal.timeout(API_TIMEOUT_MS),
+      },
+    );
+
+    if (!res.ok) {
+      return {
+        ok: false,
+        error: await parseErrorBody(
+          res,
+          "FETCH_RECENT_PARTICIPANTS_FAILED",
+          `Failed to fetch recent participants for event ${eventId}: ${res.status}`,
+        ),
+      };
+    }
+
+    return { ok: true, data: await res.json() };
+  } catch (err) {
+    return toCaughtErrorResult(
+      err,
+      "FETCH_RECENT_PARTICIPANTS_TIMEOUT",
+      "FETCH_RECENT_PARTICIPANTS_UNEXPECTED_ERROR",
     );
   }
 }

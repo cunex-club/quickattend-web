@@ -9,6 +9,7 @@ export type { GetEventsRes, GetOneEventRes, APIPagination };
 export type EventsAPIResponse = APIResponse<GetEventsRes[]>;
 export type EventByIdAPIResponse = APIResponse<GetOneEventRes>;
 export type ScanParticipantAPIResponse = APIResponse<ScanParticipantRes>;
+export type RecentParticipantsAPIResponse = APIResponse<RecentParticipantRes[]>;
 
 export type APIErrorData = {
   code: string;
@@ -92,4 +93,15 @@ export interface ScanParticipantRes {
   status: string;
   code: string;
   profile_image_url: string | null;
+}
+
+export interface RecentParticipantRes {
+  ref_id: number;
+  title_th: string | null;
+  firstname_th: string | null;
+  surname_th: string | null;
+  title_en: string | null;
+  firstname_en: string | null;
+  surname_en: string | null;
+  check_in_time: string;
 }

@@ -205,6 +205,7 @@
     "errors": {
       "failedToFetchEvents": "ไม่สามารถดึงรายการกิจกรรมสำหรับหน้าสแกนได้",
       "failedToFetchEventDetail": "ไม่สามารถดึงรายละเอียดกิจกรรมที่เลือกได้",
+      "failedToFetchRecentParticipants": "ไม่สามารถดึงรายชื่อผู้เข้าร่วมล่าสุดได้",
       "missingParticipantData": "การสแกนล้มเหลว: ไม่มีข้อมูลผู้เข้าร่วม",
       "unexpectedScanError": "การสแกนล้มเหลว: เกิดข้อผิดพลาดที่ไม่คาดคิด",
       "failedToSubmitScan": "ไม่สามารถส่งข้อมูลการสแกนผู้เข้าร่วมได้"

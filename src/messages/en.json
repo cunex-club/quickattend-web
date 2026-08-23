@@ -202,6 +202,7 @@
     "errors": {
       "failedToFetchEvents": "Failed to fetch events for the scan page",
       "failedToFetchEventDetail": "Failed to fetch selected event detail",
+      "failedToFetchRecentParticipants": "Failed to fetch recent participants",
       "missingParticipantData": "Scan failed: missing participant data",
       "unexpectedScanError": "Scan failed: unexpected error",
       "failedToSubmitScan": "Failed to submit participant scan"

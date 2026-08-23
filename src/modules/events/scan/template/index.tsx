@@ -25,8 +25,10 @@ import type { APIErrorData } from "@services/events";
 import {
   fetchEventById,
   fetchManagedEvents,
+  fetchRecentParticipants,
   postParticipantScan,
 } from "@services/events.actions";
+import type { RecentParticipantRes } from "@services/events";
 
 const formatTime = (isoTime: string) => {
   const date = new Date(isoTime);
@@ -64,34 +66,24 @@ const buildFailedScanResult = (message: string): ScanResultModalData => ({
   message,
 });
 
-const RECENT_PARTICIPANTS_STORAGE_PREFIX = "cunex_scan_recent_participants_";
-
-const loadStoredRecentParticipants = (eventId: string): Participant[] => {
-  if (typeof window === "undefined" || !eventId) return [];
-  try {
-    const raw = localStorage.getItem(
-      `${RECENT_PARTICIPANTS_STORAGE_PREFIX}${eventId}`,
-    );
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-};
-
-const saveStoredRecentParticipants = (
-  eventId: string,
-  participants: Participant[],
-) => {
-  if (typeof window === "undefined" || !eventId) return;
-  try {
-    localStorage.setItem(
-      `${RECENT_PARTICIPANTS_STORAGE_PREFIX}${eventId}`,
-      JSON.stringify(participants),
-    );
-  } catch {
-    // storage quota/serialization errors — non-critical, ignore
-  }
-};
+const buildParticipantDisplayName = (
+  person: {
+    title_th: string | null;
+    firstname_th: string | null;
+    surname_th: string | null;
+    title_en: string | null;
+    firstname_en: string | null;
+    surname_en: string | null;
+  },
+  unknownLabel: string,
+) =>
+  [person.title_th, person.firstname_th, person.surname_th]
+    .filter(Boolean)
+    .join(" ") ||
+  [person.title_en, person.firstname_en, person.surname_en]
+    .filter(Boolean)
+    .join(" ") ||
+  unknownLabel;
 
 const ScanCameraPlaceholder: StyleableFC = ({ className }) => (
   <div
@@ -291,7 +283,41 @@ const ScanTemplate = () => {
   useEffect(() => {
     setScanResult(null);
     setIsResultModalOpen(false);
-    setRecentParticipants(loadStoredRecentParticipants(selectedEventId));
+
+    if (!selectedEventId) {
+      setRecentParticipants([]);
+      return;
+    }
+
+    let cancelled = false;
+    const loadRecentParticipants = async () => {
+      const result = await fetchRecentParticipants(selectedEventId);
+      if (cancelled) return;
+
+      if (!result.ok) {
+        console.error(
+          `${t("errors.failedToFetchRecentParticipants")} [${result.error.code}]: ${result.error.message}`,
+        );
+        setRecentParticipants([]);
+        return;
+      }
+
+      setRecentParticipants(
+        result.data.data.map((person: RecentParticipantRes) => ({
+          id: String(person.ref_id),
+          name: buildParticipantDisplayName(
+            person,
+            t("resultPanel.unknownParticipant"),
+          ),
+          time: formatTime(person.check_in_time),
+        })),
+      );
+    };
+
+    loadRecentParticipants();
+    return () => {
+      cancelled = true;
+    };
   }, [selectedEventId]);
 
   const selectedEvent = useMemo(
@@ -349,14 +375,10 @@ const ScanTemplate = () => {
         return;
       }
 
-      const participantName =
-        [res.data.title_th, res.data.firstname_th, res.data.surname_th]
-          .filter(Boolean)
-          .join(" ") ||
-        [res.data.title_en, res.data.firstname_en, res.data.surname_en]
-          .filter(Boolean)
-          .join(" ") ||
-        t("resultPanel.unknownParticipant");
+      const participantName = buildParticipantDisplayName(
+        res.data,
+        t("resultPanel.unknownParticipant"),
+      );
 
       const scannedAt = res.data.check_in_time
         ? formatTime(res.data.check_in_time)
@@ -376,18 +398,16 @@ const ScanTemplate = () => {
       };
 
       if (res.data.status !== "duplicate") {
-        setRecentParticipants((prev) => {
-          const next = [
+        setRecentParticipants((prev) =>
+          [
             {
               id: res.data.ref_id || "-",
               name: participantName,
               time: scannedAt,
             },
             ...prev,
-          ].slice(0, 8);
-          saveStoredRecentParticipants(selectedEventId, next);
-          return next;
-        });
+          ].slice(0, 8),
+        );
       }
 
       setScanResult(modalData);
