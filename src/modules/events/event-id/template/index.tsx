@@ -93,8 +93,9 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
   const hasStarted = new Date(eventData.start_time) <= new Date();
   const canEdit =
     !isEnd && (eventData.role === "OWNER" || eventData.role === "MANAGER");
-  const canExport =
-    eventData.role === "OWNER" || eventData.role === "MANAGER";
+  const canExport = eventData.role === "OWNER" || eventData.role === "MANAGER";
+  const exportDeadline = new Date(eventData.end_time);
+  exportDeadline.setDate(exportDeadline.getDate() + 90);
   const canScan = !!eventData.role || eventData.allow_all_to_scan;
   // Mirrors the backend's GetEventDashboardData check (dashboard.go): the
   // caller must hold a role in this event — there's no allow-all exception
@@ -342,7 +343,10 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             onClick={() => router.push(`/dashboard/${eventId}`)}
           >
             <div className="flex justify-center text-primary items-center gap-2 min-w-0">
-              <IonIcon name="TrendingUp" className="w-6 h-6 md:w-9 md:h-9 shrink-0" />
+              <IonIcon
+                name="TrendingUp"
+                className="w-6 h-6 md:w-9 md:h-9 shrink-0"
+              />
               <div className="title-large-primary truncate">
                 {t("activityStats")}
               </div>
@@ -364,7 +368,10 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
             }
           >
             <div className="flex justify-center text-primary items-center gap-2 min-w-0">
-              <IonIcon name="DocumentText" className="w-6 h-6 md:w-9 md:h-9 shrink-0" />
+              <IonIcon
+                name="DocumentText"
+                className="w-6 h-6 md:w-9 md:h-9 shrink-0"
+              />
               <div className="title-large-primary truncate">
                 {t("evaluationForm")}
               </div>
@@ -411,7 +418,9 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
       </div>
       {canExport && (
         <p className="w-full text-sm text-neutral-500">
-          {t("exportRetentionNotice")}
+          {t("exportRetentionNotice", {
+            date: formatEventDate(exportDeadline.toISOString(), locale),
+          })}
         </p>
       )}
       {exportError && (
