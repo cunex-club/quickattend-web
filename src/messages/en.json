@@ -359,6 +359,7 @@
     "organizedBy": "Organized by",
     "scanParticipant": "Scan participant",
     "exportParticipants": "Export participants (.xlsx)",
+    "exportRetentionNotice": "Download within 90 days after the event ends - after that, individual participant data is permanently deleted.",
     "exportingParticipants": "Preparing file...",
     "exportFailed": "Unable to export participants. Please try again.",
     "exportSessionExpired": "Your session has expired. Please log in again to export participants.",

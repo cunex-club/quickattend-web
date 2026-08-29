@@ -409,6 +409,11 @@ const EventIdPageTemplate = ({ eventId }: EventIdPageTemplateProps) => {
           )}
         </div>
       </div>
+      {canExport && (
+        <p className="w-full text-sm text-neutral-500">
+          {t("exportRetentionNotice")}
+        </p>
+      )}
       {exportError && (
         <p role="alert" className="w-full text-sm text-red-600">
           {exportError}
